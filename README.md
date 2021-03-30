@@ -14,14 +14,14 @@ src
 |
 |__ features
   |__ Photo
-    |__ components
-    |  |__ PhotoList
-    |  |__ PhotoCard
-    |  |__ PhotoForm
+    |__ components (inside child components)
+    |  |__ PhotoList (child component1)
+    |  |__ PhotoCard (child component2)
+    |  |__ PhotoForm (child component3)
     |
-    |__ pages
+    |__ pages 
     |  |__ MainPage
     |  |__ AddEditPage
-    |__ photoSlice.js
-    |__ index.js
+    |__ photoSlice.js (feature's redux)
+    |__ index.js (main feature component)
 ```
