@@ -2,6 +2,15 @@
 Front-end project for web app supporting teamwork management
 
 # Project: Teamwork Manager
+## Getting Start
+
+```
+npm i
+```
+```
+npm start
+```
+
 ## Tổ chức folder
 
 ```
