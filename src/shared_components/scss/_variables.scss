@@ -1,0 +1,40 @@
+// Variable overrides
+//$sidebar-width: auto;
+
+
+.c-sidebar{
+    //width:20rem !important;
+    .c-sidebar-nav-dropdown-items{
+        
+        .c-sidebar-nav-item{
+            
+            .c-sidebar-nav-link{
+                width:20rem;
+                .c-avatar-img{
+                    width: 2rem  !important;
+                    height: 2rem !important;
+                    margin-right:1rem;
+                }
+                .badge{
+                    margin-left: auto !important;
+                }
+            }
+            
+            
+        }
+    }
+    @media (min-width: 992px) {
+        width:20rem !important;
+    }
+    
+}
+
+.c-wrapper{
+     margin-left: 0 !important;
+     @media (min-width: 992px) {
+         margin-left:20rem !important;
+     }
+}
+
+
+

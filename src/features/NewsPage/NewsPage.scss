@@ -1,0 +1,10 @@
+.k-post{
+    @media (max-width:576px){
+        .k-post-content{
+            order:2;
+        }
+        .k-post-tool{
+            order:1;
+        }
+    }
+}
