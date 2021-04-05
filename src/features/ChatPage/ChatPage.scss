@@ -1,0 +1,30 @@
+.chat-page-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin:0px;
+    margin-top:-32px;
+    padding-top:32px;
+    .main-row{
+         display:flex;
+        // flex-direction:row;
+         width: 100%;
+        .col1{
+            width:62%;
+            margin-right:3%;
+            position:relative;
+        }
+        .col2{
+            width:30%;
+            margin-right:5%;
+            position:relative;
+        }
+        @media (max-width: 768px) {
+            .col2{
+                width:32%;
+                margin-right:3%;
+            }
+        }
+    }
+    
+}

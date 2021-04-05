@@ -8,7 +8,8 @@ import //brand
 "@coreui/icons";
 
 import {
-  cisHeart,
+  cilFilter,
+  cilListFilter,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -145,11 +146,12 @@ export const icons = Object.assign(
   },
   {
     cilCommentBubble,
-
+    cilListFilter,
     cilHeart,
     cilColorPalette,
     cilChatBubble,
     cilGroup,
+    cilFilter,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

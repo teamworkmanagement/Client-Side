@@ -74,8 +74,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Tin nhắn",
-    route: "/base",
-    to: "/dashboard1",
+    to: "/chat",
     icon: "cil-chat-bubble",
   },
   {
