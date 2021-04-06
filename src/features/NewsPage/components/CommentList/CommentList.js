@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./CommentList.scss";
 import Comment from "../Comment/Comment";
+import commentApi from "src/api/commentApi";
 CommentList.propTypes = {};
 
 function CommentList(props) {
@@ -26,12 +27,33 @@ function CommentList(props) {
       date: "16/04/2021",
     },
   ];
+
+  const [cmtLists, setComments] = useState([]);
+
+  useEffect(() => {
+    async function getComments() {
+      const comments = await commentApi.getAllCommentForPost(props.postId);
+      console.log(comments);
+      setComments(comments.data);
+    }
+
+    getComments();
+  }, []);
+
   return (
+    <div>
     <div className="comment-list">
-      {commentList.map(function (item, index) {
+      {cmtLists.map(function (item, index) {
         return <Comment key={index} data={item} />;
       })}
+      
     </div>
+    <div className="load-more">
+      <div>Xem thêm</div>
+      <div className="rotate">&#171;</div>
+    </div>
+    </div>
+    
   );
 }
 

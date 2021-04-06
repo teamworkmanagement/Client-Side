@@ -16,25 +16,29 @@ import CIcon from '@coreui/icons-react'
 // routes config
 import routes from '../../routes'
 
-import { 
+import {
   TheHeaderDropdown,
   TheHeaderDropdownMssg,
   TheHeaderDropdownNotif,
   TheHeaderDropdownTasks
-}  from './index'
+} from './index'
+import { changeState } from 'src/appSlice'
 
 const TheHeader = () => {
-  const dispatch = useDispatch()
-  const sidebarShow = useSelector(state => state.sidebarShow)
+  const dispatch = useDispatch();
+
+  const sidebarShow = useSelector(state => state.app.sidebarShow);
 
   const toggleSidebar = () => {
     const val = [true, 'responsive'].includes(sidebarShow) ? false : 'responsive'
-    dispatch({type: 'set', sidebarShow: val})
+    console.log('val toggleSidebar: ', val);
+    dispatch(changeState({ type: 'set', sidebarShow: val }))
   }
 
   const toggleSidebarMobile = () => {
     const val = [false, 'responsive'].includes(sidebarShow) ? true : 'responsive'
-    dispatch({type: 'set', sidebarShow: val})
+    console.log('val toggleSidebarMobile: ', val);
+    dispatch(changeState({ type: 'set', sidebarShow: val }))
   }
 
   return (
@@ -50,14 +54,14 @@ const TheHeader = () => {
         onClick={toggleSidebar}
       />
       <CHeaderBrand className="mx-auto d-lg-none" to="/">
-        <CIcon name="logo" height="48" alt="Logo"/>
+        <CIcon name="logo" height="48" alt="Logo" />
       </CHeaderBrand>
 
       <CHeaderNav className="d-md-down-none mr-auto">
         <CHeaderNavItem className="px-3" >
           <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
         </CHeaderNavItem>
-        <CHeaderNavItem  className="px-3">
+        <CHeaderNavItem className="px-3">
           <CHeaderNavLink to="/users">Users</CHeaderNavLink>
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3">
@@ -66,33 +70,33 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
-        <TheHeaderDropdownNotif/>
-        <TheHeaderDropdownTasks/>
-        <TheHeaderDropdownMssg/>
-        <TheHeaderDropdown/>
+        <TheHeaderDropdownNotif />
+        <TheHeaderDropdownTasks />
+        <TheHeaderDropdownMssg />
+        <TheHeaderDropdown />
       </CHeaderNav>
 
-      
+
       <CSubheader className="px-3 justify-content-between">
-        <CBreadcrumbRouter 
-          className="border-0 c-subheader-nav m-0 px-0 px-md-3" 
-          routes={routes} 
+        <CBreadcrumbRouter
+          className="border-0 c-subheader-nav m-0 px-0 px-md-3"
+          routes={routes}
         />
-          <div className="d-md-down-none mfe-2 c-subheader-nav">
-            <CLink className="c-subheader-nav-link"href="#">
-              <CIcon name="cil-speech" alt="Settings" />
+        <div className="d-md-down-none mfe-2 c-subheader-nav">
+          <CLink className="c-subheader-nav-link" href="#">
+            <CIcon name="cil-speech" alt="Settings" />
+          </CLink>
+          <CLink
+            className="c-subheader-nav-link"
+            aria-current="page"
+            to="/dashboard"
+          >
+            <CIcon name="cil-graph" alt="Dashboard" />&nbsp;Dashboard
             </CLink>
-            <CLink 
-              className="c-subheader-nav-link" 
-              aria-current="page" 
-              to="/dashboard"
-            >
-              <CIcon name="cil-graph" alt="Dashboard" />&nbsp;Dashboard
+          <CLink className="c-subheader-nav-link" href="#">
+            <CIcon name="cil-settings" alt="Settings" />&nbsp;Settings
             </CLink>
-            <CLink className="c-subheader-nav-link" href="#">
-              <CIcon name="cil-settings" alt="Settings" />&nbsp;Settings
-            </CLink>
-          </div>
+        </div>
       </CSubheader>
     </CHeader>
   )

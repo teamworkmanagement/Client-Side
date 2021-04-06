@@ -7,7 +7,10 @@ const initialState = {
 const changeState = (state = initialState, { type, ...rest }) => {
   switch (type) {
     case 'set':
-      return {...state, ...rest }
+
+      const xxx = { ...state, ...rest };
+      console.log('rest laf: ', xxx);
+      return { ...state, ...rest }
     default:
       return state
   }
