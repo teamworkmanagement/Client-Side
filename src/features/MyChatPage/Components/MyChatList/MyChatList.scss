@@ -1,0 +1,73 @@
+$search-border-radius:10px;
+.chat-list-container{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+
+    padding: 0.5rem;
+    
+    padding-left: 0px;
+    margin: 0px;
+    height: inherit;
+    .input-group{
+        width:100%;
+        padding-right:0px;
+        padding-left:0.5rem;
+        input{
+            border-top-left-radius: $search-border-radius;
+            border-bottom-left-radius: $search-border-radius;
+            height:auto;
+        }
+        .input-group-append{ //button search
+            //height:inherit;
+            
+            .btn{
+                background-color: #3C4B64;
+                color:white;
+                border-top-right-radius: $search-border-radius;
+                border-bottom-right-radius: $search-border-radius;
+                .c-icon{
+                    margin-top:0px;
+                    margin-left:0px;
+                    width:1.3em;
+                    height:1.3em;
+                }
+            }
+        }
+    }
+
+    .list-items{
+        overflow-y: scroll;
+        position: static;
+        margin: 0px;
+        padding: 0px;
+        padding-right: 0.5rem;
+        flex-grow: 1;
+        margin-top: 1rem;
+        padding-left: 0.5rem;
+        background-color: #EBEDEF;
+        padding-top: 0.5rem;
+    }
+}
+
+.list-items::-webkit-scrollbar {
+    width: 0.5rem;
+}
+  
+  /* Track */
+  .list-items::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  .list-items::-webkit-scrollbar-thumb {
+    background: #CDCDCD; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  .list-items::-webkit-scrollbar-thumb:hover {
+    background: #A8A8A8; 
+  }

@@ -1,5 +1,7 @@
 import React from "react";
 import ChatPage from "./features/ChatPage/ChatPage";
+import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
+import MyChatPage from "./features/MyChatPage/MyChatPage";
 import NewsPage from "./features/NewsPage/NewsPage";
 
 const Toaster = React.lazy(() =>
@@ -106,10 +108,10 @@ const User = React.lazy(() => import("./shared_components/views/users/User"));
 
 const routes = [
   // { path: '/', exact: true, name: 'Home' },
-  { path: "/dashboard", name: "Dashboard", component: Dashboard },
+  { path: "/dashboard", name: "Dashboard", component: DashBoardPage },
   { path: "/news", name: "Bản tin", component: NewsPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
-  // { path: '/theme/typography', name: 'Typography', component: Typography },
+  { path: "/chats", name: "mychat", component: MyChatPage, exact: true },
   // { path: '/base', name: 'Base', component: Cards, exact: true },
   // { path: '/base/breadcrumbs', name: 'Breadcrumbs', component: Breadcrumbs },
   // { path: '/base/cards', name: 'Cards', component: Cards },

@@ -8,6 +8,9 @@ import //brand
 "@coreui/icons";
 
 import {
+  cilImagePlus,
+  cilSend,
+  cilSearch,
   cilFilter,
   cilListFilter,
   cibMessenger, //myimport
@@ -145,6 +148,9 @@ export const icons = Object.assign(
     logoNegative,
   },
   {
+    cilImagePlus,
+    cilSend,
+    cilSearch,
     cilCommentBubble,
     cilListFilter,
     cilHeart,

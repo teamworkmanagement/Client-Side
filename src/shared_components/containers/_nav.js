@@ -80,8 +80,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Quản lý công việc",
-    route: "/buttons",
-    to: "/dashboard2",
+    to: "/chats",
     icon: "cib-stackoverflow",
   },
 

@@ -2,6 +2,11 @@
 //$sidebar-width: auto;
 .c-main{
     position:relative;
+    padding:0px !important;
+    .container-fluid{
+        height:inherit;
+        padding:0px !important;
+    }
 }
 
 .c-sidebar{
@@ -11,7 +16,7 @@
         .c-sidebar-nav-item{
             
             .c-sidebar-nav-link{
-                width:20rem;
+                //width:20rem;
                 .c-avatar-img{
                     width: 2rem  !important;
                     height: 2rem !important;
@@ -26,15 +31,15 @@
         }
     }
     @media (min-width: 992px) {
-        width:20rem !important;
+        //width:20rem !important;
     }
     
 }
 
 .c-wrapper{
-     margin-left: 0 !important;
+     //margin-left: 0 !important;
      @media (min-width: 992px) {
-         margin-left:20rem !important;
+         //margin-left:20rem !important;
      }
 }
 

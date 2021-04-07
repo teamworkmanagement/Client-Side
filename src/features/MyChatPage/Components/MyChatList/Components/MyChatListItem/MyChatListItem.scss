@@ -1,0 +1,112 @@
+.item-container{
+    background-color: #fff;
+    display:flex;
+    justify-content:flex-start;
+    border: 1px solid #d8dbe0;
+    padding:0.5rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    height:3.8rem;
+    position:relative;
+    align-items:center;
+    overflow: hidden;
+    &:hover{
+        background-color:#3c4b641f;
+        transform: scale(1.03,1.03);
+    }
+    .chat-item-avatar{
+        
+        margin-right:0.5rem;
+        width:3rem;
+        height:3rem;
+        img{
+            border-radius:50px;
+            width:3rem;
+            height:3rem;
+        }
+    }
+
+    .item-content{
+        display:flex;
+        flex-direction:column;
+        width:10px;
+        flex-grow: 1;
+        .item-content-header{
+            margin-bottom: 0.1rem;
+            display:flex;
+            justify-content:space-between;
+            .chat-name{
+                font-weight: bold;
+                overflow:hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .chat-last-time{
+                font-size: 90%;
+                overflow:hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+        .item-content-body{
+            margin-top: 0.1rem;
+            display:flex;
+            justify-content:space-between;
+            .chat-messagge{
+                overflow:hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                
+            }
+            .chat-noti{
+                .badge {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.item-container.new-message{
+   
+
+    .item-content{
+        
+        .item-content-body{
+           
+            .chat-messagge{
+                font-weight: bold;
+                
+            }
+            .chat-noti{
+                .badge {
+                    display: inline-block !important;
+                }
+            }
+        }
+    }
+}
+
+.item-container.selected{
+    background-color: #3C4B64;
+    color:#fff;
+    .item-content{
+        .item-content-header{
+            .chat-name{
+                
+            }
+            .chat-last-time{
+                
+            }
+        }
+        .item-content-body{
+            .chat-messagge{
+                
+            }
+            .chat-noti{
+            }
+        }
+    }
+}
