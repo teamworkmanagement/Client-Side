@@ -32,28 +32,44 @@ function CommentList(props) {
 
   useEffect(() => {
     async function getComments() {
-      const comments = await commentApi.getAllCommentForPost(props.postId);
-      console.log(comments);
-      setComments(comments.data);
+      const params = {
+        PostId: props.postId,
+        PageSize: 1,
+        SkipItems: 0,
+      }
+      const comments = await commentApi.getPagination(params);
+      console.log('comments laf : ', comments);
+      setComments(comments.data.items);
     }
 
     getComments();
   }, []);
 
+
+  const loadMore = async () => {
+    const params = {
+      PostId: props.postId,
+      PageSize: 3,
+      SkipItems: cmtLists.length,
+    }
+    const comments = await commentApi.getPagination(params);
+    if (comments.data.items.length <= 0) return;
+    setComments([...cmtLists].concat(comments.data.items));
+  }
   return (
     <div>
-    <div className="comment-list">
-      {cmtLists.map(function (item, index) {
-        return <Comment key={index} data={item} />;
-      })}
-      
+      <div className="comment-list">
+        {cmtLists.map(function (item, index) {
+          return <Comment key={index} data={item} />;
+        })}
+
+      </div>
+      <div className="load-more">
+        <div onClick={loadMore}>Xem thêm</div>
+        <div className="rotate">&#171;</div>
+      </div>
     </div>
-    <div className="load-more">
-      <div>Xem thêm</div>
-      <div className="rotate">&#171;</div>
-    </div>
-    </div>
-    
+
   );
 }
 
