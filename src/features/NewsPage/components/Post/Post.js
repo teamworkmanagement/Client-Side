@@ -9,7 +9,7 @@ import CommentList from "../CommentList/CommentList";
 import LoadMore from "../LoadMore/LoadMore";
 import MyComment from "../MyComment/MyComment";
 
-const Post = () => {
+const Post = (props) => {
   // render
   return (
     <CRow>
@@ -19,27 +19,23 @@ const Post = () => {
             <div className="author-infor">
               <div className="author-avatar c-avatar">
                 <img
-                  src={"avatars/1.jpg"}
+                  src={props.postObj.userAvatar}
                   className="c-avatar-img"
-                  alt="admin@bootstrapmaster.com"
+                  alt="avatar"
                 />
               </div>
-              <div className="author-name">Card with label</div>
+              <div className="author-name">{props.postObj.userName}</div>
             </div>
-            <div className="post-date ">12/03/2021</div>
+            <div className="post-date ">{props.postObj.postCreatedAt}</div>
           </CCardHeader>
           <CCardBody>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-            nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
-            volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation
-            ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
-            consequat.
+            {props.postObj.postContent}
           </CCardBody>
-          <ContentToolBar />
+          <ContentToolBar comments={props.postObj.postCommentCount}/>
           <Divider />
           <MyComment />
-          <CommentList />
-          <LoadMore />
+          <CommentList postId={props.postObj.postId}/>
+          {/*<LoadMore />*/}
         </CCard>
       </CCol>
     </CRow>

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./CommentList.scss";
 import Comment from "../Comment/Comment";
+import commentApi from "src/api/commentApi";
 CommentList.propTypes = {};
 
 function CommentList(props) {
@@ -26,12 +27,49 @@ function CommentList(props) {
       date: "16/04/2021",
     },
   ];
+
+  const [cmtLists, setComments] = useState([]);
+
+  useEffect(() => {
+    async function getComments() {
+      const params = {
+        PostId: props.postId,
+        PageSize: 1,
+        SkipItems: 0,
+      }
+      const comments = await commentApi.getPagination(params);
+      console.log('comments laf : ', comments);
+      setComments(comments.data.items);
+    }
+
+    getComments();
+  }, []);
+
+
+  const loadMore = async () => {
+    const params = {
+      PostId: props.postId,
+      PageSize: 3,
+      SkipItems: cmtLists.length,
+    }
+    const comments = await commentApi.getPagination(params);
+    if (comments.data.items.length <= 0) return;
+    setComments([...cmtLists].concat(comments.data.items));
+  }
   return (
-    <div className="comment-list">
-      {commentList.map(function (item, index) {
-        return <Comment key={index} data={item} />;
-      })}
+    <div>
+      <div className="comment-list">
+        {cmtLists.map(function (item, index) {
+          return <Comment key={index} data={item} />;
+        })}
+
+      </div>
+      <div className="load-more">
+        <div onClick={loadMore}>Xem thêm</div>
+        <div className="rotate">&#171;</div>
+      </div>
     </div>
+
   );
 }
 
