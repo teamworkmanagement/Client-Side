@@ -1,3 +1,5 @@
+@import "../../../../shared_components/scss/style.scss";
+
 $search-border-radius:10px;
 .chat-list-container{
     position:relative;
@@ -23,7 +25,7 @@ $search-border-radius:10px;
             //height:inherit;
             
             .btn{
-                background-color: #3C4B64;
+                @include background-color-theme;
                 color:white;
                 border-top-right-radius: $search-border-radius;
                 border-bottom-right-radius: $search-border-radius;

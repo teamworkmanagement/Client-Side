@@ -147,6 +147,7 @@ function MyChatList(props) {
             <MyChatListItem
               key={index}
               data={item}
+              animationDelay={index + 3}
               hanelSelectItem={hanelSelectItem}
             ></MyChatListItem>
           );

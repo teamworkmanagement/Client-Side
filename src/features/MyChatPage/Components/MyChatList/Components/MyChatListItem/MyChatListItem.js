@@ -5,7 +5,7 @@ import { CBadge } from "@coreui/react";
 MyChatListItem.propTypes = {};
 
 function MyChatListItem(props) {
-  const hanelSelect = () => {
+  const handelSelect = () => {
     if (props.hanelSelectItem) {
       props.hanelSelectItem(props.data.id);
     }
@@ -13,11 +13,12 @@ function MyChatListItem(props) {
 
   return (
     <div
-      onClick={() => hanelSelect()}
+      onClick={() => handelSelect()}
       className={`item-container ${props.data.isNew ? "new-message" : ""} ${
         props.data.isSelected ? "selected" : ""
       }
       `}
+      style={{ animationDelay: `0.${props.animationDelay}s` }}
     >
       <div className="chat-item-avatar">
         <img alt="" src={props.data.avatar} />

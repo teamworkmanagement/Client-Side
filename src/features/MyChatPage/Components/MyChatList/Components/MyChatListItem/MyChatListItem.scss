@@ -1,4 +1,33 @@
+@import "../../../../../../shared_components/scss/style.scss";
+@keyframes  ShowIn{
+	0% {
+		transform: scale(0);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes showInChatItem {
+    from   { opacity:0;transform : translateY(60px) }
+    to  { opacity:1;transform : translateY(0px) }
+  }
+
+@mixin ListChatItemApear{
+    transition: all 0.3s ease-out;
+	transform: scale(0);
+	animation-name: showInChatItem;
+	animation-duration: 0.3s;
+	animation-iteration-count: 1;
+	animation-direction: normal;
+	animation-timing-function: ease;
+	animation-fill-mode: both;
+	animation-delay: 0.3s;
+    transform-origin: bottom;
+}
+
 .item-container{
+    @include ListChatItemApear;
     background-color: #fff;
     display:flex;
     justify-content:flex-start;
@@ -90,7 +119,7 @@
 }
 
 .item-container.selected{
-    background-color: #3C4B64;
+    @include background-color-theme;
     color:#fff;
     .item-content{
         .item-content-header{

@@ -1,7 +1,29 @@
+@import "../../../../../../shared_components/scss/style.scss";
 $normal-border-radius:20px;
 $not-normal-border-radius:6px;
 $message-font-weight:500;
 
+@keyframes showIn {
+	0% {
+		transform: scale(0);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@mixin Appear{
+    transition: all 0.3s ease;
+	transform: scale(0);
+	transform-origin: left;
+	animation-name: showIn;
+	animation-duration: 0.3s;
+	animation-iteration-count: 1;
+	animation-direction: normal;
+	animation-timing-function: ease-in;
+	animation-fill-mode: both;
+	animation-delay: 0.4s;
+}
   
 .message-list{
     overflow-y: scroll;
@@ -11,9 +33,11 @@ $message-font-weight:500;
    
 }
 .message-item-container{
+    
     padding:0.5rem;
     display:flex;
     align-items: flex-end;
+    
     .avatar{
         margin: 0rem 0.2rem;
         padding: 0px;
@@ -21,6 +45,7 @@ $message-font-weight:500;
         height:2rem;
     }
     .message-content{
+        @include Appear;
         margin: 0rem 0.2rem;
         margin-right: 3rem;
         display:flex;
@@ -85,21 +110,24 @@ $message-font-weight:500;
 
 .message-item-container.mine{
     flex-direction: row-reverse;
+    
     .avatar{
         display:none;
     }
     .message-content{
+        transform-origin: right;
         margin: 0rem 0.2rem;
         flex-direction:column;
         align-items: flex-end;
         margin-left: 3rem;
         .message-text{
+            @include background-color-theme;
             font-weight: $message-font-weight;
             padding:0.5rem 0.7rem;
             width:fit-content;
             border-radius: $normal-border-radius;
             color:#FAFAFA;
-        background-color:#3C4B64;
+            
         }
         .message-time{
             padding:0rem 0.1rem;

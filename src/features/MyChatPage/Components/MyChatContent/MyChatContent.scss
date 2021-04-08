@@ -1,3 +1,4 @@
+@import "../../../../shared_components/scss/style.scss";
 $media-btn-padding:0.5rem;
 .chat-content-container{
     border-radius: 10px;
@@ -6,11 +7,12 @@ $media-btn-padding:0.5rem;
     display:flex;
     flex-direction:column;
     .chat-content-header{
+        @include background-color-theme;
         display:flex;
         justify-content:space-between;
         align-items:center;
         padding:0.7rem;
-        background-color:#3C4B64;
+        
         border-top-left-radius:10px ;
         border-top-right-radius:10px ;
         box-shadow: 0px 2px 6px 1px rgba(black , 0.20);
@@ -41,8 +43,8 @@ $media-btn-padding:0.5rem;
             .member-count{
                 margin-left:0.5rem;
             }
-            .vertical-devider{
-                background-color: #5b6068;
+            .vertical-divider{
+                background-color: white;
                 width:0.1rem;
                 height:1.5rem;
                 margin-left:0.5rem;
@@ -58,7 +60,7 @@ $media-btn-padding:0.5rem;
     }
     .chat-content-footer{
         box-shadow: 0px -2px 6px 1px rgba(black , 0.20);
-        background-color:white;
+        
         display: flex;
         padding:0.5rem;
         
@@ -100,6 +102,7 @@ $media-btn-padding:0.5rem;
 
         }
         .send-btn{
+            @include background-color-theme;
             display:flex;
             align-items:center;
             padding: 0.5rem;
@@ -107,7 +110,7 @@ $media-btn-padding:0.5rem;
             color:#FAFAFA;
             border-radius:50px;
             cursor: pointer;
-            background-color:#3C4B64;
+            
             transition: all 0.2s;
             .c-icon{
                 width:1.3rem  ;

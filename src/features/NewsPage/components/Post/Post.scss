@@ -1,8 +1,14 @@
-.card{
+.post-item{
+    background-color:white;
+    border-radius: 10px;
+    margin-bottom: 1rem !important;
+    border-radius: 10px !important;
     .card-header{
         display:flex;
         justify-content: space-between;
         border:none;
+        border-top-left-radius: 10px !important;
+        border-top-right-radius: 10px !important;
         .author-infor{
             display:flex;
             align-items: center;

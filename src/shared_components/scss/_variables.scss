@@ -1,5 +1,36 @@
 // Variable overrides
 //$sidebar-width: auto;
+$app-theme:red;
+// @mixin background-color-theme {
+//     background: rgb(16,228,254);
+//     background: linear-gradient(30deg, rgba(16,228,254,1) 0%, rgba(156,86,254,1) 63%, rgba(242,123,253,1) 100%);
+// }
+@mixin background-color-theme {
+    background: #3399FF;
+}
+
+
+
+@mixin PaddingForLeftPanel{
+    padding:2rem 1rem 2rem 2rem;
+    @media (max-width:992px){
+        padding:1rem 0.5rem 1rem 1rem;
+    }
+}
+@mixin PaddingForRightPanel{
+    padding:2rem 2rem 2rem 1rem;
+    @media (max-width:992px){
+        padding:1rem 1rem 1rem 0.5rem;
+    }
+}
+
+
+
+
+
+
+
+//$gray-base:$app-theme;
 .c-main{
     position:relative;
     padding:0px !important;

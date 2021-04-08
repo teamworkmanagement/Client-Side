@@ -22,7 +22,7 @@ function MyChatContent(props) {
         <div className="chat-infor">
           <CIcon name="cil-group" />
           <div className="member-count">2</div>
-          <div className="vertical-devider"></div>
+          <div className="vertical-divider"></div>
           <div className="last-message-time">6 giờ</div>
         </div>
       </div>

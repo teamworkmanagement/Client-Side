@@ -146,6 +146,7 @@ function MessageList(props) {
         ) : (
           <div
             key={index}
+            animationDelay={index + 2}
             className={`message-item-container ${
               item.class ? item.class : ""
             } ${item.isMine ? "mine" : ""} `}

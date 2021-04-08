@@ -43,6 +43,7 @@
 	justify-content: flex-end;
 	align-items: flex-end;
 	margin-bottom: 15px;
+
 	transition: all 0.3s ease;
 	transform: scale(0);
 	transform-origin: right;
@@ -53,6 +54,7 @@
 	animation-timing-function: cubic-bezier( 0.88, 0.19, 0.37, 1.11 );
 	animation-fill-mode: both;
 	animation-delay: 0.2s;
+	
 	.avatar {
 		margin-right: 0px;
 		margin-left: 20px;
