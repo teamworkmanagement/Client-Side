@@ -1,7 +1,7 @@
 import React from "react";
 import ChatPage from "./features/ChatPage/ChatPage";
 import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
-import MyChatPage from "./features/MyChatPage/MyChatPage";
+import MyChatPage from "./features/ChatPage/ChatPage";
 import NewsPage from "./features/NewsPage/NewsPage";
 
 const Toaster = React.lazy(() =>
