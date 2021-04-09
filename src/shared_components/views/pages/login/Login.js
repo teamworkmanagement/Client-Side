@@ -21,6 +21,7 @@ import { facebookProvider, googleProvider } from 'src/utils/firebase/authMethods
 import authApi from 'src/api/authApi';
 import { useDispatch } from 'react-redux';
 import { login, socialLogin } from './authSlice';
+import { setCurrentPostPage } from 'src/appSlice';
 
 const Login = () => {
   const history = useHistory();
@@ -56,6 +57,7 @@ const Login = () => {
   }*/ (e) => {
       e.preventDefault();
       dispatch(login(loginObject));
+      dispatch(setCurrentPostPage());
     }
 
   const loginFacebook = async () => {
