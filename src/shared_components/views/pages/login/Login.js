@@ -22,6 +22,7 @@ import authApi from 'src/api/authApi';
 import { useDispatch } from 'react-redux';
 import { login, socialLogin } from './authSlice';
 import { setCurrentPostPage } from 'src/appSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const Login = () => {
   const history = useHistory();
@@ -39,26 +40,14 @@ const Login = () => {
     });
   }
 
-  const onSubmit = /*async (e) => {
-    try {
-      e.preventDefault();
-      console.log(loginObject);
-      const data = {
-        fullName: "string",
-        email: "dunghkuit@gmail.com",
-        password: "string1",
-        confirmPassword: "string"
-      }
-      await authApi.register(data);
-    } catch (error) {
-      console.log(error);
-    }
-
-  }*/ (e) => {
-      e.preventDefault();
-      dispatch(login(loginObject));
-      dispatch(setCurrentPostPage());
-    }
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const out = await dispatch(login(loginObject));
+    const outPut = unwrapResult(out);
+    console.log('output unwrap là: ', outPut);
+    if (localStorage.getItem('access_token'))
+      history.push('/dashboard');
+  }
 
   const loginFacebook = async () => {
     const res = await socialMediaAuth(facebookProvider);
@@ -120,8 +109,12 @@ const Login = () => {
     catch (error) {
       console.log(error);
     }*/
-    dispatch(socialLogin(data));
+    const outSocial = await dispatch(socialLogin(data));
 
+    const outPutSocial = unwrapResult(outSocial);
+    console.log('output unwrap là: ', outPutSocial);
+    if (localStorage.getItem('access_token'))
+      history.push('/dashboard');
   }
 
   return (

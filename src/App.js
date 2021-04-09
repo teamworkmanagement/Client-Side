@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import "./shared_components/scss/style.scss";
+import PrivateRoute from "./shared_components/team_route/PrivateRoute";
+import PublicRoute from "./shared_components/team_route/PublicRoute";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -33,7 +36,10 @@ class App extends Component {
       <BrowserRouter>
         <React.Suspense fallback={loading}>
           <Switch>
-            <Route
+            <PublicRoute restricted={true} component={Register} path="/register" exact />
+            <PublicRoute restricted={true} component={Login} path="/login" exact />
+            
+            {/*<Route
               exact
               path="/login"
               name="Login Page"
@@ -44,7 +50,7 @@ class App extends Component {
               path="/register"
               name="Register Page"
               render={(props) => <Register {...props} />}
-            />
+            />*/}
             <Route
               exact
               path="/404"
