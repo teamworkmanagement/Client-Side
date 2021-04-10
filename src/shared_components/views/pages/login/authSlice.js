@@ -50,6 +50,9 @@ const authSlice = createSlice(
         reducers: {
             setAuth: (state) => {
                 state.loginStatus = !state.loginStatus;
+            },
+            setAuthF: (state) => {
+                state.loginStatus = false;
             }
         },
         extraReducers: {
@@ -87,5 +90,5 @@ const authSlice = createSlice(
 );
 
 const { actions, reducer } = authSlice;
-export const { setAuth } = actions;
+export const { setAuth, setAuthF } = actions;
 export default reducer; // default export

@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { refreshToken } from 'src/utils/auth';
+import { setAuthF } from 'src/shared_components/views/pages/login/authSlice';
+import { refreshToken, refreshTokenFunc } from 'src/utils/auth';
+import store from '../app/store';
 
 axios.defaults.withCredentials = true;
 
@@ -33,27 +35,36 @@ axiosClient.interceptors.response.use(function (response) {
   const originalRequest = err.config;
   if (err.response) {
     // client received an error response (5xx, 4xx)
-    console.log('cc1 res', err.response);
-    console.log('cc1 data', err.response.data);
+    //console.log('er1 res', err.response);
+    //console.log('er1 data', err.response.data);
     if (err.response.data.status) {
-      console.log('cc1status', err.response.data.status);
+      //console.log('er1status', err.response.data.status);
     }
     return Promise.reject(err.response.data);
-  } else if (err.request) {
+  }
+  else if (err.request) {
     // client never received a response, or request never left 
-    console.log('cc2', err.request.response);
-    const object = JSON.parse(err.request.response);
-    return axios.post('https://localhost:9001/api/account/refresh').then(response => {
-      console.log('config cũ: ', err.response.config);
-      return axios(err.response.config);
+    //console.log('er2', err.request.response);
+    return refreshTokenFunc().then(data => {
+      return new Promise((resolve, reject) => {
+        axiosClient.request(err.config).then(res => {
+          resolve(res);
+        }).catch(err => {
+          reject(err);
+        })
+      })
     }).catch(error => {
-
-      //router.push('/login');
+      console.log('error next: ', error);
+      store.dispatch(setAuthF());
       return Promise.reject(error);
-    })
-    return Promise.reject(object);
-  } else {
-    console.log('cc3', err);
+    });
+
+    /*const output = refreshToken();
+    if (output)
+      return axiosClient(err.config);*/
+  }
+  else {
+    console.log('er3', err);
   }
   return Promise.reject(err);
 

@@ -10,17 +10,19 @@ import storage from 'redux-persist/lib/storage';
 import appReducer from '../appSlice';
 import { combineReducers } from "redux";
 import authReducer from '../shared_components/views/pages/login/authSlice';
+import testReducer from '../api/testSlice';
 
 const persistConfig = {
     key: 'root',
     version: 1,
     storage,
-    blacklist: ['app'],
+    blacklist: ['app', 'test'],
 }
 
 const rootReducer = combineReducers({
     app: appReducer,
     auth: authReducer,
+    test: testReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

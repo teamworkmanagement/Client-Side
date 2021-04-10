@@ -77,14 +77,18 @@ import "./PostList.scss";
 import Post from "../Post/Post";
 import testApi from "src/api/testApi";
 import { refreshToken } from "src/utils/auth";
+import { useDispatch } from "react-redux";
+import { getTest } from "src/api/testSlice";
 PostList.propTypes = {};
 
 function PostList(props) {
+  const dispatch = useDispatch();
   const onButtonClick = async () => {
     try {
-      await testApi.getTest();
+      const outPut = await testApi.getTest();
+      console.log('post gettest: ', outPut);
     } catch (error) {
-      console.log('postlist :', error);
+      console.log(error);
     }
   }
 
