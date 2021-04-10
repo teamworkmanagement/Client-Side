@@ -19,7 +19,7 @@ import './Login.scss';
 import socialMediaAuth from 'src/utils/firebase/authSocial';
 import { facebookProvider, googleProvider } from 'src/utils/firebase/authMethods';
 import authApi from 'src/api/authApi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login, socialLogin } from './authSlice';
 import { setCurrentPostPage } from 'src/appSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -27,6 +27,8 @@ import { unwrapResult } from '@reduxjs/toolkit';
 const Login = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const authStatus = useSelector(state => state.auth.loginStatus);
 
   const [loginObject, setLoginObject] = useState({
     email: '',
@@ -42,10 +44,8 @@ const Login = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const out = await dispatch(login(loginObject));
-    const outPut = unwrapResult(out);
-    console.log('output unwrap là: ', outPut);
-    if (localStorage.getItem('access_token'))
+    await dispatch(login(loginObject));
+    if (authStatus)
       history.push('/dashboard');
   }
 
@@ -109,11 +109,10 @@ const Login = () => {
     catch (error) {
       console.log(error);
     }*/
-    const outSocial = await dispatch(socialLogin(data));
+    await dispatch(socialLogin(data));
 
-    const outPutSocial = unwrapResult(outSocial);
-    console.log('output unwrap là: ', outPutSocial);
-    if (localStorage.getItem('access_token'))
+    if (authStatus)
+
       history.push('/dashboard');
   }
 

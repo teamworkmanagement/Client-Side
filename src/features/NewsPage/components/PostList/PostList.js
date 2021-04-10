@@ -75,11 +75,27 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./PostList.scss";
 import Post from "../Post/Post";
+import testApi from "src/api/testApi";
+import { refreshToken } from "src/utils/auth";
 PostList.propTypes = {};
 
 function PostList(props) {
+  const onButtonClick = async () => {
+    try {
+      await testApi.getTest();
+    } catch (error) {
+      console.log('postlist :', error);
+    }
+  }
+
+  const onButtonClick1 = () => {
+    refreshToken();
+  }
+
   return (
     <div className="">
+      <button onClick={onButtonClick}>Test token</button>
+      <button onClick={onButtonClick1}>Test refresh token</button>
       <Post />
       <Post />
       <Post />

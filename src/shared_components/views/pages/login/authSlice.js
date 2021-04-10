@@ -31,16 +31,27 @@ export const login = createAsyncThunk(
     }
 );
 
+export const islogin = createAsyncThunk(
+    'auth/isLogin',
+    async () => {
+        const data = await authApi.isLogin();
+        console.log('data redux là: ', data);
+        return data;
+    }
+);
 
 const authSlice = createSlice(
     {
         name: 'user',
         initialState: {
-            currentUser: {
-
-            },
+            currentUser: {},
+            loginStatus: false,
         },
-        reducers: {},
+        reducers: {
+            setAuth: (state) => {
+                state.loginStatus = !state.loginStatus;
+            }
+        },
         extraReducers: {
             [register.fulfilled]: (state, action) => {
                 console.log('register fullfilled: ', action.payload);
@@ -49,23 +60,32 @@ const authSlice = createSlice(
                 console.log('register rejected: ', action.payload);
             },
             [login.rejected]: (state, action) => {
-                console.log('login reject: ', JSON.parse(action.error.message));
+
             },
             [login.fulfilled]: (state, action) => {
 
                 const { id, fullName, email, userAvatar } = action.payload;
                 state.currentUser = { id, fullName, email, userAvatar };
+                state.loginStatus = true;
             },
             [socialLogin.fulfilled]: (state, action) => {
                 const { id, fullName, email, userAvatar } = action.payload;
                 state.currentUser = { id, fullName, email, userAvatar };
+                state.loginStatus = true;
             },
             [socialLogin.rejected]: (state, action) => {
                 console.log('social rejected: ', action.payload);
+            },
+            [islogin.fulfilled]: (state, action) => {
+                state.loginStatus = action.payload.data === "UnAuth" ? false : true;
+            },
+            [islogin.rejected]: (state, action) => {
+
             }
         },
     }
 );
 
-const { reducer } = authSlice;
+const { actions, reducer } = authSlice;
+export const { setAuth } = actions;
 export default reducer; // default export
