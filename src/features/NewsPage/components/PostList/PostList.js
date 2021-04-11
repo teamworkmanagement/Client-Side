@@ -76,13 +76,9 @@ import PropTypes from "prop-types";
 import "./PostList.scss";
 import Post from "../Post/Post";
 import testApi from "src/api/testApi";
-import { refreshToken } from "src/utils/auth";
-import { useDispatch } from "react-redux";
-import { getTest } from "src/api/testSlice";
 PostList.propTypes = {};
 
 function PostList(props) {
-  const dispatch = useDispatch();
   const onButtonClick = async () => {
     try {
       const outPut = await testApi.getTest();
@@ -92,14 +88,9 @@ function PostList(props) {
     }
   }
 
-  const onButtonClick1 = () => {
-    refreshToken();
-  }
-
   return (
     <div className="">
       <button onClick={onButtonClick}>Test token</button>
-      <button onClick={onButtonClick1}>Test refresh token</button>
       <Post />
       <Post />
       <Post />

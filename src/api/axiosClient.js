@@ -37,10 +37,12 @@ axiosClient.interceptors.response.use(function (response) {
     // client received an error response (5xx, 4xx)
     //console.log('er1 res', err.response);
     //console.log('er1 data', err.response.data);
-    if (err.response.data.status) {
-      //console.log('er1status', err.response.data.status);
-    }
-    return Promise.reject(err.response.data);
+
+    console.log('er1status', err.response);
+    if (err.response.status === 401)
+      store.dispatch(setAuthF());
+
+    return Promise.reject(err.response);
   }
   else if (err.request) {
     // client never received a response, or request never left 

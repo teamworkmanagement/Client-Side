@@ -48,7 +48,7 @@ export const refreshToken = () => {
 }
 
 export const refreshTokenFunc = () => {
-    return axiosClient.post("https://localhost:9001/api/account/refresh").then(function (response) {
+    return axiosClient.post("/account/refresh").then(function (response) {
         return response;
     });
 }
