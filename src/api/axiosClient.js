@@ -45,23 +45,21 @@ axiosClient.interceptors.response.use(function (response) {
   else if (err.request) {
     // client never received a response, or request never left 
     //console.log('er2', err.request.response);
-    return refreshTokenFunc().then(data => {
-      return new Promise((resolve, reject) => {
-        axiosClient.request(err.config).then(res => {
-          resolve(res);
-        }).catch(err => {
-          reject(err);
+    if (getCookie('TokenExpired') === "true") {
+      return refreshTokenFunc().then(data => {
+        return new Promise((resolve, reject) => {
+          axiosClient.request(err.config).then(res => {
+            resolve(res);
+          }).catch(err => {
+            reject(err);
+          })
         })
-      })
-    }).catch(error => {
-      console.log('error next: ', error);
-      store.dispatch(setAuthF());
-      return Promise.reject(error);
-    });
-
-    /*const output = refreshToken();
-    if (output)
-      return axiosClient(err.config);*/
+      }).catch(error => {
+        console.log('error next: ', error);
+        store.dispatch(setAuthF());
+        return Promise.reject(error);
+      });
+    }
   }
   else {
     console.log('er3', err);
@@ -69,5 +67,12 @@ axiosClient.interceptors.response.use(function (response) {
   return Promise.reject(err);
 
 });
+
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 export default axiosClient;
