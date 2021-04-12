@@ -53,6 +53,9 @@ const authSlice = createSlice(
             },
             setAuthF: (state) => {
                 state.loginStatus = false;
+            },
+            setValueAuth: (state, action) => {
+                state.loginStatus = action.payload;
             }
         },
         extraReducers: {
@@ -90,5 +93,5 @@ const authSlice = createSlice(
 );
 
 const { actions, reducer } = authSlice;
-export const { setAuth, setAuthF } = actions;
+export const { setAuth, setAuthF, setValueAuth } = actions;
 export default reducer; // default export

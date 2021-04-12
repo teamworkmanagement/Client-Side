@@ -76,21 +76,33 @@ import PropTypes from "prop-types";
 import "./PostList.scss";
 import Post from "../Post/Post";
 import testApi from "src/api/testApi";
-PostList.propTypes = {};
+import store from '../../../../app/store';
+import { setTest } from "src/api/testSlice";
+import { setValueAuth } from "src/shared_components/views/pages/login/authSlice";
 
+PostList.propTypes = {};
 function PostList(props) {
+
   const onButtonClick = async () => {
     try {
       const outPut = await testApi.getTest();
       console.log('post gettest: ', outPut);
     } catch (error) {
-      console.log(error);
+      console.log('error postlist : ', error);
     }
+    //store.dispatch(setTest(true));
+  }
+
+  const onLogout = () => {
+    document.cookie = `backup=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    document.cookie = `TokenExpired=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    store.dispatch(setValueAuth(false));
   }
 
   return (
     <div className="">
       <button onClick={onButtonClick}>Test token</button>
+      <button onClick={onLogout}>Log out</button>
       <Post />
       <Post />
       <Post />

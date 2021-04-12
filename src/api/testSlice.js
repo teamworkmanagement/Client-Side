@@ -15,8 +15,14 @@ export const getTest = createAsyncThunk(
 const testSlice = createSlice(
     {
         name: 'test',
-        initialState: {},
-        reducers: {},
+        initialState: {
+            testBool: false,
+        },
+        reducers: {
+            setTest: (state, action) => {
+                state.testBool = action.payload;
+            }
+        },
         extraReducers: {
             [getTest.fulfilled]: (state, action) => {
                 console.log('get test fullfill');
@@ -28,5 +34,6 @@ const testSlice = createSlice(
     }
 );
 
-const { reducer } = testSlice;
+const { actions, reducer } = testSlice;
+export const { setTest } = actions;
 export default reducer; // default export

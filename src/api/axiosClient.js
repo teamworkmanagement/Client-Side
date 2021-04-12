@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { setAuthF } from 'src/shared_components/views/pages/login/authSlice';
-import { refreshToken, refreshTokenFunc } from 'src/utils/auth';
+import { setValueAuth } from 'src/shared_components/views/pages/login/authSlice';
+import { refreshTokenFunc } from 'src/utils/auth';
 import store from '../app/store';
 
 axios.defaults.withCredentials = true;
@@ -40,7 +40,7 @@ axiosClient.interceptors.response.use(function (response) {
 
     console.log('er1status', err.response);
     if (err.response.status === 401)
-      store.dispatch(setAuthF());
+      store.dispatch(setValueAuth(false));
 
     return Promise.reject(err.response);
   }
@@ -51,14 +51,16 @@ axiosClient.interceptors.response.use(function (response) {
       return refreshTokenFunc().then(data => {
         return new Promise((resolve, reject) => {
           axiosClient.request(err.config).then(res => {
+            delete_cookie('TokenExpired');
             resolve(res);
           }).catch(err => {
+            delete_cookie('TokenExpired');
             reject(err);
           })
         })
       }).catch(error => {
         console.log('error next: ', error);
-        store.dispatch(setAuthF());
+        store.dispatch(setValueAuth(false));
         return Promise.reject(error);
       });
     }
@@ -75,6 +77,10 @@ function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function delete_cookie(name) {
+  document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
 export default axiosClient;

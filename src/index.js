@@ -15,6 +15,7 @@ import store from './app/store';
 import persistStore from 'redux-persist/es/persistStore';
 import { PersistGate } from 'redux-persist/integration/react';
 
+
 React.icons = icons
 
 const persistor = persistStore(store);
