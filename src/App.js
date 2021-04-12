@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import "./shared_components/scss/style.scss";
@@ -34,9 +34,13 @@ const Page500 = React.lazy(() =>
 
 function App() {
   const dispatch = useDispatch();
+  const loginStatus = useSelector(state => state.auth.loginStatus);
   useEffect(() => {
-    dispatch(islogin());
-  }, [])
+    const cloneStatus = !!loginStatus;
+    if (!cloneStatus)
+      dispatch(islogin());
+  }, []);
+
   return (
     <BrowserRouter>
       <React.Suspense fallback={loading}>
