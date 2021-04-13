@@ -1,6 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import "./shared_components/scss/style.scss";
+import PrivateRoute from "./shared_components/team_route/PrivateRoute";
+import PublicRoute from "./shared_components/team_route/PublicRoute";
+import { islogin } from "./shared_components/views/pages/login/authSlice";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -27,13 +32,23 @@ const Page500 = React.lazy(() =>
   import("./shared_components/views/pages/page500/Page500")
 );
 
-class App extends Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <React.Suspense fallback={loading}>
-          <Switch>
-            <Route
+function App() {
+  const dispatch = useDispatch();
+  const loginStatus = useSelector(state => state.auth.loginStatus);
+  useEffect(() => {
+    const cloneStatus = !!loginStatus;
+    if (!cloneStatus)
+      dispatch(islogin());
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <React.Suspense fallback={loading}>
+        <Switch>
+          <PublicRoute restricted={true} component={Register} path="/register" exact />
+          <PublicRoute restricted={true} component={Login} path="/login" exact />
+
+          {/*<Route
               exact
               path="/login"
               name="Login Page"
@@ -44,29 +59,27 @@ class App extends Component {
               path="/register"
               name="Register Page"
               render={(props) => <Register {...props} />}
-            />
-            <Route
-              exact
-              path="/404"
-              name="Page 404"
-              render={(props) => <Page404 {...props} />}
-            />
-            <Route
-              exact
-              path="/500"
-              name="Page 500"
-              render={(props) => <Page500 {...props} />}
-            />
-            <Route
-              path="/"
-              name="Home"
-              render={(props) => <TheLayout {...props} />}
-            />
-          </Switch>
-        </React.Suspense>
-      </BrowserRouter>
-    );
-  }
+            />*/}
+          <Route
+            exact
+            path="/404"
+            name="Page 404"
+            render={(props) => <Page404 {...props} />}
+          />
+          <Route
+            exact
+            path="/500"
+            name="Page 500"
+            render={(props) => <Page500 {...props} />}
+          />
+          <Route
+            path="/"
+            name="Home"
+            render={(props) => <TheLayout {...props} />}
+          />
+        </Switch>
+      </React.Suspense>
+    </BrowserRouter>
+  );
 }
-
 export default App;

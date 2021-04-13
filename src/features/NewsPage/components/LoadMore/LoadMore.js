@@ -7,7 +7,7 @@ function LoadMore(props) {
   return (
     <div className="load-more">
       <div>Xem thêm</div>
-      <div class="rotate">&#171;</div>
+      <div className="rotate">&#171;</div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { setCurrentPostPage } from "src/appSlice";
 
 PostList.propTypes = {};
 
+PostList.propTypes = {};
 function PostList(props) {
   const [listPosts, setListPosts] = useState([]);
   const dispatch = useDispatch();
