@@ -13,8 +13,7 @@ function ContentToolBar(props) {
       <div className="heart-count count">12</div>
 
       <CIcon name="cil-comment-bubble" />
-      <div className="comment-count count">12</div>
-      {/* <div className="comment-count count">{props.comments}</div> */}
+      <div className="comment-count count">{props.comments}</div>
     </div>
   );
 }

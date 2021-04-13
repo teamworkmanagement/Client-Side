@@ -59,6 +59,8 @@ $message-font-weight:500;
             border-radius: $normal-border-radius;
             &:hover{
                 background-color:#C4C6CA;
+                transition-delay:1s;
+
             }
             
         }

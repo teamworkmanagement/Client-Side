@@ -1,96 +1,155 @@
-import React from "react";
-import "./ChatList.scss";
-import ChatListItems from "./ChatListItems";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+import "./ChatList.scss";
 import { CInputGroup, CInput, CInputGroupAppend, CButton } from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import MyChatListItem from "./Components/ChatListItem/ChatListItem";
+MyChatList.propTypes = {};
 
-ChatList.propTypes = {};
-
-ChatList.defaultProps = {};
-
-function ChatList(props) {
-  const groupsChat = [
+function MyChatList(props) {
+  const initChatList = [
     {
-      name: "khoa",
-      active: false,
-      isOnline: true,
-      image:
+      id: "1",
+      avatar:
         "https://noidangsong.vn/files/uploads/fb1735058496563345/1526444239-tt_avatar_small.jpg",
-      groupId: "1",
-      status: "ok",
+      chatName: "Khoa",
+      lastestMessage: "Hello tao là khoa nè thằng quỷ",
+      lastestTime: "42 phút",
+      isNew: false,
+      isSelected: true,
     },
     {
-      name: "dũng",
-      active: true,
-      isOnline: false,
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      groupId: "2",
-      status: "ok",
+      id: "2",
+      avatar:
+        "https://www.pngjoy.com/pngm/209/4095832_kakashi-avatar-gamer-hd-png-download.png",
+      chatName: "Dũng",
+      lastestMessage: "Chờ chút",
+      lastestTime: "22 phút",
+      isNew: false,
+      isSelected: false,
     },
     {
-      name: "dũng",
-      active: true,
-      isOnline: false,
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      groupId: "2",
-      status: "ok",
+      id: "3",
+      avatar: "https://i1.sndcdn.com/avatars-000139328661-3yxi2u-t500x500.jpg",
+      chatName: "Khá Bảnh",
+      lastestMessage: "Còn 8 năm nữa anh ra rồi",
+      lastestTime: "3 ngày",
+      isNew: false,
+      isSelected: false,
     },
     {
-      name: "dũng",
-      active: true,
-      isOnline: false,
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      groupId: "2",
-      status: "ok",
+      id: "4",
+      avatar:
+        "https://dreambuilders.dk/wp-content/uploads/2015/03/Screen-Shot-2015-03-02-at-2.53.43-PM.png",
+      chatName: "Miu Miu",
+      lastestMessage: "Anh Dũng book em trước rồi",
+      lastestTime: "2 phút",
+      isNew: false,
+      isSelected: false,
     },
     {
-      name: "dũng",
-      active: true,
-      isOnline: false,
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      groupId: "2",
-      status: "ok",
+      id: "5",
+      avatar:
+        "https://lh3.googleusercontent.com/sfqL9ZXWinErcwThSaKWdBQRzQ4NjmAt-eveN0yTjr0RAlULbfFZ3BiYFCYZcm8omg",
+      chatName: "Sugar Baby",
+      lastestMessage: "Tối đi với Dũng rồi, sorry",
+      lastestTime: "10 giây",
+      isNew: true,
+      isSelected: false,
     },
     {
-      name: "dũng",
-      active: true,
-      isOnline: false,
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      groupId: "2",
-      status: "ok",
+      id: "6",
+      avatar:
+        "https://i.pinimg.com/originals/8a/56/c8/8a56c8fb5f78bd6cff84cbb999809e05.jpg",
+      chatName: "Nico Robin",
+      lastestMessage: "Làm xong deadline chưa bạn, tối qua chỉ",
+      lastestTime: "8 phút",
+      isNew: true,
+      isSelected: false,
     },
     {
-      name: "dũng",
-      active: true,
-      isOnline: false,
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      groupId: "2",
-      status: "ok",
+      id: "7",
+      avatar: "https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg",
+      chatName: "Khủng long",
+      lastestMessage: "Mình bị tuyệt chủng rồi",
+      lastestTime: "10 giờ",
+      isNew: true,
+      isSelected: false,
+    },
+    {
+      id: "8",
+      avatar:
+        "https://store.playstation.com/store/api/chihiro/00_09_000/container/CA/en/99/UP1063-BLUS31423_00-UAFAIRYFEN000021/0/image?_version=00_09_000&platform=chihiro&bg_color=000000&opacity=100&w=720&h=720",
+      chatName: "Sugar Baby",
+      lastestMessage: "Oke nha",
+      lastestTime: "4 giờ",
+      isNew: true,
+      isSelected: false,
+    },
+    {
+      id: "9",
+      avatar:
+        "https://thuthuatnhanh.com/wp-content/uploads/2019/07/hinh-anh-avatar-chibi-cuc-cute-de-thuong-cho-facebook-9.jpg",
+      chatName: "Sugar Baby",
+      lastestMessage: "My name is Sugar, your...",
+      lastestTime: "2 ngày",
+      isNew: true,
+      isSelected: false,
+    },
+    {
+      id: "10",
+      avatar:
+        "https://i.pinimg.com/originals/e3/79/fb/e379fb4952ed180112b2bb56c3e28f7f.jpg",
+      chatName: "Sugar Baby",
+      lastestMessage: "baby bay",
+      lastestTime: "10 ngày",
+      isNew: true,
+      isSelected: false,
     },
   ];
 
+  const [chatList, setChatList] = useState(initChatList);
+
+  const hanelSelectItem = (selectedId) => {
+    // clone current array to the new one
+    const newChatList = [...chatList];
+
+    newChatList.map((item, index) => {
+      const isSlelectedItem = item.id === selectedId ? true : false;
+      const returnItem = item;
+      returnItem.isSelected = isSlelectedItem ? true : false;
+
+      if (isSlelectedItem) {
+        returnItem.isNew = false;
+      }
+      return {
+        returnItem,
+      };
+    });
+
+    // update todo list
+    setChatList(newChatList);
+  };
+
   return (
-    <div className="main__chatlist">
-      <div className="chatlist__heading"></div>
-      <CInputGroup>
-        <CInput id="appendedInputButton" size="16" type="text" />
+    <div className="chat-list-container">
+      <CInputGroup className="chat-search">
+        <CInput id="appendedInputButton" type="text" />
         <CInputGroupAppend>
-          <CButton color="secondary">Go!</CButton>
+          <CButton color="secondary">
+            <CIcon name="cil-search" />
+          </CButton>
         </CInputGroupAppend>
       </CInputGroup>
-      <div className="chatlist__items">
-        {groupsChat.map((item, index) => {
+      <div className="list-items">
+        {chatList.map(function (item, index) {
           return (
-            <ChatListItems
-              name={item.name}
+            <MyChatListItem
               key={index}
-              animationDelay={index + 1}
-              active={item.active ? "active" : ""}
-              isOnline={item.isOnline ? "active" : ""}
-              image={item.image}
-              groupId={item.groupId}
-              status={item.status}
-            />
+              data={item}
+              animationDelay={index + 3}
+              hanelSelectItem={hanelSelectItem}
+            ></MyChatListItem>
           );
         })}
       </div>
@@ -98,4 +157,4 @@ function ChatList(props) {
   );
 }
 
-export default ChatList;
+export default MyChatList;

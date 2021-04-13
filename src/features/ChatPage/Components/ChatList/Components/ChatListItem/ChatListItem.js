@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import "./MyChatListItem.scss";
+import "./ChatListItem.scss";
 import { CBadge } from "@coreui/react";
 MyChatListItem.propTypes = {};
 

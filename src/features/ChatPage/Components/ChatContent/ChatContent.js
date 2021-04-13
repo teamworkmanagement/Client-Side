@@ -1,92 +1,54 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "./ChatContent.scss";
-import Avatar from "../ChatList/Avatar";
-import ChatItem from "./ChatItem";
+import CIcon from "@coreui/icons-react";
+import { CInput } from "@coreui/react";
+import MessageList from "./Components/MessageList/MessageList";
 
-function ChatContent(props) {
-  const chatlist = [
-    {
-      image:
-        "https://noidangsong.vn/files/uploads/fb1735058496563345/1526444239-tt_avatar_small.jpg",
-      type: "other",
-      msg: "oka la hahahahaha",
-      timeSend: "30/03/2021",
-    },
-    {
-      image:
-        "https://noidangsong.vn/files/uploads/fb1735058496563345/1526444239-tt_avatar_small.jpg",
-      type: "other",
-      msg: "oka la hahahahaha",
-      timeSend: "30/03/2021",
-    },
-    {
-      image:
-        "https://noidangsong.vn/files/uploads/fb1735058496563345/1526444239-tt_avatar_small.jpg",
-      type: "other",
-      msg: "oka la hahahahaha",
-      timeSend: "30/03/2021",
-    },
-    {
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      type: "me",
-      msg: "oka la hahahahaha",
-      timeSend: "30/03/2021",
-    },
-    {
-      image: "https://lamsaodecao.yolasite.com/resources/189921.png",
-      type: "me",
-      msg: "oka la hahahahaha",
-      timeSend: "30/03/2021",
-    },
-    {
-      image:
-        "https://noidangsong.vn/files/uploads/fb1735058496563345/1526444239-tt_avatar_small.jpg",
-      type: "other",
-      msg: "oka la hahahahaha",
-      timeSend: "30/03/2021",
-    },
-  ];
+MyChatContent.propTypes = {};
+
+function MyChatContent(props) {
   return (
-    <div className="main__chatcontent">
-      <div className="content__header">
-        <div className="blocks">
-          <div className="current-chatting-user">
-            <Avatar
-              isOnline="active"
-              image="https://noidangsong.vn/files/uploads/fb1735058496563345/1526444239-tt_avatar_small.jpg"
-            />
-            <p>Khoa</p>
-          </div>
+    <div className="chat-content-container">
+      <div className="chat-content-header">
+        <div className="user-infor">
+          <img
+            alt=""
+            className="avatar"
+            src="https://i.pinimg.com/originals/8a/56/c8/8a56c8fb5f78bd6cff84cbb999809e05.jpg"
+          />
+          <div classname="chat-name">Nico Robin</div>
+        </div>
+        <div className="chat-infor">
+          <CIcon name="cil-group" />
+          <div className="member-count">2</div>
+          <div className="vertical-divider"></div>
+          <div className="last-message-time">6 giờ</div>
         </div>
       </div>
-      <div className="content__body">
-        <div className="chat__items">
-          {chatlist.map((itm, index) => {
-            return (
-              <ChatItem
-                animationDelay={index + 2}
-                key={index}
-                user={itm.type ? itm.type : "me"}
-                msg={itm.msg}
-                image={itm.image}
-                timeSend={itm.timeSend}
-              />
-            );
-          })}
-        </div>
+      <div className="message-list">
+        <MessageList />
       </div>
-      <div className="content__footer">
-        <div className="sendNewMessage">
-          <button className="addFiles">+</button>
-          <input type="text" placeholder="Type a message here" />
+      <div className="chat-content-footer">
+        <div className="attach-file-btn">
+          <CIcon name="cil-paperclip" />
+        </div>
+        <div className="attach-image-btn">
+          <CIcon name="cil-image-plus" />
+        </div>
 
-          <button className="btnSendMsg" id="sendMsgBtn">
-            send
-          </button>
+        <CInput
+          autoComplete="off"
+          id="name"
+          placeholder="Enter your name"
+          required
+        />
+        <div className="send-btn">
+          <CIcon name="cil-send" />
         </div>
       </div>
     </div>
   );
 }
 
-export default ChatContent;
+export default MyChatContent;

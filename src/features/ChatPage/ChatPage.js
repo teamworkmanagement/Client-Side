@@ -3,22 +3,28 @@ import PropTypes from "prop-types";
 import "./ChatPage.scss";
 import { CRow, CCol, CCard } from "@coreui/react";
 import PostList from "../NewsPage/components/PostList/PostList";
-import ChatBody from "./Components/ChatBody/ChatBody";
-import ChatList from "./Components/ChatList/ChatList";
+import MyChatList from "./Components/ChatList/ChatList";
+import MyChatContent from "./Components/ChatContent/ChatContent";
 
-ChatPage.propTypes = {};
+MyChatPage.propTypes = {};
 
-function ChatPage(props) {
+function MyChatPage(props) {
   return (
     <CRow className="chat-page-container">
-      <div className="main-row">
-        <CCard className="col1">
-          <ChatBody />
-        </CCard>
-        {/* <CCard className="col2">{ <ChatList /> }</CCard> */}
-      </div>
+      <CRow className="">
+        <CCol className="chat-content-panel col-8">
+          <CCard>
+            <MyChatContent />
+          </CCard>
+        </CCol>
+        <CCol className="chat-tool-panel col-4">
+          <CCard>
+            <MyChatList />
+          </CCard>
+        </CCol>
+      </CRow>
     </CRow>
   );
 }
 
-export default ChatPage;
+export default MyChatPage;
