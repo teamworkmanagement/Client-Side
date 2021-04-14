@@ -1,0 +1,84 @@
+.list-file-table-container {
+    .table {
+        border-collapse: separate;
+        border-spacing: 0rem 0.3rem;
+
+        border: none;
+        thead {
+            tr {
+                th {
+                    border: none;
+                    input.form-control {
+                        border-color: #3c4b64;
+                    }
+                }
+            }
+        }
+        tbody {
+            border: none;
+            tr.p-0 {
+                display: none;
+            }
+            td {
+                vertical-align: middle;
+                padding: 0.5rem 1rem;
+                border: 1px solid #3c4b64;
+                border-left: none;
+                border-right: none;
+                &:first-child {
+                    border-left: 1px solid #3c4b64;
+                    border-top-left-radius: 50px;
+                    border-bottom-left-radius: 50px;
+                }
+                &:last-child {
+                    border-right: 1px solid black;
+                    border-top-right-radius: 50px;
+                    border-bottom-right-radius: 50px;
+                }
+                .download-btn:hover {
+                    cursor: pointer;
+                    transition: all 0.1s;
+                    .c-icon {
+                        color: black;
+                        transform: scale(1.2);
+                    }
+                }
+                .file-name {
+                    font-weight: bold;
+                }
+                .owner {
+                    display: flex;
+                    align-items: center;
+                    .owner-image {
+                        width: 2rem;
+                        height: 2rem;
+                        border-radius: 50px;
+                        margin-right: 0.5rem;
+                    }
+                }
+                .type {
+                    display: flex;
+                    align-items: center;
+                    .type-image {
+                        width: 2rem;
+                        height: 2rem;
+                        margin-right: 0.5rem;
+                    }
+                }
+            }
+        }
+    }
+    .pagination {
+        .page-item {
+            .page-link {
+                color: #3c4b64;
+            }
+        }
+        .page-item.active {
+            .page-link {
+                background-color: #3c4b64;
+                color: white;
+            }
+        }
+    }
+}

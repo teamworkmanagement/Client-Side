@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./ChatListItem.scss";
 import { CBadge } from "@coreui/react";
-MyChatListItem.propTypes = {};
+ChatListItem.propTypes = {};
 
-function MyChatListItem(props) {
+function ChatListItem(props) {
   const handelSelect = () => {
     if (props.hanelSelectItem) {
       props.hanelSelectItem(props.data.id);
@@ -41,4 +41,4 @@ function MyChatListItem(props) {
   );
 }
 
-export default MyChatListItem;
+export default ChatListItem;

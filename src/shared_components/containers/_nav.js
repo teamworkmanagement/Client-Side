@@ -22,7 +22,7 @@ const _nav = [
   {
     _tag: "CSidebarNavDropdown",
     name: "Nhóm",
-    to: "/theme/typography",
+    to: "/news",
     icon: "cil-group",
     _children: [
       {
@@ -80,7 +80,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Quản lý công việc",
-    to: "/chats",
+    to: "/team",
     icon: "cib-stackoverflow",
   },
 

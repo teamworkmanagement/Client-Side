@@ -5,9 +5,9 @@ import CIcon from "@coreui/icons-react";
 import { CInput } from "@coreui/react";
 import MessageList from "./Components/MessageList/MessageList";
 
-MyChatContent.propTypes = {};
+ChatContent.propTypes = {};
 
-function MyChatContent(props) {
+function ChatContent(props) {
   return (
     <div className="chat-content-container">
       <div className="chat-content-header">
@@ -51,4 +51,4 @@ function MyChatContent(props) {
   );
 }
 
-export default MyChatContent;
+export default ChatContent;

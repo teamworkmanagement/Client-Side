@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import "./ChatList.scss";
 import { CInputGroup, CInput, CInputGroupAppend, CButton } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import MyChatListItem from "./Components/ChatListItem/ChatListItem";
-MyChatList.propTypes = {};
+import ChatListItem from "./Components/ChatListItem/ChatListItem";
+ChatList.propTypes = {};
 
-function MyChatList(props) {
+function ChatList(props) {
   const initChatList = [
     {
       id: "1",
@@ -144,12 +144,12 @@ function MyChatList(props) {
       <div className="list-items">
         {chatList.map(function (item, index) {
           return (
-            <MyChatListItem
+            <ChatListItem
               key={index}
               data={item}
               animationDelay={index + 3}
               hanelSelectItem={hanelSelectItem}
-            ></MyChatListItem>
+            ></ChatListItem>
           );
         })}
       </div>
@@ -157,4 +157,4 @@ function MyChatList(props) {
   );
 }
 
-export default MyChatList;
+export default ChatList;
