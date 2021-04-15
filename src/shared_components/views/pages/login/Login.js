@@ -74,6 +74,7 @@ const Login = () => {
     if (!res.additionalUserInfo)
       return null;//tắt popup
 
+    console.log('goolge login: ', res);
     const { email, id, name, picture } = res.additionalUserInfo.profile;
 
     return { email, id, name, picture };
@@ -95,6 +96,7 @@ const Login = () => {
     if (outPut === null)
       return;
 
+    console.log('output social laf: ', outPut);
     const data = {
       id: outPut.id,
       fullName: outPut.name,

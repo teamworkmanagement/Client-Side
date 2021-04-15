@@ -5,6 +5,11 @@ import Post from "../Post/Post";
 import postApi from "src/api/postApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPostPage } from "src/appSlice";
+import store from "src/app/store";
+import { setValueAuth } from "src/shared_components/views/pages/login/authSlice";
+import testApi from "src/api/testApi";
+import { getAllGroupChatForUser } from "src/features/ChatPage/chatSlice";
+import { getTest } from "src/api/testSlice";
 
 PostList.propTypes = {};
 
@@ -16,58 +21,52 @@ function PostList(props) {
   latestPosts.current = listPosts;
 
   const pageNumber = useSelector((state) => state.app.currentPostPage);
+  const userId = useSelector(state => state.auth.currentUser.id);
 
   useEffect(() => {
     async function getPosts() {
-      const outPut = await postApi.getPagination({
-        pageNumber: pageNumber,
-        pageSize: 3,
-      });
-      const cur = [...latestPosts.current];
-      const las = cur.concat(outPut.data.items);
-      console.log(las);
-      setListPosts(las);
+      try {
+        const params = {
+          UserId: userId,
+          PageSize: 3,
+          SkipItems: listPosts.length,
+        }
+        const outPut = await postApi.getPagination({ params });
+        const cur = [...latestPosts.current];
+        const las = cur.concat(outPut.data.items);
+        console.log(las);
+        setListPosts(las);
+      } catch (err) {
+        console.log(err);
+      }
+
     }
 
     getPosts();
+    dispatch(getTest());
   }, [pageNumber]);
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return function release() {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const handleScroll = async () => {
-    const windowHeight =
-      "innerHeight" in window
-        ? window.innerHeight
-        : document.documentElement.offsetHeight;
-    const body = document.body;
-    const html = document.documentElement;
-    const docHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-    const windowBottom = windowHeight + window.pageYOffset;
-
-    if (windowBottom >= docHeight) {
-      loadMoreItems();
+  const onButtonClick = () => {
+    try {
+      dispatch(getAllGroupChatForUser(userId));
+    } catch (err) {
+      console.log(err);
     }
-  };
 
-  const loadMoreItems = () => {
-    dispatch(setCurrentPostPage());
-  };
+  }
+
+  const onLogout = () => {
+    document.cookie = `backup=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    document.cookie = `TokenExpired=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    store.dispatch(setValueAuth(false));
+  }
 
   return (
     <div>
-      {listPosts.map((obj, index) => (
-        <Post key={index} postObj={obj} />
+      <button onClick={onButtonClick}>Test get</button>
+      <button onClick={onLogout}>Log out</button>
+      {listPosts.map((obj) => (
+        <Post key={obj.postId} postObj={obj} />
       ))}
     </div>
   );

@@ -4,6 +4,8 @@ import "./ChatList.scss";
 import { CInputGroup, CInput, CInputGroupAppend, CButton } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import MyChatListItem from "./Components/ChatListItem/ChatListItem";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentGroup } from "../../chatSlice";
 MyChatList.propTypes = {};
 
 function MyChatList(props) {
@@ -108,27 +110,15 @@ function MyChatList(props) {
     },
   ];
 
+  const dispatch = useDispatch();
+  const groupChatList = useSelector(state => state.chat.groupChat);
   const [chatList, setChatList] = useState(initChatList);
 
   const hanelSelectItem = (selectedId) => {
     // clone current array to the new one
-    const newChatList = [...chatList];
 
-    newChatList.map((item, index) => {
-      const isSlelectedItem = item.id === selectedId ? true : false;
-      const returnItem = item;
-      returnItem.isSelected = isSlelectedItem ? true : false;
+    dispatch(setCurrentGroup(selectedId));
 
-      if (isSlelectedItem) {
-        returnItem.isNew = false;
-      }
-      return {
-        returnItem,
-      };
-    });
-
-    // update todo list
-    setChatList(newChatList);
   };
 
   return (
@@ -142,12 +132,12 @@ function MyChatList(props) {
         </CInputGroupAppend>
       </CInputGroup>
       <div className="list-items">
-        {chatList.map(function (item, index) {
+        {groupChatList.map(function (item, index) {
           return (
             <MyChatListItem
               key={index}
               data={item}
-              animationDelay={index + 3}
+              animationdelay={index + 3}
               hanelSelectItem={hanelSelectItem}
             ></MyChatListItem>
           );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./ChatContent.scss";
 import CIcon from "@coreui/icons-react";
@@ -8,6 +8,25 @@ import MessageList from "./Components/MessageList/MessageList";
 MyChatContent.propTypes = {};
 
 function MyChatContent(props) {
+  const [reachTop, setReachTop] = useState({
+    rt: 0,
+  });
+
+  let i = 0;
+  const onScroll = (e) => {
+    let element = e.target;
+    if (element.scrollTop === 0) {
+      console.log('reach top: ', i++);
+      const rto = { ...reachTop };
+      rto.rt++;
+      setReachTop(rto);
+    }
+  }
+  const scrollRef = useRef(null);
+  const scrollFixed = () => {
+    console.log('scroll fixed');
+    scrollRef.current.scrollTo(0, 50);
+  }
   return (
     <div className="chat-content-container">
       <div className="chat-content-header">
@@ -26,8 +45,8 @@ function MyChatContent(props) {
           <div className="last-message-time">6 giờ</div>
         </div>
       </div>
-      <div className="message-list">
-        <MessageList />
+      <div ref={scrollRef} onScroll={onScroll} className="message-list">
+        <MessageList scrollF={scrollFixed} reachTop={reachTop} />
       </div>
       <div className="chat-content-footer">
         <div className="attach-file-btn">
@@ -40,7 +59,7 @@ function MyChatContent(props) {
         <CInput
           autoComplete="off"
           id="name"
-          placeholder="Enter your name"
+          placeholder="Enter your message"
           required
         />
         <div className="send-btn">

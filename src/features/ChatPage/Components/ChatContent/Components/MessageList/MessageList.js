@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { CRow, CCol, CTooltip } from "@coreui/react";
 import "./MessageList.scss";
+import { useDispatch, useSelector } from "react-redux";
+import messageApi from "src/api/messageApi";
+import { setIsSelected } from "src/features/ChatPage/chatSlice";
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useHistory } from "react-router";
+import { refreshTokenFunc } from "src/utils/auth";
+import axiosClient from "src/api/axiosClient";
+import axios from "axios";
 
 MessageList.propTypes = {};
 
 function MessageList(props) {
+  const history = useHistory();
   const messageList = [
     {
       id: "",
@@ -135,21 +144,136 @@ function MessageList(props) {
       isLabel: false,
     },
   ];
-
+  const dispatch = useDispatch();
+  const currentGroup = useSelector(state => state.chat.currentGroup);
+  const userId = useSelector(state => state.auth.currentUser.id);
+  const isSelected = useSelector(state => state.chat.isSelected);
   const toolTipOptions = {};
+  const [listMes, setListMes] = useState([]);
+  const [showSeeMore, setShowSeeMore] = useState(false);
+  const [trigger, setTrigger] = useState(0);
+
+
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  const connection = new HubConnectionBuilder()
+    .withUrl(`https://localhost:9001/hubchat`)
+    .withAutomaticReconnect()
+    .build();
+
+  useEffect(() => {
+    connection.start()
+      .then(result => {
+        console.log('Đã Connected signalR!');
+
+        connection.on('NhanMessage', message => {
+
+        });
+      })
+      .catch(e => {
+        console.log('Connection failed: ', JSON.stringify(e), e.statusCode);
+        if (e.statusCode === 401) {
+          history.push('/login');
+        }
+
+        if (getCookie('TokenExpired') === "true") {
+          refreshTokenFunc().then(data => {
+            setTrigger(parseInt((trigger + 1).toString()));
+          }).catch(err => {
+            history.push('/login');
+          }).finally(() => {
+            document.cookie = 'TokenExpired=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          })
+        }
+      });
+
+    return () => {
+      connection.stop();
+    }
+  }, [trigger])
+
+
+  useEffect(() => {
+    async function getMessage() {
+      let skipItems = listMes.length;
+      if (isSelected) {
+        dispatch(setIsSelected(false));
+        skipItems = 0;
+      }
+
+      setShowSeeMore(true);
+      const params = {
+        GroupId: currentGroup,
+        SkipItems: skipItems,
+        PageSize: 8,
+      }
+      const outPut = await messageApi.getPagination({ params });
+      console.log(outPut.data.items);
+
+
+
+      setShowSeeMore(false);
+      if (outPut.data.items.length === 0) {
+        return;
+      }
+
+
+      const newArray = outPut.data.items.map(mes => {
+        return {
+          id: mes.messageId,
+          message: mes.messageContent,
+          class: "normal",
+          isMine: mes.messageUserId === userId ? true : false,
+          time: mes.messageCreatedAt,
+          isLabel: false,
+        }
+      });
+
+
+      if (skipItems === 0) {
+        setListMes(newArray);
+        scrollToBottom();
+      }
+
+      else {
+        const newArray1 = newArray.concat([...listMes]);
+        setListMes(newArray1);
+        props.scrollF();
+      }
+    }
+    getMessage();
+  }, [props.reachTop, currentGroup]);
+
+
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div>
-      {messageList.map((item, index) => {
+
+      {
+        showSeeMore ? <div className="message-label">
+          <label>Loading...</label>
+        </div> : null
+      }
+      {listMes.map((item, index) => {
         return item.isLabel ? (
           <div className="message-label">{item.message}</div>
         ) : (
           <div
             key={index}
-            animationDelay={index + 2}
-            className={`message-item-container ${
-              item.class ? item.class : ""
-            } ${item.isMine ? "mine" : ""} `}
+            animationdelay={index + 2}
+            className={`message-item-container ${item.class ? item.class : ""
+              } ${item.isMine ? "mine" : ""} `}
           >
             <img
               className="avatar"
@@ -171,6 +295,8 @@ function MessageList(props) {
           </div>
         );
       })}
+
+      <div ref={messagesEndRef} />
     </div>
   );
 }
