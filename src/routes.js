@@ -1,6 +1,6 @@
 import React from "react";
-import ChatPage from "./features/ChatPage/ChatPage";
 import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
+import ChatPage from "./features/ChatPage/ChatPage";
 import NewsPage from "./features/NewsPage/NewsPage";
 import TeamPage from "./features/TeamPage/TeamPage";
 

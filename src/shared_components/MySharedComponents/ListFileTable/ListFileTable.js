@@ -201,6 +201,7 @@ function ListFileTable(props) {
       owner: "Nguyễn Thanh",
       type: "Png",
       ownerImageURL: "avatars/6.jpg",
+      downloadIcon: "images/download.png",
     },
     {
       id: 2,
@@ -250,9 +251,9 @@ function ListFileTable(props) {
   ];
   const tableContainerRef = useRef(null);
   useEffect(() => {
-    tableContainerRef.current.children[0].children[0].children[0].children[0].innerHTML =
+    tableContainerRef.current.children[1].children[0].children[0].children[0].innerHTML =
       "Lọc:";
-    tableContainerRef.current.children[0].children[0].children[1].children[0].children[0].innerHTML =
+    tableContainerRef.current.children[1].children[0].children[1].children[0].children[0].innerHTML =
       "Số dòng:";
   });
 
@@ -321,6 +322,10 @@ function ListFileTable(props) {
 
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
+      <div className="upload-container">
+        <img className="upload-image" src={"images/upload.png"} alt="" />
+        <div>Tải tệp lên nhóm</div>
+      </div>
       <CDataTable
         items={FilesData}
         fields={fields}
@@ -370,12 +375,18 @@ function ListFileTable(props) {
           downloadAction: (item, index) => {
             return (
               <td>
-                <div className="download-btn">
-                  <CIcon name="cil-cloud-download" onClick={handleDownload} />
+                <div className="download-btn-container">
+                  <img
+                    className="download-btn"
+                    src={"images/download.png"}
+                    alt=""
+                    onClick={handleDownload}
+                  />
                 </div>
               </td>
             );
           },
+
           //   details: (item, index) => {
           //     return (
           //       <CCollapse show={details.includes(index)}>

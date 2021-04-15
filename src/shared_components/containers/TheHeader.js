@@ -23,11 +23,11 @@ import {
   TheHeaderDropdownNotif,
   TheHeaderDropdownTasks,
 } from "./index";
-import { changeState } from "src/appSlice";
+import { changeState, setDarkMode } from "src/appSlice";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
-
+  const darkMode = useSelector((state) => state.app.darkMode);
   const sidebarShow = useSelector((state) => state.app.sidebarShow);
 
   const toggleSidebar = () => {
@@ -44,6 +44,11 @@ const TheHeader = () => {
       : "responsive";
     console.log("val toggleSidebarMobile: ", val);
     dispatch(changeState({ type: "set", sidebarShow: val }));
+  };
+
+  const changeDarkMode = () => {
+    dispatch(setDarkMode());
+    console.log("switch");
   };
 
   return (
@@ -95,6 +100,8 @@ const TheHeader = () => {
             variant={"opposite"}
             labelOn={"on"}
             labelOff={"off"}
+            onClick={changeDarkMode}
+            defaultChecked={darkMode}
           />
         </div>
 

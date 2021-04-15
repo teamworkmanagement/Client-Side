@@ -1,5 +1,5 @@
 @mixin background-color-theme {
-    background: #3399ff;
+    background: #3e79f7;
 }
 @mixin PaddingForLeftPanel {
     padding: 2rem 1rem 2rem 2rem;
@@ -17,13 +17,23 @@
 @mixin SideBarItemNormal {
     color: #3c4b64;
     font-weight: 500;
+    border: none;
     .c-sidebar-nav-icon {
         color: #3c4b64;
     }
 }
 @mixin SideBarItemSelected {
     color: #3e79f7;
-    background-color: white;
+    background-color: #ebf1fe;
+    border-right: 3px solid #3e79f7;
+    .c-sidebar-nav-icon {
+        color: #3e79f7;
+    }
+}
+@mixin SideBarItemHover {
+    color: #3e79f7;
+    background-color: #ebf1fe;
+
     .c-sidebar-nav-icon {
         color: #3e79f7;
     }
@@ -53,13 +63,13 @@
                 .c-sidebar-nav-label {
                     @include SideBarItemNormal;
                     &:hover {
-                        @include SideBarItemSelected;
+                        @include SideBarItemHover;
                     }
                 }
                 .c-sidebar-nav-link {
                     @include SideBarItemNormal;
                     &:hover {
-                        @include SideBarItemSelected;
+                        @include SideBarItemHover;
                     }
                 }
                 .c-sidebar-nav-link.c-active {
@@ -74,7 +84,7 @@
                 .c-sidebar-nav-dropdown-toggle {
                     @include SideBarItemNormal;
                     &:hover {
-                        @include SideBarItemSelected;
+                        @include SideBarItemHover;
                     }
 
                     &::after {
@@ -100,7 +110,7 @@
                                 margin-left: auto !important;
                             }
                             &:hover {
-                                @include SideBarItemSelected;
+                                @include SideBarItemHover;
                             }
                         }
                     }
@@ -117,6 +127,17 @@
             background-color: white;
             box-shadow: 0px -1px 4px -1px rgb(0 0 0 / 15%);
             z-index: 1000;
+            &:hover {
+                background-color: #ebf1fe;
+            }
+            &::before {
+                background-color: transparent;
+                background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%238a93a2' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 12.5px;
+                transition: 0.3s;
+            }
         }
 
         @media (min-width: 992px) {
@@ -146,9 +167,11 @@
             }
         }
         .c-body {
+            background-color: #fafafb;
             .c-main {
                 position: relative;
                 padding: 0px !important;
+
                 .container-fluid {
                     height: inherit;
                     padding: 0px !important;

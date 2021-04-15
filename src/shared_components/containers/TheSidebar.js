@@ -21,6 +21,7 @@ import { changeState } from "src/appSlice";
 const TheSidebar = () => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.app.sidebarShow);
+  const darkMode = useSelector((state) => state.app.darkMode);
 
   const onChange = (val) => {
     console.log("change : ", val);
@@ -31,7 +32,7 @@ const TheSidebar = () => {
   return (
     <CSidebar show={show} onShowChange={onChange}>
       <CSidebarBrand className="d-md-down-none" to="/">
-        <div className="logo-team-container"></div>
+        {darkMode && <div className="logo-team-container"></div>}
       </CSidebarBrand>
       <CSidebarNav>
         <CCreateElement
@@ -44,6 +45,7 @@ const TheSidebar = () => {
           }}
         />
       </CSidebarNav>
+
       <CSidebarMinimizer className="c-d-md-down-none" />
     </CSidebar>
   );

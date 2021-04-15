@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import "./ChatListItem.scss";
 import { CBadge } from "@coreui/react";
+
 ChatListItem.propTypes = {};
 
 function ChatListItem(props) {
@@ -14,13 +15,12 @@ function ChatListItem(props) {
   return (
     <div
       onClick={() => handelSelect()}
-      className={`item-container ${props.data.isNew ? "new-message" : ""} ${
+      className={`chat-item-container ${props.data.isNew ? "message" : ""} ${
         props.data.isSelected ? "selected" : ""
-      }
-      `}
-      style={{ animationDelay: `0.${props.animationDelay}s` }}
+      }`}
+      style={{ animationDelay: `${props.animationDelay / 10}s` }}
     >
-      <div className="chat-item-avatar">
+      <div className="item-avatar">
         <img alt="" src={props.data.avatar} />
       </div>
       <div className="item-content">

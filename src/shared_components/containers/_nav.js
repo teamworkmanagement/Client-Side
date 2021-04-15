@@ -6,7 +6,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Tổng quan",
-    to: "/dashboard",
+    to: "/newchat",
     icon: "cil-speedometer", //<CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon"/>,
     badge: {
       color: "info",
