@@ -229,17 +229,17 @@ function MessageList(props) {
         PageSize: 8,
       }
       const outPut = await messageApi.getPagination({ params });
-      console.log(outPut.data.items);
+      console.log(outPut.data?.items);
 
 
 
       setShowSeeMore(false);
-      if (outPut.data.items.length === 0) {
+      if (outPut.data?.items.length === 0) {
         return;
       }
 
 
-      const newArray = outPut.data.items.map(mes => {
+      const newArray = outPut.data?.items.map(mes => {
         return {
           id: mes.messageId,
           message: mes.messageContent,
@@ -276,12 +276,6 @@ function MessageList(props) {
 
   return (
     <div>
-
-      {
-        showSeeMore ? <div className="message-label">
-          <label>Loading...</label>
-        </div> : null
-      }
       {listMes.map((item, index) => {
         return item.isLabel ? (
           <div className="message-label">{item.message}</div>
