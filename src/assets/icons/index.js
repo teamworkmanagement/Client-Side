@@ -8,6 +8,7 @@ import //brand
 "@coreui/icons";
 
 import {
+  cilClock,
   cilDescription,
   cilLineWeight,
   cilImagePlus,
@@ -150,6 +151,7 @@ export const icons = Object.assign(
     logoNegative,
   },
   {
+    cilClock,
     cilDescription,
     cilLineWeight,
     cilImagePlus,

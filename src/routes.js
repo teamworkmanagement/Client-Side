@@ -3,6 +3,7 @@ import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import ChatPage from "./features/ChatPage/ChatPage";
 import NewsPage from "./features/NewsPage/NewsPage";
 import TeamPage from "./features/TeamPage/TeamPage";
+import NewsFeedPage from "./features/NewsFeedPage/NewsFeedPage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -111,7 +112,8 @@ const routes = [
   { path: "/dashboard", name: "Dashboard", component: DashBoardPage },
   { path: "/news", name: "Bản tin", component: NewsPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
-  { path: "/team", name: "team", component: TeamPage, exact: true },
+  { path: "/team", name: "Nhóm", component: TeamPage, exact: true },
+  { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   //{ path: "/team", name: "mychat", component: ChatPage, exact: true },
   // { path: '/base', name: 'Base', component: Cards, exact: true },
   // { path: '/base/breadcrumbs', name: 'Breadcrumbs', component: Breadcrumbs },

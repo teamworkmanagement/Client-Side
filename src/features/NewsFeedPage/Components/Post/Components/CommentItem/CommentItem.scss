@@ -1,0 +1,32 @@
+.comment-item-container {
+    display: flex;
+    margin-bottom: 1rem;
+    .commenter-avatar {
+        width: 2rem;
+        height: 2rem;
+        cursor: pointer;
+        margin-right: 0.5rem;
+        img {
+            width: inherit;
+            height: inherit;
+            border-radius: 50px;
+        }
+    }
+    .comment-infor {
+        flex-grow: 1;
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            .commenter-name {
+                font-weight: 550;
+                cursor: pointer;
+            }
+            .comment-date {
+                font-size: 85%;
+                color: rgba(0, 0, 0, 0.5);
+            }
+        }
+        .comment-content {
+        }
+    }
+}

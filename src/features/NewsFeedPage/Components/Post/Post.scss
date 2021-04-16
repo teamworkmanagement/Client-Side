@@ -1,0 +1,184 @@
+@keyframes showInPostItem {
+    from {
+        opacity: 0;
+        transform: translateY(-60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@mixin ListPostItemApear {
+    transition: all 0.3s ease-out;
+    transform: scale(0);
+    animation-name: showInPostItem;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+    animation-delay: 0.3s;
+    transform-origin: left;
+}
+
+.post-container {
+    @include ListPostItemApear;
+    background-color: white;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    padding: 1.5rem;
+    padding-bottom: 1rem;
+    border: 1px solid #e6ebf1;
+    transition: all 0.3s;
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        .post-infor {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            .poster-avatar {
+                width: 2.5rem;
+                height: 2.5rem;
+                margin-right: 0.5rem;
+                cursor: pointer;
+                img {
+                    width: inherit;
+                    height: inherit;
+                    border-radius: 50px;
+                }
+            }
+            .poster-infor {
+                display: flex;
+                flex-direction: column;
+                .name-and-group {
+                    strong {
+                        cursor: pointer;
+                    }
+                }
+                .post-date {
+                    font-size: 85%;
+                    color: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    .c-icon {
+                        width: 0.8rem;
+                        height: 0.8rem;
+                        font-weight: bold;
+                        color: rgba(0, 0, 0, 0.5);
+                        margin-left: 0.2rem;
+                    }
+                }
+            }
+        }
+        .post-actions {
+            width: 2rem;
+            height: 2rem;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 50px;
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+            .c-icon {
+            }
+        }
+    }
+    .post-content {
+        margin-bottom: 1rem;
+    }
+    .interaction-bar {
+        display: flex;
+        align-items: center;
+        .is-love-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.3rem;
+            cursor: pointer;
+            color: rgba(#3c4b64, 0.8);
+            &:hover {
+                transform: scale(1.2);
+            }
+            &.loved {
+                color: #ec5873;
+            }
+        }
+        .love-count {
+            margin-right: 1rem;
+        }
+        .comment-icon {
+            width: 1.4rem;
+            height: 1.4rem;
+            margin-right: 0.3rem;
+            cursor: pointer;
+            color: rgba(#3c4b64, 0.8);
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+        .comment-count {
+            margin-right: 0.5rem;
+        }
+    }
+    .my-comment {
+        display: flex;
+        padding: 0;
+        margin: 1rem 0rem;
+        .my-avatar {
+            width: 2rem;
+            height: 2rem;
+            img {
+                width: inherit;
+                height: inherit;
+                border-radius: 50px;
+            }
+        }
+        .input-container {
+            flex-grow: 1;
+
+            input {
+                color: #3c4b64;
+                border-radius: 0.625rem;
+            }
+        }
+    }
+    .load-more-comment {
+        //margin: 0rem 1.25rem 0rem 1.25rem;
+        display: flex;
+        text-align: end;
+        cursor: pointer;
+        justify-content: flex-end;
+        align-items: center;
+        &:hover {
+            font-weight: bold;
+        }
+        .rotate {
+            font-size: 1.1rem;
+            //margin-bottom: -0.2rem;
+
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+        }
+    }
+}
+
+::-webkit-input-placeholder {
+    font-style: italic;
+}
+:-moz-placeholder {
+    font-style: italic;
+}
+::-moz-placeholder {
+    font-style: italic;
+}
+:-ms-input-placeholder {
+    font-style: italic;
+}

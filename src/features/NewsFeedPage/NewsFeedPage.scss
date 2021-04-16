@@ -1,0 +1,125 @@
+@keyframes showInGroupItem {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@mixin ListGroupItemApear {
+    transition: all 0.3s ease-out;
+    transform: scale(0);
+    animation-name: showInGroupItem;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+    animation-delay: 0.2s;
+    transform-origin: left;
+}
+
+.newsfeed-page-container {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    .post-list-container {
+        flex-grow: 1;
+        margin-right: 1rem;
+    }
+    .side-panel-container {
+        width: 45rem;
+
+        .toggle-filter-btn {
+            cursor: pointer;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 10px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+
+            border: 1px solid #e6ebf1;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s;
+            z-index: 1000 !important;
+            justify-content: space-between;
+            .title {
+                .c-icon {
+                    width: 1.3rem;
+                    height: 1.3rem;
+                    margin-right: 0.5rem;
+                }
+            }
+            .expand-icon {
+                transition: all 0.8s;
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+            &:hover {
+                background-color: #e6ebf1;
+            }
+        }
+        .post-group-list-container {
+            padding: 1rem;
+
+            background-color: white;
+            border-radius: 10px;
+            border: 1px solid #e6ebf1;
+            margin-top: 1rem;
+            .group-list-title {
+                font-weight: 550;
+            }
+            .post-group-item {
+                @include ListGroupItemApear;
+                display: flex;
+                align-items: center;
+                margin-top: 0.5rem;
+                cursor: pointer;
+                border-radius: 10px;
+                padding: 0.5rem;
+                transition: all 0.3s;
+                &:hover {
+                    background-color: #e6ebf1;
+                }
+                .group-avatar {
+                    width: 2rem;
+                    height: 2rem;
+                    img {
+                        width: inherit;
+                        height: inherit;
+                        border-radius: 50px;
+                    }
+                }
+                .group-infor {
+                    display: flex;
+                    flex-direction: column;
+                    width: 1rem;
+                    flex-grow: 1;
+                    margin-left: 0.5rem;
+                    .group-name {
+                        font-weight: 550;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                    .group-member-count {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        font-size: 85%;
+                        color: rgba(0, 0, 0, 0.5);
+                    }
+                }
+                .group-new-count {
+                    margin-left: 1rem;
+                }
+            }
+        }
+    }
+}

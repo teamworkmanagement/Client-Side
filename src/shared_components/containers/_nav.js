@@ -16,7 +16,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Bản tin",
-    to: "/news",
+    to: "/newsfeed",
     icon: "cil-newspaper",
   },
   {
