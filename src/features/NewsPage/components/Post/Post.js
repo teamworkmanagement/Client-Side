@@ -4,7 +4,7 @@ import CIcon from "@coreui/icons-react";
 import "./Post.scss";
 import ContentToolBar from "../ContentToolBar/ContentToolBar";
 import Comment from "../Comment/Comment";
-import Divider from "src/shared_components/Divider/Divider";
+import Divider from "src/shared_components/MySharedComponents/Divider/Divider";
 import CommentList from "../CommentList/CommentList";
 import LoadMore from "../LoadMore/LoadMore";
 import MyComment from "../MyComment/MyComment";

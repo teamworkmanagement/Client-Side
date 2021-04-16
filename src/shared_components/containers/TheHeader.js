@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   CHeader,
   CToggler,
@@ -9,37 +9,47 @@ import {
   CHeaderNavLink,
   CSubheader,
   CBreadcrumbRouter,
-  CLink
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+  CLink,
+  CSwitch,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
 
 // routes config
-import routes from '../../routes'
+import routes from "../../routes";
 
 import {
   TheHeaderDropdown,
   TheHeaderDropdownMssg,
   TheHeaderDropdownNotif,
-  TheHeaderDropdownTasks
-} from './index'
-import { changeState } from 'src/appSlice'
+  TheHeaderDropdownTasks,
+} from "./index";
+import { changeState, setDarkMode } from "src/appSlice";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
-
-  const sidebarShow = useSelector(state => state.app.sidebarShow);
+  const darkMode = useSelector((state) => state.app.darkMode);
+  const sidebarShow = useSelector((state) => state.app.sidebarShow);
 
   const toggleSidebar = () => {
-    const val = [true, 'responsive'].includes(sidebarShow) ? false : 'responsive'
-    console.log('val toggleSidebar: ', val);
-    dispatch(changeState({ type: 'set', sidebarShow: val }))
-  }
+    const val = [true, "responsive"].includes(sidebarShow)
+      ? false
+      : "responsive";
+    console.log("val toggleSidebar: ", val);
+    dispatch(changeState({ type: "set", sidebarShow: val }));
+  };
 
   const toggleSidebarMobile = () => {
-    const val = [false, 'responsive'].includes(sidebarShow) ? true : 'responsive'
-    console.log('val toggleSidebarMobile: ', val);
-    dispatch(changeState({ type: 'set', sidebarShow: val }))
-  }
+    const val = [false, "responsive"].includes(sidebarShow)
+      ? true
+      : "responsive";
+    console.log("val toggleSidebarMobile: ", val);
+    dispatch(changeState({ type: "set", sidebarShow: val }));
+  };
+
+  const changeDarkMode = () => {
+    dispatch(setDarkMode());
+    console.log("switch");
+  };
 
   return (
     <CHeader withSubheader>
@@ -58,7 +68,7 @@ const TheHeader = () => {
       </CHeaderBrand>
 
       <CHeaderNav className="d-md-down-none mr-auto">
-        <CHeaderNavItem className="px-3" >
+        <CHeaderNavItem className="px-3">
           <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3">
@@ -76,13 +86,26 @@ const TheHeader = () => {
         <TheHeaderDropdown />
       </CHeaderNav>
 
-
       <CSubheader className="px-3 justify-content-between">
         <CBreadcrumbRouter
           className="border-0 c-subheader-nav m-0 px-0 px-md-3"
           routes={routes}
         />
-        <div className="d-md-down-none mfe-2 c-subheader-nav">
+        <div className="dark-theme-container">
+          <div>Dark Theme</div>
+          <CSwitch
+            className={"mx-1"}
+            shape={"pill"}
+            color={"secondary"}
+            variant={"opposite"}
+            labelOn={"on"}
+            labelOff={"off"}
+            onClick={changeDarkMode}
+            defaultChecked={darkMode}
+          />
+        </div>
+
+        <div className="d-md-down-none mfe-2 c-subheader-nav nodisplay">
           <CLink className="c-subheader-nav-link" href="#">
             <CIcon name="cil-speech" alt="Settings" />
           </CLink>
@@ -91,15 +114,17 @@ const TheHeader = () => {
             aria-current="page"
             to="/dashboard"
           >
-            <CIcon name="cil-graph" alt="Dashboard" />&nbsp;Dashboard
-            </CLink>
+            <CIcon name="cil-graph" alt="Dashboard" />
+            &nbsp;Dashboard
+          </CLink>
           <CLink className="c-subheader-nav-link" href="#">
-            <CIcon name="cil-settings" alt="Settings" />&nbsp;Settings
-            </CLink>
+            <CIcon name="cil-settings" alt="Settings" />
+            &nbsp;Settings
+          </CLink>
         </div>
       </CSubheader>
     </CHeader>
-  )
-}
+  );
+};
 
-export default TheHeader
+export default TheHeader;

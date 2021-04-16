@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import { CRow, CCol, CTooltip } from "@coreui/react";
 import "./MessageList.scss";
 import { useDispatch, useSelector } from "react-redux";
 import messageApi from "src/api/messageApi";
@@ -9,7 +8,7 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useHistory } from "react-router";
 import { refreshTokenFunc } from "src/utils/auth";
 import axiosClient from "src/api/axiosClient";
-import axios from "axios";
+import { CTooltip } from "@coreui/react";
 
 MessageList.propTypes = {};
 
@@ -113,6 +112,14 @@ function MessageList(props) {
     },
     {
       id: "",
+      message: "OK?",
+      class: "normal",
+      isMine: false,
+      time: "02/03/2021 3:45pm",
+      isLabel: false,
+    },
+    {
+      id: "",
       message: "start",
       class: "start",
       isMine: true,
@@ -124,6 +131,14 @@ function MessageList(props) {
       message: "end",
       class: "end",
       isMine: true,
+      time: "02/03/2021 3:45pm",
+      isLabel: false,
+    },
+    {
+      id: "",
+      message: "OK?",
+      class: "normal",
+      isMine: false,
       time: "02/03/2021 3:45pm",
       isLabel: false,
     },
@@ -144,6 +159,7 @@ function MessageList(props) {
       isLabel: false,
     },
   ];
+
   const dispatch = useDispatch();
   const currentGroup = useSelector(state => state.chat.currentGroup);
   const userId = useSelector(state => state.auth.currentUser.id);
@@ -257,6 +273,7 @@ function MessageList(props) {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+
   return (
     <div>
 
@@ -278,13 +295,12 @@ function MessageList(props) {
             <img
               className="avatar"
               alt=""
-              src="https://i.pinimg.com/originals/8a/56/c8/8a56c8fb5f78bd6cff84cbb999809e05.jpg"
+              src="http://emilus.themenate.net/img/avatars/thumb-2.jpg"
             />
 
             <div className="message-content">
               <CTooltip
                 className="my-tooltip"
-                advancedOptions={toolTipOptions}
                 content={item.time}
                 placement={item.isMine ? "left" : "right"}
               >

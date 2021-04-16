@@ -8,6 +8,8 @@ import //brand
 "@coreui/icons";
 
 import {
+  cilDescription,
+  cilLineWeight,
   cilImagePlus,
   cilSend,
   cilSearch,
@@ -148,6 +150,8 @@ export const icons = Object.assign(
     logoNegative,
   },
   {
+    cilDescription,
+    cilLineWeight,
     cilImagePlus,
     cilSend,
     cilSearch,

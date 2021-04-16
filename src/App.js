@@ -34,19 +34,28 @@ const Page500 = React.lazy(() =>
 
 function App() {
   const dispatch = useDispatch();
-  const loginStatus = useSelector(state => state.auth.loginStatus);
+  const loginStatus = useSelector((state) => state.auth.loginStatus);
   useEffect(() => {
     const cloneStatus = !!loginStatus;
-    if (!cloneStatus)
-      dispatch(islogin());
+    if (!cloneStatus) dispatch(islogin());
   }, []);
 
   return (
     <BrowserRouter>
       <React.Suspense fallback={loading}>
         <Switch>
-          <PublicRoute restricted={true} component={Register} path="/register" exact />
-          <PublicRoute restricted={true} component={Login} path="/login" exact />
+          {/* <PublicRoute
+            restricted={true}
+            component={Register}
+            path="/register"
+            exact
+          />
+          <PublicRoute
+            restricted={true}
+            component={Login}
+            path="/login"
+            exact
+          /> */}
 
           {/*<Route
               exact

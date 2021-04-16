@@ -6,14 +6,15 @@ import CIcon from "@coreui/icons-react";
 import MyChatListItem from "./Components/ChatListItem/ChatListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentGroup } from "../../chatSlice";
-MyChatList.propTypes = {};
+import ChatListItem from "./Components/ChatListItem/ChatListItem";
 
-function MyChatList(props) {
+ChatList.propTypes = {};
+
+function ChatList(props) {
   const initChatList = [
     {
       id: "1",
-      avatar:
-        "https://noidangsong.vn/files/uploads/fb1735058496563345/1526444239-tt_avatar_small.jpg",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-2.jpg",
       chatName: "Khoa",
       lastestMessage: "Hello tao là khoa nè thằng quỷ",
       lastestTime: "42 phút",
@@ -22,8 +23,7 @@ function MyChatList(props) {
     },
     {
       id: "2",
-      avatar:
-        "https://www.pngjoy.com/pngm/209/4095832_kakashi-avatar-gamer-hd-png-download.png",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-1.jpg",
       chatName: "Dũng",
       lastestMessage: "Chờ chút",
       lastestTime: "22 phút",
@@ -32,7 +32,7 @@ function MyChatList(props) {
     },
     {
       id: "3",
-      avatar: "https://i1.sndcdn.com/avatars-000139328661-3yxi2u-t500x500.jpg",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-3.jpg",
       chatName: "Khá Bảnh",
       lastestMessage: "Còn 8 năm nữa anh ra rồi",
       lastestTime: "3 ngày",
@@ -41,8 +41,7 @@ function MyChatList(props) {
     },
     {
       id: "4",
-      avatar:
-        "https://dreambuilders.dk/wp-content/uploads/2015/03/Screen-Shot-2015-03-02-at-2.53.43-PM.png",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-4.jpg",
       chatName: "Miu Miu",
       lastestMessage: "Anh Dũng book em trước rồi",
       lastestTime: "2 phút",
@@ -51,8 +50,7 @@ function MyChatList(props) {
     },
     {
       id: "5",
-      avatar:
-        "https://lh3.googleusercontent.com/sfqL9ZXWinErcwThSaKWdBQRzQ4NjmAt-eveN0yTjr0RAlULbfFZ3BiYFCYZcm8omg",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-5.jpg",
       chatName: "Sugar Baby",
       lastestMessage: "Tối đi với Dũng rồi, sorry",
       lastestTime: "10 giây",
@@ -61,8 +59,7 @@ function MyChatList(props) {
     },
     {
       id: "6",
-      avatar:
-        "https://i.pinimg.com/originals/8a/56/c8/8a56c8fb5f78bd6cff84cbb999809e05.jpg",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-6.jpg",
       chatName: "Nico Robin",
       lastestMessage: "Làm xong deadline chưa bạn, tối qua chỉ",
       lastestTime: "8 phút",
@@ -71,17 +68,16 @@ function MyChatList(props) {
     },
     {
       id: "7",
-      avatar: "https://scr.vn/wp-content/uploads/2020/07/avt-cute.jpg",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-7.jpg",
       chatName: "Khủng long",
-      lastestMessage: "Mình bị tuyệt chủng rồi",
+      lastestMessage: "Làm xong deadline chưa bạn, tối qua chỉ",
       lastestTime: "10 giờ",
       isNew: true,
       isSelected: false,
     },
     {
       id: "8",
-      avatar:
-        "https://store.playstation.com/store/api/chihiro/00_09_000/container/CA/en/99/UP1063-BLUS31423_00-UAFAIRYFEN000021/0/image?_version=00_09_000&platform=chihiro&bg_color=000000&opacity=100&w=720&h=720",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-8.jpg",
       chatName: "Sugar Baby",
       lastestMessage: "Oke nha",
       lastestTime: "4 giờ",
@@ -90,8 +86,7 @@ function MyChatList(props) {
     },
     {
       id: "9",
-      avatar:
-        "https://thuthuatnhanh.com/wp-content/uploads/2019/07/hinh-anh-avatar-chibi-cuc-cute-de-thuong-cho-facebook-9.jpg",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-9.jpg",
       chatName: "Sugar Baby",
       lastestMessage: "My name is Sugar, your...",
       lastestTime: "2 ngày",
@@ -100,8 +95,7 @@ function MyChatList(props) {
     },
     {
       id: "10",
-      avatar:
-        "https://i.pinimg.com/originals/e3/79/fb/e379fb4952ed180112b2bb56c3e28f7f.jpg",
+      avatar: "http://emilus.themenate.net/img/avatars/thumb-10.jpg",
       chatName: "Sugar Baby",
       lastestMessage: "baby bay",
       lastestTime: "10 ngày",
@@ -112,39 +106,23 @@ function MyChatList(props) {
 
   const dispatch = useDispatch();
   const groupChatList = useSelector(state => state.chat.groupChat);
-  const [chatList, setChatList] = useState(initChatList);
-
   const hanelSelectItem = (selectedId) => {
-    // clone current array to the new one
-
     dispatch(setCurrentGroup(selectedId));
-
   };
-
   return (
-    <div className="chat-list-container">
-      <CInputGroup className="chat-search">
-        <CInput id="appendedInputButton" type="text" />
-        <CInputGroupAppend>
-          <CButton color="secondary">
-            <CIcon name="cil-search" />
-          </CButton>
-        </CInputGroupAppend>
-      </CInputGroup>
-      <div className="list-items">
-        {groupChatList.map(function (item, index) {
-          return (
-            <MyChatListItem
-              key={index}
-              data={item}
-              animationdelay={index + 3}
-              hanelSelectItem={hanelSelectItem}
-            ></MyChatListItem>
-          );
-        })}
-      </div>
+    <div className="chat-list-conatainer">
+      {groupChatList.map(function (item, index) {
+        return (
+          <ChatListItem
+            key={index}
+            data={item}
+            animationDelay={index + 1}
+            hanelSelectItem={hanelSelectItem}
+          ></ChatListItem>
+        );
+      })}
     </div>
   );
 }
 
-export default MyChatList;
+export default ChatList;
