@@ -1,7 +1,4 @@
 .team-container {
-    position: absolute;
-    height: 100%;
-    width: 100%;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -15,7 +12,7 @@
             flex: 1 1 0;
             margin: 0rem 0.2rem;
             .nav-link {
-                border-radius: 50px;
+                border-radius: 0.625rem;
                 color: #3c4b64;
                 display: flex;
                 justify-content: center;
@@ -46,20 +43,16 @@
     .tab-content {
         border: none;
         flex-grow: 1;
-        padding: 1rem;
+        //padding: 1rem;
         overflow-y: hidden;
         display: flex;
+        border-radius: 0.625rem;
         background-color: white;
         .tab-pane {
             flex-grow: 1;
             .chat-page-container {
-                position: inherit;
-                .chat-content-panel {
-                    padding: 0;
-                }
-                .chat-tool-panel {
-                    padding: 0;
-                }
+                padding: 0;
+                position: relative;
             }
         }
     }

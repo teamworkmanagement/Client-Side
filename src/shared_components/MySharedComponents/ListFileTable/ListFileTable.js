@@ -250,12 +250,12 @@ function ListFileTable(props) {
     },
   ];
   const tableContainerRef = useRef(null);
-  useEffect(() => {
-    tableContainerRef.current.children[1].children[0].children[0].children[0].innerHTML =
-      "Lọc:";
-    tableContainerRef.current.children[1].children[0].children[1].children[0].children[0].innerHTML =
-      "Số dòng:";
-  });
+  // useEffect(() => {
+  //   tableContainerRef.current.children[1].children[0].children[0].children[0].innerHTML =
+  //     "Lọc:";
+  //   tableContainerRef.current.children[1].children[0].children[1].children[0].children[0].innerHTML =
+  //     "Số dòng:";
+  // });
 
   const [details, setDetails] = useState([]);
 
@@ -330,8 +330,8 @@ function ListFileTable(props) {
         items={FilesData}
         fields={fields}
         columnFilter
-        tableFilter
-        itemsPerPageSelect
+        //tableFilter
+        //itemsPerPageSelect
         itemsPerPage={5}
         hover
         sorter
@@ -386,23 +386,6 @@ function ListFileTable(props) {
               </td>
             );
           },
-
-          //   details: (item, index) => {
-          //     return (
-          //       <CCollapse show={details.includes(index)}>
-          //         <CCardBody>
-          //           <h4>{item.username}</h4>
-          //           <p className="text-muted">User since: {item.registered}</p>
-          //           <CButton size="sm" color="info">
-          //             User Settings
-          //           </CButton>
-          //           <CButton size="sm" color="danger" className="ml-1">
-          //             Delete
-          //           </CButton>
-          //         </CCardBody>
-          //       </CCollapse>
-          //     );
-          //   },
         }}
       />
     </div>
