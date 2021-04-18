@@ -28,7 +28,7 @@ function ChatListItem(props) {
   return (
     <div
       onClick={() => handelSelect()}
-      className={`chat-item-container ${props.data.isNew ? "message" : ""} ${props.data.groupChatId === currentGroup ? "selected" : ""
+      className={`chat-item-container ${props.data.newMessage ? "message" : ""} ${props.data.groupChatId === currentGroup ? "selected" : ""
         }`}
       style={{ animationDelay: `${props.animationDelay / 10}s` }}
     >
@@ -44,7 +44,7 @@ function ChatListItem(props) {
           </div>
         </div>
         <div className="item-content-body">
-          <div className="chat-messagge">props.data.lastestMessage</div>
+          <div className="chat-messagge">{props.data.lastestMes}</div>
           <div className="chat-noti">
             <CBadge className="mr-1" color="danger">
               Mới

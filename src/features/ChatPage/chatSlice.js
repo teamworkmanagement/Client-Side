@@ -11,6 +11,13 @@ export const getAllGroupChatForUser = createAsyncThunk(
     }
 );
 
+export const sendMes = createAsyncThunk(
+    'chat/sendmes',
+    async (payload) => {
+        console.log(payload);
+        const data = await chatApi.sendMes(payload);
+    }
+);
 
 
 const chatSlice = createSlice(
@@ -31,9 +38,18 @@ const chatSlice = createSlice(
             },
             setCurrentGroup: (state, action) => {
                 state.currentGroup = action.payload;
+                const gr = state.groupChat.find(x => x.groupChatId === action.payload);
+                gr.newMessage = false;
+                localStorage.setItem('groupId',state.currentGroup);
             },
             setIsSelected: (state, action) => {
                 state.isSelected = action.payload;
+            },
+            setReceiveMes: (state, action) => {
+                const gr = state.groupChat.find(x => x.groupChatId === action.payload.groupId);
+                gr.lastestMes = action.payload.message;
+                gr.groupChatUpdatedAt = Date.now();
+                gr.newMessage = action.payload.newMessage ? true : false;
             }
         },
         extraReducers: {
@@ -41,6 +57,7 @@ const chatSlice = createSlice(
                 state.groupChat = action.payload;
                 state.loadDone = true;
                 state.currentGroup = action.payload.length > 0 ? action.payload[0].groupChatId : state.currentGroup;
+                localStorage.setItem('groupId',state.currentGroup);
             },
             [getAllGroupChatForUser.rejected]: (state, action) => {
 
@@ -50,5 +67,5 @@ const chatSlice = createSlice(
 );
 
 const { actions, reducer } = chatSlice;
-export const { setLoadDone, editChatGroup, setCurrentGroup, setIsSelected } = actions;
+export const {setLoadDone, editChatGroup, setCurrentGroup, setIsSelected, setReceiveMes } = actions;
 export default reducer; // default export

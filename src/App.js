@@ -44,7 +44,7 @@ function App() {
     <BrowserRouter>
       <React.Suspense fallback={loading}>
         <Switch>
-          {/* <PublicRoute
+          <PublicRoute
             restricted={true}
             component={Register}
             path="/register"
@@ -55,7 +55,7 @@ function App() {
             component={Login}
             path="/login"
             exact
-          /> */}
+          />
 
           {/*<Route
               exact

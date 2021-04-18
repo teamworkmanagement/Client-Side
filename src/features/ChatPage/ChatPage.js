@@ -16,6 +16,13 @@ function ChatPage(props) {
   const userId = useSelector(state => state.auth.currentUser.id);
   const loadDone = useSelector(state => state.chat.loadDone);
   const [reachTop, setReachTop] = useState(0);
+  const grChats = useSelector(state => state.chat.groupChat);
+  const currentGroup = useSelector(state => state.chat.currentGroup);
+  const group = grChats.find(x => x.groupChatId === currentGroup);
+  const user = useSelector(state => state.auth.currentUser);
+  const [msg, setMsg] = useState('');
+  const [send, setSend] = useState(null);
+  const scroll2 = useRef(null);
 
   useEffect(() => {
     dispatch(getAllGroupChatForUser(userId));
@@ -37,6 +44,35 @@ function ChatPage(props) {
   const scrollFixed = () => {
     scrollRef.current.scrollTo(0, 50);
   }
+
+  const scrollBottom = () => {
+    console.log('scroll2');
+    scroll2.current.scrollIntoView({ behavior: "smooth" });
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (msg === '') return;
+
+      const chatMessage = {
+        userName: user.fullName,
+        message: msg,
+        userId: user.id,
+        groupId: currentGroup,
+        timeSend: Date.now(),
+      }
+      setSend({
+        mesObj: chatMessage,
+      });
+      scrollBottom();
+      setMsg('');
+    }
+  }
+
+  const onStateChange = (e) => {
+    setMsg(e.target.value);
+  };
+
   return (
     <div className="chat-page-container">
       {
@@ -56,17 +92,20 @@ function ChatPage(props) {
           </div>
           <div className="chat-content">
             <div className="chat-content-header">
-              <div className="chat-group-title">Nico Robin</div>
+              <div className="chat-group-title">{group.groupChatName}</div>
               <div className="chat-group-actions">
                 <CIcon name="cil-options" />
               </div>
             </div>
             <div ref={scrollRef} onScroll={onScroll} className="chat-content-message-list">
-              <NewMessageList scrollF={scrollFixed} reachTop={reachTop} />
+              <NewMessageList send={send} scrollF={scrollFixed} reachTop={reachTop} />
+              <div ref={scroll2} />
             </div>
             <div className="chat-content-footer">
               <div className="input-container">
-                <CInput class="input-field" type="text" />
+                <CInput placeholder="Type a message here" onChange={onStateChange}
+                  value={msg}
+                  onKeyDown={handleKeyDown} class="input-field" type="text" />
                 <div className="input-actions-group">
                   <CIcon name="cil-paperclip" />
                   <CIcon name="cil-image-plus" />

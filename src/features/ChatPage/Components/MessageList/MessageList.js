@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./MessageList.scss";
 import { useDispatch, useSelector } from "react-redux";
 import messageApi from "src/api/messageApi";
-import { setIsSelected } from "src/features/ChatPage/chatSlice";
+import { sendMes, setGroupIt, setIsSelected, setReceiveMes } from "src/features/ChatPage/chatSlice";
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useHistory } from "react-router";
 import { refreshTokenFunc } from "src/utils/auth";
@@ -163,12 +163,19 @@ function MessageList(props) {
   const dispatch = useDispatch();
   const currentGroup = useSelector(state => state.chat.currentGroup);
   const userId = useSelector(state => state.auth.currentUser.id);
-  const isSelected = useSelector(state => state.chat.isSelected);
+  const isSelected = useSelector(state => state.chat.isSelected);//chuyeenr nhom chat
   const toolTipOptions = {};
   const [listMes, setListMes] = useState([]);
-  const [showSeeMore, setShowSeeMore] = useState(false);
-  const [trigger, setTrigger] = useState(0);
+  const [test, setTest] = useState(0);
+  const [trigger, setTrigger] = useState(0);//refresh token signalr
+  const messagesEndRef = useRef(null);
+  const groupRef = useRef(null);
+  const [connection, setConnection] = useState(new HubConnectionBuilder()
+    .withUrl(`https://localhost:9001/hubchat`)
+    .withAutomaticReconnect()
+    .build());
 
+  groupRef.current = currentGroup;
 
 
   function getCookie(name) {
@@ -177,18 +184,37 @@ function MessageList(props) {
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
 
-  const connection = new HubConnectionBuilder()
-    .withUrl(`https://localhost:9001/hubchat`)
-    .withAutomaticReconnect()
-    .build();
-
   useEffect(() => {
+
+    //setConnection(connect);
     connection.start()
       .then(result => {
         console.log('Đã Connected signalR!');
 
         connection.on('NhanMessage', message => {
+          console.log('nhan tin nhan');
+          const newMes = {
+            message: message.message,
+            class: "normal",
+            isMine: false,
+            time: message.timeSend,
+            isLabel: false,
+          }
 
+          console.log(message.groupId, ' ', groupRef.current, ' ', currentGroup);
+
+          const messageObj = { ...message };
+          if (message.groupId !== groupRef.current) {
+
+            messageObj.newMessage = true;
+            dispatch(setReceiveMes(messageObj));
+            return;
+          }
+
+          dispatch(setReceiveMes(messageObj));
+          const cloneList = [...listMes, newMes];
+          setListMes(cloneList);
+          scrollToBottom();
         });
       })
       .catch(e => {
@@ -221,8 +247,6 @@ function MessageList(props) {
         dispatch(setIsSelected(false));
         skipItems = 0;
       }
-
-      setShowSeeMore(true);
       const params = {
         GroupId: currentGroup,
         SkipItems: skipItems,
@@ -230,10 +254,6 @@ function MessageList(props) {
       }
       const outPut = await messageApi.getPagination({ params });
       console.log(outPut.data?.items);
-
-
-
-      setShowSeeMore(false);
       if (outPut.data?.items.length === 0) {
         return;
       }
@@ -265,47 +285,70 @@ function MessageList(props) {
     getMessage();
   }, [props.reachTop, currentGroup]);
 
+  useEffect(() => {
+    if (props.send === null)
+      return;
+
+    const newMes = {
+      message: props.send.mesObj.message,
+      class: "normal",
+      isMine: true,
+      time: props.send.mesObj.timeSend,
+      isLabel: false,
+    }
+
+    dispatch(sendMes(props.send.mesObj));
+    dispatch(setReceiveMes(props.send.mesObj));
+
+    const cloneList = [...listMes, newMes];
+    setListMes(cloneList);
+    scrollToBottom();
+  }, [props.send]);
 
 
-  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
+    //console.log('scrollbot', messagesEndRef.current);
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-
+  const onClick = () => {
+    scrollToBottom();
+  }
   return (
     <div>
-      {listMes.map((item, index) => {
-        return item.isLabel ? (
-          <div className="message-label">{item.message}</div>
-        ) : (
-          <div
-            key={index}
-            animationdelay={index + 2}
-            className={`message-item-container ${item.class ? item.class : ""
-              } ${item.isMine ? "mine" : ""} `}
-          >
-            <img
-              className="avatar"
-              alt=""
-              src="http://emilus.themenate.net/img/avatars/thumb-2.jpg"
-            />
+      <button onClick={onClick}>{test}</button>
+      <div>
+        {listMes.map((item, index) => {
+          return item.isLabel ? (
+            <div className="message-label">{item.message}</div>
+          ) : (
+            <div
+              key={index}
+              animationdelay={index + 2}
+              className={`message-item-container ${item.class ? item.class : ""
+                } ${item.isMine ? "mine" : ""} `}
+            >
+              <img
+                className="avatar"
+                alt=""
+                src="http://emilus.themenate.net/img/avatars/thumb-2.jpg"
+              />
 
-            <div className="message-content">
-              <CTooltip
-                className="my-tooltip"
-                content={item.time}
-                placement={item.isMine ? "left" : "right"}
-              >
-                <div className="message-text">{item.message}</div>
-              </CTooltip>
-              <div className="message-time">{item.time}</div>
+              <div className="message-content">
+                <CTooltip
+                  className="my-tooltip"
+                  content={item.time}
+                  placement={item.isMine ? "left" : "right"}
+                >
+                  <div className="message-text">{item.message}</div>
+                </CTooltip>
+                <div className="message-time">{item.time}</div>
+              </div>
             </div>
-          </div>
-        );
-      })}
-
+          );
+        })}
+      </div>
       <div ref={messagesEndRef} />
     </div>
   );

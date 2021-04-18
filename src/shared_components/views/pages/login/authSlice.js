@@ -10,18 +10,12 @@ export const socialLogin = createAsyncThunk(
   "auth/social-login",
   async (payload) => {
     const data = await authApi.socialLogin(payload);
-
-    localStorage.setItem("access_token", data.data.jwToken);
-    localStorage.setItem("refresh_token", data.data.refreshToken);
     return data.data;
   }
 );
 
 export const login = createAsyncThunk("auth/login", async (payload) => {
   const data = await authApi.login(payload);
-  localStorage.setItem("access_token", data.data.jwToken);
-  localStorage.setItem("refresh_token", data.data.refreshToken);
-
   return data.data;
 });
 
@@ -35,7 +29,7 @@ const authSlice = createSlice({
   name: "user",
   initialState: {
     currentUser: {},
-    loginStatus: true,
+    loginStatus: false,
   },
   reducers: {
     setAuth: (state) => {
