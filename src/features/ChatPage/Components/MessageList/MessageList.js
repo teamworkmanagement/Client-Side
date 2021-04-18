@@ -172,6 +172,7 @@ function MessageList(props) {
   const groupRef = useRef(null);
   const buttonRef = useRef(null);
   const latestChat = useRef(null);
+  const [bot, setBottom] = useState(false);
   const [connection, setConnection] = useState(new HubConnectionBuilder()
     .withUrl(`https://localhost:9001/hubchat`)
     .withAutomaticReconnect()
@@ -183,10 +184,15 @@ function MessageList(props) {
 
   const scrollToBottom = () => {
     //console.log('scrollbot', messagesEndRef.current);
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  
+
+  useEffect(() => {
+    if (bot === true) {
+      scrollToBottom();
+    }
+  }, [bot])
 
   //connect signalr
   useEffect(() => {
@@ -304,8 +310,10 @@ function MessageList(props) {
     const cloneList = [...latestChat.current];
     cloneList.push(newMes);
     setListMes(cloneList);
-
-    scrollToBottom();
+    setTimeout(function() {
+      scrollToBottom();
+    }, 1);
+    
 
 
   }, [props.send]);
