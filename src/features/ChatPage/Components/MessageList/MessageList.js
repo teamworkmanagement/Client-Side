@@ -6,9 +6,9 @@ import messageApi from "src/api/messageApi";
 import { sendMes, setGroupIt, setIsSelected, setReceiveMes } from "src/features/ChatPage/chatSlice";
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useHistory } from "react-router";
-import { refreshTokenFunc } from "src/utils/auth";
-import axiosClient from "src/api/axiosClient";
+import { getCookie, refreshTokenFunc } from "src/utils/auth";
 import { CTooltip } from "@coreui/react";
+import moment from "moment";
 
 MessageList.propTypes = {};
 
@@ -170,23 +170,26 @@ function MessageList(props) {
   const [trigger, setTrigger] = useState(0);//refresh token signalr
   const messagesEndRef = useRef(null);
   const groupRef = useRef(null);
+  const buttonRef = useRef(null);
+  const latestChat = useRef(null);
   const [connection, setConnection] = useState(new HubConnectionBuilder()
     .withUrl(`https://localhost:9001/hubchat`)
     .withAutomaticReconnect()
     .build());
 
+  latestChat.current = listMes;
   groupRef.current = currentGroup;
 
 
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
+  const scrollToBottom = () => {
+    //console.log('scrollbot', messagesEndRef.current);
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
 
+  
+
+  //connect signalr
   useEffect(() => {
-
-    //setConnection(connect);
     connection.start()
       .then(result => {
         console.log('Đã Connected signalR!');
@@ -201,24 +204,22 @@ function MessageList(props) {
             isLabel: false,
           }
 
-          console.log(message.groupId, ' ', groupRef.current, ' ', currentGroup);
-
           const messageObj = { ...message };
           if (message.groupId !== groupRef.current) {
-
             messageObj.newMessage = true;
             dispatch(setReceiveMes(messageObj));
             return;
           }
 
           dispatch(setReceiveMes(messageObj));
-          const cloneList = [...listMes, newMes];
+          const cloneList = [...latestChat.current];
+          cloneList.push(newMes);
           setListMes(cloneList);
-          scrollToBottom();
+          //scrollToBottom();
         });
       })
       .catch(e => {
-        console.log('Connection failed: ', JSON.stringify(e), e.statusCode);
+        console.log('Connection failed: ', JSON.stringify(e), e.statusCode, e);
         if (e.statusCode === 401) {
           history.push('/login');
         }
@@ -237,9 +238,9 @@ function MessageList(props) {
     return () => {
       connection.stop();
     }
-  }, [trigger])
+  }, [trigger]);
 
-
+  //load tin nhan
   useEffect(() => {
     async function getMessage() {
       let skipItems = listMes.length;
@@ -253,7 +254,6 @@ function MessageList(props) {
         PageSize: 8,
       }
       const outPut = await messageApi.getPagination({ params });
-      console.log(outPut.data?.items);
       if (outPut.data?.items.length === 0) {
         return;
       }
@@ -277,7 +277,7 @@ function MessageList(props) {
       }
 
       else {
-        const newArray1 = newArray.concat([...listMes]);
+        const newArray1 = newArray.concat([...latestChat.current]);
         setListMes(newArray1);
         props.scrollF();
       }
@@ -285,6 +285,7 @@ function MessageList(props) {
     getMessage();
   }, [props.reachTop, currentGroup]);
 
+  //bam nut send
   useEffect(() => {
     if (props.send === null)
       return;
@@ -300,54 +301,57 @@ function MessageList(props) {
     dispatch(sendMes(props.send.mesObj));
     dispatch(setReceiveMes(props.send.mesObj));
 
-    const cloneList = [...listMes, newMes];
+    const cloneList = [...latestChat.current];
+    cloneList.push(newMes);
     setListMes(cloneList);
+
     scrollToBottom();
+
+
   }, [props.send]);
 
 
-
-  const scrollToBottom = () => {
-    //console.log('scrollbot', messagesEndRef.current);
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  };
-
   const onClick = () => {
+    console.log('DDax click');
     scrollToBottom();
   }
+
   return (
     <div>
-      <button onClick={onClick}>{test}</button>
       <div>
-        {listMes.map((item, index) => {
-          return item.isLabel ? (
-            <div className="message-label">{item.message}</div>
-          ) : (
-            <div
-              key={index}
-              animationdelay={index + 2}
-              className={`message-item-container ${item.class ? item.class : ""
-                } ${item.isMine ? "mine" : ""} `}
-            >
-              <img
-                className="avatar"
-                alt=""
-                src="http://emilus.themenate.net/img/avatars/thumb-2.jpg"
-              />
+        <button ref={buttonRef} onClick={onClick}>{test}</button>
+        <div>
+          {listMes.map((item, index) => {
+            return item.isLabel ? (
+              <div className="message-label">{item.message}</div>
+            ) : (
+              <div
+                key={index}
+                animationdelay={index + 2}
+                className={`message-item-container ${item.class ? item.class : ""
+                  } ${item.isMine ? "mine" : ""} `}
+              >
+                <img
+                  className="avatar"
+                  alt=""
+                  src="http://emilus.themenate.net/img/avatars/thumb-2.jpg"
+                />
 
-              <div className="message-content">
-                <CTooltip
-                  className="my-tooltip"
-                  content={item.time}
-                  placement={item.isMine ? "left" : "right"}
-                >
-                  <div className="message-text">{item.message}</div>
-                </CTooltip>
-                <div className="message-time">{item.time}</div>
+                <div className="message-content">
+                  <CTooltip
+                    className="my-tooltip"
+                    content={moment(item.time).format("DD/MM/YYYY hh:mma")}
+                    placement={item.isMine ? "left" : "right"}
+                  >
+                    <div className="message-text">{item.message}</div>
+                  </CTooltip>
+                  <div className="message-time">{moment(item.time).format("DD/MM/YYYY hh:mma")}</div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+
       </div>
       <div ref={messagesEndRef} />
     </div>

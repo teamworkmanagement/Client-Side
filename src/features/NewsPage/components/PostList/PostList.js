@@ -43,7 +43,6 @@ function PostList(props) {
     }
 
     getPosts();
-    dispatch(getTest());
   }, [pageNumber]);
 
   const onButtonClick = () => {

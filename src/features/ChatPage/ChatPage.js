@@ -22,7 +22,6 @@ function ChatPage(props) {
   const user = useSelector(state => state.auth.currentUser);
   const [msg, setMsg] = useState('');
   const [send, setSend] = useState(null);
-  const scroll2 = useRef(null);
 
   useEffect(() => {
     dispatch(getAllGroupChatForUser(userId));
@@ -45,11 +44,6 @@ function ChatPage(props) {
     scrollRef.current.scrollTo(0, 50);
   }
 
-  const scrollBottom = () => {
-    console.log('scroll2');
-    scroll2.current.scrollIntoView({ behavior: "smooth" });
-  }
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       if (msg === '') return;
@@ -64,7 +58,6 @@ function ChatPage(props) {
       setSend({
         mesObj: chatMessage,
       });
-      scrollBottom();
       setMsg('');
     }
   }
@@ -99,7 +92,6 @@ function ChatPage(props) {
             </div>
             <div ref={scrollRef} onScroll={onScroll} className="chat-content-message-list">
               <NewMessageList send={send} scrollF={scrollFixed} reachTop={reachTop} />
-              <div ref={scroll2} />
             </div>
             <div className="chat-content-footer">
               <div className="input-container">

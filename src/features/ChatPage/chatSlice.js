@@ -14,7 +14,6 @@ export const getAllGroupChatForUser = createAsyncThunk(
 export const sendMes = createAsyncThunk(
     'chat/sendmes',
     async (payload) => {
-        console.log(payload);
         const data = await chatApi.sendMes(payload);
     }
 );
@@ -40,7 +39,6 @@ const chatSlice = createSlice(
                 state.currentGroup = action.payload;
                 const gr = state.groupChat.find(x => x.groupChatId === action.payload);
                 gr.newMessage = false;
-                localStorage.setItem('groupId',state.currentGroup);
             },
             setIsSelected: (state, action) => {
                 state.isSelected = action.payload;
@@ -57,7 +55,6 @@ const chatSlice = createSlice(
                 state.groupChat = action.payload;
                 state.loadDone = true;
                 state.currentGroup = action.payload.length > 0 ? action.payload[0].groupChatId : state.currentGroup;
-                localStorage.setItem('groupId',state.currentGroup);
             },
             [getAllGroupChatForUser.rejected]: (state, action) => {
 
