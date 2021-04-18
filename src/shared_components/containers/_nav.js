@@ -27,11 +27,15 @@ const _nav = [
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "Sinh viên A14 - KTX",
-        to: "/icons/coreui-icons",
+        name: (
+          <div className="team-name-dropdown-item">Group Anh Văn Toeic</div>
+        ),
+        to: "/team",
         icon: (
           <CImg
-            src={"avatars/6.jpg"}
+            src={
+              "https://scontent-sin6-3.xx.fbcdn.net/v/t1.6435-9/70944423_1289407744573535_1300646982062178304_n.jpg?_nc_cat=104&ccb=1-3&_nc_sid=825194&_nc_ohc=30N8un2vPewAX8QcAkk&_nc_ht=scontent-sin6-3.xx&oh=5ece776d1f0b830ca2f8e106d6452719&oe=609EBA21"
+            }
             className="c-avatar-img"
             alt="admin@bootstrapmaster.com"
           />
@@ -43,15 +47,18 @@ const _nav = [
       },
       {
         _tag: "CSidebarNavItem",
-        name: "Bảo trì phần mềm gfdg",
+        name: <div className="team-name-dropdown-item">Hóng hớt Showbiz</div>,
+
         icon: (
           <CImg
-            src={"avatars/1.jpg"}
+            src={
+              "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7"
+            }
             className="c-avatar-img"
             alt="admin@bootstrapmaster.com"
           />
         ),
-        to: "/dashboard",
+        to: "",
         badge: {
           color: "success",
           text: "NEW",
@@ -59,11 +66,13 @@ const _nav = [
       },
       {
         _tag: "CSidebarNavItem",
-        name: "Group Anh văn TOEIC",
-        to: "/icons/brands",
+        name: <div className="team-name-dropdown-item">J2Team DeathClick</div>,
+        to: "",
         icon: (
           <CImg
-            src={"avatars/3.jpg"}
+            src={
+              "https://scontent.fsgn5-7.fna.fbcdn.net/v/t31.18172-8/15975043_801295790009762_5833023295370153210_o.jpg?_nc_cat=103&ccb=1-3&_nc_sid=825194&_nc_ohc=dgeZuFN3avMAX956AeV&_nc_ht=scontent.fsgn5-7.fna&oh=aee48f31173dee1270bc615946e65024&oe=609D8354"
+            }
             className="c-avatar-img"
             alt="admin@bootstrapmaster.com"
           />
@@ -80,7 +89,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Quản lý công việc",
-    to: "/team",
+    to: "/",
     icon: "cib-stackoverflow",
   },
 

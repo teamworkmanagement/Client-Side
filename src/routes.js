@@ -1,7 +1,6 @@
 import React from "react";
 import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import ChatPage from "./features/ChatPage/ChatPage";
-import NewsPage from "./features/NewsPage/NewsPage";
 import TeamPage from "./features/TeamPage/TeamPage";
 import NewsFeedPage from "./features/NewsFeedPage/NewsFeedPage";
 
@@ -110,7 +109,6 @@ const User = React.lazy(() => import("./shared_components/views/users/User"));
 const routes = [
   // { path: '/', exact: true, name: 'Home' },
   { path: "/dashboard", name: "Dashboard", component: DashBoardPage },
-  { path: "/news", name: "Bản tin", component: NewsPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
   { path: "/team", name: "Nhóm", component: TeamPage, exact: true },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },

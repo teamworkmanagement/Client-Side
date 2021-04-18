@@ -1,15 +1,29 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./NewsFeedPage.scss";
-import { CBadge, CCol, CCollapse, CRow } from "@coreui/react";
+import {
+  CBadge,
+  CButton,
+  CCol,
+  CCollapse,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CRow,
+} from "@coreui/react";
 import PostList from "./Components/PostList/PostList";
 import PostToolBar from "./Components/PostToolBar/PostToolBar";
 import CIcon from "@coreui/icons-react";
+import TextareaAutosize from "react-textarea-autosize";
 
 NewsFeedPage.propTypes = {};
 
 function NewsFeedPage(props) {
   const [showFilter, setShowFilter] = useState(false);
+  const [showCreatePost, setShowCreatePost] = useState(false);
+
   const groupList = [
     {
       groupId: "1",
@@ -81,6 +95,15 @@ function NewsFeedPage(props) {
       </div>
       <div className="side-panel-container">
         <div
+          className="create-post-btn"
+          onClick={() => setShowCreatePost(!showCreatePost)}
+        >
+          <div className="title">
+            <CIcon name="cil-pencil" />
+            Viết bài mới
+          </div>
+        </div>
+        <div
           className="toggle-filter-btn"
           onClick={toggleShowFilter}
           style={
@@ -110,34 +133,59 @@ function NewsFeedPage(props) {
         <CCollapse show={showFilter}>
           <PostToolBar />
         </CCollapse>
-        <div className="post-group-list-container">
-          <div className="group-list-title">Bài viết trong nhóm</div>
-          {groupList.map((item, index) => {
-            return (
-              <div
-                key={item.groupId}
-                className="post-group-item"
-                style={{ animationDelay: `${(index + 2) / 10}s` }}
-              >
-                <div className="group-avatar">
-                  <img src={item.groupAvatar} alt="" />
-                </div>
-                <div className="group-infor">
-                  <div className="group-name">{item.groupName}</div>
-                  <div className="group-member-count">
-                    {item.groupMemberCount} Thành viên
+        {!props.isInTeam && (
+          <div className="post-group-list-container">
+            <div className="group-list-title">Bài viết trong nhóm</div>
+            {groupList.map((item, index) => {
+              return (
+                <div
+                  key={item.groupId}
+                  className="post-group-item"
+                  style={{ animationDelay: `${(index + 2) / 10}s` }}
+                >
+                  <div className="group-avatar">
+                    <img src={item.groupAvatar} alt="" />
+                  </div>
+                  <div className="group-infor">
+                    <div className="group-name">{item.groupName}</div>
+                    <div className="group-member-count">
+                      {item.groupMemberCount} Thành viên
+                    </div>
+                  </div>
+                  <div className="group-new-count">
+                    <CBadge className="badge-danger">
+                      {item.groupNewPostCount}
+                    </CBadge>
                   </div>
                 </div>
-                <div className="group-new-count">
-                  <CBadge className="badge-danger">
-                    {item.groupNewPostCount}
-                  </CBadge>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+
+      <CModal
+        show={showCreatePost}
+        onClose={() => setShowCreatePost(!showCreatePost)}
+      >
+        <CModalBody>
+          <TextareaAutosize
+            className="input-post"
+            minRows={1}
+            maxRows={20}
+            placeholder="Viết bản tin mới..."
+          />
+        </CModalBody>
+        <CModalFooter>
+          <CButton
+            color="primary"
+            className="submit-btn"
+            onClick={() => setShowCreatePost(!showCreatePost)}
+          >
+            Đăng bài
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </div>
   );
 }

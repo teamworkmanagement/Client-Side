@@ -12,12 +12,13 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import ListFileTable from "../../shared_components/MySharedComponents/ListFileTable/ListFileTable";
+import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
 
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
   const lorem = "ccc";
-  const [active, setActive] = useState(3);
+  const [active, setActive] = useState(0);
   return (
     <div className="team-container">
       <CTabs activeTab={active} onActiveTabChange={(idx) => setActive(idx)}>
@@ -48,10 +49,12 @@ function TeamPage(props) {
           </CNavItem>
         </CNav>
         <CTabContent>
-          <CTabPane>{`1. ${lorem}`}</CTabPane>
+          <CTabPane>
+            <NewsFeedPage isInTeam={true} />
+          </CTabPane>
           <CTabPane>{`2. ${lorem}`}</CTabPane>
           <CTabPane>
-            <ChatPage />
+            <ChatPage isInTeam={true} />
           </CTabPane>
           <CTabPane>
             <ListFileTable />

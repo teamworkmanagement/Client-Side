@@ -25,7 +25,7 @@
 @mixin SideBarItemSelected {
     color: #3e79f7;
     background-color: #ebf1fe;
-    border-right: 3px solid #3e79f7;
+    border-right: 3px solid #3e79f7 !important;
     .c-sidebar-nav-icon {
         color: #3e79f7;
     }
@@ -100,12 +100,22 @@
                     .c-sidebar-nav-item {
                         @include SideBarItemNormal;
                         .c-sidebar-nav-link {
-                            //width:20rem;
+                            overflow-x: hidden;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
                             @include SideBarItemNormal;
                             .c-avatar-img {
-                                width: 2rem !important;
-                                height: 2rem !important;
+                                width: 1.5rem !important;
+                                height: 1.5rem !important;
                                 margin-right: 1rem;
+                            }
+                            .team-name-dropdown-item {
+                                width: 0.5rem;
+                                flex-grow: 1;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
                             }
                             .badge {
                                 margin-left: auto !important;
