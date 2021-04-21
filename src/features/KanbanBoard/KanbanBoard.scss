@@ -1,0 +1,16 @@
+.kanban-board-container {
+    background-color: #ced2d8;
+    padding: 1.5rem;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    .board {
+        background-color: #fafafb;
+        border-radius: 0.625rem;
+        height: 100%;
+        width: 100%;
+        overflow-y: hidden;
+        display: flex;
+    }
+}

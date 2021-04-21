@@ -1,0 +1,16 @@
+.kanbancard-container {
+    margin: 1rem 0rem;
+    border-radius: 0.625rem;
+    padding: 1rem;
+    background-color: white;
+    border: 1px solid #e6ebf1;
+    cursor: pointer;
+    border-color: transparent;
+    .card-name {
+        //color: #d6d7dc;
+        font-size: 120%;
+    }
+    &:hover {
+        box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%);
+    }
+}

@@ -44,12 +44,13 @@
     .c-sidebar {
         box-shadow: 1px 0px 4px -1px rgb(0 0 0 / 15%);
         .c-sidebar-brand {
-            background-color: white;
+            background-color: #283142;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 0.2rem 0rem;
             .logo-team-container {
+                background-color: #283142;
                 background-image: url("../../common/images/logoteam.png");
                 height: 100%;
                 width: 100%;
@@ -59,7 +60,7 @@
             }
         }
         .c-sidebar-nav {
-            background-color: white;
+            background-color: #283142;
             .c-sidebar-nav-item {
                 .c-sidebar-nav-label {
                     @include SideBarItemNormal;
@@ -135,7 +136,7 @@
         }
 
         .c-sidebar-minimizer {
-            background-color: white;
+            background-color: #283142;
             box-shadow: 0px -1px 4px -1px rgb(0 0 0 / 15%);
             z-index: 1000;
             &:hover {
@@ -161,7 +162,9 @@
         }
         .c-header {
             box-shadow: 0px 1px 4px -1px rgb(0 0 0 / 15%);
+            background-color: #283142;
             .c-subheader {
+                background-color: #283142;
                 display: flex;
                 align-items: center;
                 justify-content: space-between !important;

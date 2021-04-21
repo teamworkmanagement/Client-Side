@@ -1,0 +1,23 @@
+.kanbanlist-container {
+    margin: 1rem;
+    border: 1px solid #e6ebf1;
+    border-radius: 0.625rem;
+    padding: 1rem;
+    width: 17rem;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    .kanbanlist-header {
+        //margin-bottom: 1rem;
+        //color: #d6d7dc;
+        font-weight: bold;
+        font-size: 150%;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e6ebf1;
+    }
+    .kanbanlist-cards {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+}
