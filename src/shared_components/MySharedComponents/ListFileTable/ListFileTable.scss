@@ -118,4 +118,48 @@
             }
         }
     }
+
+    #snackbar {
+        visibility: visible;
+        min-width: 250px;
+        background-color: #de313c;
+        color: #fff;
+        text-align: left;
+        border-radius: 2px;
+        padding: 16px;
+        border-radius: 4px;
+        position: fixed;
+
+        /* To be displayed above 
+           Parent HTML DOM element  */
+        z-index: 1;
+        right: 10px;
+        bottom: 10px;
+        animation: fadein 0.5s, fadeout 0.5s 4.5s;
+    }
+
+    /* when the Snackbar Appears */
+    @keyframes fadein {
+        from {
+            bottom: 0;
+            opacity: 0;
+        }
+        to {
+            bottom: 30px;
+            opacity: 1;
+        }
+    }
+
+    /* when the Snackbar Disappears
+       from the Screen */
+    @keyframes fadeout {
+        from {
+            bottom: 30px;
+            opacity: 1;
+        }
+        to {
+            bottom: 0;
+            opacity: 0;
+        }
+    }
 }

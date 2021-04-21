@@ -22,6 +22,7 @@ import 'moment/locale/vi';
 import prettyBytes from "pretty-bytes";
 import { Prompt, useHistory } from "react-router";
 import useExitPrompt from "../../../utils/customHook/useExitPrompt";
+import { setTimeout } from "core-js";
 
 moment.locale("vi");
 ListFileTable.propTypes = {};
@@ -334,7 +335,8 @@ function ListFileTable(props) {
   const [page, setPage] = useState(1);
   const [cfile, setCfile] = useState(null);//current file
   const [showExitPrompt, setShowExitPrompt] = useExitPrompt(false);
-  const [triggerLoad, setTriggerLoad] = useState(0);
+  const [triggerLoad, setTriggerLoad] = useState(0);//call api khi thêm file...
+  const [showError, setShowError] = useState(false);
   const pickerRef = useRef(null);
   const history = useHistory();
   const pageSize = 5;
@@ -368,7 +370,10 @@ function ListFileTable(props) {
     const file = e.target.files[0];
     if (file) {
       if (file.size / 1024 / 1024 >= maxSize) {
-        alert(`can't up file larger: ${maxSize}`);
+        setShowError(true);
+        setTimeout(() => {
+          setShowError(false);
+        }, 1500);
         return;
       }
 
@@ -418,30 +423,34 @@ function ListFileTable(props) {
   //pagination
   useEffect(() => {
     async function getDatas() {
-      const params = {
-        TeamId: 'team2',
-        PageNumber: page,
-        PageSize: pageSize,
-      };
-      const outPut = await fileApi.getFile({ params });
+      try {
+        const params = {
+          TeamId: 'team2',
+          PageNumber: page,
+          PageSize: pageSize,
+        };
+        const outPut = await fileApi.getFile({ params });
 
-      const dts = outPut.data.items.map(f => {
-        return {
-          id: f.fileId,
-          name: f.fileName,
-          createdAt: f.fileUploadTime,
-          size: f.fileSize,
-          owner: f.fileUserName,
-          type: f.fileType,
-          ownerImageURL: f.userImage,
-          downloadIcon: "images/download.png",
-          fileUrl: f.fileUrl,
-        }
-      });
+        const dts = outPut.data.items.map(f => {
+          return {
+            id: f.fileId,
+            name: f.fileName,
+            createdAt: f.fileUploadTime,
+            size: f.fileSize,
+            owner: f.fileUserName,
+            type: f.fileType,
+            ownerImageURL: f.userImage,
+            downloadIcon: "images/download.png",
+            fileUrl: f.fileUrl,
+          }
+        });
 
-      setDatas(dts);
-      setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
-      console.log(outPut.data.items);
+        setDatas(dts);
+        setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
+        console.log(outPut.data.items);
+      } catch (err) {
+
+      }
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -464,6 +473,7 @@ function ListFileTable(props) {
         <div>Tải tệp lên nhóm</div>
         <input onChange={onPick} ref={pickerRef} type="file" style={{ display: "none" }} />
       </div>
+      <label className="mt-2 text-danger">*Dung lượng mỗi file không quá 30MB.</label>
       <CDataTable
         items={datas}
         fields={fields}
@@ -555,6 +565,7 @@ function ListFileTable(props) {
       }
       <Prompt when={upload}
         message="Cancel uploading file?" />
+      {showError ? <div id="snackbar">Vui lòng xem lại dung lượng file!</div> : null}
     </div>
   );
 }
