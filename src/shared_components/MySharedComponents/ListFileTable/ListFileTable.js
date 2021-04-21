@@ -538,7 +538,7 @@ function ListFileTable(props) {
               <td>
                 <div className="download-btn-container">
 
-                  <a target="_blank" href={item.fileUrl}>
+                  <a href={item.fileUrl}>
                     <img
                       className="download-btn"
                       src={"images/download.png"}
@@ -552,20 +552,23 @@ function ListFileTable(props) {
           },
         }}
       />
-      <CPagination
+      {
+        totals!==0?<CPagination
         activePage={page}
         pages={totals}
         dots
         align="center"
         doubleArrows={false}
         onActivePageChange={(i) => setActivePage(i)}
-      />
+      />:null
+      }
+      
       {upload ?
         <UploadItem progress={progress} name={cfile.name} /> : null
       }
       <Prompt when={upload}
         message="Cancel uploading file?" />
-      {showError ? <div id="snackbar">Vui lòng xem lại dung lượng file!</div> : null}
+      {showError ? <div id="snackbar">Dung lượng file lớn hơn 30MB!</div> : null}
     </div>
   );
 }
