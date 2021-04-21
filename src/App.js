@@ -41,7 +41,11 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter getUserConfirmation={(message, callback) => {
+      // this is the default behavior
+      const allowTransition = window.confirm(message);
+      callback(allowTransition);
+    }}>
       <React.Suspense fallback={loading}>
         <Switch>
           {/* <PublicRoute
