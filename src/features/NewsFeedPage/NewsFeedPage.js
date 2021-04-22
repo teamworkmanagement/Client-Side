@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./NewsFeedPage.scss";
 import {
@@ -88,6 +88,9 @@ function NewsFeedPage(props) {
     console.log(showFilter);
   }
 
+  const getFilter = (obj)=>{
+    console.log(obj);
+  }
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
@@ -109,15 +112,15 @@ function NewsFeedPage(props) {
           style={
             showFilter
               ? {
-                  borderBottomLeftRadius: "0",
-                  borderBottomRightRadius: "0",
-                  borderBottom: "none",
-                }
+                borderBottomLeftRadius: "0",
+                borderBottomRightRadius: "0",
+                borderBottom: "none",
+              }
               : {
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  borderBottom: "1px solid #e6ebf1",
-                }
+                borderBottomLeftRadius: "10px",
+                borderBottomRightRadius: "10px",
+                borderBottom: "1px solid #e6ebf1",
+              }
           }
         >
           <div className="title">
@@ -131,7 +134,7 @@ function NewsFeedPage(props) {
           )}
         </div>
         <CCollapse show={showFilter}>
-          <PostToolBar />
+          <PostToolBar getFilter={getFilter}/>
         </CCollapse>
         {!props.isInTeam && (
           <div className="post-group-list-container">
