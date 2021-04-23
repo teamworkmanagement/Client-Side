@@ -15,6 +15,7 @@ import {
   CLabel,
   CSelect,
 } from "@coreui/react";
+import UserFilter from "./UserFilter";
 
 PostToolBar.propTypes = {};
 
@@ -26,6 +27,7 @@ function PostToolBar(props) {
 
   const [fDate, setFDate] = useState(null);
   const [tDate, setTDate] = useState(null);
+  const [pUser, setPuser] = useState(null);
 
   const onChange = (e) => {
     setFilter({
@@ -79,11 +81,12 @@ function PostToolBar(props) {
         FromDate: fDate,
       });
     }
-    else if (cFrom && filter?.FromDate) {
-      const { FromDate, ...noFromDate } = filter;
-      setFilter(noFromDate);
+    else if (cFrom) {
+      setFilter({
+        ...filter,
+        FromDate: null,
+      });
     }
-
     setCFrom(!cFrom);
   }
 
@@ -95,12 +98,57 @@ function PostToolBar(props) {
       });
     }
     else
-      if (cTo && filter?.ToDate) {
-        const { ToDate, ...noToDate } = filter;
-        setFilter(noToDate);
+      if (cTo) {
+        setFilter({
+          ...filter,
+          ToDate: null,
+        });
       }
 
     setCto(!cTo);
+  }
+
+  const onCheckBoxPostUser = (e) => {
+    if (!cUser && pUser) {
+      setFilter({
+        ...filter,
+        PostUser: pUser.value,
+      });
+    }
+    else if (cUser) {
+      setFilter({
+        ...filter,
+        PostUser: null,
+      });
+    }
+    setCuser(!cUser);
+  }
+
+  const pickUser = (obj) => {
+    if (cUser) {
+      if (filter?.PostUser) {
+        if (obj === null) {
+          const { PostUser, ...noPostUser } = filter;
+          setFilter(noPostUser);
+        } else {
+          setFilter({
+            ...filter,
+            PostUser: obj.value,
+          })
+        }
+      }
+      else if (!filter?.PostUser) {
+        if (obj == null) {
+
+        } else {
+          setFilter({
+            ...filter,
+            PostUser: obj.value,
+          })
+        }
+      }
+    }
+    setPuser(obj);
   }
 
   return (
@@ -218,7 +266,7 @@ function PostToolBar(props) {
         </CFormGroup>
 
         <CFormGroup variant="checkbox" className="checkbox">
-          <CInputCheckbox id="checkbox4" checked={cUser} onClick={() => setCuser(!cUser)} name="checkbox4" value="option4" />
+          <CInputCheckbox id="checkbox4" checked={cUser} onClick={onCheckBoxPostUser} name="checkbox4" value="option4" />
           <CLabel
             variant="checkbox"
             className="form-check-label"
@@ -227,12 +275,7 @@ function PostToolBar(props) {
             Người đăng
           </CLabel>
           <CInputGroup>
-            <CInputGroupPrepend>
-              <CInputGroupText>
-                <CIcon name="cil-user" />
-              </CInputGroupText>
-            </CInputGroupPrepend>
-            <CInput id="input1-group1" name="input1-group1" placeholder="" />
+            <UserFilter pickUser={pickUser} />
           </CInputGroup>
         </CFormGroup>
       </div>

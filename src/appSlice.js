@@ -62,6 +62,7 @@ const appSlice = createSlice({
     currentPostPage: 1,
     darkMode: true,
     kanbanBoardData: initKanbanBoardData,
+    filterChanged: false,
   },
   reducers: {
     changeState(state, payload) {
@@ -90,6 +91,9 @@ const appSlice = createSlice({
         state.kanbanBoardData.listOrder = payload.payload.newColumnOrder;
       }
     },
+    setFilterChange(state, action) {
+      state.filterChanged = action.payload;
+    }
   },
 });
 
@@ -99,5 +103,6 @@ export const {
   changeState,
   setCurrentPostPage,
   setDarkMode,
+  setFilterChange
 } = actions; // named export
 export default reducer; // default export

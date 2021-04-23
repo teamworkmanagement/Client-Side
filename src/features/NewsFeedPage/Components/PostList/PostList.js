@@ -5,7 +5,7 @@ import Post from "../Post/Post";
 import PostForm from "../Post/Components/PostForm/PostForm";
 import { useDispatch, useSelector } from "react-redux";
 import postApi from "src/api/postApi";
-import { setCurrentPostPage } from "src/appSlice";
+import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 
 PostList.propTypes = {};
 
@@ -17,7 +17,8 @@ function PostList(props) {
   latestPosts.current = listPosts;
 
   const pageNumber = useSelector((state) => state.app.currentPostPage);
-  const userId = useSelector(state => state.auth.currentUser.id);
+  const userId = '8650b7fe-2952-4b03-983c-660dddda9029';
+  const filterChanged = useSelector(state => state.app.filterChanged);
 
   const [filter, setFilter] = useState({
     UserId: userId,
@@ -27,23 +28,42 @@ function PostList(props) {
   useEffect(() => {
     async function getPosts() {
       try {
-        const params = {
-          ...filter,
-          SkipItems: listPosts.length,
+        if (filterChanged) {
+          console.log('filterchanged');
+          const params = {
+            ...props.filter,
+            UserId: userId,
+            PageSize: 3,
+            SkipItems: 0,
+          }
+
+          setFilter(params);
+
+          const outPut = await postApi.getPagination({ params });
+          dispatch(setFilterChange(false));
+          setListPosts(outPut.data.items);
         }
-        const outPut = await postApi.getPagination({ params });
-        const cur = [...latestPosts.current];
-        const las = cur.concat(outPut.data.items);
-        console.log(las);
-        setListPosts(las);
+
+        else {
+          console.log('pagechanged');
+          const params = {
+            ...filter,
+            SkipItems: listPosts.length,
+          }
+          const outPut = await postApi.getPagination({ params });
+          const cur = [...latestPosts.current];
+          const las = cur.concat(outPut.data.items);
+          console.log(las);
+          setListPosts(las);
+        }
+
       } catch (err) {
         console.log(err);
       }
     }
 
     getPosts();
-  }, [pageNumber]);
-
+  }, [pageNumber, props.filter]);
 
 
   useEffect(() => {

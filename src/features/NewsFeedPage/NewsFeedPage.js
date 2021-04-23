@@ -17,12 +17,16 @@ import PostList from "./Components/PostList/PostList";
 import PostToolBar from "./Components/PostToolBar/PostToolBar";
 import CIcon from "@coreui/icons-react";
 import TextareaAutosize from "react-textarea-autosize";
+import { useDispatch } from "react-redux";
+import { setFilterChange } from "src/appSlice";
 
 NewsFeedPage.propTypes = {};
 
 function NewsFeedPage(props) {
   const [showFilter, setShowFilter] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const [filter, setFilter] = useState({});
+  const dispatch = useDispatch();
 
   const groupList = [
     {
@@ -88,13 +92,26 @@ function NewsFeedPage(props) {
     console.log(showFilter);
   }
 
-  const getFilter = (obj)=>{
-    console.log(obj);
+  const getFilter = (obj) => {
+    if (obj === null || obj === undefined)
+      return;
+    for (var propName in obj) {
+      if (obj[propName] === null || obj[propName] === undefined) {
+        delete obj[propName];
+      }
+    }
+    if (filter === obj || JSON.stringify(filter) === JSON.stringify(obj))
+      return;
+
+    console.log(obj, '-----', filter);
+
+    setFilter(obj);
+    dispatch(setFilterChange(true));
   }
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
-        <PostList />
+        <PostList filter={filter} />
       </div>
       <div className="side-panel-container">
         <div
@@ -134,7 +151,7 @@ function NewsFeedPage(props) {
           )}
         </div>
         <CCollapse show={showFilter}>
-          <PostToolBar getFilter={getFilter}/>
+          <PostToolBar getFilter={getFilter} />
         </CCollapse>
         {!props.isInTeam && (
           <div className="post-group-list-container">
