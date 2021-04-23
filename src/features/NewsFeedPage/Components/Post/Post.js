@@ -17,6 +17,7 @@ function Post(props) {
   const [cmtLists, setComments] = useState([]);
   const [loadComment, setLoadComment] = useState(0);
   const [post, setPost] = useState({ ...props.post });
+  const [commentContent, setCommentContent] = useState('');
 
   useEffect(() => {
     async function getComments() {
@@ -49,6 +50,34 @@ function Post(props) {
       postReactCount: post.isReacted ? post.postReactCount - 1 : post.postReactCount + 1,
       isReacted: !post.isReacted,
     });
+  }
+
+  const onAddComment = (e) => {
+    if (e.key === 'Enter') {
+      if (commentContent !== '') {
+        console.log(commentContent);
+        commentApi.addComment({
+          "commentPostId": post.postId,
+          "commentUserId": '8650b7fe-2952-4b03-983c-660dddda9029',
+          "commentContent": commentContent,
+          "commentCreatedAt": new Date().toISOString(),
+          "commentIsDeleted": false,
+        }).then(res => {
+
+          const newArrr = [{
+            'commentId': res.data.commentId,
+            'commentPostId': res.data.commentPostId,
+            'commentUserId': res.data.commentUserId,
+            'commentContent': res.data.commentContent,
+            'userName': 'Dungx Nguyeenx',
+            'commentCreatedAt': res.data.commentCreatedAt,
+          }].concat([...cmtLists]);
+          setComments(newArrr);
+
+        }).catch(err => { });
+      }
+      setCommentContent('');
+    }
   }
   return (
     <div className="post-container">
@@ -89,7 +118,7 @@ function Post(props) {
           <img alt="" src="avatars/6.jpg" />
         </div>
         <div className="input-container">
-          <CInput type="text" placeholder="Viết bình luận..." />
+          <CInput type="text" placeholder="Viết bình luận..." value={commentContent} onKeyDown={onAddComment} onChange={(e) => setCommentContent(e.target.value)} />
         </div>
       </div>
       <div className="comment-list">

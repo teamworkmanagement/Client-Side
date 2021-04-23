@@ -9,6 +9,10 @@ const commentApi = {
     getPagination(params) {
         const url = `/comment?PostId=${params.PostId}&PageSize=${params.PageSize}&SkipItems=${params.SkipItems}`;
         return axiosClient.get(url);
+    },
+    addComment(params) {
+        const url = '/comment';
+        return axiosClient.post(url, params);
     }
 };
 
