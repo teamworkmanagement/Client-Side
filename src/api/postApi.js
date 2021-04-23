@@ -9,6 +9,14 @@ const postApi = {
     getPagination(params) {
         const url = `/post/paging-multi`;
         return axiosClient.get(url, params);
+    },
+    reactPost(params) {
+        const url = '/post/add-react';
+        return axiosClient.post(url, params);
+    },
+    deleteReactPost(params) {
+        const url = '/post/delete-react';
+        return axiosClient.delete(url, params);
     }
 };
 

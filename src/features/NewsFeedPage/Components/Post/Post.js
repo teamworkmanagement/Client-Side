@@ -7,6 +7,8 @@ import { CInput } from "@coreui/react";
 import moment from "moment";
 import 'moment/locale/vi';
 import commentApi from "src/api/commentApi";
+import classNames from "classnames";
+import postApi from "src/api/postApi";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -14,6 +16,7 @@ Post.propTypes = {};
 function Post(props) {
   const [cmtLists, setComments] = useState([]);
   const [loadComment, setLoadComment] = useState(0);
+  const [post, setPost] = useState({ ...props.post });
 
   useEffect(() => {
     async function getComments() {
@@ -33,7 +36,20 @@ function Post(props) {
     setLoadComment(loadComment + 1);
   }
 
-  
+  const onLoveClick = () => {
+    const params = {
+      "postId": post.postId,
+      "userId": '8650b7fe-2952-4b03-983c-660dddda9029'
+    };
+    post.isReacted ? postApi.deleteReactPost({ params }).then(res => { }).catch(err => { })
+      : postApi.reactPost(params).then(res => { }).catch(err => { })
+
+    setPost({
+      ...post,
+      postReactCount: post.isReacted ? post.postReactCount - 1 : post.postReactCount + 1,
+      isReacted: !post.isReacted,
+    });
+  }
   return (
     <div className="post-container">
       <div className="post-header">
@@ -46,11 +62,11 @@ function Post(props) {
           </div>
           <div className="poster-infor">
             <div className="name-and-group">
-              <strong>{props.post.userName}</strong> đã đăng trong nhóm{" "}
-              <strong>{props.post.teamName}</strong>
+              <strong>{post.userName}</strong> đã đăng trong nhóm{" "}
+              <strong>{post.teamName}</strong>
             </div>
             <div className="post-date">
-              {moment(props.post.postCreatedAt).format("l")}
+              {moment(post.postCreatedAt).format("l")}
               <CIcon name="cil-clock" />
             </div>
           </div>
@@ -60,13 +76,13 @@ function Post(props) {
         </div>
       </div>
       <div className="post-content">
-        {props.post.postContent}
+        {post.postContent}
       </div>
       <div className="interaction-bar">
-        <CIcon name="cil-heart" className="is-love-icon loved" />
-        <div className="love-count">{props.post.postReactCount}</div>
+        <CIcon name="cil-heart" className={classNames('is-love-icon', { 'loved': post.isReacted })} onClick={onLoveClick} />
+        <div className="love-count">{post.postReactCount}</div>
         <CIcon name="cil-comment-square" className="comment-icon" />
-        <div className="comment-count">{props.post.postCommentCount}</div>
+        <div className="comment-count">{post.postCommentCount}</div>
       </div>
       <div className="my-comment">
         <div className="my-avatar">
