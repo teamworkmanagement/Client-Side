@@ -17,15 +17,20 @@ import PostList from "./Components/PostList/PostList";
 import PostToolBar from "./Components/PostToolBar/PostToolBar";
 import CIcon from "@coreui/icons-react";
 import TextareaAutosize from "react-textarea-autosize";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFilterChange } from "src/appSlice";
+
 
 NewsFeedPage.propTypes = {};
 
 function NewsFeedPage(props) {
   const [showFilter, setShowFilter] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({
+    UserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+    PageSize: 3,
+  });
+
   const dispatch = useDispatch();
 
   const groupList = [
@@ -105,7 +110,11 @@ function NewsFeedPage(props) {
 
     console.log(obj, '-----', filter);
 
-    setFilter(obj);
+    setFilter({
+      ...filter,
+      ...obj
+    })
+
     dispatch(setFilterChange(true));
   }
   return (
