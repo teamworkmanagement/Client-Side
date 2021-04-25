@@ -9,6 +9,7 @@ import {
   CTabContent,
   CTabPane,
   CTabs,
+  CTooltip,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import ListFileTable from "../../shared_components/MySharedComponents/ListFileTable/ListFileTable";
@@ -25,28 +26,36 @@ function TeamPage(props) {
       <CTabs activeTab={active} onActiveTabChange={(idx) => setActive(idx)}>
         <CNav variant="tabs">
           <CNavItem>
-            <CNavLink>
-              <CIcon name="cil-newspaper" />
-              <div className="tab-name">Bản tin nhóm</div>
-            </CNavLink>
+            <CTooltip content="Bản tin nhóm" placement="right">
+              <CNavLink>
+                <CIcon name="cil-newspaper" />
+                <div className="tab-name">Bản tin nhóm</div>
+              </CNavLink>
+            </CTooltip>
           </CNavItem>
           <CNavItem>
-            <CNavLink>
-              <CIcon name="cil-line-weight" />
-              <div className="tab-name">Công việc</div>
-            </CNavLink>
+            <CTooltip content="Công việc" placement="right">
+              <CNavLink>
+                <CIcon name="cil-line-weight" />
+                <div className="tab-name">Công việc</div>
+              </CNavLink>
+            </CTooltip>
           </CNavItem>
           <CNavItem>
-            <CNavLink>
-              <CIcon name="cil-send" />
-              <div className="tab-name">Tin nhắn nhóm</div>
-            </CNavLink>
+            <CTooltip content="Tin nhắn nhóm" placement="right">
+              <CNavLink>
+                <CIcon name="cil-send" />
+                <div className="tab-name">Tin nhắn nhóm</div>
+              </CNavLink>
+            </CTooltip>
           </CNavItem>
           <CNavItem>
-            <CNavLink>
-              <CIcon name="cil-description" />
-              <div className="tab-name">Tài liệu</div>
-            </CNavLink>
+            <CTooltip content="Tài liệu" placement="right">
+              <CNavLink>
+                <CIcon name="cil-description" />
+                <div className="tab-name">Tài liệu</div>
+              </CNavLink>
+            </CTooltip>
           </CNavItem>
         </CNav>
         <CTabContent>
