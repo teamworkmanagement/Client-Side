@@ -2,12 +2,16 @@
     margin: 1rem;
     border: 1px solid #e6ebf1;
     border-radius: 0.625rem;
-    padding: 1rem;
-    width: 17rem;
+    padding: 0rem;
+    width: 280px;
+    min-width: 270px;
+    max-width: 270px;
     background-color: #f0f2f5;
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
+    overflow-x: hidden;
+    justify-content: space-between;
     .kanbanlist-header {
         //margin-bottom: 1rem;
         //color: #d6d7dc;
@@ -20,4 +24,46 @@
         flex-grow: 1;
         overflow-y: auto;
     }
+    .kanbanlist-footer-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom-left-radius: 0.625rem;
+        border-bottom-right-radius: 0.625rem;
+        background-color: white;
+        border: 1px solid #e6ebf1;
+        padding: 0.2rem 0rem;
+        cursor: pointer;
+        .c-icon {
+            margin-right: 0.3rem;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.kanbanlist-cards::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+/* Track */
+.kanbanlist-cards::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.kanbanlist-cards::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+    border-radius: 10px;
+    border: 0.1rem solid #ebedef !important;
+}
+
+/* Handle on hover */
+.kanbanlist-cards::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }

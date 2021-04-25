@@ -13,6 +13,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import ListFileTable from "../../shared_components/MySharedComponents/ListFileTable/ListFileTable";
 import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
+import KanbanBoard from "../KanbanBoard/KanbanBoard";
 
 TeamPage.propTypes = {};
 
@@ -52,7 +53,9 @@ function TeamPage(props) {
           <CTabPane>
             <NewsFeedPage isInTeam={true} />
           </CTabPane>
-          <CTabPane>{`2. ${lorem}`}</CTabPane>
+          <CTabPane>
+            <KanbanBoard />
+          </CTabPane>
           <CTabPane>
             <ChatPage isInTeam={true} />
           </CTabPane>
