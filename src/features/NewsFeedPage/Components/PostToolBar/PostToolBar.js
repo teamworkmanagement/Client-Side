@@ -88,8 +88,23 @@ function PostToolBar(props) {
     }
     else {
       console.log(adFilter);
+      const cloneAdFilter = { ...adFilter };
+
+      if (!cFrom)
+        cloneAdFilter.FromDate = null;
+
+      if (!cTo)
+        cloneAdFilter.ToDate = null;
+
+      if (!cUser)
+        cloneAdFilter.PostUser = null;
+
+      if (!cFrom && !cTo && !cUser) {
+        setFilter(null);
+        return;
+      }
       setFilter({
-        ...adFilter,
+        ...cloneAdFilter,
       })
     }
   }

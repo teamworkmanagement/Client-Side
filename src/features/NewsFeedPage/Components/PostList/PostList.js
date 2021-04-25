@@ -7,12 +7,14 @@ import postApi from "src/api/postApi";
 import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import Empty from "../Post/Empty/Empty";
 import Loading from "../Post/Empty/Loading";
+import CIcon from "@coreui/icons-react";
 
 PostList.propTypes = {};
 
 function PostList(props) {
   const [listPosts, setListPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showScroll, setShowScroll] = useState(false);
 
   const dispatch = useDispatch();
   const latestPosts = useRef(null);
@@ -57,11 +59,22 @@ function PostList(props) {
 
   useEffect(() => {
     window.onscroll = function (ev) {
+
+      if (window.pageYOffset > 600) {
+        setShowScroll(true);
+      } else if (window.pageYOffset <= 600) {
+        setShowScroll(false);
+      }
+
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         dispatch(setCurrentPostPage());
       }
     };
   }, [])
+
+  const scrollTop = () => {
+    window.scrollTo(0, 0);
+  }
 
   const renderListPost = listPosts.map(item => {
     return <Post post={item} key={item.postId} />
@@ -73,6 +86,7 @@ function PostList(props) {
         listPosts.length === 0 && !isLoading ? <Empty /> : renderListPost
       }
       {isLoading ? <Loading /> : null}
+      {showScroll ? <div className="show-scroll" onClick={scrollTop}>GO TOP</div> : null}
     </div>
   );
 }
