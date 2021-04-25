@@ -19,6 +19,7 @@ import CIcon from "@coreui/icons-react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterChange } from "src/appSlice";
+import Loading from "./Components/Post/Empty/Loading";
 
 
 NewsFeedPage.propTypes = {};

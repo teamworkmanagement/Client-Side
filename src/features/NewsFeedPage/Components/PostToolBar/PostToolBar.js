@@ -50,7 +50,7 @@ function PostToolBar(props) {
 
     setAdFilter({
       ...adFilter,
-      [name]: value,
+      [name]: value !== '' ? Math.round(new Date(value).getTime()) : null,
     })
   }
 

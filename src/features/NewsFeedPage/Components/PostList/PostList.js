@@ -6,11 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import postApi from "src/api/postApi";
 import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import Empty from "../Post/Empty/Empty";
+import Loading from "../Post/Empty/Loading";
 
 PostList.propTypes = {};
 
 function PostList(props) {
   const [listPosts, setListPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const latestPosts = useRef(null);
@@ -23,11 +25,13 @@ function PostList(props) {
   useEffect(() => {
     async function getPosts() {
       try {
+
+        setIsLoading(true);
         const params = {
           ...props.filter,
           SkipItems: filterChanged ? 0 : listPosts.length,
         }
-        
+
         const outPut = await postApi.getPagination({ params });
 
         if (filterChanged) {
@@ -43,7 +47,7 @@ function PostList(props) {
         console.log(err);
       }
       finally {
-
+        setIsLoading(false);
       }
     }
 
@@ -66,8 +70,9 @@ function PostList(props) {
   return (
     <div>
       {
-        listPosts.length === 0 ? <Empty /> : renderListPost
+        listPosts.length === 0 && !isLoading ? <Empty /> : renderListPost
       }
+      {isLoading ? <Loading /> : null}
     </div>
   );
 }
