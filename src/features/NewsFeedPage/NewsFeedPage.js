@@ -19,7 +19,8 @@ import CIcon from "@coreui/icons-react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterChange } from "src/appSlice";
-import Loading from "./Components/Post/Empty/Loading";
+import Loading from "./Components/Post/Components/Loading/Loading";
+import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 
 
 NewsFeedPage.propTypes = {};
@@ -31,6 +32,11 @@ function NewsFeedPage(props) {
     UserId: '8650b7fe-2952-4b03-983c-660dddda9029',
     PageSize: 3,
   });
+
+  const [clearSelect, setClearFilter] = useState(-1);
+
+  const [grAddPost, setGrAddPost] = useState(null);
+  const [newPostContent, setNewPostContent] = useState('');
 
   const dispatch = useDispatch();
 
@@ -119,6 +125,31 @@ function NewsFeedPage(props) {
 
     dispatch(setFilterChange(true));
   }
+
+
+  const getGroupPost = (gr) => {
+    setGrAddPost(gr === null ? null : gr.value);
+  }
+
+  const addPostClick = () => {
+
+    console.log('group : ', grAddPost);
+    console.log('content : ', newPostContent);
+
+    setShowCreatePost(false)
+  }
+
+  const onTextAreaChange = (e) => {
+    setNewPostContent(e.target.value);
+  }
+
+  const onModalClose = () => {
+    console.log('modal close');
+
+    setClearFilter(clearSelect + 1);
+    setNewPostContent('');
+    setShowCreatePost(false);
+  }
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
@@ -197,21 +228,24 @@ function NewsFeedPage(props) {
 
       <CModal
         show={showCreatePost}
-        onClose={() => setShowCreatePost(!showCreatePost)}
+        onClosed={onModalClose}
       >
         <CModalBody>
+          <GroupFilter clearSelect={clearSelect} getGroupPost={getGroupPost} />
           <TextareaAutosize
             className="input-post"
             minRows={1}
             maxRows={20}
             placeholder="Viết bản tin mới..."
+            onChange={onTextAreaChange}
+            value={newPostContent}
           />
         </CModalBody>
         <CModalFooter>
           <CButton
             color="primary"
             className="submit-btn"
-            onClick={() => setShowCreatePost(!showCreatePost)}
+            onClick={addPostClick}
           >
             Đăng bài
           </CButton>

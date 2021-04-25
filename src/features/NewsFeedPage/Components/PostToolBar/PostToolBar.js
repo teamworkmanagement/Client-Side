@@ -15,7 +15,7 @@ import {
   CLabel,
   CSelect,
 } from "@coreui/react";
-import UserFilter from "./UserFilter";
+import UserFilter from "../Post/Components/Selector/UserFilter/UserFilter";
 
 PostToolBar.propTypes = {};
 
