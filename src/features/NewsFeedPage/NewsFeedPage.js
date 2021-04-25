@@ -112,7 +112,7 @@ function NewsFeedPage(props) {
         delete obj[propName];
       }
     }
-    if (filter === obj || JSON.stringify(filter) === JSON.stringify(obj))
+    if (filter === obj || JSON.stringify(filter) === JSON.stringify(obj) || JSON.stringify(obj) === JSON.stringify({}))
       return;
 
     console.log(obj, '-----', filter);
@@ -136,7 +136,9 @@ function NewsFeedPage(props) {
     console.log('group : ', grAddPost);
     console.log('content : ', newPostContent);
 
-    setShowCreatePost(false)
+    if (!grAddPost || !newPostContent)
+      alert('Xem lại');
+    setShowCreatePost(false);
   }
 
   const onTextAreaChange = (e) => {
@@ -150,6 +152,7 @@ function NewsFeedPage(props) {
     setNewPostContent('');
     setShowCreatePost(false);
   }
+
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">

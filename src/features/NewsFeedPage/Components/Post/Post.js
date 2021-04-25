@@ -64,6 +64,11 @@ function Post(props) {
           "commentIsDeleted": false,
         }).then(res => {
 
+          setPost({
+            ...post,
+            postCommentCount: post.postCommentCount + 1,
+          });
+
           const newArrr = [{
             'commentId': res.data.commentId,
             'commentPostId': res.data.commentPostId,
@@ -72,6 +77,7 @@ function Post(props) {
             'userName': 'Dungx Nguyeenx',
             'commentCreatedAt': res.data.commentCreatedAt,
           }].concat([...cmtLists]);
+
           setComments(newArrr);
 
         }).catch(err => { });

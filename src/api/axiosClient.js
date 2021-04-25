@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setValueAuth } from "src/shared_components/views/pages/login/authSlice";
-import { refreshTokenFunc } from "src/utils/auth";
+import { delete_cookie, getCookie, refreshTokenFunc } from "src/utils/auth";
 import store from "../app/store";
 
 axios.defaults.withCredentials = true;
@@ -77,14 +77,5 @@ axiosClient.interceptors.response.use(
   }
 );
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(";").shift();
-}
-
-function delete_cookie(name) {
-  document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-}
 
 export default axiosClient;
