@@ -111,9 +111,10 @@ function NewsFeedPage(props) {
     console.log(obj, '-----', filter);
 
     setFilter({
-      ...filter,
-      ...obj
-    })
+      ...obj,
+      UserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+      PageSize: 3,
+    });
 
     dispatch(setFilterChange(true));
   }

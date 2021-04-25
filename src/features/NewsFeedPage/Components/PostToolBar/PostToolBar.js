@@ -25,14 +25,19 @@ function PostToolBar(props) {
   const [cTo, setCto] = useState(false);
   const [cUser, setCuser] = useState(false);
 
-  const [fDate, setFDate] = useState(null);
-  const [tDate, setTDate] = useState(null);
+  /*const [fDate, setFDate] = useState(null);
+  const [tDate, setTDate] = useState(null);*/
   const [pUser, setPuser] = useState(null);
 
+
+  const [basicFilter, setBasicFilter] = useState(null);
+  const [adFilter, setAdFilter] = useState(null);
+
   const onChange = (e) => {
-    setFilter({
-      ...filter,
-      [e.target.name]: e.target.value,
+    const { name, value } = e.target;
+    setBasicFilter({
+      ...basicFilter,
+      [name]: value,
     });
   }
 
@@ -42,120 +47,57 @@ function PostToolBar(props) {
 
   const onChangeDate = (e) => {
     const { value, name } = e.target;
-    if (name === 'FromDate') {
-      setFDate(value);
-      if (cFrom)
-        if (!value) {
-          const { FromDate, ...noFromDate } = filter;
-          setFilter(noFromDate);
-        }
-        else {
-          setFilter({
-            ...filter,
-            FromDate: value,
-          });
-        }
-    }
-    else {
-      setTDate(value);
-      if (cTo) {
-        if (!value) {
-          const { ToDate, ...noToDate } = filter;
-          setFilter(noToDate);
-        }
-        else {
-          setFilter({
-            ...filter,
-            ToDate: value,
-          });
-        }
-      }
-    }
+
+    setAdFilter({
+      ...adFilter,
+      [name]: value,
+    })
   }
 
   const onCheckBoxFromDate = (e) => {
-
-    if (!cFrom && fDate) {
-      setFilter({
-        ...filter,
-        FromDate: fDate,
-      });
-    }
-    else if (cFrom) {
-      setFilter({
-        ...filter,
-        FromDate: null,
-      });
-    }
     setCFrom(!cFrom);
   }
 
   const onCheckBoxToDate = (e) => {
-    if (!cTo && tDate) {
-      setFilter({
-        ...filter,
-        ToDate: tDate,
-      });
-    }
-    else
-      if (cTo) {
-        setFilter({
-          ...filter,
-          ToDate: null,
-        });
-      }
-
     setCto(!cTo);
   }
 
   const onCheckBoxPostUser = (e) => {
-    if (!cUser && pUser) {
-      setFilter({
-        ...filter,
-        PostUser: pUser.value,
-      });
-    }
-    else if (cUser) {
-      setFilter({
-        ...filter,
-        PostUser: null,
-      });
-    }
     setCuser(!cUser);
   }
 
   const pickUser = (obj) => {
-    if (cUser) {
-      if (filter?.PostUser) {
-        if (obj === null) {
-          const { PostUser, ...noPostUser } = filter;
-          setFilter(noPostUser);
-        } else {
-          setFilter({
-            ...filter,
-            PostUser: obj.value,
-          })
-        }
-      }
-      else if (!filter?.PostUser) {
-        if (obj == null) {
 
-        } else {
-          setFilter({
-            ...filter,
-            PostUser: obj.value,
-          })
-        }
-      }
-    }
+
     setPuser(obj);
   }
 
+  useEffect(() => {
+    setAdFilter({
+      ...adFilter,
+      PostUser: pUser === null ? pUser : pUser.value,
+    })
+  }, [pUser]);
+
+  const onFilterClick = (type) => {
+    if (type == 'basic') {
+      console.log(basicFilter);
+      setFilter({
+        ...basicFilter,
+      })
+    }
+    else {
+      console.log(adFilter);
+      setFilter({
+        ...adFilter,
+      })
+    }
+  }
   return (
     <CCard className="post-tool-bar">
       <div className="filter-title">
         Cơ bản
-        <CButton shape="pill" color="danger">
+        <CButton shape="pill" onClick={() => { onFilterClick('basic') }} color="danger">
           <CIcon name="cil-filter" />
         </CButton>
       </div>
@@ -223,7 +165,7 @@ function PostToolBar(props) {
       </div>
       <div className="filter-title">
         Nâng cao
-        <CButton shape="pill" color="danger">
+        <CButton shape="pill" onClick={() => { onFilterClick('advanced') }} color="danger">
           <CIcon name="cil-filter" />
         </CButton>
       </div>
@@ -242,7 +184,7 @@ function PostToolBar(props) {
             id="date-from"
             name="FromDate"
             placeholder="date"
-            value={fDate}
+
             onChange={onChangeDate}
           />
         </CFormGroup>
@@ -260,7 +202,7 @@ function PostToolBar(props) {
             id="date-to"
             name="ToDate"
             placeholder="date"
-            value={tDate}
+
             onChange={onChangeDate}
           />
         </CFormGroup>
