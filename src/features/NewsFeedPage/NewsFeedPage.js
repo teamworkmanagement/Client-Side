@@ -234,6 +234,7 @@ function NewsFeedPage(props) {
         onClosed={onModalClose}
       >
         <CModalBody>
+          <button className="button-close" onClick={() => setShowCreatePost(false)}>X</button>
           <GroupFilter clearSelect={clearSelect} getGroupPost={getGroupPost} />
           <TextareaAutosize
             className="input-post"

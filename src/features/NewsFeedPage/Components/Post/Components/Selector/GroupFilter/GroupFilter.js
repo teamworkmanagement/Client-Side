@@ -75,7 +75,7 @@ function GroupFilter(props) {
     }, []);
 
     return (
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '90%' }}>
             <Select
                 value={isFocused ? null : currentGroup}
                 onChange={onChange}
