@@ -6,6 +6,7 @@ import "./shared_components/scss/style.scss";
 import PrivateRoute from "./shared_components/team_route/PrivateRoute";
 import PublicRoute from "./shared_components/team_route/PublicRoute";
 import { islogin } from "./shared_components/views/pages/login/authSlice";
+import { start } from "./utils/signalr/chatservices";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -38,6 +39,9 @@ function App() {
   useEffect(() => {
     const cloneStatus = !!loginStatus;
     if (!cloneStatus) dispatch(islogin());
+
+    start();
+
   }, []);
 
   return (

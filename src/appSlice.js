@@ -6,6 +6,7 @@ const appSlice = createSlice({
     sidebarShow: "responsive",
     currentPostPage: 1,
     darkMode: true,
+    newMessage: null
   },
   reducers: {
     changeState(state, payload) {
@@ -19,9 +20,12 @@ const appSlice = createSlice({
     setDarkMode(state, action) {
       state.darkMode = !state.darkMode;
     },
+    setNewMessage(state, action) {
+      state.newMessage = action.payload;
+    }
   },
 });
 
 const { actions, reducer } = appSlice;
-export const { changeState, setCurrentPostPage, setDarkMode } = actions; // named export
+export const { changeState, setCurrentPostPage, setDarkMode, setNewMessage } = actions; // named export
 export default reducer; // default export

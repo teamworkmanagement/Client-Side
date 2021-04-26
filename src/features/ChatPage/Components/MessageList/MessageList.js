@@ -173,6 +173,9 @@ function MessageList(props) {
   const buttonRef = useRef(null);
   const latestChat = useRef(null);
   const [bot, setBottom] = useState(false);
+  const newMessage = useSelector(state => state.app.newMessage);
+
+
   const [connection, setConnection] = useState(new HubConnectionBuilder()
     .withUrl(`https://localhost:9001/hubchat`)
     .withAutomaticReconnect()
@@ -194,57 +197,32 @@ function MessageList(props) {
     }
   }, [bot])
 
-  //connect signalr
+
   useEffect(() => {
-    connection.start()
-      .then(result => {
-        console.log('Đã Connected signalR!');
 
-        connection.on('NhanMessage', message => {
-          console.log('nhan tin nhan');
-          const newMes = {
-            message: message.message,
-            class: "normal",
-            isMine: false,
-            time: message.timeSend,
-            isLabel: false,
-          }
-
-          const messageObj = { ...message };
-          if (message.groupId !== groupRef.current) {
-            messageObj.newMessage = true;
-            dispatch(setReceiveMes(messageObj));
-            return;
-          }
-
-          dispatch(setReceiveMes(messageObj));
-          const cloneList = [...latestChat.current];
-          cloneList.push(newMes);
-          setListMes(cloneList);
-          //scrollToBottom();
-        });
-      })
-      .catch(e => {
-        console.log('Connection failed: ', JSON.stringify(e), e.statusCode, e);
-        if (e.statusCode === 401) {
-          history.push('/login');
-        }
-
-        if (getCookie('TokenExpired') === "true") {
-          refreshTokenFunc().then(data => {
-            setTrigger(parseInt((trigger + 1).toString()));
-          }).catch(err => {
-            history.push('/login');
-          }).finally(() => {
-            document.cookie = 'TokenExpired=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-          })
-        }
-      });
-
-    return () => {
-      connection.stop();
+    if (newMessage === null)
+      return;
+    const newMes = {
+      message: newMessage.message,
+      class: "normal",
+      isMine: false,
+      time: newMessage.timeSend,
+      isLabel: false,
     }
-  }, [trigger]);
+
+    const messageObj = { ...newMessage };
+    if (newMessage.groupId !== groupRef.current) {
+      messageObj.newMessage = true;
+      dispatch(setReceiveMes(messageObj));
+      return;
+    }
+
+    const cloneList = [...latestChat.current];
+    cloneList.push(newMes);
+    setListMes(cloneList);
+    console.log(newMessage);
+
+  }, [newMessage]);
 
   //load tin nhan
   useEffect(() => {
@@ -310,10 +288,10 @@ function MessageList(props) {
     const cloneList = [...latestChat.current];
     cloneList.push(newMes);
     setListMes(cloneList);
-    setTimeout(function() {
+    setTimeout(function () {
       scrollToBottom();
     }, 1);
-    
+
 
 
   }, [props.send]);
