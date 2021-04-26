@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFilterChange } from "src/appSlice";
 import Loading from "./Components/Post/Components/Loading/Loading";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
+import postApi from "src/api/postApi";
 
 
 NewsFeedPage.propTypes = {};
@@ -34,6 +35,7 @@ function NewsFeedPage(props) {
   });
 
   const [clearSelect, setClearFilter] = useState(-1);
+  const [addPostDone, setAddPostDone] = useState(null);
 
   const [grAddPost, setGrAddPost] = useState(null);
   const [newPostContent, setNewPostContent] = useState('');
@@ -136,8 +138,23 @@ function NewsFeedPage(props) {
     console.log('group : ', grAddPost);
     console.log('content : ', newPostContent);
 
-    if (!grAddPost || !newPostContent)
+    if (!grAddPost || !newPostContent) {
       alert('Xem lại');
+      return;
+    }
+
+
+    postApi.addPost({
+      postUserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+      postTeamId: grAddPost,
+      postContent: newPostContent,
+    }).then(res => {
+      console.log(res.data);
+      setAddPostDone(res.data);
+    }).catch(err => {
+
+    });
+
     setShowCreatePost(false);
   }
 
@@ -156,7 +173,7 @@ function NewsFeedPage(props) {
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
-        <PostList filter={filter} />
+        <PostList addPostDone={addPostDone} filter={filter} />
       </div>
       <div className="side-panel-container">
         <div

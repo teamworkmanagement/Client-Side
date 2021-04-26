@@ -17,6 +17,10 @@ const postApi = {
     deleteReactPost(params) {
         const url = '/post/delete-react';
         return axiosClient.delete(url, params);
+    },
+    addPost(params) {
+        const url = '/post';
+        return axiosClient.post(url, params);
     }
 };
 

@@ -56,6 +56,13 @@ function PostList(props) {
     getPosts();
   }, [pageNumber, props.filter]);
 
+  useEffect(() => {
+    if (props.addPostDone === null)
+      return;
+    const cur = [...latestPosts.current];
+    const las = [props.addPostDone].concat(cur);
+    setListPosts(las);
+  }, [props.addPostDone])
 
   useEffect(() => {
     window.onscroll = function (ev) {
