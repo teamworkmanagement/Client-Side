@@ -514,7 +514,9 @@ const appSlice = createSlice({
     sidebarShow: "responsive",
     currentPostPage: 1,
     darkMode: true,
-    kanbanBoardData: testInitKanbanBoardData,
+    kanbanBoardData: initKanbanBoardData,
+    filterChanged: false,
+    //kanbanBoardData: testInitKanbanBoardData,
     //data from api
     tasks: Tasks,
     users: Users,
@@ -550,6 +552,11 @@ const appSlice = createSlice({
         state.kanbanBoardData.listOrder = payload.payload.newColumnOrder;
       }
     },
+
+    setFilterChange(state, action) {
+      state.filterChanged = action.payload;
+    }
+
     setKanbanLists(state, payload) {
       state.kanbanLists = payload.payload;
     },
@@ -711,6 +718,7 @@ export const {
   changeState,
   setCurrentPostPage,
   setDarkMode,
+  setFilterChange
   refactorTasks,
   setKanbanLists,
   handleDragEnd,

@@ -1,0 +1,11 @@
+.show-scroll {
+    position: fixed;
+    bottom: 21px;
+    right: 10px;
+    border: 1px solid;
+    background-color: plum;
+    border-radius: 2px;
+    &:hover {
+        cursor: pointer;
+    }
+}

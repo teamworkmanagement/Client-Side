@@ -398,7 +398,7 @@ function ListFileTable(props) {
               "fileUrl": `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
               "fileType": GetTypeFromExt(file.name),
               "userId": "8650b7fe-2952-4b03-983c-660dddda9029",
-              "teamId": "team2",
+              "fileBelongedId": "team2",
               "fileSize": file.size,
             }
 
@@ -425,7 +425,7 @@ function ListFileTable(props) {
     async function getDatas() {
       try {
         const params = {
-          TeamId: 'team2',
+          BelongedId: 'team2',
           PageNumber: page,
           PageSize: pageSize,
         };

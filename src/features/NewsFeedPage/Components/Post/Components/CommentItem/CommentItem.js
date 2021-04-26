@@ -1,10 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./CommentItem.scss";
+import moment from "moment";
+import 'moment/locale/vi';
+
+moment.locale('vi');
 
 CommentItem.propTypes = {};
 
-function CommentItem(props) {
+function CommentItem({comment}) {
   return (
     <div className="comment-item-container">
       <div className="commenter-avatar">
@@ -12,11 +16,11 @@ function CommentItem(props) {
       </div>
       <div className="comment-infor">
         <div className="comment-header">
-          <div className="commenter-name">Athony Dũng</div>
-          <div className="comment-date">18/03/2021</div>
+          <div className="commenter-name">{comment.userName}</div>
+          <div className="comment-date">{moment(comment.commentCreatedAt).format('l')}</div>
         </div>
         <div className="comment-content">
-          Vô cùng thuyết phục, tào lao rất hay!!
+          {comment.commentContent}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./NewsFeedPage.scss";
 import {
@@ -17,12 +17,30 @@ import PostList from "./Components/PostList/PostList";
 import PostToolBar from "./Components/PostToolBar/PostToolBar";
 import CIcon from "@coreui/icons-react";
 import TextareaAutosize from "react-textarea-autosize";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilterChange } from "src/appSlice";
+import Loading from "./Components/Post/Components/Loading/Loading";
+import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
+import postApi from "src/api/postApi";
+
 
 NewsFeedPage.propTypes = {};
 
 function NewsFeedPage(props) {
   const [showFilter, setShowFilter] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const [filter, setFilter] = useState({
+    UserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+    PageSize: 3,
+  });
+
+  const [clearSelect, setClearFilter] = useState(-1);
+  const [addPostDone, setAddPostDone] = useState(null);
+
+  const [grAddPost, setGrAddPost] = useState(null);
+  const [newPostContent, setNewPostContent] = useState('');
+
+  const dispatch = useDispatch();
 
   const groupList = [
     {
@@ -88,10 +106,74 @@ function NewsFeedPage(props) {
     console.log(showFilter);
   }
 
+  const getFilter = (obj) => {
+    if (obj === null || obj === undefined)
+      return;
+    for (var propName in obj) {
+      if (obj[propName] === null || obj[propName] === undefined) {
+        delete obj[propName];
+      }
+    }
+    if (filter === obj || JSON.stringify(filter) === JSON.stringify(obj) || JSON.stringify(obj) === JSON.stringify({}))
+      return;
+
+    console.log(obj, '-----', filter);
+
+    setFilter({
+      ...obj,
+      UserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+      PageSize: 3,
+    });
+
+    dispatch(setFilterChange(true));
+  }
+
+
+  const getGroupPost = (gr) => {
+    setGrAddPost(gr === null ? null : gr.value);
+  }
+
+  const addPostClick = () => {
+
+    console.log('group : ', grAddPost);
+    console.log('content : ', newPostContent);
+
+    if (!grAddPost || !newPostContent) {
+      alert('Xem lại');
+      return;
+    }
+
+
+    postApi.addPost({
+      postUserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+      postTeamId: grAddPost,
+      postContent: newPostContent,
+    }).then(res => {
+      console.log(res.data);
+      setAddPostDone(res.data);
+    }).catch(err => {
+
+    });
+
+    setShowCreatePost(false);
+  }
+
+  const onTextAreaChange = (e) => {
+    setNewPostContent(e.target.value);
+  }
+
+  const onModalClose = () => {
+    console.log('modal close');
+
+    setClearFilter(clearSelect + 1);
+    setNewPostContent('');
+    setShowCreatePost(false);
+  }
+
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
-        <PostList />
+        <PostList addPostDone={addPostDone} filter={filter} />
       </div>
       <div className="side-panel-container">
         <div
@@ -109,15 +191,15 @@ function NewsFeedPage(props) {
           style={
             showFilter
               ? {
-                  borderBottomLeftRadius: "0",
-                  borderBottomRightRadius: "0",
-                  borderBottom: "none",
-                }
+                borderBottomLeftRadius: "0",
+                borderBottomRightRadius: "0",
+                borderBottom: "none",
+              }
               : {
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  borderBottom: "1px solid #e6ebf1",
-                }
+                borderBottomLeftRadius: "10px",
+                borderBottomRightRadius: "10px",
+                borderBottom: "1px solid #e6ebf1",
+              }
           }
         >
           <div className="title">
@@ -131,7 +213,7 @@ function NewsFeedPage(props) {
           )}
         </div>
         <CCollapse show={showFilter}>
-          <PostToolBar />
+          <PostToolBar getFilter={getFilter} />
         </CCollapse>
         {!props.isInTeam && (
           <div className="post-group-list-container">
@@ -166,21 +248,25 @@ function NewsFeedPage(props) {
 
       <CModal
         show={showCreatePost}
-        onClose={() => setShowCreatePost(!showCreatePost)}
+        onClosed={onModalClose}
       >
         <CModalBody>
+          <button className="button-close" onClick={() => setShowCreatePost(false)}>X</button>
+          <GroupFilter clearSelect={clearSelect} getGroupPost={getGroupPost} />
           <TextareaAutosize
             className="input-post"
             minRows={1}
             maxRows={20}
             placeholder="Viết bản tin mới..."
+            onChange={onTextAreaChange}
+            value={newPostContent}
           />
         </CModalBody>
         <CModalFooter>
           <CButton
             color="primary"
             className="submit-btn"
-            onClick={() => setShowCreatePost(!showCreatePost)}
+            onClick={addPostClick}
           >
             Đăng bài
           </CButton>
