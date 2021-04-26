@@ -1,4 +1,5 @@
 import React from "react";
+import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
 import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
 
 const TheLayout = () => {
@@ -10,7 +11,6 @@ const TheLayout = () => {
         <div className="c-body">
           <TheContent />
         </div>
-        {/* <TheFooter/> */}
       </div>
     </div>
   );
