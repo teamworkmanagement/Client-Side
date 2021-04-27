@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./ChatList.scss";
 import ChatListItem from "./Components/ChatListItem/ChatListItem";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentGroup } from "../../chatSlice";
 
 ChatList.propTypes = {};
 
@@ -101,29 +103,15 @@ function ChatList(props) {
 
   const [chatList, setChatList] = useState(initChatList);
 
+  const dispatch = useDispatch();
+  const groupChatList = useSelector(state => state.chat.groupChat);
   const hanelSelectItem = (selectedId) => {
-    // clone current array to the new one
-    const ChatList = [...chatList];
-
-    ChatList.map((item, index) => {
-      const isSlelectedItem = item.id === selectedId ? true : false;
-      const returnItem = item;
-      returnItem.isSelected = isSlelectedItem ? true : false;
-
-      if (isSlelectedItem) {
-        returnItem.isNew = false;
-      }
-      return {
-        returnItem,
-      };
-    });
-
-    // update todo list
-    setChatList(ChatList);
+    dispatch(setCurrentGroup(selectedId));
   };
+
   return (
     <div className="chat-list-conatainer">
-      {chatList.map(function (item, index) {
+      {groupChatList.map(function (item, index) {
         return (
           <ChatListItem
             key={index}

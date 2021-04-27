@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./MessageList.scss";
 import { CTooltip } from "@coreui/react";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import messageApi from "src/api/messageApi";
+import { setIsSelected, setReceiveMes } from "../../chatSlice";
+import chatApi from "src/api/chatApi";
 
 MessageList.propTypes = {};
 
@@ -151,18 +156,148 @@ function MessageList(props) {
       isLabel: false,
     },
   ];
+
+  const dispatch = useDispatch();
+  const currentGroup = useSelector(state => state.chat.currentGroup);
+  const userId = useSelector(state => state.auth.currentUser.id);
+  const isSelected = useSelector(state => state.chat.isSelected);//chuyeenr nhom chat
+  const toolTipOptions = {};
+  const [listMes, setListMes] = useState([]);
+  const [test, setTest] = useState(0);
+  const messagesEndRef = useRef(null);
+  const latestChat = useRef(null);
+  const newMessage = useSelector(state => state.chat.newMessage);
+
+
+  latestChat.current = listMes;
+
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+
+  //load tin nhan
+  useEffect(() => {
+    async function getMessage() {
+      let skipItems = listMes.length;
+      if (isSelected) {
+        dispatch(setIsSelected(false));
+        skipItems = 0;
+      }
+      const params = {
+        GroupId: currentGroup,
+        SkipItems: skipItems,
+        PageSize: 8,
+      }
+      const outPut = await messageApi.getPagination({ params });
+      if (outPut.data?.items.length === 0) {
+        return;
+      }
+
+
+      const newArray = outPut.data?.items.map(mes => {
+        return {
+          id: mes.messageId,
+          message: mes.messageContent,
+          class: "normal",
+          isMine: mes.messageUserId === userId ? true : false,
+          time: mes.messageCreatedAt,
+          isLabel: false,
+        }
+      });
+
+
+      if (skipItems === 0) {
+        setListMes(newArray);
+        setTimeout(() => {
+          scrollToBottom();
+        }, 1)
+
+      }
+
+      else {
+        const newArray1 = newArray.concat([...latestChat.current]);
+        setListMes(newArray1);
+        props.scrollFix();
+      }
+    }
+
+    getMessage();
+  }, [props.reachTop, currentGroup]);
+
+
+  //receive mes
+  useEffect(() => {
+
+    if (newMessage === null)
+      return;
+    console.log(newMessage);
+
+    const newMes = {
+      message: newMessage.message,
+      class: "normal",
+      isMine: false,
+      time: newMessage.timeSend,
+      isLabel: false,
+    }
+
+    const messageObj = { ...newMessage };
+    if (newMessage.groupId !== currentGroup) {
+      messageObj.newMessage = true;
+      dispatch(setReceiveMes(messageObj));
+      return;
+    }
+
+    const cloneList = [...latestChat.current];
+    cloneList.push(newMes);
+    setListMes(cloneList);
+
+  }, [newMessage]);
+
+
+  //send mes
+  useEffect(() => {
+    console.log(props.sendMes);
+    if (props.sendMes === null)
+      return;
+
+    chatApi.sendMes(props.sendMes.mesObj).then(res => {
+      const newMes = {
+        message: props.sendMes.mesObj.message,
+        class: "normal",
+        isMine: true,
+        time: props.sendMes.mesObj.timeSend,
+        isLabel: false,
+      }
+
+      dispatch(setReceiveMes(props.sendMes.mesObj));
+
+      const cloneList = [...latestChat.current];
+      cloneList.push(newMes);
+      setListMes(cloneList);
+      setTimeout(function () {
+        scrollToBottom();
+      }, 1);
+
+    }).catch(err => {
+
+    });
+
+  }, [props.sendMes]);
+
+
   return (
-    <div>
-      {messageList.map((item, index) => {
+    <div >
+      {listMes.map((item, index) => {
         return item.isLabel ? (
           <div className="message-label">{item.message}</div>
         ) : (
           <div
             key={index}
             animationDelay={index + 2}
-            className={`message-item-container ${
-              item.class ? item.class : ""
-            } ${item.isMine ? "mine" : ""} `}
+            className={`message-item-container ${item.class ? item.class : ""
+              } ${item.isMine ? "mine" : ""} `}
           >
             <img
               className="avatar"
@@ -173,16 +308,17 @@ function MessageList(props) {
             <div className="message-content">
               <CTooltip
                 className="my-tooltip"
-                content={item.time}
+                content={moment(item.time).format("DD/MM/YYYY hh:mma")}
                 placement={item.isMine ? "left" : "right"}
               >
                 <div className="message-text">{item.message}</div>
               </CTooltip>
-              <div className="message-time">{item.time}</div>
+              <div className="message-time">{moment(item.time).format("DD/MM/YYYY hh:mma")}</div>
             </div>
           </div>
         );
       })}
+      <div ref={messagesEndRef} />
     </div>
   );
 }

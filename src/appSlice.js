@@ -555,7 +555,7 @@ const appSlice = createSlice({
 
     setFilterChange(state, action) {
       state.filterChanged = action.payload;
-    }
+    },
 
     setKanbanLists(state, payload) {
       state.kanbanLists = payload.payload;
@@ -718,7 +718,7 @@ export const {
   changeState,
   setCurrentPostPage,
   setDarkMode,
-  setFilterChange
+  setFilterChange,
   refactorTasks,
   setKanbanLists,
   handleDragEnd,
