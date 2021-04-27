@@ -43,16 +43,14 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter
-      getUserConfirmation={(message, callback) => {
-        // this is the default behavior
-        const allowTransition = window.confirm(message);
-        callback(allowTransition);
-      }}
-    >
+    <BrowserRouter getUserConfirmation={(message, callback) => {
+      // this is the default behavior
+      const allowTransition = window.confirm(message);
+      callback(allowTransition);
+    }}>
       <React.Suspense fallback={loading}>
         <Switch>
-          {/* <PublicRoute
+          <PublicRoute
             restricted={true}
             component={Register}
             path="/register"
@@ -63,20 +61,20 @@ function App() {
             component={Login}
             path="/login"
             exact
-          /> */}
+          />
 
-          <Route
-            exact
-            path="/login"
-            name="Login Page"
-            render={(props) => <Login {...props} />}
-          />
-          <Route
-            exact
-            path="/register"
-            name="Register Page"
-            render={(props) => <Register {...props} />}
-          />
+          {/*<Route
+              exact
+              path="/login"
+              name="Login Page"
+              render={(props) => <Login {...props} />}
+            />
+            <Route
+              exact
+              path="/register"
+              name="Register Page"
+              render={(props) => <Register {...props} />}
+            />*/}
           <Route
             exact
             path="/404"
@@ -89,7 +87,7 @@ function App() {
             name="Page 500"
             render={(props) => <Page500 {...props} />}
           />
-          <PublicRoute
+          <Route
             path="/"
             name="Home"
             render={(props) => <TheLayout {...props} />}
