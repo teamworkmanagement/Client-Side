@@ -253,6 +253,16 @@ function MessageList(props) {
     cloneList.push(newMes);
     setListMes(cloneList);
 
+
+    const timeOut = setTimeout(() => {
+      if (props.reachBot)
+        scrollToBottom();
+    }, 1);
+
+    return () => {
+      clearTimeout(timeOut);
+    }
+
   }, [newMessage]);
 
 

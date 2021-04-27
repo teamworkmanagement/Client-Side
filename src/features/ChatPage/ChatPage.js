@@ -21,6 +21,7 @@ function ChatPage(props) {
   const user = useSelector(state => state.auth.currentUser);
   const [msg, setMsg] = useState('');
   const [send, setSend] = useState(null);
+  const [reachBot, setReachBot] = useState(true);
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -37,6 +38,13 @@ function ChatPage(props) {
       setReachTop(reachTop + 1);
       console.log('scroll');
     }
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      console.log('bottom');
+      setReachBot(true);
+    }
+
+    else
+      setReachBot(false);
   }
 
 
@@ -92,7 +100,7 @@ function ChatPage(props) {
           )}
 
           <div ref={scrollRef} onScroll={onScroll} className="chat-content-message-list">
-            <NewMessageList reachTop={reachTop} sendMes={send} scrollFix={scrollFixed} />
+            <NewMessageList reachBot={reachBot} reachTop={reachTop} sendMes={send} scrollFix={scrollFixed} />
           </div>
           <div className="chat-content-footer">
             <div className="input-container">
