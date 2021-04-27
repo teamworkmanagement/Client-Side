@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login, socialLogin } from './authSlice';
 import { setCurrentPostPage } from 'src/appSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { startChatService } from 'src/utils/signalr/chatService';
 
 const Login = () => {
   const history = useHistory();
@@ -111,9 +112,12 @@ const Login = () => {
     }*/
     await dispatch(socialLogin(data));
 
-    if (authStatus)
-
+    if (authStatus) {
       history.push('/dashboard');
+      startChatService();
+    }
+
+
   }
 
   return (

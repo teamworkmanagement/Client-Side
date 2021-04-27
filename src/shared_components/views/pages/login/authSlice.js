@@ -35,7 +35,7 @@ const authSlice = createSlice({
   name: "user",
   initialState: {
     currentUser: {},
-    loginStatus: true,
+    loginStatus: false,
   },
   reducers: {
     setAuth: (state) => {

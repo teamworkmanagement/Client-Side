@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   CButton,
   CCard,
@@ -14,8 +14,37 @@ import {
   CRow
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import authApi from 'src/api/authApi';
+import { useHistory } from 'react-router';
 
 const Register = () => {
+
+  const [registerObj, setRegisterObj] = useState(null);
+  const history = useHistory();
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setRegisterObj({
+      ...registerObj,
+      [name]: value,
+    });
+  }
+
+  const onRegisterClick = () => {
+
+    if (!registerObj.email || !registerObj.password || !registerObj.confirmPassword || !registerObj.fullName) {
+      alert('Thông tin không được bỏ trống');
+    }
+
+    authApi.register(registerObj).then(res => {
+      alert('Kiểm tra email và hoàn tất quá trình đăng ký');
+      history.push('/login');
+    }).catch(err => {
+      console.log(err.data);
+      alert('Vui lòng kiểm tra dữ liệu');
+    });
+
+  }
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
@@ -32,13 +61,13 @@ const Register = () => {
                         <CIcon name="cil-user" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type="text" placeholder="Username" autoComplete="username" />
+                    <CInput type="text" name="fullName" placeholder="Tên của bạn" onChange={onChange} autoComplete="username" />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupPrepend>
                       <CInputGroupText>@</CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type="text" placeholder="Email" autoComplete="email" />
+                    <CInput type="text" placeholder="Email" onChange={onChange} name="email" autoComplete="email" />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupPrepend>
@@ -46,7 +75,7 @@ const Register = () => {
                         <CIcon name="cil-lock-locked" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type="password" placeholder="Password" autoComplete="new-password" />
+                    <CInput type="password" placeholder="Password" onChange={onChange} name="password" autoComplete="new-password" />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
                     <CInputGroupPrepend>
@@ -54,21 +83,11 @@ const Register = () => {
                         <CIcon name="cil-lock-locked" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type="password" placeholder="Repeat password" autoComplete="new-password" />
+                    <CInput type="password" name="confirmPassword" onChange={onChange} placeholder="Repeat password" autoComplete="new-password" />
                   </CInputGroup>
-                  <CButton color="success" block>Create Account</CButton>
+                  <CButton color="success" onClick={onRegisterClick} block>Create Account</CButton>
                 </CForm>
               </CCardBody>
-              <CCardFooter className="p-4">
-                <CRow>
-                  <CCol xs="12" sm="6">
-                    <CButton className="btn-facebook mb-1" block><span>facebook</span></CButton>
-                  </CCol>
-                  <CCol xs="12" sm="6">
-                    <CButton className="btn-twitter mb-1" block><span>twitter</span></CButton>
-                  </CCol>
-                </CRow>
-              </CCardFooter>
             </CCard>
           </CCol>
         </CRow>
