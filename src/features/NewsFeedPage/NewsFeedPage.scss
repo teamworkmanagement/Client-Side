@@ -28,10 +28,11 @@
     justify-content: space-between;
     .post-list-container {
         flex-grow: 1;
+        width: 2rem;
         margin-right: 1rem;
     }
     .side-panel-container {
-        width: 40rem;
+        width: 20rem;
         .create-post-btn {
             cursor: pointer;
             padding: 1rem;
@@ -190,7 +191,7 @@
     background: #a8a8a8;
 }
 
-.button-close{
+.button-close {
     position: absolute;
     top: 5;
     left: 90%;

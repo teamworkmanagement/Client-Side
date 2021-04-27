@@ -1,0 +1,35 @@
+.tasks-team-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: absolute;
+    .show-mode {
+        padding: 0.5rem;
+        width: 100%;
+        justify-content: flex-end;
+        height: 3.5rem;
+        display: flex;
+        .mode-btn {
+            width: 3rem;
+            max-width: 3rem;
+            border: 1px solid #e6ebf1;
+            background-color: transparent;
+            &.active {
+                border-color: #3e79f7;
+            }
+            &.first {
+                border-top-left-radius: 0.625rem;
+                border-bottom-left-radius: 0.625rem;
+            }
+            &.last {
+                border-top-right-radius: 0.625rem;
+                border-bottom-right-radius: 0.625rem;
+                .c-icon {
+                    transform: rotate(90deg);
+                }
+            }
+        }
+    }
+}

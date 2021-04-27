@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./KanbanBoard.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,8 @@ import {
   setKanbanLists,
   handleDragEnd,
 } from "src/appSlice";
+import { CButton, CButtonGroup } from "@coreui/react";
+import CIcon from "@coreui/icons-react";
 
 KanbanBoard.propTypes = {};
 
@@ -23,35 +25,6 @@ function KanbanBoard(props) {
   function onDragEnd(result) {
     dispatch(handleDragEnd(result));
     return;
-
-    // const start = kanbanBoardData.lists[source.droppableId];
-    // const finish = kanbanBoardData.lists[destination.droppableId];
-    // if (start === finish) {
-    //   const newTaskIds = Array.from(start.listTaskIds);
-    //   newTaskIds.splice(source.index, 1);
-    //   newTaskIds.splice(destination.index, 0, draggableId);
-
-    //   const newData = {
-    //     listId: source.droppableId,
-    //     newTaskIds: newTaskIds,
-    //     type: 1,
-    //   };
-    //   dispatch(setKanbanBoardData(newData));
-    //   return;
-    // }
-
-    // const startTaskIds = Array.from(start.listTaskIds);
-    // const finishTaskIds = Array.from(finish.listTaskIds);
-    // startTaskIds.splice(source.index, 1);
-    // finishTaskIds.splice(destination.index, 0, draggableId);
-    // const newData = {
-    //   listIdSource: source.droppableId,
-    //   startTaskIds: startTaskIds,
-    //   listIdFinish: destination.droppableId,
-    //   finishTaskIds: finishTaskIds,
-    //   type: 2,
-    // };
-    // dispatch(setKanbanBoardData(newData));
   }
 
   function getKanbanListsData() {

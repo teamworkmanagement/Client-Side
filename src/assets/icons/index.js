@@ -17,6 +17,8 @@ import {
   cilSearch,
   cilFilter,
   cilListFilter,
+  cilColumns,
+  cilChart,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -166,6 +168,8 @@ export const icons = Object.assign(
     cilGroup,
     cilFilter,
     cilPlus,
+    cilColumns,
+    cilChart,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

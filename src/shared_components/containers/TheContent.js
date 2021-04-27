@@ -22,7 +22,7 @@ const TheContent = () => {
             {routes.map((route, idx) => {
               return (
                 route.component && (
-                  <PrivateRoute
+                  <PublicRoute
                     key={idx}
                     path={route.path}
                     exact={route.exact}
@@ -32,7 +32,7 @@ const TheContent = () => {
                 )
               );
             })}
-            <Redirect from="/" to="/login" />
+            <Redirect from="/" to="/dashboard" />
           </Switch>
         </Suspense>
       </CContainer>

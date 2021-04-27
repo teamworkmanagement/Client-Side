@@ -15,12 +15,13 @@ import CIcon from "@coreui/icons-react";
 import ListFileTable from "../../shared_components/MySharedComponents/ListFileTable/ListFileTable";
 import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
 import KanbanBoard from "../KanbanBoard/KanbanBoard";
+import TeamTasks from "./Components/TeamTasks/TeamTasks";
 
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
   const lorem = "ccc";
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(1);
   return (
     <div className="team-container">
       <CTabs activeTab={active} onActiveTabChange={(idx) => setActive(idx)}>
@@ -63,7 +64,7 @@ function TeamPage(props) {
             <NewsFeedPage isInTeam={true} />
           </CTabPane>
           <CTabPane>
-            <KanbanBoard />
+            <TeamTasks />
           </CTabPane>
           <CTabPane>
             <ChatPage isInTeam={true} />

@@ -1,3 +1,26 @@
+@keyframes showInKanbanCard {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@mixin KanbanCardAppear {
+    transition: all 0.1s ease-out;
+    transform: scale(0);
+    animation-name: showInKanbanCard;
+    animation-duration: 0.15s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+    animation-delay: 0.1s;
+    transform-origin: left;
+}
 .dropdown-menu.show {
     transform: translate(0, 2rem) !important;
     margin-top: -0.3rem !important;
@@ -258,6 +281,7 @@
     }
 
     .card-component {
+        @include KanbanCardAppear;
         background-color: white;
         border-radius: 5px;
         margin: 0.2rem 0.8rem 1rem 0.8em;

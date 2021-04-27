@@ -1,9 +1,11 @@
 .kanban-board-container {
+    flex-grow: 1;
     background-color: #ced2d8;
     padding: 1.5rem;
-    position: absolute;
-    height: 100%;
-    width: 100%;
+    overflow-y: hidden;
+    //position: absolute;
+    // height: 100%;
+    // width: 100%;
     display: flex;
     .board {
         background-color: #fafafb;

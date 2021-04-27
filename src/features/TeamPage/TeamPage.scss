@@ -5,6 +5,7 @@
     height: 100%;
     position: absolute;
     width: 100%;
+    background-color: #fafafb;
     .nav-tabs {
         display: flex;
         flex-direction: column;
@@ -54,6 +55,10 @@
                 &:hover {
                     color: #3e79f7;
                     border-color: #3e79f7;
+                    //background-color: #E4E6E9;
+                    border-color: transparent;
+                    box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%),
+                        0 5px 12px 4px rgb(0 0 0 / 9%);
                 }
             }
             .nav-link.active {
@@ -92,7 +97,7 @@
             .newsfeed-page-container {
                 padding: 0;
                 .side-panel-container {
-                    width: 30rem;
+                    width: 20rem;
                 }
             }
         }

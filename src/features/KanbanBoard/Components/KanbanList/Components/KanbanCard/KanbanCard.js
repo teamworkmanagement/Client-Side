@@ -96,6 +96,19 @@ function KanbanCard(props) {
     }
   }
 
+  function getProgressColor(progress) {
+    if (progress < 26) {
+      return "danger";
+    }
+    if (progress < 51) {
+      return "warning";
+    }
+    if (progress < 76) {
+      return "info";
+    }
+    return "success";
+  }
+
   function getCardImage() {
     //debugger;
 
@@ -334,7 +347,11 @@ function KanbanCard(props) {
             </CModal>
           </div>
 
-          <div className="card-component" onClick={openEditPopup}>
+          <div
+            className="card-component"
+            style={{ animationDelay: `${props.index / 10}s` }}
+            onClick={openEditPopup}
+          >
             {imageCard && (
               <div className="card-image-label">
                 <img alt="" src={imageCard} />
@@ -384,9 +401,9 @@ function KanbanCard(props) {
             </div>
             <div className="card-progress">
               <CProgress
-                color="success"
+                color={getProgressColor(props.data.taskCompletedPercent)}
                 animated
-                value={props.data.taskCompletedPercent}
+                value={props.data.taskCompletedPercent + 2}
               />
               <div className="progress-text">
                 {props.data.taskCompletedPercent}%
