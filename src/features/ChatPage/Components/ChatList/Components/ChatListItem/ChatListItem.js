@@ -29,13 +29,14 @@ function ChatListItem(props) {
   return (
     <div
       onClick={() => handelSelect()}
-      className={`chat-item-container ${props.data.isNew ? "message" : ""} ${props.data.groupChatId === currentGroup ? "selected" : ""
+      className={`chat-item-container ${props.data.newMessage ? "message" : ""} ${props.data.groupChatId === currentGroup ? "selected" : ""
         }`}
       style={{ animationDelay: `${props.animationDelay / 10}s` }}
     >
       <div className="item-avatar">
-        <img alt="" src={props.data.groupAvatar} />
+        <img alt="" src={props.data.groupAvatar ? props.data.groupAvatar : "images/member_240px.png"} />
       </div>
+
       <div className="item-content">
         <div className="item-content-header">
           <div className="chat-name">{props.data.groupChatName}</div>
