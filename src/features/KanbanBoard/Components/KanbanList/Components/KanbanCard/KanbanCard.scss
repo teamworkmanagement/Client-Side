@@ -35,7 +35,7 @@
 }
 .card-container {
     .modal-content {
-        background-color: #f4f5f7;
+        background-color: white;
         .modal-header {
             border: none;
             padding: 1rem;
@@ -60,9 +60,13 @@
                         justify-content: flex-start;
                         align-items: center;
                         margin-right: 0.2rem;
+                        margin-top: -0.2rem;
+                    }
+                    .task-progress {
+                        margin-left: 0.3rem;
                     }
                 }
-                .task-status {
+                .task-status-label-header {
                     background-color: #f3c943;
                     color: white;
                     padding: 0.2rem 0.5rem;
@@ -93,27 +97,40 @@
                 .name-input-container {
                     margin-left: 2rem;
                     margin-bottom: 1rem;
+
                     input {
-                        background-color: #eaecf0;
+                        border-color: transparent;
+                        background-color: transparent;
+                        // border-color: rgba(#d8dbe0, 0.5);
+                        // background-color: #eaecf0;
                     }
                 }
 
                 .infor-bar {
+                    margin-top: 1rem;
                     display: flex;
+                    flex-direction: column;
                     justify-content: flex-start;
                     font-weight: bold;
-                    padding: 0rem 1rem;
-                    flex-wrap: wrap;
+                    //padding: 0rem 1rem;
+                    padding: 0;
+                    //flex-wrap: wrap;
+                    .my-row {
+                        display: flex;
+                        .my-col {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                        }
+                    }
                     .item-group {
+                        //width:;
                         display: flex;
                         flex-direction: column;
-                        align-items: center;
-                        margin-right: 4rem;
-                        margin-top: 1rem;
-                        margin-bottom: 1rem;
+                        align-items: flex-start;
                         .label {
                             display: flex;
-                            width: 100%;
+                            //width: 100%;
                             align-items: center;
                             .c-icon {
                                 margin-right: 0.5rem;
@@ -122,35 +139,133 @@
                     }
 
                     .assign-group {
+                        .assign-label {
+                            .c-icon {
+                                margin-top: -0.2rem;
+                            }
+                        }
                         img {
                             height: 2rem;
                             width: 2rem;
                             border-radius: 50px;
+                            margin-top: 0.4rem;
                         }
                     }
                     .due-group {
                         .due-label {
                         }
                         input {
+                            margin-top: 0.4rem;
                             background-color: transparent;
                             border: none;
                             width: fit-content;
+                            border: 1px solid #e6ebf1;
+                            border-radius: 0.625rem;
+                            border-color: #d8dbe0;
                         }
                     }
                     .theme-group {
+                        margin-top: 1rem;
                         .theme-label {
                         }
                         .theme-color {
                             background-color: #f16f81;
                             width: 100%;
-                            height: 1rem;
-                            border-radius: 5px;
-                            margin-top: 0.5rem;
+                            height: 2rem;
+                            width: 2rem;
+                            border-radius: 50px;
+                            margin-top: 0.4rem;
+                            cursor: pointer;
+                            border: none;
+                            outline: none;
+                            &.toggle-color-picker {
+                                .circle-picker {
+                                    z-index: 2;
+                                    background-color: rgba(#000000, 0.4);
+                                    padding: 0.5rem !important;
+                                    width: 14.2rem !important;
+                                    border-radius: 0.625rem;
+                                    top: 8.5rem;
+                                    left: 1rem;
+                                    position: absolute;
+                                    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+                                    span {
+                                        div {
+                                            margin: 0.2rem !important;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .status-group {
+                        margin-top: 1rem;
+                        .status-infor {
+                            margin-top: 0.4rem;
+                            .dropdown-toggle.btn {
+                                &:hover {
+                                    color: white;
+                                }
+                            }
+                            .dropdown-menu {
+                                padding: 0;
+                                border-radius: 0.625rem;
+                                background-color: white;
+                                border: 1px solid #e6ebf1;
+                                box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%),
+                                    0 5px 12px 4px rgb(0 0 0 / 9%);
+                                border: none;
+                                min-width: 0;
+                                .dropdown-item {
+                                    display: flex;
+
+                                    font-size: 90%;
+                                    font-weight: bold;
+                                    //color: white;
+                                    border: 0.5px solid #e6ebf1;
+                                    &:active {
+                                        background-color: white;
+                                        color: #3c4b64;
+                                    }
+                                    .color-dot {
+                                        margin-right: 0.7rem;
+                                        width: 0.5rem;
+                                        height: 0.5rem;
+                                        border-radius: 50px;
+                                        //background-color: black;
+                                    }
+                                    &.todo-status {
+                                        .color-dot {
+                                            background-color: #de4436;
+                                        }
+                                    }
+                                    &.doing-status {
+                                        .color-dot {
+                                            background-color: #ffc542;
+                                        }
+                                    }
+                                    &.done-status {
+                                        .color-dot {
+                                            background-color: #05d182;
+                                        }
+                                    }
+                                }
+                                .dropdown-item:first-child {
+                                    border-top-left-radius: 05px;
+                                    border-top-right-radius: 5px;
+                                }
+                                .dropdown-item:last-child {
+                                    border-bottom-left-radius: 05px;
+                                    border-bottom-right-radius: 5px;
+                                }
+                            }
                         }
                     }
                     .progress-group {
+                        margin-top: 1rem;
                         .progress {
-                            height: 1rem;
+                            height: 0.5rem;
                             width: 100%;
                             margin-top: 0.5rem;
 
@@ -159,16 +274,9 @@
                             }
                         }
                     }
-                    .status-group {
-                        .status-infor {
-                            margin-top: 0.2rem;
-                            .dropdown-toggle.btn {
-                                font-size: 75%;
-                            }
-                        }
-                    }
                 }
                 .list-attachments {
+                    overflow-x: auto;
                     display: flex;
                     .attachment-item {
                         border: 1px solid #e6ebf1;
@@ -223,7 +331,10 @@
                     textarea {
                         height: calc(1.5em + 0.75rem + 2px);
                         min-height: calc(1.5em + 0.75rem + 2px);
-                        background-color: #eaecf0;
+                        background-color: transparent;
+                        border-color: transparent;
+                        // background-color: #eaecf0;
+                        // border-color: rgba(#d8dbe0, 0.5);
                     }
                 }
                 .comment-label {

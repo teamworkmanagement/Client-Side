@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Draggable } from "react-beautiful-dnd";
 import "./KanbanCard.scss";
 import {
+  CButton,
   CCol,
   CDropdown,
   CDropdownItem,
@@ -19,12 +20,15 @@ import {
 import CIcon from "@coreui/icons-react";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { CirclePicker } from "react-color";
 
 KanbanCard.propTypes = {};
 
 function KanbanCard(props) {
   const initIsShowEditPopup = false;
+
   const [isShowEditPopup, setIsShowEditPopup] = useState(initIsShowEditPopup);
+  const [isShowColorPicker, setIsShowColorPicker] = useState(false);
   const files = useSelector((state) => state.app.files);
   const handleTasks = useSelector((state) => state.app.handleTasks);
   const users = useSelector((state) => state.app.users);
@@ -133,7 +137,11 @@ function KanbanCard(props) {
   }
 
   return (
-    <Draggable draggableId={props.data.taskId} index={props.index}>
+    <Draggable
+      isDragDisabled={isShowEditPopup}
+      draggableId={props.data.taskId}
+      index={props.index}
+    >
       {(provided) => (
         <div
           className="card-container"
@@ -156,23 +164,7 @@ function KanbanCard(props) {
                     <div className="task-progress">25%</div>
                   </div>
 
-                  <div className="task-status-dropdown">
-                    <CDropdown>
-                      <CDropdownToggle id="dropdownMenuButton" caret>
-                        Đang thực hiện
-                      </CDropdownToggle>
-                      <CDropdownMenu
-                        aria-labelledby="dropdownMenuButton"
-                        placement="bottom-end"
-                      >
-                        <CDropdownItem>Action</CDropdownItem>
-                        <CDropdownItem>Another action</CDropdownItem>
-                        <CDropdownItem>Something else here</CDropdownItem>
-                        <CDropdownItem divider />
-                        <CDropdownItem>Separated link</CDropdownItem>
-                      </CDropdownMenu>
-                    </CDropdown>
-                  </div>
+                  <div className="task-status-label-header">Đang thực hiện</div>
                 </div>
               </CModalHeader>
               <CModalBody>
@@ -188,75 +180,103 @@ function KanbanCard(props) {
                           id="name"
                           placeholder="Tên công việc..."
                           required
+                          autoCorrect="off"
+                          autoComplete="off"
+                          autocomplete="off"
+                          type="text"
                         />
                       </div>
                       <div className="card-divider"></div>
                       <div className="infor-bar">
-                        <div className="assign-group item-group">
-                          <div className="assign-label label">
-                            <CIcon name="cil-user-follow" />
-                            Giao cho
-                          </div>
-                          <div className="assigned-user-avatar">
-                            <img
-                              src="https://emilus.themenate.net/img/avatars/thumb-2.jpg"
-                              alt=""
-                            />
-                          </div>
-                        </div>
-                        <div className="due-group item-group">
-                          <div className="due-label label">
-                            <CIcon name="cil-clock" />
-                            Hạn hoàn thành
-                          </div>
-                          <div className="due-date">
-                            <CInput
-                              type="date"
-                              id="date-from"
-                              name="date-input"
-                              placeholder="date"
-                            />
-                          </div>
-                        </div>
+                        <CRow className="my-row">
+                          <CCol className="col-6 my-col left">
+                            <div className="assign-group item-group">
+                              <div className="assign-label label">
+                                <CIcon name="cil-user-follow" />
+                                Giao cho
+                              </div>
+                              <div className="assigned-user-avatar">
+                                <img
+                                  src="https://emilus.themenate.net/img/avatars/thumb-2.jpg"
+                                  alt=""
+                                />
+                              </div>
+                            </div>
+                            <div className="theme-group item-group">
+                              <div className="theme-label label">
+                                <CIcon name="cil-color-palette" />
+                                Màu chủ đề
+                              </div>
+                              <button
+                                className="theme-color toggle-color-picker"
+                                onBlur={() => {
+                                  setIsShowColorPicker(false);
+                                }}
+                                onClick={() =>
+                                  setIsShowColorPicker(!isShowColorPicker)
+                                }
+                              >
+                                {isShowColorPicker ? <CirclePicker /> : null}
+                              </button>
+                            </div>
+                          </CCol>
+                          <CCol className="col-6 my-col right">
+                            <div className="due-group item-group">
+                              <div className=" due-label label">
+                                <CIcon name="cil-clock" />
+                                Hạn hoàn thành
+                              </div>
+                              <div className=" due-date">
+                                <CInput
+                                  type="date"
+                                  id="date-from"
+                                  name="date-input"
+                                  placeholder="date"
+                                />
+                              </div>
+                            </div>
+                            <div className="status-group item-group">
+                              <div className="status-label label">
+                                <CIcon name="cil-task" />
+                                Trạng thái
+                              </div>
+                              <div className="task-status-dropdown status-infor">
+                                <CDropdown>
+                                  <CDropdownToggle
+                                    id="dropdownMenuButton"
+                                    caret
+                                  >
+                                    Đang thực hiện
+                                  </CDropdownToggle>
+                                  <CDropdownMenu
+                                    aria-labelledby="dropdownMenuButton"
+                                    placement="bottom-end"
+                                  >
+                                    <CDropdownItem className="todo-status">
+                                      <div className="color-dot"></div>
+                                      Đang chờ
+                                    </CDropdownItem>
+                                    <CDropdownItem className="doing-status">
+                                      <div className="color-dot"></div>
+                                      Đang thực hiện
+                                    </CDropdownItem>
+                                    <CDropdownItem className="done-status">
+                                      <div className="color-dot"></div>
+                                      Hoàn thành
+                                    </CDropdownItem>
+                                  </CDropdownMenu>
+                                </CDropdown>
+                              </div>
+                            </div>
+                          </CCol>
+                        </CRow>
 
-                        <div className="theme-group item-group">
-                          <div className="theme-label label">
-                            <CIcon name="cil-color-palette" />
-                            Màu chủ đề
-                          </div>
-                          <div className="theme-color"></div>
-                        </div>
                         <div className="progress-group item-group">
                           <div className="progress-label label">
                             <CIcon name="cil-chart-line" />
                             Tiến độ
                           </div>
                           <CProgress animated value={25} />
-                        </div>
-                        <div className="status-group item-group">
-                          <div className="status-label label">
-                            <CIcon name="cil-task" />
-                            Trạng thái
-                          </div>
-                          <div className="task-status-dropdown status-infor">
-                            <CDropdown>
-                              <CDropdownToggle id="dropdownMenuButton" caret>
-                                Đang thực hiện
-                              </CDropdownToggle>
-                              <CDropdownMenu
-                                aria-labelledby="dropdownMenuButton"
-                                placement="bottom-end"
-                              >
-                                <CDropdownItem>Action</CDropdownItem>
-                                <CDropdownItem>Another action</CDropdownItem>
-                                <CDropdownItem>
-                                  Something else here
-                                </CDropdownItem>
-                                <CDropdownItem divider />
-                                <CDropdownItem>Separated link</CDropdownItem>
-                              </CDropdownMenu>
-                            </CDropdown>
-                          </div>
                         </div>
                       </div>
 
@@ -292,6 +312,7 @@ function KanbanCard(props) {
                           id="textarea-input"
                           rows="9"
                           placeholder="Mô tả công việc..."
+                          autocomplete="off"
                         />
                       </div>
                       <div className="comment-label">
@@ -337,7 +358,7 @@ function KanbanCard(props) {
                         <div className="action-name">Cho điểm</div>
                       </div>
                       <div className="action-item">
-                        <CIcon name="cil-delete" />
+                        <CIcon name="cil-trash" />
                         <div className="action-name">Xóa công việc</div>
                       </div>
                     </div>

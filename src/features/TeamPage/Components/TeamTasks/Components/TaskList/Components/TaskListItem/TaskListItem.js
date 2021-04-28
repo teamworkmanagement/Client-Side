@@ -98,7 +98,9 @@ function TaskListItem(props) {
   return (
     <div
       className="task-list-item-container"
-      style={{ animationDelay: `${props.index / 10}s` }}
+      style={{
+        animationDelay: `${props.index / 10}s`,
+      }}
     >
       <div className="task-title">
         <div className="task-name">{props.data.taskName}</div>
@@ -154,11 +156,11 @@ function TaskListItem(props) {
             >
               <CDropdownItem className="first">
                 <CIcon name="cil-pencil" />
-                Đổi tên
+                Chỉnh sửa
               </CDropdownItem>
               <CDropdownItem className="last">
-                <CIcon name="cil-plus" />
-                Thêm thẻ
+                <CIcon name="cil-trash" className="icon-delete" />
+                Xóa
               </CDropdownItem>
             </CDropdownMenu>
           </CDropdown>

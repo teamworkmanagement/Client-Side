@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import "./TaskList.scss";
 import TaskListItem from "./Components/TaskListItem/TaskListItem";
@@ -14,6 +14,7 @@ function TaskList(props) {
       {tasks.map((item, index) => {
         return <TaskListItem index={index} key={item.taskId} data={item} />;
       })}
+      {}
     </div>
   );
 }

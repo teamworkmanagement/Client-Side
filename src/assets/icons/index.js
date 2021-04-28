@@ -8,6 +8,7 @@ import //brand
 "@coreui/icons";
 
 import {
+  cilSortNumericUp,
   cilPlus,
   cilClock,
   cilDescription,
@@ -19,6 +20,7 @@ import {
   cilListFilter,
   cilColumns,
   cilChart,
+  cilChartLine,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -170,6 +172,8 @@ export const icons = Object.assign(
     cilPlus,
     cilColumns,
     cilChart,
+    cilSortNumericUp,
+    cilChartLine,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,
