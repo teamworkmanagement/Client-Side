@@ -21,6 +21,7 @@ import {
   cilColumns,
   cilChart,
   cilChartLine,
+  cilLibraryAdd,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -174,6 +175,7 @@ export const icons = Object.assign(
     cilChart,
     cilSortNumericUp,
     cilChartLine,
+    cilLibraryAdd,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

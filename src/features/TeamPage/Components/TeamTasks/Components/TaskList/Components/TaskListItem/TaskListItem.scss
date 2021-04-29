@@ -58,7 +58,7 @@
     align-items: center;
     position: relative;
     //overflow-x: hidden;
-    white-space: nowrap;
+    white-space: pre;
     flex-wrap: wrap;
     .task-title {
         width: 4rem;
@@ -69,12 +69,12 @@
             font-weight: bold;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            white-space: pre;
         }
         .task-description {
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            white-space: pre;
             color: rgba(114, 132, 154, 0.7);
         }
     }

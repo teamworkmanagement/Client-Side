@@ -134,12 +134,12 @@
                         font-weight: 550;
                         overflow: hidden;
                         text-overflow: ellipsis;
-                        white-space: nowrap;
+                        white-space: pre;
                     }
                     .group-member-count {
                         overflow: hidden;
                         text-overflow: ellipsis;
-                        white-space: nowrap;
+                        white-space: pre;
                         font-size: 85%;
                         color: rgba(0, 0, 0, 0.5);
                     }

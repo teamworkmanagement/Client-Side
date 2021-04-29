@@ -38,23 +38,30 @@ function App() {
   const loginStatus = useSelector((state) => state.auth.loginStatus);
   useEffect(() => {
     const cloneStatus = !!loginStatus;
-    if (!cloneStatus) dispatch(islogin());
+
+    if (!cloneStatus) {
+      console.log("check login");
+      dispatch(islogin());
+    }
     startChatService();
   }, []);
 
   return (
-    <BrowserRouter getUserConfirmation={(message, callback) => {
-      // this is the default behavior
-      const allowTransition = window.confirm(message);
-      callback(allowTransition);
-    }}>
+    <BrowserRouter
+      getUserConfirmation={(message, callback) => {
+        // this is the default behavior
+        const allowTransition = window.confirm(message);
+        callback(allowTransition);
+      }}
+    >
       <React.Suspense fallback={loading}>
         <Switch>
           <PublicRoute
             restricted={true}
             component={Register}
             path="/register"
-            exact />
+            exact
+          />
 
           <PublicRoute
             restricted={true}

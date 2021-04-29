@@ -1,0 +1,54 @@
+.slider-container {
+    width: 100%;
+    display: "flex";
+    justify-content: "center";
+    flex-wrap: "wrap";
+    margin-top: 1rem;
+    display: flex;
+    .track-container {
+        display: flex;
+        width: 100%;
+        .track-bar {
+            height: 8px;
+            width: 100%;
+            border-radius: 4px;
+            align-self: center;
+            cursor: default;
+            .thumb {
+                height: 1.5rem;
+                width: 1rem;
+                border-radius: 4px;
+                background-color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 0px 2px 6px #aaa;
+                &:focus {
+                    outline: none;
+                }
+                &:active {
+                    .value {
+                        display: flex;
+                    }
+                }
+                .value {
+                    position: absolute;
+                    top: -1.9rem;
+                    background: #548bf4;
+                    color: white;
+                    padding: 0.1rem;
+                    border-radius: 50px;
+                    width: 1.7rem;
+                    height: 1.7rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    display: none;
+                }
+            }
+        }
+    }
+    .result {
+        margin-left: 0.7rem;
+    }
+}

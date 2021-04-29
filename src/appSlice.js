@@ -165,6 +165,7 @@ const Tasks = [
     taskCompletedPercent: 0,
     taskListBelongedId: "list_1",
     taskOrderInlist: 0,
+    taskThemeColor: "#52a8ff",
   },
   {
     taskId: "task_2",
@@ -178,6 +179,7 @@ const Tasks = [
     taskCompletedPercent: 65,
     taskListBelongedId: "list_1",
     taskOrderInlist: 1,
+    taskThemeColor: "",
   },
   {
     taskId: "task_3",
@@ -190,6 +192,7 @@ const Tasks = [
     taskCompletedPercent: 100,
     taskListBelongedId: "list_1",
     taskOrderInlist: 2,
+    taskThemeColor: "",
   },
   {
     taskId: "task_4",
@@ -203,6 +206,7 @@ const Tasks = [
     taskCompletedPercent: 0,
     taskListBelongedId: "list_2",
     taskOrderInlist: 0,
+    taskThemeColor: "",
   },
   {
     taskId: "task_5",
@@ -216,6 +220,7 @@ const Tasks = [
     taskCompletedPercent: 41,
     taskListBelongedId: "list_3",
     taskOrderInlist: 0,
+    taskThemeColor: "",
   },
   {
     taskId: "task_6",
@@ -229,6 +234,7 @@ const Tasks = [
     taskCompletedPercent: 100,
     taskListBelongedId: "list_3",
     taskOrderInlist: 1,
+    taskThemeColor: "",
   },
   {
     taskId: "task_7",
@@ -241,6 +247,7 @@ const Tasks = [
     taskCompletedPercent: 56,
     taskListBelongedId: "list_4",
     taskOrderInlist: 0,
+    taskThemeColor: "",
   },
   {
     taskId: "task_8",
@@ -254,6 +261,7 @@ const Tasks = [
     taskCompletedPercent: 12,
     taskListBelongedId: "list_4",
     taskOrderInlist: 1,
+    taskThemeColor: "",
   },
   {
     taskId: "task_9",
@@ -267,6 +275,7 @@ const Tasks = [
     taskCompletedPercent: 0,
     taskListBelongedId: "list_4",
     taskOrderInlist: 2,
+    taskThemeColor: "",
   },
   {
     taskId: "task_10",
@@ -280,6 +289,7 @@ const Tasks = [
     taskCompletedPercent: 0,
     taskListBelongedId: "list_4",
     taskOrderInlist: 3,
+    taskThemeColor: "",
   },
 ];
 
@@ -516,7 +526,6 @@ const appSlice = createSlice({
     darkMode: true,
     kanbanBoardData: initKanbanBoardData,
     filterChanged: false,
-    //kanbanBoardData: testInitKanbanBoardData,
     //data from api
     tasks: Tasks,
     users: Users,
@@ -709,6 +718,18 @@ const appSlice = createSlice({
         }
       }
     },
+    updateTask(state, payload) {
+      const updatedTask = payload.payload;
+      for (let i = 0; i < state.tasks.length; i++) {
+        if (state.tasks[i].taskId === updatedTask.taskId) {
+          state.tasks[i] = {
+            ...updatedTask,
+          };
+          console.log(state.tasks[0].taskName);
+          break;
+        }
+      }
+    },
   },
 });
 
@@ -722,5 +743,6 @@ export const {
   refactorTasks,
   setKanbanLists,
   handleDragEnd,
+  updateTask,
 } = actions; // named export
 export default reducer; // default export

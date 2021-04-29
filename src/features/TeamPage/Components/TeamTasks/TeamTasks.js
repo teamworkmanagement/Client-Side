@@ -9,7 +9,7 @@ import TaskList from "./Components/TaskList/TaskList";
 TeamTasks.propTypes = {};
 
 function TeamTasks(props) {
-  const [showMode, setShowMode] = useState(2); //1:kanban, 2:list, 3:gantt
+  const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
   function switchShowMode(index) {
     //debugger;
     console.log(index);

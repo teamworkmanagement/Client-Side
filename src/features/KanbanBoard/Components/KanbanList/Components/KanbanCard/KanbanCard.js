@@ -21,6 +21,7 @@ import CIcon from "@coreui/icons-react";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { CirclePicker } from "react-color";
+import TaskEditModal from "./Components/TaskEditModal/TaskEditModal";
 
 KanbanCard.propTypes = {};
 
@@ -28,7 +29,7 @@ function KanbanCard(props) {
   const initIsShowEditPopup = false;
 
   const [isShowEditPopup, setIsShowEditPopup] = useState(initIsShowEditPopup);
-  const [isShowColorPicker, setIsShowColorPicker] = useState(false);
+
   const files = useSelector((state) => state.app.files);
   const handleTasks = useSelector((state) => state.app.handleTasks);
   const users = useSelector((state) => state.app.users);
@@ -51,14 +52,6 @@ function KanbanCard(props) {
       }
     }
     return "";
-  }
-
-  function handleKeyDown(e) {
-    const limit = 80;
-
-    e.target.style.height = `${e.target.scrollHeight}px`;
-    // In case you have a limitation
-    e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
   }
 
   function openEditPopup() {
@@ -136,6 +129,11 @@ function KanbanCard(props) {
     return count;
   }
 
+  function onEditModalClose() {
+    setIsShowEditPopup(false);
+    console.log("ok");
+  }
+
   return (
     <Draggable
       isDragDisabled={isShowEditPopup}
@@ -149,228 +147,20 @@ function KanbanCard(props) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <div>
-            <CModal
-              show={isShowEditPopup}
-              onClose={() => setIsShowEditPopup(!isShowEditPopup)}
-              size="lg"
-            >
-              <CModalHeader closeButton>
-                <div className="card-labels">
-                  <div className="progress-label">
-                    <div className="progress-icon">
-                      <CIcon name="cil-chart-line" />
-                    </div>
-                    <div className="task-progress">25%</div>
-                  </div>
-
-                  <div className="task-status-label-header">Đang thực hiện</div>
-                </div>
-              </CModalHeader>
-              <CModalBody>
-                <CRow>
-                  <CCol className="col-9">
-                    <div className="form-content">
-                      <div className="title-label">
-                        <CIcon name="cil-credit-card" />
-                        <div className="name">Tên</div>
-                      </div>
-                      <div className="name-input-container">
-                        <CInput
-                          id="name"
-                          placeholder="Tên công việc..."
-                          required
-                          autoCorrect="off"
-                          autoComplete="off"
-                          autocomplete="off"
-                          type="text"
-                        />
-                      </div>
-                      <div className="card-divider"></div>
-                      <div className="infor-bar">
-                        <CRow className="my-row">
-                          <CCol className="col-6 my-col left">
-                            <div className="assign-group item-group">
-                              <div className="assign-label label">
-                                <CIcon name="cil-user-follow" />
-                                Giao cho
-                              </div>
-                              <div className="assigned-user-avatar">
-                                <img
-                                  src="https://emilus.themenate.net/img/avatars/thumb-2.jpg"
-                                  alt=""
-                                />
-                              </div>
-                            </div>
-                            <div className="theme-group item-group">
-                              <div className="theme-label label">
-                                <CIcon name="cil-color-palette" />
-                                Màu chủ đề
-                              </div>
-                              <button
-                                className="theme-color toggle-color-picker"
-                                onBlur={() => {
-                                  setIsShowColorPicker(false);
-                                }}
-                                onClick={() =>
-                                  setIsShowColorPicker(!isShowColorPicker)
-                                }
-                              >
-                                {isShowColorPicker ? <CirclePicker /> : null}
-                              </button>
-                            </div>
-                          </CCol>
-                          <CCol className="col-6 my-col right">
-                            <div className="due-group item-group">
-                              <div className=" due-label label">
-                                <CIcon name="cil-clock" />
-                                Hạn hoàn thành
-                              </div>
-                              <div className=" due-date">
-                                <CInput
-                                  type="date"
-                                  id="date-from"
-                                  name="date-input"
-                                  placeholder="date"
-                                />
-                              </div>
-                            </div>
-                            <div className="status-group item-group">
-                              <div className="status-label label">
-                                <CIcon name="cil-task" />
-                                Trạng thái
-                              </div>
-                              <div className="task-status-dropdown status-infor">
-                                <CDropdown>
-                                  <CDropdownToggle
-                                    id="dropdownMenuButton"
-                                    caret
-                                  >
-                                    Đang thực hiện
-                                  </CDropdownToggle>
-                                  <CDropdownMenu
-                                    aria-labelledby="dropdownMenuButton"
-                                    placement="bottom-end"
-                                  >
-                                    <CDropdownItem className="todo-status">
-                                      <div className="color-dot"></div>
-                                      Đang chờ
-                                    </CDropdownItem>
-                                    <CDropdownItem className="doing-status">
-                                      <div className="color-dot"></div>
-                                      Đang thực hiện
-                                    </CDropdownItem>
-                                    <CDropdownItem className="done-status">
-                                      <div className="color-dot"></div>
-                                      Hoàn thành
-                                    </CDropdownItem>
-                                  </CDropdownMenu>
-                                </CDropdown>
-                              </div>
-                            </div>
-                          </CCol>
-                        </CRow>
-
-                        <div className="progress-group item-group">
-                          <div className="progress-label label">
-                            <CIcon name="cil-chart-line" />
-                            Tiến độ
-                          </div>
-                          <CProgress animated value={25} />
-                        </div>
-                      </div>
-
-                      <div className="card-divider"></div>
-                      <div className="attachment-label">
-                        <CIcon name="cil-paperclip" />
-                        <div className="description">Tệp đính kèm</div>
-                      </div>
-                      <div className="list-attachments">
-                        <div className="attachment-item">
-                          <img
-                            src="https://emilus.themenate.net/img/others/img-13.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="attachment-item">
-                          <img
-                            src="https://emilus.themenate.net/img/others/img-14.jpg"
-                            alt=""
-                          />
-                        </div>
-                      </div>
-                      <div className="card-divider"></div>
-
-                      <div className="description-label">
-                        <CIcon name="cil-description" />
-                        <div className="description">Chi tiết</div>
-                      </div>
-                      <div className="description-input-container">
-                        <CTextarea
-                          onKeyDown={handleKeyDown}
-                          name="textarea-input"
-                          id="textarea-input"
-                          rows="9"
-                          placeholder="Mô tả công việc..."
-                          autocomplete="off"
-                        />
-                      </div>
-                      <div className="comment-label">
-                        <CIcon name="cil-speech" />
-                        <div className="commnet">Bình luận</div>
-                      </div>
-                      {/* <MyComment /> 
-                        <div className="comment-list">
-                          {commentList.map(function (item, index) {
-                            return <Comment key={index} data={item} />;
-                          })}
-                        </div>*/}
-                    </div>
-                  </CCol>
-                  <CCol className="col-3">
-                    <div className="form-actions">
-                      {/* <div className="action-item">
-                          <CIcon name="cil-clock" />
-                          <div className="action-name">Hạn hoàn thành</div>
-                        </div> */}
-                      {/* <div className="action-item">
-                          <CIcon name="cil-paperclip" />
-                          <div className="action-name">Tài liệu đính kèm</div>
-                        </div> */}
-                      <div className="action-item">
-                        <CIcon name="cil-share-boxed" />
-                        <div className="action-name">Chuyển đến...</div>
-                      </div>
-                      {/* <div className="action-item">
-                          <CIcon name="cil-chart-line" />
-                          <div className="action-name">Tiến độ</div>
-                        </div> */}
-                      {/* <div className="action-item">
-                          <CIcon name="cil-task" />
-                          <div className="action-name">Trạng thái</div>
-                        </div> */}
-                      {/* <div className="action-item">
-                          <CIcon name="cil-color-palette" />
-                          <div className="action-name">Màu chủ đề</div>
-                        </div> */}
-                      <div className="action-item">
-                        <CIcon name="cil-sort-numeric-up" />
-                        <div className="action-name">Cho điểm</div>
-                      </div>
-                      <div className="action-item">
-                        <CIcon name="cil-trash" />
-                        <div className="action-name">Xóa công việc</div>
-                      </div>
-                    </div>
-                  </CCol>
-                </CRow>
-              </CModalBody>
-            </CModal>
-          </div>
+          <TaskEditModal
+            closePopup={onEditModalClose}
+            isShowEditPopup={isShowEditPopup}
+            data={props.data}
+          />
 
           <div
             className="card-component"
-            style={{ animationDelay: `${props.index / 10}s` }}
+            style={{
+              animationDelay: `${props.index / 10}s`,
+              borderLeft: props.data.taskThemeColor
+                ? `0.3rem solid ${props.data.taskThemeColor}`
+                : "1px",
+            }}
             onClick={openEditPopup}
           >
             {imageCard && (
