@@ -21,35 +21,8 @@ import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 KanbanList.propTypes = {};
 
 function KanbanList(props) {
-  const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
-  const kanbanTasks = useSelector((state) => state.app.tasks);
-  const kanbanCardsData = getKanbanCardsData();
-
-  function getKanbanCardsData() {
-    const listId = props.data.kanbanListId;
-    const listCards = [];
-    for (var i = 0; i < kanbanTasks.length; i++) {
-      if (kanbanTasks[i].taskListBelongedId === listId) {
-        listCards.push({ ...kanbanTasks[i] });
-      }
-    }
-    if (listCards.length === 0) return listCards;
-    //sort
-    let clonedCards = [...listCards];
-
-    for (var i = 0; i < clonedCards.length; i++) {
-      for (var j = i + 1; j < clonedCards.length; j++) {
-        if (clonedCards[i].taskOrderInlist > clonedCards[j].taskOrderInlist) {
-          let temp = clonedCards[i];
-          clonedCards[i] = clonedCards[j];
-          clonedCards[j] = temp;
-        }
-      }
-    }
-
-    return [...clonedCards];
-  }
+  const { taskUIKanban } = props.data;
 
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>
@@ -70,7 +43,7 @@ function KanbanList(props) {
                 ref={provided.innerRef} //required by dnd
                 {...provided.droppableProps} //required by dnd
               >
-                {kanbanCardsData.map((item, index) => {
+                {taskUIKanban.map((item, index) => {
                   return (
                     <KanbanCard
                       key={item.taskId}

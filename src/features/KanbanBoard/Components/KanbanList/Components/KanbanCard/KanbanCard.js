@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Draggable } from "react-beautiful-dnd";
 import "./KanbanCard.scss";
@@ -21,6 +21,7 @@ import CIcon from "@coreui/icons-react";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { CirclePicker } from "react-color";
+import taskApi from "src/api/taskApi";
 
 KanbanCard.propTypes = {};
 
@@ -29,29 +30,8 @@ function KanbanCard(props) {
 
   const [isShowEditPopup, setIsShowEditPopup] = useState(initIsShowEditPopup);
   const [isShowColorPicker, setIsShowColorPicker] = useState(false);
-  const files = useSelector((state) => state.app.files);
-  const handleTasks = useSelector((state) => state.app.handleTasks);
-  const users = useSelector((state) => state.app.users);
-  const imageCard = getCardImage();
-  const attachmentsCount = getAttachmentsCount();
-  const assignedUserImage = getAssignedUserImage();
+  const [modalTask, setModaTask] = useState(null);
 
-  function getAssignedUserImage() {
-    //find handleTask
-    let userHandleId = "";
-    for (let i = 0; i < handleTasks.length; i++) {
-      if (handleTasks[i].handleTaskTaskId === props.data.taskId) {
-        userHandleId = handleTasks[i].handleTaskUserId;
-        break;
-      }
-    }
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].userId === userHandleId) {
-        return users[i].userImageUrl;
-      }
-    }
-    return "";
-  }
 
   function handleKeyDown(e) {
     const limit = 80;
@@ -61,12 +41,23 @@ function KanbanCard(props) {
     e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
   }
 
-  function openEditPopup() {
+  const openEditPopup = async () => {
+    const taskModal = await taskApi.getTaskById(props.data.taskId);
+    setModaTask(taskModal.data);
     setIsShowEditPopup(true);
   }
 
+  /*useEffect(() => {
+    if (modalTask === null)
+      return;
+    setIsShowEditPopup(true);
+  }, [modalTask]);*/
+
   function removeYearOfDate(date) {
-    if (new Date().getFullYear() === date.getFullYear()) {
+
+    var dt = new Date(date);
+
+    if (new Date().getFullYear() === dt.getFullYear()) {
       return moment(date).format("DD/MM");
     }
     return moment(date).format("DD/MM/YYYY");
@@ -113,29 +104,6 @@ function KanbanCard(props) {
     return "success";
   }
 
-  function getCardImage() {
-    //debugger;
-
-    for (let i = 0; i < files.length; i++) {
-      if (
-        files[i].fileBelongedId === props.data.taskId &&
-        files[i].fileType === "image"
-      ) {
-        return files[i].fileUrl;
-      }
-    }
-    return false;
-  }
-  function getAttachmentsCount() {
-    let count = 0;
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].fileBelongedId === props.data.taskId) {
-        count++;
-      }
-    }
-    return count;
-  }
-
   return (
     <Draggable
       isDragDisabled={isShowEditPopup}
@@ -161,10 +129,10 @@ function KanbanCard(props) {
                     <div className="progress-icon">
                       <CIcon name="cil-chart-line" />
                     </div>
-                    <div className="task-progress">25%</div>
+                    <div className="task-progress">{modalTask?.taskCompletedPercent}%</div>
                   </div>
 
-                  <div className="task-status-label-header">Đang thực hiện</div>
+                  <div className="task-status-label-header">{modalTask?.taskStatus}</div>
                 </div>
               </CModalHeader>
               <CModalBody>
@@ -184,6 +152,7 @@ function KanbanCard(props) {
                           autoComplete="off"
                           autocomplete="off"
                           type="text"
+                          value={modalTask?.taskName}
                         />
                       </div>
                       <div className="card-divider"></div>
@@ -197,7 +166,7 @@ function KanbanCard(props) {
                               </div>
                               <div className="assigned-user-avatar">
                                 <img
-                                  src="https://emilus.themenate.net/img/avatars/thumb-2.jpg"
+                                  src={modalTask?.userAvatar}
                                   alt=""
                                 />
                               </div>
@@ -232,6 +201,7 @@ function KanbanCard(props) {
                                   id="date-from"
                                   name="date-input"
                                   placeholder="date"
+                                  value={modalTask?.taskDeadline}
                                 />
                               </div>
                             </div>
@@ -246,7 +216,7 @@ function KanbanCard(props) {
                                     id="dropdownMenuButton"
                                     caret
                                   >
-                                    Đang thực hiện
+                                    {modalTask?.taskStatus}
                                   </CDropdownToggle>
                                   <CDropdownMenu
                                     aria-labelledby="dropdownMenuButton"
@@ -276,7 +246,7 @@ function KanbanCard(props) {
                             <CIcon name="cil-chart-line" />
                             Tiến độ
                           </div>
-                          <CProgress animated value={25} />
+                          <CProgress animated value={modalTask?.taskCompletedPercent} />
                         </div>
                       </div>
 
@@ -313,6 +283,7 @@ function KanbanCard(props) {
                           rows="9"
                           placeholder="Mô tả công việc..."
                           autocomplete="off"
+                          value={modalTask?.taskDescription}
                         />
                       </div>
                       <div className="comment-label">
@@ -373,9 +344,9 @@ function KanbanCard(props) {
             style={{ animationDelay: `${props.index / 10}s` }}
             onClick={openEditPopup}
           >
-            {imageCard && (
+            {props.data.image && (
               <div className="card-image-label">
-                <img alt="" src={imageCard} />
+                <img alt="" src={props.data.image} />
               </div>
             )}
 
@@ -404,20 +375,20 @@ function KanbanCard(props) {
                   <div className="comment-icon">
                     <CIcon name="cil-speech" />
                   </div>
-                  <div className="comment-count">12</div>
+                  <div className="comment-count">{props.data.commentsCount}</div>
                 </div>
-                {attachmentsCount > 0 && (
+                {props.data.filesCount > 0 && (
                   <div className="attachment-infor">
                     <div className="attachment-icon">
                       <CIcon name="cil-paperclip" />
                     </div>
-                    <div className="attachment-count">{attachmentsCount}</div>
+                    <div className="attachment-count">{props.data.filesCount}</div>
                   </div>
                 )}
               </div>
 
               <div className="user-assign-avatar">
-                <img alt="avatar" src={assignedUserImage} />
+                <img alt="avatar" src={props.data.userAvatar} />
               </div>
             </div>
             <div className="card-progress">

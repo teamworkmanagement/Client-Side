@@ -15,37 +15,6 @@ import moment from "moment";
 TaskListItem.propTypes = {};
 
 function TaskListItem(props) {
-  const files = useSelector((state) => state.app.files);
-  const handleTasks = useSelector((state) => state.app.handleTasks);
-  const users = useSelector((state) => state.app.users);
-  const attachmentsCount = getAttachmentsCount();
-  const daysLeftCount = countDaysLeft();
-  const assignedUserImage = getAssignedUserImage();
-  function getAssignedUserImage() {
-    //find handleTask
-    let userHandleId = "";
-    for (let i = 0; i < handleTasks.length; i++) {
-      if (handleTasks[i].handleTaskTaskId === props.data.taskId) {
-        userHandleId = handleTasks[i].handleTaskUserId;
-        break;
-      }
-    }
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].userId === userHandleId) {
-        return users[i].userImageUrl;
-      }
-    }
-    return "";
-  }
-  function getAttachmentsCount() {
-    let count = 0;
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].fileBelongedId === props.data.taskId) {
-        count++;
-      }
-    }
-    return count;
-  }
 
   function getStatusColor(status) {
     switch (status) {
@@ -89,7 +58,7 @@ function TaskListItem(props) {
 
   function countDaysLeft() {
     const nowdate = new Date();
-    const deadlineDate = props.data.taskDeadline;
+    const deadlineDate = new Date(props.data.taskDeadline);
     const spaceTime = Math.round((deadlineDate - nowdate) / 86400000);
     if (spaceTime >= 0) return "Còn " + spaceTime + " ngày";
     return "Trễ " + -spaceTime + " ngày";
@@ -109,10 +78,10 @@ function TaskListItem(props) {
       <div className="task-detail">
         <div
           className="attachment infor"
-          style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+          style={{ visibility: props.data.filesCount === 0 ? "hidden" : "visible" }}
         >
           <CIcon name="cil-paperclip" className=""></CIcon>
-          <div className="">{attachmentsCount} </div>
+          <div className="">{props.data.filesCount} </div>
         </div>
         <div className="comment infor">
           <CIcon name="cil-speech" className=""></CIcon>
@@ -133,7 +102,7 @@ function TaskListItem(props) {
           </div>
         </div>
         <div className="assigned-user infor">
-          <img alt="" className="avatar" src={assignedUserImage} />
+          <img alt="" className="avatar" src={props.data.userAvatar} />
         </div>
         <div
           style={getStatusColor(props.data.taskStatus)}

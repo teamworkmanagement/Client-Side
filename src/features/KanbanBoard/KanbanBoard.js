@@ -11,15 +11,15 @@ import {
 } from "src/appSlice";
 import { CButton, CButtonGroup } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { getBoardDataForUI } from "./kanbanSlice";
 
 KanbanBoard.propTypes = {};
 
 function KanbanBoard(props) {
   const dispatch = useDispatch();
 
-  const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
-  const kanbanLists = useSelector((state) => state.app.kanbanLists);
-  const tasks = useSelector((state) => state.app.tasks);
+  const kanbanLists = useSelector((state) => state.kanban.kanbanBoard.kanbanLists);
+
   const boardId = "board_1";
 
   function onDragEnd(result) {
@@ -27,34 +27,10 @@ function KanbanBoard(props) {
     return;
   }
 
-  function getKanbanListsData() {
-    const boardId = "board_1";
-    const lists = [];
-    for (var i = 0; i < kanbanLists.length; i++) {
-      if (kanbanLists[i].kanbanListBoardBelongedId === boardId) {
-        lists.push({ ...kanbanLists[i] });
-      }
-    }
-    if (lists.length === 0) return lists;
-    //sort
-    let clonedLists = [...lists];
-    for (var i = 0; i < clonedLists.length; i++) {
-      for (var j = i + 1; j < clonedLists.length; j++) {
-        if (
-          clonedLists[i].kanbanListOrderInBoard >
-          clonedLists[j].kanbanListOrderInBoard
-        ) {
-          //debugger;
-          let temp = clonedLists[i];
-          clonedLists[i] = clonedLists[j];
-          clonedLists[j] = temp;
-        }
-      }
-    }
-    return [...clonedLists];
-  }
 
-  let kanbanListsData = getKanbanListsData();
+  useEffect(() => {
+    dispatch(getBoardDataForUI('board1'));
+  }, []);
 
   return (
     <div className="kanban-board-container">
@@ -66,7 +42,7 @@ function KanbanBoard(props) {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {kanbanListsData.map((item, index) => {
+              {kanbanLists.map((item, index) => {
                 return (
                   <KanbanList
                     key={item.kanbanListId}
