@@ -6,19 +6,19 @@
 }
 .lds-ellipsis {
     display: inline-block;
-    position: fixed;
-    bottom: 0;
-    left: 50%;
+    //top: 0;
     width: 80px;
-    height: 80px;
+    height: 20px;
+    position: absolute;
+    left: 45%;
 }
 .lds-ellipsis div {
     position: absolute;
     bottom: 10px;
-    width: 13px;
-    height: 13px;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
-    background: #333;
+    background: #3c4b64;
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 .lds-ellipsis div:nth-child(1) {

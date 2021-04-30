@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./TaskListItem.scss";
 import CIcon from "@coreui/icons-react";
@@ -12,15 +12,21 @@ import {
 import { useSelector } from "react-redux";
 import { func } from "prop-types";
 import moment from "moment";
+import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 TaskListItem.propTypes = {};
 
 function TaskListItem(props) {
   const files = useSelector((state) => state.app.files);
   const handleTasks = useSelector((state) => state.app.handleTasks);
   const users = useSelector((state) => state.app.users);
+  const [isShowEditPopup, setIsShowEditPopup] = useState(false);
   const attachmentsCount = getAttachmentsCount();
   const daysLeftCount = countDaysLeft();
   const assignedUserImage = getAssignedUserImage();
+
+  function onEditModalClose() {
+    setIsShowEditPopup(false);
+  }
   function getAssignedUserImage() {
     //find handleTask
     let userHandleId = "";
@@ -96,76 +102,90 @@ function TaskListItem(props) {
   }
 
   return (
-    <div
-      className="task-list-item-container"
-      style={{
-        animationDelay: `${props.index / 10}s`,
-      }}
-    >
-      <div className="task-title">
-        <div className="task-name">{props.data.taskName}</div>
-        <div className="task-description">{props.data.taskDescription}</div>
-      </div>
-      <div className="task-detail">
-        <div
-          className="attachment infor"
-          style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
-        >
-          <CIcon name="cil-paperclip" className=""></CIcon>
-          <div className="">{attachmentsCount} </div>
-        </div>
-        <div className="comment infor">
-          <CIcon name="cil-speech" className=""></CIcon>
-          <div className="">3 </div>
-        </div>
-        <div className="deadline infor">
-          <CIcon name="cil-clock" className=""></CIcon>
-          {countDaysLeft()}
-        </div>
-        <div className="progress infor">
-          <CProgress
-            className="progress-bar"
-            color={getProgressColor(props.data.taskCompletedPercent)}
-            value={props.data.taskCompletedPercent + 2}
-          />
-          <div className="progress-text">
-            {props.data.taskCompletedPercent}%
+    <div>
+      <div
+        className="task-list-item-container"
+        style={{
+          animationDelay: `${props.index / 10}s`,
+        }}
+      >
+        <div className="task-infor-container">
+          <div className="task-title">
+            <div className="task-name">{props.data.taskName}</div>
+            <div className="task-description">{props.data.taskDescription}</div>
+          </div>
+          <div className="task-detail">
+            <div
+              className="attachment infor"
+              style={{ display: attachmentsCount === 0 ? "none" : "flex" }}
+              // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+            >
+              <CIcon name="cil-paperclip" className=""></CIcon>
+              <div className="">{attachmentsCount} </div>
+            </div>
+            <div className="comment infor">
+              <CIcon name="cil-speech" className=""></CIcon>
+              <div className="">3 </div>
+            </div>
+            <div className="deadline infor">
+              <CIcon name="cil-clock" className=""></CIcon>
+              {countDaysLeft()}
+            </div>
+            <div className="progress infor">
+              <CProgress
+                className="progress-bar"
+                color={getProgressColor(props.data.taskCompletedPercent)}
+                value={props.data.taskCompletedPercent + 2}
+              />
+              <div className="progress-text">
+                {props.data.taskCompletedPercent}%
+              </div>
+            </div>
+            <div className="assigned-user infor">
+              <img alt="" className="avatar" src={assignedUserImage} />
+            </div>
+            <div
+              style={getStatusColor(props.data.taskStatus)}
+              className="infor status"
+            >
+              {getStatusText(props.data.taskStatus)}
+            </div>
           </div>
         </div>
-        <div className="assigned-user infor">
-          <img alt="" className="avatar" src={assignedUserImage} />
-        </div>
-        <div
-          style={getStatusColor(props.data.taskStatus)}
-          className="infor status"
-        >
-          {getStatusText(props.data.taskStatus)}
-        </div>
-      </div>
-      <div className="task-actions">
-        <div className="header-actions-dropdown">
-          <CDropdown>
-            <CDropdownToggle id="dropdownMenuButton" caret>
-              <div className="lane-actions">
-                <CIcon name="cil-options" />
-              </div>
-            </CDropdownToggle>
-            <CDropdownMenu
-              aria-labelledby="dropdownMenuButton"
-              placement="bottom-end"
-            >
-              <CDropdownItem className="first">
-                <CIcon name="cil-pencil" />
-                Chỉnh sửa
-              </CDropdownItem>
-              <CDropdownItem className="last">
-                <CIcon name="cil-trash" className="icon-delete" />
-                Xóa
-              </CDropdownItem>
-            </CDropdownMenu>
-          </CDropdown>
+
+        <div className="task-actions">
+          <div className="header-actions-dropdown">
+            <CDropdown>
+              <CDropdownToggle id="dropdownMenuButton" caret>
+                <div className="lane-actions">
+                  <CIcon name="cil-options" />
+                </div>
+              </CDropdownToggle>
+              <CDropdownMenu
+                aria-labelledby="dropdownMenuButton"
+                placement="bottom-end"
+              >
+                <CDropdownItem
+                  className="first"
+                  onClick={() => setIsShowEditPopup(true)}
+                >
+                  <CIcon name="cil-pencil" />
+                  Chỉnh sửa
+                </CDropdownItem>
+                <CDropdownItem className="last">
+                  <CIcon name="cil-trash" className="icon-delete" />
+                  Xóa
+                </CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+          </div>
         </div>
       </div>
+      <TaskEditModal
+        closePopup={onEditModalClose}
+        isShowEditPopup={isShowEditPopup}
+        data={props.data}
+      />
     </div>
   );
 }
