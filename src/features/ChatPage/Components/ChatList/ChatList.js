@@ -104,13 +104,13 @@ function ChatList(props) {
   const [chatList, setChatList] = useState(initChatList);
 
   const dispatch = useDispatch();
-  const groupChatList = useSelector(state => state.chat.groupChat);
+  const groupChatList = useSelector((state) => state.chat.groupChat);
   const hanelSelectItem = (selectedId) => {
     dispatch(setCurrentGroup(selectedId));
   };
 
   return (
-    <div className="chat-list-conatainer">
+    <div className="chat-list-container">
       {groupChatList.map(function (item, index) {
         return (
           <ChatListItem

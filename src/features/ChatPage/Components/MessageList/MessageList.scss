@@ -11,18 +11,38 @@ $message-font-weight: normal;
         transform: scale(1);
     }
 }
+@keyframes showIn1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 
 @mixin Appear {
     transition: all 0.3s ease;
     transform: scale(0);
-    transform-origin: left;
     animation-name: showIn;
+    transform-origin: left;
     animation-duration: 0.3s;
     animation-iteration-count: 1;
     animation-direction: normal;
     animation-timing-function: ease-in;
     animation-fill-mode: both;
-    animation-delay: 0.4s;
+    animation-delay: 0.3s;
+}
+@mixin Appear1 {
+    //transition: all 0.3s ease;
+    transform: scale(0);
+    //transform-origin: left;
+    animation-name: showIn1;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease-in;
+    animation-fill-mode: both;
+    animation-delay: 0.3s;
 }
 
 .message-item-container {
@@ -38,12 +58,12 @@ $message-font-weight: normal;
         border-radius: 50px;
     }
     .message-content {
-        @include Appear;
+        //@include Appear1;
         margin: 0rem 0.2rem;
         margin-right: 3rem;
         display: flex;
         flex-direction: column;
-        transition: all 3s;
+        //transition: all 2s;
         .message-text {
             font-weight: $message-font-weight;
             background-color: #ededed;
@@ -106,7 +126,8 @@ $message-font-weight: normal;
         display: none;
     }
     .message-content {
-        transform-origin: right;
+        //@include Appear();
+        //transform-origin: right;
         margin: 0rem 0.2rem;
         flex-direction: column;
         align-items: flex-end;

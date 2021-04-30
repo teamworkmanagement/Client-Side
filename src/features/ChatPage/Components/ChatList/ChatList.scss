@@ -1,25 +1,26 @@
-.chat-list-conatainer {
+.chat-list-container {
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
+    padding-right: 0;
 }
 
-.chat-list-conatainer::-webkit-scrollbar {
+.chat-list-container::-webkit-scrollbar {
     width: 0.3rem;
 }
 
 /* Track */
-.chat-list-conatainer::-webkit-scrollbar-track {
+.chat-list-container::-webkit-scrollbar-track {
     //box-shadow: inset 0 0 5px grey;
     border-radius: 10px;
 }
 
 /* Handle */
-.chat-list-conatainer::-webkit-scrollbar-thumb {
+.chat-list-container::-webkit-scrollbar-thumb {
     background: #cdcdcd;
     border-radius: 10px;
 }
 
 /* Handle on hover */
-.chat-list-conatainer::-webkit-scrollbar-thumb:hover {
+.chat-list-container::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
