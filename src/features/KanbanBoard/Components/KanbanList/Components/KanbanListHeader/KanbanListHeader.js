@@ -13,6 +13,7 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import CreateCardModal from "../CreateCardModal/CreateCardModal";
 
 KanbanListHeader.propTypes = {};
 
@@ -74,7 +75,11 @@ function KanbanListHeader(props) {
           </div>
         </div>
       )}
-      <CModal
+      <CreateCardModal
+        showAddCard={showAddCard}
+        setShowAddCard={setShowAddCard}
+      />
+      {/* <CModal
         show={showAddCard}
         onClose={() => setShowAddCard(!showAddCard)}
         size="sm"
@@ -90,7 +95,7 @@ function KanbanListHeader(props) {
             Tạo
           </CButton>
         </CModalBody>
-      </CModal>
+      </CModal> */}
     </div>
   );
 }

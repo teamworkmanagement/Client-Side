@@ -84,9 +84,9 @@ function PostList(props) {
   });
 
   return (
-    <div>
+    <div className="post-list">
       {listPosts.length === 0 && !isLoading ? <Empty /> : renderListPost}
-      {isLoading ? <Loading /> : null}
+      {isLoading ? <Loading className="loading-bar" /> : null}
       {showScroll ? (
         <div className="show-scroll" onClick={scrollTop}>
           GO TOP

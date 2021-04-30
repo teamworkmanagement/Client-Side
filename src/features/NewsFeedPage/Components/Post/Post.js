@@ -5,7 +5,7 @@ import CIcon from "@coreui/icons-react";
 import CommentItem from "./Components/CommentItem/CommentItem";
 import { CInput } from "@coreui/react";
 import moment from "moment";
-import 'moment/locale/vi';
+import "moment/locale/vi";
 import commentApi from "src/api/commentApi";
 import classNames from "classnames";
 import postApi from "src/api/postApi";
@@ -17,7 +17,7 @@ function Post(props) {
   const [cmtLists, setComments] = useState([]);
   const [loadComment, setLoadComment] = useState(0);
   const [post, setPost] = useState({ ...props.post });
-  const [commentContent, setCommentContent] = useState('');
+  const [commentContent, setCommentContent] = useState("");
 
   useEffect(() => {
     async function getComments() {
@@ -35,56 +35,68 @@ function Post(props) {
 
   const seeMore = () => {
     setLoadComment(loadComment + 1);
-  }
+  };
 
   const onLoveClick = () => {
     const params = {
-      "postId": post.postId,
-      "userId": '8650b7fe-2952-4b03-983c-660dddda9029'
+      postId: post.postId,
+      userId: "8650b7fe-2952-4b03-983c-660dddda9029",
     };
-    post.isReacted ? postApi.deleteReactPost({ params }).then(res => { }).catch(err => { })
-      : postApi.reactPost(params).then(res => { }).catch(err => { })
+    post.isReacted
+      ? postApi
+          .deleteReactPost({ params })
+          .then((res) => {})
+          .catch((err) => {})
+      : postApi
+          .reactPost(params)
+          .then((res) => {})
+          .catch((err) => {});
 
     setPost({
       ...post,
-      postReactCount: post.isReacted ? post.postReactCount - 1 : post.postReactCount + 1,
+      postReactCount: post.isReacted
+        ? post.postReactCount - 1
+        : post.postReactCount + 1,
       isReacted: !post.isReacted,
     });
-  }
+  };
 
   const onAddComment = (e) => {
-    if (e.key === 'Enter') {
-      if (commentContent !== '') {
+    if (e.key === "Enter") {
+      if (commentContent !== "") {
         console.log(commentContent);
-        commentApi.addComment({
-          "commentPostId": post.postId,
-          "commentUserId": '8650b7fe-2952-4b03-983c-660dddda9029',
-          "commentContent": commentContent,
-          "commentCreatedAt": new Date().toISOString(),
-          "commentIsDeleted": false,
-        }).then(res => {
+        commentApi
+          .addComment({
+            commentPostId: post.postId,
+            commentUserId: "8650b7fe-2952-4b03-983c-660dddda9029",
+            commentContent: commentContent,
+            commentCreatedAt: new Date().toISOString(),
+            commentIsDeleted: false,
+          })
+          .then((res) => {
+            setPost({
+              ...post,
+              postCommentCount: post.postCommentCount + 1,
+            });
 
-          setPost({
-            ...post,
-            postCommentCount: post.postCommentCount + 1,
-          });
+            const newArrr = [
+              {
+                commentId: res.data.commentId,
+                commentPostId: res.data.commentPostId,
+                commentUserId: res.data.commentUserId,
+                commentContent: res.data.commentContent,
+                userName: "Dungx Nguyeenx",
+                commentCreatedAt: res.data.commentCreatedAt,
+              },
+            ].concat([...cmtLists]);
 
-          const newArrr = [{
-            'commentId': res.data.commentId,
-            'commentPostId': res.data.commentPostId,
-            'commentUserId': res.data.commentUserId,
-            'commentContent': res.data.commentContent,
-            'userName': 'Dungx Nguyeenx',
-            'commentCreatedAt': res.data.commentCreatedAt,
-          }].concat([...cmtLists]);
-
-          setComments(newArrr);
-
-        }).catch(err => { });
+            setComments(newArrr);
+          })
+          .catch((err) => {});
       }
-      setCommentContent('');
+      setCommentContent("");
     }
-  }
+  };
   return (
     <div className="post-container">
       <div className="post-header">
@@ -110,11 +122,13 @@ function Post(props) {
           <CIcon name="cil-options" />
         </div>
       </div>
-      <div className="post-content">
-        {post.postContent}
-      </div>
+      <div className="post-content">{post.postContent}</div>
       <div className="interaction-bar">
-        <CIcon name="cil-heart" className={classNames('is-love-icon', { 'loved': post.isReacted })} onClick={onLoveClick} />
+        <CIcon
+          name="cil-heart"
+          className={classNames("is-love-icon", { loved: post.isReacted })}
+          onClick={onLoveClick}
+        />
         <div className="love-count">{post.postReactCount}</div>
         <CIcon name="cil-comment-square" className="comment-icon" />
         <div className="comment-count">{post.postCommentCount}</div>
@@ -124,20 +138,24 @@ function Post(props) {
           <img alt="" src="avatars/6.jpg" />
         </div>
         <div className="input-container">
-          <CInput type="text" placeholder="Viết bình luận..." value={commentContent} onKeyDown={onAddComment} onChange={(e) => setCommentContent(e.target.value)} />
+          <CInput
+            type="text"
+            placeholder="Viết bình luận..."
+            value={commentContent}
+            onKeyDown={onAddComment}
+            onChange={(e) => setCommentContent(e.target.value)}
+          />
         </div>
       </div>
       <div className="comment-list">
-        {
-          cmtLists.map(item => {
-            return <CommentItem comment={item} key={item.commentId} />
-          })
-        }
+        {cmtLists.map((item) => {
+          return <CommentItem comment={item} key={item.commentId} />;
+        })}
       </div>
 
       <div className="load-more-comment">
         <div onClick={seeMore}>
-          <i>Xem thêm</i>
+          <i>Xem thêm </i>
         </div>
         <div className="rotate">&#171;</div>
       </div>

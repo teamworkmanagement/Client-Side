@@ -744,7 +744,7 @@ function TaskEditModal(props) {
                     name={showDetail ? "cil-caret-top" : "cil-caret-bottom"}
                   />
                 </div>
-                <CCollapse show={showDetail}>
+                <CCollapse className="advanced-collapse" show={showDetail}>
                   <div className="infor-bar">
                     <CRow className="my-row">
                       <CCol className="col-6 my-col left">

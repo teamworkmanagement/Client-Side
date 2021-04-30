@@ -17,6 +17,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
+import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
 
 KanbanList.propTypes = {};
 
@@ -25,6 +26,7 @@ function KanbanList(props) {
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const kanbanTasks = useSelector((state) => state.app.tasks);
   const kanbanCardsData = getKanbanCardsData();
+  const [showAddCard, setShowAddCard] = useState(false);
 
   function getKanbanCardsData() {
     const listId = props.data.kanbanListId;
@@ -88,10 +90,17 @@ function KanbanList(props) {
               </div>
             )}
           </Droppable>
-          <div className="kanbanlist-footer-container">
+          <div
+            className="kanbanlist-footer-container"
+            onClick={() => setShowAddCard(true)}
+          >
             <CIcon name="cil-plus" />
             Thêm thẻ
           </div>
+          <CreateCardModal
+            showAddCard={showAddCard}
+            setShowAddCard={setShowAddCard}
+          />
         </div>
       )}
     </Draggable>
