@@ -40,9 +40,41 @@
     }
     .modal-body {
         .form-content {
+            // display: flex;
+            // flex-direction: column-reverse;
             .card-divider {
                 border-top: 1px solid #e6ebf1;
                 //margin: 1rem 0rem;
+            }
+            .show-detail-toggle {
+                border-radius: 5px;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+                padding: 0.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                margin-left: -0.5rem;
+                &:hover {
+                    background-color: #eaecf0;
+                }
+                .detail-toggle-label {
+                    display: flex;
+                    align-items: center;
+                    .c-icon {
+                        margin-right: 0.3rem;
+                        width: 1.2rem;
+                        height: 1.2rem;
+                    }
+                    .label-name {
+                        font-weight: bold;
+                    }
+                }
+                .icon-up-down {
+                    width: 0.8rem;
+                    height: 0.8rem;
+                }
             }
 
             .title-label {
@@ -68,6 +100,7 @@
                     background-color: transparent;
                     // border-color: rgba(#d8dbe0, 0.5);
                     // background-color: #eaecf0;
+                    color: inherit;
                 }
                 .save-name-btn {
                     margin-top: 0.5rem;
@@ -277,6 +310,7 @@
             .list-attachments {
                 overflow-x: auto;
                 display: flex;
+                margin-bottom: 1rem;
                 .attachment-item {
                     border: 1px solid #e6ebf1;
                     border-radius: 0.625rem;
@@ -286,15 +320,94 @@
                     margin-bottom: 1rem;
                     width: 13rem;
                     height: 9rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: fit-content;
+                    padding: 0.2rem 0.5rem 0.2rem 0.2rem;
+                    height: fit-content;
                     img {
-                        border-radius: 0.625rem;
-                        width: inherit;
-                        height: inherit;
-                        padding: 0.5rem;
+                        border-radius: 0;
+                        flex-grow: 1;
+                        height: 2rem;
+                        width: 2rem;
+                        padding: 0;
+                    }
+                    .attachment-name-containner {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        align-items: flex-end;
+                        .download-icon-container {
+                            background-color: transparent;
+                            color: black;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            padding: 0.2rem 0.4rem;
+                            border-radius: 4px;
+                            padding: 0.2rem 0.4rem;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            &:hover {
+                                transform: scale(1.1);
+                                background-color: #eaecf0;
+                            }
+                            .icon-bottom {
+                                margin-top: -0.98rem;
+                                width: 1.2rem;
+                                height: 1.2rem;
+                            }
+                        }
+                        .attachment-name {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: pre;
+                            font-weight: bold;
+                            margin-left: 0.2rem;
+                            cursor: pointer;
+                        }
                     }
                 }
             }
             .attachment-label {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 0.5rem;
+                margin-top: 1rem;
+                .label-title {
+                    display: flex;
+                    align-items: center;
+                    .c-icon {
+                        margin-right: 0.3rem;
+                        width: 1.1rem;
+                        height: 1.1rem;
+                        margin-top: -0.1rem;
+                    }
+                    .description {
+                        font-weight: bold;
+                    }
+                }
+                .label-action {
+                    border: 1px solid #e6ebf1;
+                    padding: 0.2rem 0.4rem;
+                    border-radius: 0.25rem;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    .c-icon {
+                        margin-right: 0.3rem;
+                    }
+                    .action-name {
+                        font-weight: bold;
+                    }
+                    &:hover {
+                        background-color: #eaecf0;
+                    }
+                }
+            }
+            .task-avatar-label {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -382,6 +495,7 @@
                 display: flex;
                 align-items: center;
                 margin-bottom: 0.5rem;
+                margin-top: 0.5rem;
                 .c-icon {
                     margin-right: 0.3rem;
                     width: 1.2rem;
@@ -393,20 +507,68 @@
             }
 
             .my-comment {
-                padding: 0rem 0rem 0rem 2rem;
-                input {
-                    background-color: #fafafa;
+                margin-top: 1rem;
+                padding: 0rem 0rem 0rem 0rem;
+                display: flex;
+                align-items: center;
+                .my-avatar {
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius: 50px;
+                    margin-right: 0.5rem;
+                    img {
+                        width: inherit;
+                        height: inherit;
+                        border-radius: inherit;
+                    }
+                }
+                .input-container {
+                    width: 100% !important;
+                    input {
+                        background-color: #fafafa;
+                    }
+                }
+            }
+            .task-avatar {
+                width: 13rem;
+                height: 9rem;
+                margin-bottom: 1rem;
+                position: relative;
+                img {
+                    width: inherit;
+                    height: inherit;
+                    border-radius: 0.5rem;
+                }
+                .delete-task-avatar-icon {
+                    position: absolute;
+                    background: #de4436;
+                    width: 1.4rem;
+                    height: 1.4rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50px;
+                    color: white;
+                    padding: 0.1rem;
+                    top: -0.5rem;
+                    right: -0.5rem;
+                    cursor: pointer;
+                    &:hover {
+                        transform: scale(1.2);
+                    }
                 }
             }
 
             .comment-list {
                 margin-bottom: 0rem;
+                padding: 1rem 0rem 0rem 0rem;
                 .comment {
-                    padding: 0.75rem 0rem 0rem 2rem;
+                    //padding: 0.75rem 0rem 0rem 2rem;
                 }
             }
         }
         .form-actions {
+            margin-top: 4rem;
             .action-item {
                 display: flex;
                 background-color: #eaecf0;
