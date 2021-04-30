@@ -67,7 +67,7 @@ function TeamPage(props) {
             <TeamTasks />
           </CTabPane>
           <CTabPane>
-            <ChatPage isInTeam={true} />
+            <ChatPage isInTeam={true} tabActiveTeam={active} />
           </CTabPane>
           <CTabPane>
             <ListFileTable />
