@@ -9,7 +9,7 @@ export const getBoardDataForUI = createAsyncThunk(
     'kanban/getboardui',
     async (boardId) => {
         const data = await kanbanApi.getBoardUI(boardId);
-        console.log('kanban data redux: ', data.data);
+        //console.log('kanban data redux: ', data.data);
         return data.data;
     }
 );
@@ -18,162 +18,70 @@ const kanbanSlice = createSlice({
     name: "kanban",
     initialState: {
         kanbanBoard: {
-            kanbanLists:[]
+            kanbanLists: []
         }
     },
     reducers: {
-        setKanbanLists(state, payload) {
+        handleDragEnd(state, action) {
+            const { destination, source, draggableId, type } = action.payload;
 
-        },
+            if (!destination) return;
+            if (type == 'task') {
+                if (destination.droppableId === source.droppableId && destination.index === source.index)
+                    return;
 
-        handleDragEnd(state, payload) {
-            const result = payload.payload;
-            const { destination, source, draggableId, type } = result;
 
-            if (!destination) {
-                return;
+                const cloneKanbanLists = JSON.parse(JSON.stringify(state.kanbanBoard.kanbanLists))
+
+                console.log(cloneKanbanLists);
+                
+
+                //source
+                const sourceList = cloneKanbanLists.find(x => x.kanbanListId === source.droppableId);
+                console.log(sourceList);
+                const sourceElement = sourceList.taskUIKanban.find(x => x.orderInList === source.index);
+
+                //set new pos for source
+                sourceList.taskUIKanban.forEach(e => {
+                    if (e.orderInList > source.index)
+                        e.orderInList--;
+                });
+                //delete old pos
+                sourceList.taskUIKanban.splice(source.index, 1);
+
+
+                //destination
+                const destinationList = cloneKanbanLists.find(x => x.kanbanListId === destination.droppableId);
+
+                //set mew pos for destination
+                destinationList.taskUIKanban.forEach(e => {
+                    if (e.orderInList >= destination.index)
+                        e.orderInList++;
+                });
+
+                //add new pos
+                sourceElement.orderInList = destination.index;
+                sourceElement.kanbanListId = destination.droppableId;
+
+                destinationList.taskUIKanban.splice(destination.index, 0, sourceElement);
+
+                state.kanbanBoard.kanbanLists = cloneKanbanLists;
+            }
+            else {
+                if (destination.droppableId === source.droppableId && destination.index === source.index)
+                    return;
+
+                const cloneKanbanLists = JSON.parse(JSON.stringify(state.kanbanBoard.kanbanLists));
+
+                cloneKanbanLists[destination.index].kanbanListOrderInBoard = source.index;
+                cloneKanbanLists[source.index].kanbanListOrderInBoard = destination.index;
+
+                //swap list
+                [cloneKanbanLists[destination.index], cloneKanbanLists[source.index]] = [cloneKanbanLists[source.index], cloneKanbanLists[destination.index]];
+
+                state.kanbanBoard.kanbanLists = cloneKanbanLists;
             }
 
-            if (
-                destination.droppableId === source.droppableId &&
-                destination.index === source.index
-            ) {
-                return;
-            }
-
-            if (type === "list") {
-                if (source.index > destination.index) {
-                    //move back
-                    for (let i = 0; i < state.kanbanLists.length; i++) {
-                        if (state.kanbanLists[i].kanbanListId === draggableId) {
-                            //nếu là item đang drag, set luôn order mới
-                            state.kanbanLists[i] = {
-                                ...state.kanbanLists[i],
-                                kanbanListOrderInBoard: destination.index,
-                            };
-                        } else {
-                            //nếu là items trong vùng dịch chuyển, cộng thêm order với 1
-                            const order = state.kanbanLists[i].kanbanListOrderInBoard;
-                            if (order < source.index && order >= destination.index) {
-                                state.kanbanLists[i] = {
-                                    ...state.kanbanLists[i],
-                                    kanbanListOrderInBoard: order + 1,
-                                };
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < state.kanbanLists.length; i++) {
-                        if (state.kanbanLists[i].kanbanListId === draggableId) {
-                            //nếu là item đang drag, set luôn order mới
-                            state.kanbanLists[i] = {
-                                ...state.kanbanLists[i],
-                                kanbanListOrderInBoard: destination.index,
-                            };
-                        } else {
-                            //nếu là items trong vùng dịch chuyển, cộng thêm order với 1
-                            const order = state.kanbanLists[i].kanbanListOrderInBoard;
-                            if (order > source.index && order <= destination.index) {
-                                state.kanbanLists[i] = {
-                                    ...state.kanbanLists[i],
-                                    kanbanListOrderInBoard: order - 1,
-                                };
-                            }
-                        }
-                    }
-                }
-
-                return;
-            }
-
-            //here is card dragging case
-            if (source.droppableId === destination.droppableId) {
-                //move card trong cùng list nguồn
-                if (source.index > destination.index) {
-                    //move back
-                    for (let i = 0; i < state.tasks.length; i++) {
-                        if (state.tasks[i].taskId === draggableId) {
-                            //nếu là item đang drag, set luôn order mới
-                            state.tasks[i] = {
-                                ...state.tasks[i],
-                                taskOrderInlist: destination.index,
-                            };
-                        } else {
-                            //nếu là items trong vùng dịch chuyển, cộng thêm order với 1
-                            const order = state.tasks[i].taskOrderInlist;
-                            if (
-                                state.tasks[i].taskListBelongedId === source.droppableId &&
-                                order < source.index &&
-                                order >= destination.index
-                            ) {
-                                state.tasks[i] = {
-                                    ...state.tasks[i],
-                                    taskOrderInlist: order + 1,
-                                };
-                            }
-                        }
-                    }
-                } else {
-                    for (let i = 0; i < state.tasks.length; i++) {
-                        if (state.tasks[i].taskId === draggableId) {
-                            //nếu là item đang drag, set luôn order mới
-                            state.tasks[i] = {
-                                ...state.tasks[i],
-                                taskOrderInlist: destination.index,
-                            };
-                        } else {
-                            //nếu là items trong vùng dịch chuyển, cộng thêm order với 1
-                            const order = state.tasks[i].taskOrderInlist;
-                            if (
-                                state.tasks[i].taskListBelongedId === source.droppableId &&
-                                order > source.index &&
-                                order <= destination.index
-                            ) {
-                                state.tasks[i] = {
-                                    ...state.tasks[i],
-                                    taskOrderInlist: order - 1,
-                                };
-                            }
-                        }
-                    }
-                }
-            } else {
-                //move card khác list
-                //step 1: đổi order cho list source
-                for (let i = 0; i < state.tasks.length; i++) {
-                    const order = state.tasks[i].taskOrderInlist;
-                    if (
-                        state.tasks[i].taskListBelongedId === source.droppableId &&
-                        order > source.index
-                    ) {
-                        state.tasks[i] = {
-                            ...state.tasks[i],
-                            taskOrderInlist: order - 1,
-                        };
-                    }
-                }
-                //step 2: đổi order cho list destination
-                for (let i = 0; i < state.tasks.length; i++) {
-                    const order = state.tasks[i].taskOrderInlist;
-                    if (state.tasks[i].taskId === draggableId) {
-                        state.tasks[i] = {
-                            ...state.tasks[i],
-                            taskOrderInlist: destination.index,
-                            taskListBelongedId: destination.droppableId,
-                        };
-                    } else {
-                        if (
-                            state.tasks[i].taskListBelongedId === destination.droppableId &&
-                            order >= destination.index
-                        ) {
-                            state.tasks[i] = {
-                                ...state.tasks[i],
-                                taskOrderInlist: order + 1,
-                            };
-                        }
-                    }
-                }
-            }
         },
     },
     extraReducers: {
@@ -186,7 +94,6 @@ const kanbanSlice = createSlice({
 
 const { actions, reducer } = kanbanSlice;
 export const {
-    setKanbanLists,
     handleDragEnd,
-} = actions; // named export
-export default reducer; // default export
+} = actions;
+export default reducer;

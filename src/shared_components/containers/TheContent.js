@@ -22,7 +22,7 @@ const TheContent = () => {
             {routes.map((route, idx) => {
               return (
                 route.component && (
-                  <PublicRoute
+                  <PrivateRoute
                     key={idx}
                     path={route.path}
                     exact={route.exact}
