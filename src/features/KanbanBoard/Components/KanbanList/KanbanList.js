@@ -33,6 +33,7 @@ function KanbanList(props) {
           {...provided.draggableProps}
         >
           <KanbanListHeader
+            cardCount={props.data.taskUIKanban.length}
             title={headerTitle}
             dragHandleProps={{ ...provided.dragHandleProps }}
           />

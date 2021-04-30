@@ -92,6 +92,7 @@ const TheHeader = () => {
           routes={routes}
         />
         <div className="dark-theme-container">
+        <button>Gia nhập hoặc tạo nhóm</button>
           <div>Dark Theme</div>
           <CSwitch
             className={"mx-1"}
