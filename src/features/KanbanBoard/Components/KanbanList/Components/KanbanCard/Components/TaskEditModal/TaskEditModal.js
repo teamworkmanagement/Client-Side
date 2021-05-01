@@ -174,8 +174,11 @@ function TaskEditModal(props) {
       setRenderedValue([
         props.data.taskCompletedPercent,
       ]);
-      setCmtLists(props.data.comments);
-      setAttachments(props.data.files);
+      if (props.data.comments)
+        setCmtLists(props.data.comments);
+
+      if (props.data.files)
+        setAttachments(props.data.files);
     }
   }, [props.data])
 
@@ -324,8 +327,10 @@ function TaskEditModal(props) {
         return "Đang chờ";
       case "doing":
         return "Đang thực hiện";
-      default:
+      case "done":
         return "Hoàn thành";
+      default:
+        return "Đang chờ";
     }
   }
 
@@ -335,8 +340,10 @@ function TaskEditModal(props) {
         return "#DE4436";
       case "doing":
         return "#FFC542";
-      default:
+      case "done":
         return "#04D182";
+      default:
+        return "#DE4436";
     }
   }
 
