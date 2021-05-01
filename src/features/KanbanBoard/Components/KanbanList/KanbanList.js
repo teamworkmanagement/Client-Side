@@ -54,6 +54,8 @@ function KanbanList(props) {
   }*/
 
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
+  const [showAddCard, setShowAddCard] = useState(false);
+
   const { taskUIKanbans } = props.data;
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>
@@ -64,7 +66,7 @@ function KanbanList(props) {
           {...provided.draggableProps}
         >
           <KanbanListHeader
-          cardCount={props.data.taskUIKanbans.length}
+            cardCount={props.data.taskUIKanbans.length}
             title={headerTitle}
             dragHandleProps={{ ...provided.dragHandleProps }}
           />
