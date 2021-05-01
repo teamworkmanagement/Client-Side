@@ -38,6 +38,7 @@ import { updateEditTask } from "../../../../../../kanbanSlice";
 import { myBucket } from "src/utils/aws/config";
 import { v4 as uuidv4 } from 'uuid';
 import fileApi from "src/api/fileApi";
+import commentApi from "src/api/commentApi";
 
 TaskEditModal.propTypes = {};
 
@@ -61,7 +62,8 @@ function TaskEditModal(props) {
   const [attachments, setAttachments] = useState([]);
   const [triggerUpdateTask, setTriggerUpdateTask] = useState(-1);//cause setState is asynchonous action
 
-  const userId = useSelector(state => state.auth.currentUser.id);
+  const curUser = useSelector(state => state.auth.currentUser);
+  const [commentContent, setCommentContent] = useState('');
 
   const addToast = () => {
     setToasts([
@@ -542,6 +544,45 @@ function TaskEditModal(props) {
   }
 
 
+
+  const onAddComment = (e) => {
+    if (e.key === 'Enter') {
+      if (commentContent !== '') {
+        console.log(commentContent);
+        commentApi.addComment({
+          "commentTaskId": task.taskId,
+          "commentUserId": curUser.id,
+          "commentContent": commentContent,
+          "commentCreatedAt": new Date().toISOString(),
+          "commentIsDeleted": false,
+        }).then(res => {
+
+          setTask({
+            ...task,
+            commentsCount: task.commentsCount + 1,
+          });
+
+          const cmtObj = {
+            'commentId': res.data.commentId,
+            'commentTaskId': res.data.commentTaskId,
+            'commentUserId': res.data.commentUserId,
+            'commentContent': res.data.commentContent,
+            'userName': curUser.fullName,
+            'userAvatar': curUser.userAvatar,
+            'commentCreatedAt': res.data.commentCreatedAt,
+          };
+
+          const cmtListsClone = [...cmtLists];
+          cmtListsClone.splice(0, 0, cmtObj);
+          setCmtLists(cmtListsClone);
+
+          dispatchUpdateTask();
+        }).catch(err => { });
+      }
+      setCommentContent('');
+    }
+  }
+
   const onFilePickChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -566,7 +607,7 @@ function TaskEditModal(props) {
               fileName: file.name,
               fileUrl: fileUrl,
               fileType: GetTypeFromExt(file.name),
-              userId: userId,
+              userId: curUser.id,
               fileBelongedId: task.taskId,
             }).then(res => {
               const attachmentsClone = [...attachments];
@@ -585,6 +626,18 @@ function TaskEditModal(props) {
 
   const onPickFile = () => {
     fileRef.current.click();
+  }
+
+
+  const seeMoreComments = async () => {
+    const params = {
+      taskId: task.taskId,
+      skipItems: cmtLists.length,
+    };
+    const res = await commentApi.getByTask({ params });
+    const cloneCmtList = [...cmtLists];
+    const newCmts = cloneCmtList.concat(res.data);
+    setCmtLists(newCmts);
   }
   return (
     <div>
@@ -952,8 +1005,9 @@ function TaskEditModal(props) {
                     <CInput
                       type="text"
                       placeholder="Viết bình luận..."
-                    // onKeyDown={onAddComment}
-                    // onChange={(e) => setCommentContent(e.target.value)}
+                      onKeyDown={onAddComment}
+                      onChange={(e) => setCommentContent(e.target.value)}
+                      value={commentContent}
                     />
                   </div>
                 </div>
@@ -961,6 +1015,13 @@ function TaskEditModal(props) {
                   {cmtLists.map((item) => {
                     return <CommentItem comment={item} key={item.commentId} />;
                   })}
+
+                  <div className="load-more-comment" onClick={seeMoreComments}>
+                    <div>
+                      <i>Xem thêm</i>
+                    </div>
+                    <div className="rotate">&#171;</div>
+                  </div>
                 </div>
               </div>
             </CCol>

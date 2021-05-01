@@ -13,6 +13,10 @@ const commentApi = {
     addComment(params) {
         const url = '/comment';
         return axiosClient.post(url, params);
+    },
+    getByTask(params) {
+        const url = `comment/bytask`;
+        return axiosClient.get(url, params);
     }
 };
 
