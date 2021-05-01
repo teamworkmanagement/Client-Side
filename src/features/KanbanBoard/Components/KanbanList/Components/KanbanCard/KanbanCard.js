@@ -1,27 +1,14 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { Draggable } from "react-beautiful-dnd";
-import "./KanbanCard.scss";
-import {
-  CButton,
-  CCol,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CInput,
-  CModal,
-  CModalBody,
-  CModalHeader,
-  CProgress,
-  CRow,
-  CTextarea,
-} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import {
+  CProgress
+} from "@coreui/react";
 import moment from "moment";
+import React, { useState } from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
-import { CirclePicker } from "react-color";
+import taskApi from "src/api/taskApi";
 import TaskEditModal from "./Components/TaskEditModal/TaskEditModal";
+import "./KanbanCard.scss";
 
 KanbanCard.propTypes = {};
 
@@ -29,8 +16,9 @@ function KanbanCard(props) {
   const initIsShowEditPopup = false;
 
   const [isShowEditPopup, setIsShowEditPopup] = useState(initIsShowEditPopup);
+  const [modalTask, setModaTask] = useState(null);
 
-  const files = useSelector((state) => state.app.files);
+  /*const files = useSelector((state) => state.app.files);
   const handleTasks = useSelector((state) => state.app.handleTasks);
   const users = useSelector((state) => state.app.users);
   const imageCard = getCardImage();
@@ -52,14 +40,18 @@ function KanbanCard(props) {
       }
     }
     return "";
-  }
+  }*/
 
-  function openEditPopup() {
+  async function openEditPopup() {
     setIsShowEditPopup(true);
+    const taskModal = await taskApi.getTaskById(props.data.taskId);
+    setModaTask(taskModal.data);    
   }
 
   function removeYearOfDate(date) {
-    if (new Date().getFullYear() === date.getFullYear()) {
+    var dt = new Date(date);
+
+    if (new Date().getFullYear() === dt.getFullYear()) {
       return moment(date).format("DD/MM");
     }
     return moment(date).format("DD/MM/YYYY");
@@ -106,7 +98,7 @@ function KanbanCard(props) {
     return "success";
   }
 
-  function getCardImage() {
+  /*function getCardImage() {
     //debugger;
 
     for (let i = 0; i < files.length; i++) {
@@ -127,7 +119,7 @@ function KanbanCard(props) {
       }
     }
     return count;
-  }
+  }*/
 
   function onEditModalClose() {
     setIsShowEditPopup(false);
@@ -150,7 +142,7 @@ function KanbanCard(props) {
           <TaskEditModal
             closePopup={onEditModalClose}
             isShowEditPopup={isShowEditPopup}
-            data={props.data}
+            data={modalTask}
           />
 
           <div
@@ -163,9 +155,9 @@ function KanbanCard(props) {
             }}
             onClick={openEditPopup}
           >
-            {imageCard && (
+            {props.image && (
               <div className="card-image-label">
-                <img alt="" src={imageCard} />
+                <img alt="" src={props.image} />
               </div>
             )}
 
@@ -194,20 +186,20 @@ function KanbanCard(props) {
                   <div className="comment-icon">
                     <CIcon name="cil-speech" />
                   </div>
-                  <div className="comment-count">12</div>
+                  <div className="comment-count">{props.data.commentsCount}</div>
                 </div>
-                {attachmentsCount > 0 && (
+                {props.data.filesCount > 0 && (
                   <div className="attachment-infor">
                     <div className="attachment-icon">
                       <CIcon name="cil-paperclip" />
                     </div>
-                    <div className="attachment-count">{attachmentsCount}</div>
+                    <div className="attachment-count">{props.data.filesCount}</div>
                   </div>
                 )}
               </div>
 
               <div className="user-assign-avatar">
-                <img alt="avatar" src={assignedUserImage} />
+                <img alt="avatar" src={props.data.userAvatar} />
               </div>
             </div>
             <div className="card-progress">

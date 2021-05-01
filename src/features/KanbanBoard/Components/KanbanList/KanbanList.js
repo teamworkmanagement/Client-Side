@@ -21,7 +21,7 @@ import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 KanbanList.propTypes = {};
 
 function KanbanList(props) {
-  const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
+  /*const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const kanbanTasks = useSelector((state) => state.app.tasks);
   const kanbanCardsData = getKanbanCardsData();
@@ -49,8 +49,10 @@ function KanbanList(props) {
     }
 
     return [...clonedCards];
-  }
+  }*/
 
+  const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
+  const { taskUIKanbans } = props.data;
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>
       {(provided) => (
@@ -60,6 +62,7 @@ function KanbanList(props) {
           {...provided.draggableProps}
         >
           <KanbanListHeader
+          cardCount={props.data.taskUIKanbans.length}
             title={headerTitle}
             dragHandleProps={{ ...provided.dragHandleProps }}
           />
@@ -70,7 +73,7 @@ function KanbanList(props) {
                 ref={provided.innerRef} //required by dnd
                 {...provided.droppableProps} //required by dnd
               >
-                {kanbanCardsData.map((item, index) => {
+                {taskUIKanbans.map((item, index) => {
                   return (
                     <KanbanCard
                       key={item.taskId}

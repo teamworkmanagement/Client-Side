@@ -32,6 +32,7 @@ import moment from "moment";
 import TextareaAutosize from "react-textarea-autosize";
 import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/CommentItem/CommentItem";
 import { GetFileTypeImage } from "src/utils/file/index";
+import CardLoading from "../../CardLoading/CardLoading";
 
 TaskEditModal.propTypes = {};
 
@@ -57,24 +58,22 @@ function TaskEditModal(props) {
   })();
 
   const dispatch = useDispatch();
-  const [finalColor, changeColor] = useState(
-    props.data.taskThemeColor ? props.data.taskThemeColor : "ffffff"
-  );
+  const [finalColor, changeColor] = useState(null);
   const [isShowColorPicker, setIsShowColorPicker] = useState(false);
   const [taskNameEditing, setTaskNameEditing] = useState(false);
   const [taskDescriptionEditing, setTaskDescriptionEditing] = useState(false);
-  var initTask = { ...props.data };
-  const [task, setTask] = useState(initTask);
+
+  const [task, setTask] = useState({});
   const [showDetail, setShowDetail] = useState(false);
 
   const handleTasks = useSelector((state) => state.app.handleTasks);
   const users = useSelector((state) => state.app.users);
-  const [value, setValue] = useState(props.data.taskCompletedPercent);
-  const [renderedValue, setRenderedValue] = useState([
-    props.data.taskCompletedPercent,
-  ]);
+  const [value, setValue] = useState(null);
+  const [renderedValue, setRenderedValue] = useState([0]);
 
-  const cmtLists = [
+  const [cmtLists, setCmtLists] = useState([]);
+  const [attachments, setAttachments] = useState([]);
+  /*const cmtLists = [
     {
       commentId: "comment_1",
       commentPostId: "",
@@ -121,9 +120,9 @@ function TaskEditModal(props) {
       commentIsDeleted: false,
       userName: "Leader Nè",
     },
-  ];
+  ];*/
 
-  const attachments = [
+  /*const attachments = [
     {
       fileId: "file_1",
       fileName: "Báo cáo.docx",
@@ -150,13 +149,27 @@ function TaskEditModal(props) {
       fileType: "rar",
     },
   ];
+  */
+
+  useEffect(() => {
+    if (props.data) {
+      setTask({ ...props.data });
+      changeColor(props.data.taskThemeColor ? props.data.taskThemeColor : "ffffff");
+      setValue(props.data.taskCompletedPercent);
+      setRenderedValue([
+        props.data.taskCompletedPercent,
+      ]);
+      setCmtLists(props.data.comments);
+      setAttachments(props.data.files);
+    }
+  }, [props.data])
 
   const assignedUserImage = getAssignedUserImage();
   function getAssignedUserImage() {
     //find handleTask
     let userHandleId = "";
     for (let i = 0; i < handleTasks.length; i++) {
-      if (handleTasks[i].handleTaskTaskId === props.data.taskId) {
+      if (handleTasks[i].handleTaskTaskId === task.taskId) {
         userHandleId = handleTasks[i].handleTaskUserId;
         break;
       }
@@ -227,7 +240,7 @@ function TaskEditModal(props) {
   }
 
   function getStatusText() {
-    switch (props.data.taskStatus) {
+    switch (task.taskStatus) {
       case "todo":
         return "Đang chờ";
       case "doing":
@@ -238,7 +251,7 @@ function TaskEditModal(props) {
   }
 
   function getStatusColor() {
-    switch (props.data.taskStatus) {
+    switch (task.taskStatus) {
       case "todo":
         return "#DE4436";
       case "doing":
@@ -369,7 +382,7 @@ function TaskEditModal(props) {
           </div>
         </CModalHeader>
         <CModalBody>
-          <CRow>
+          {props.data ? <CRow>
             <CCol className="col-9">
               <div className="form-content">
                 <div className="title-label">
@@ -450,7 +463,7 @@ function TaskEditModal(props) {
                             Giao cho
                           </div>
                           <div className="assigned-user-avatar">
-                            <img src={assignedUserImage} alt="" />
+                            <img src={task.userAvatar} alt="" />
                           </div>
                         </div>
                         <div className="theme-group item-group">
@@ -642,7 +655,7 @@ function TaskEditModal(props) {
                   </div>
                   <div className="task-avatar">
                     <img
-                      src="https://emilus.themenate.net/img/others/img-13.jpg"
+                      src={task.userAvatar}
                       alt=""
                     />
                     <div className="delete-task-avatar-icon">
@@ -669,10 +682,11 @@ function TaskEditModal(props) {
                           <div className="attachment-name-containner">
                             <div className="download-icon-container">
                               <CIcon name="cil-vertical-align-bottom" />
-                              <CIcon
-                                name="cil-space-bar"
-                                className="icon-bottom"
-                              />
+                              <a href={item.fileUrl} name="cil-space-bar"
+                                className="icon-bottom">
+                                <CIcon />
+                              </a>
+
                             </div>
                             <div className="attachment-name">
                               {item.fileName}
@@ -697,8 +711,8 @@ function TaskEditModal(props) {
                     <CInput
                       type="text"
                       placeholder="Viết bình luận..."
-                      // onKeyDown={onAddComment}
-                      // onChange={(e) => setCommentContent(e.target.value)}
+                    // onKeyDown={onAddComment}
+                    // onChange={(e) => setCommentContent(e.target.value)}
                     />
                   </div>
                 </div>
@@ -719,6 +733,10 @@ function TaskEditModal(props) {
                           <CIcon name="cil-paperclip" />
                           <div className="action-name">Tài liệu đính kèm</div>
                         </div> */}
+                <div className="action-item">
+                  <CIcon name="cil-save" />
+                  <div className="action-name">Lưu</div>
+                </div>
                 <div className="action-item">
                   <CIcon name="cil-share-boxed" />
                   <div className="action-name">Chuyển đến...</div>
@@ -745,7 +763,7 @@ function TaskEditModal(props) {
                 </div>
               </div>
             </CCol>
-          </CRow>
+          </CRow> : <div><CardLoading /></div>}
         </CModalBody>
       </CModal>
     </div>
