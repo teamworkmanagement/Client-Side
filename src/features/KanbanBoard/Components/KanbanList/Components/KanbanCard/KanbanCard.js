@@ -43,9 +43,14 @@ function KanbanCard(props) {
   }*/
 
   async function openEditPopup() {
+    setModaTask(null);
     setIsShowEditPopup(true);
     const taskModal = await taskApi.getTaskById(props.data.taskId);
-    setModaTask(taskModal.data);    
+    setModaTask({
+      ...taskModal.data,
+      filesCount: props.data.filesCount,
+      commentsCount: props.data.commentsCount,
+    });
   }
 
   function removeYearOfDate(date) {
@@ -155,9 +160,9 @@ function KanbanCard(props) {
             }}
             onClick={openEditPopup}
           >
-            {props.image && (
+            {props.data.image && (
               <div className="card-image-label">
-                <img alt="" src={props.image} />
+                <img alt="" src={props.data.image} />
               </div>
             )}
 

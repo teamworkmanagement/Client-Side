@@ -33,11 +33,31 @@ import TextareaAutosize from "react-textarea-autosize";
 import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/CommentItem/CommentItem";
 import { GetFileTypeImage } from "src/utils/file/index";
 import CardLoading from "../../CardLoading/CardLoading";
+import taskApi from "src/api/taskApi";
+import { updateEditTask } from "../../../../../../kanbanSlice";
 
 TaskEditModal.propTypes = {};
 
 function TaskEditModal(props) {
   const [toasts, setToasts] = useState([]);
+  const dispatch = useDispatch();
+  const [finalColor, changeColor] = useState(null);
+  const [isShowColorPicker, setIsShowColorPicker] = useState(false);
+  const [taskNameEditing, setTaskNameEditing] = useState(false);
+  const [taskDescriptionEditing, setTaskDescriptionEditing] = useState(false);
+
+  const [task, setTask] = useState({});
+  const [showDetail, setShowDetail] = useState(false);
+
+  const handleTasks = useSelector((state) => state.app.handleTasks);
+  const users = useSelector((state) => state.app.users);
+  const [value, setValue] = useState(null);
+  const [renderedValue, setRenderedValue] = useState([0]);
+
+  const [cmtLists, setCmtLists] = useState([]);
+  const [attachments, setAttachments] = useState([]);
+  const [triggerUpdateTask, setTriggerUpdateTask] = useState(-1);//cause setState is asynchonous action
+
   const addToast = () => {
     setToasts([
       ...toasts,
@@ -57,22 +77,7 @@ function TaskEditModal(props) {
     }, {});
   })();
 
-  const dispatch = useDispatch();
-  const [finalColor, changeColor] = useState(null);
-  const [isShowColorPicker, setIsShowColorPicker] = useState(false);
-  const [taskNameEditing, setTaskNameEditing] = useState(false);
-  const [taskDescriptionEditing, setTaskDescriptionEditing] = useState(false);
 
-  const [task, setTask] = useState({});
-  const [showDetail, setShowDetail] = useState(false);
-
-  const handleTasks = useSelector((state) => state.app.handleTasks);
-  const users = useSelector((state) => state.app.users);
-  const [value, setValue] = useState(null);
-  const [renderedValue, setRenderedValue] = useState([0]);
-
-  const [cmtLists, setCmtLists] = useState([]);
-  const [attachments, setAttachments] = useState([]);
   /*const cmtLists = [
     {
       commentId: "comment_1",
@@ -164,6 +169,36 @@ function TaskEditModal(props) {
     }
   }, [props.data])
 
+
+
+  const dispatchUpdateTask = () => {
+
+
+    setTriggerUpdateTask(triggerUpdateTask + 1);
+
+  }
+
+
+  useEffect(() => {
+    if (triggerUpdateTask < 0)
+      return;
+    const taskMapObj = {
+      "kanbanListId": task.kanbanListId,
+      "taskId": task.taskId,
+      "image": task.taskImageUrl,
+      "taskName": task.taskName,
+      "taskDeadline": task.taskDeadline,
+      "taskDescription": task.taskDescription,
+      "taskStatus": task.taskStatus,
+      "commentsCount": task.commentsCount,
+      "filesCount": task.filesCount,
+      "userId": task.userId,
+      "userAvatar": task.userAvatar,
+      "taskCompletedPercent": task.taskCompletedPercent,
+      "taskThemeColor": task.taskThemeColor,
+    }
+    dispatch(updateEditTask(taskMapObj));
+  }, [triggerUpdateTask])
   const assignedUserImage = getAssignedUserImage();
   function getAssignedUserImage() {
     //find handleTask
@@ -194,37 +229,59 @@ function TaskEditModal(props) {
     // In case you have a limitation
     e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
   }
-  function handleInputName(e) {
-    setTaskNameEditing(true);
-    const newTask = {
+  function handleInputNameAndDes(e) {
+    const { name, value } = e.target;
+    if (name === 'taskName')
+      setTaskNameEditing(true);
+    else
+      setTaskDescriptionEditing(true);
+
+    setTask({
       ...task,
-      taskName: e.target.value,
-    };
-    setTask(newTask);
-  }
-  function handleInputDescription(e) {
-    setTaskDescriptionEditing(true);
-    const newTask = {
-      ...task,
-      taskDescription: e.target.value,
-    };
-    setTask(newTask);
+      [name]: value,
+    });
   }
 
+
   function onSaveTaskName() {
-    if (task.taskName === "") {
+    if (task.taskName === "" || task.taskName === undefined || task.taskName === null) {
       addToast();
       return;
     }
-    dispatch(updateTask(task));
+
+    taskApi.updateTask({
+      taskId: task.taskId,
+      taskName: task.taskName,
+      taskThemeColor: task.taskThemeColor,
+      taskStatus: task.taskStatus,
+      taskCompletedPercent: task.taskCompletedPercent,
+      taskDeadline: task.taskDeadline,
+    }).then(res => { }).catch(err => { });
+
+    //dispatch(updateTask(task));
+
+    dispatchUpdateTask();
     setTaskNameEditing(false);
   }
+
   function onSaveTaskDescription() {
     if (task.taskDescription === "") {
       addToast();
       return;
     }
-    dispatch(updateTask(task));
+
+    taskApi.updateTask({
+      taskId: task.taskId,
+      taskDescription: task.taskDescription,
+      taskThemeColor: task.taskThemeColor,
+      taskStatus: task.taskStatus,
+      taskCompletedPercent: task.taskCompletedPercent,
+      taskDeadline: task.taskDeadline,
+    }).then(res => { }).catch(err => { });
+
+    //dispatch(updateTask(task));
+
+    dispatchUpdateTask();
     setTaskDescriptionEditing(false);
   }
 
@@ -235,8 +292,18 @@ function TaskEditModal(props) {
       ...task,
       taskDeadline: newDate,
     };
+
+    taskApi.updateTask({
+      taskId: task.taskId,
+      taskDeadline: newDate,
+      taskThemeColor: task.taskThemeColor,
+      taskStatus: task.taskStatus,
+      taskCompletedPercent: task.taskCompletedPercent,
+    }).then(res => { }).catch(err => { });
     setTask(newTask);
-    dispatch(updateTask(newTask));
+    dispatchUpdateTask();
+
+    //dispatch(updateTask(newTask));
   }
 
   function getStatusText() {
@@ -269,8 +336,18 @@ function TaskEditModal(props) {
           ...task,
           taskStatus: "todo",
         };
+
+        taskApi.updateTask({
+          taskId: task.taskId,
+          taskThemeColor: task.taskThemeColor,
+          taskStatus: 'todo',
+          taskCompletedPercent: task.taskCompletedPercent,
+          taskDeadline: task.taskDeadline,
+        }).then(res => { }).catch(err => { });
+
         setTask(newTask);
-        dispatch(updateTask(newTask));
+        dispatchUpdateTask();
+        //dispatch(updateTask(newTask));
         return;
       }
       case "doing-status": {
@@ -278,8 +355,17 @@ function TaskEditModal(props) {
           ...task,
           taskStatus: "doing",
         };
+
+        taskApi.updateTask({
+          taskId: task.taskId,
+          taskThemeColor: task.taskThemeColor,
+          taskStatus: 'doing',
+          taskCompletedPercent: task.taskCompletedPercent,
+          taskDeadline: task.taskDeadline,
+        }).then(res => { }).catch(err => { });
         setTask(newTask);
-        dispatch(updateTask(newTask));
+        dispatchUpdateTask();
+        //dispatch(updateTask(newTask));
         return;
       }
       default: {
@@ -287,8 +373,17 @@ function TaskEditModal(props) {
           ...task,
           taskStatus: "done",
         };
+
+        taskApi.updateTask({
+          taskId: task.taskId,
+          taskThemeColor: task.taskThemeColor,
+          taskStatus: 'done',
+          taskCompletedPercent: task.taskCompletedPercent,
+          taskDeadline: task.taskDeadline,
+        }).then(res => { }).catch(err => { });
         setTask(newTask);
-        dispatch(updateTask(newTask));
+        dispatchUpdateTask();
+        //dispatch(updateTask(newTask));
         return;
       }
     }
@@ -313,8 +408,17 @@ function TaskEditModal(props) {
       ...task,
       taskThemeColor: colore.hex,
     };
+
+    taskApi.updateTask({
+      taskId: task.taskId,
+      taskThemeColor: colore.hex,
+      taskStatus: task.taskStatus,
+      taskCompletedPercent: task.taskCompletedPercent,
+      taskDeadline: task.taskDeadline,
+    }).then(res => { }).catch(err => { });
     setTask(newTask);
-    dispatch(updateTask(newTask));
+    dispatchUpdateTask();
+    //dispatch(updateTask(newTask));
   }
 
   function onDeleteThemeTask() {
@@ -333,8 +437,16 @@ function TaskEditModal(props) {
       taskCompletedPercent: value,
     };
 
+    taskApi.updateTask({
+      taskId: task.taskId,
+      taskThemeColor: task.taskThemeColor,
+      taskStatus: task.taskStatus,
+      taskCompletedPercent: value,
+      taskDeadline: task.taskDeadline,
+    }).then(res => { }).catch(err => { });
     setTask(newTask);
-    dispatch(updateTask(newTask));
+    dispatchUpdateTask();
+    //dispatch(updateTask(newTask));
   }
 
   function getColorFromValue() {
@@ -370,16 +482,16 @@ function TaskEditModal(props) {
       </div>
       <CModal show={props.isShowEditPopup} onClose={handleClose} size="lg">
         <CModalHeader closeButton>
-          <div className="card-labels">
+          {props.data ? <div className="card-labels">
             <div className="progress-label">
               <div className="progress-icon">
                 <CIcon name="cil-chart-line" />
               </div>
-              <div className="task-progress">25%</div>
+              <div className="task-progress">{task.taskCompletedPercent}%</div>
             </div>
 
-            <div className="task-status-label-header">Đang thực hiện</div>
-          </div>
+            <div className="task-status-label-header">{getStatusText(task.taskStatus)}</div>
+          </div> : null}
         </CModalHeader>
         <CModalBody>
           {props.data ? <CRow>
@@ -399,7 +511,8 @@ function TaskEditModal(props) {
                     autocomplete="off"
                     type="text"
                     value={task.taskName}
-                    onChange={handleInputName}
+                    name="taskName"
+                    onChange={handleInputNameAndDes}
                   />
                   {taskNameEditing && (
                     <div className="save-name-btn" onClick={onSaveTaskName}>
@@ -426,7 +539,8 @@ function TaskEditModal(props) {
                     maxRows={20}
                     placeholder="Mô tả công việc..."
                     value={task.taskDescription}
-                    onChange={handleInputDescription}
+                    onChange={handleInputNameAndDes}
+                    name="taskDescription"
                   />
                   {taskDescriptionEditing && (
                     <div
@@ -513,7 +627,7 @@ function TaskEditModal(props) {
                               id="date-from"
                               name="date-input"
                               placeholder="date"
-                              value={moment(props.data.taskDeadline).format(
+                              value={moment(task.taskDeadline).format(
                                 "YYYY-MM-DD"
                               )}
                               onChange={onChangeDeadline}
@@ -733,10 +847,6 @@ function TaskEditModal(props) {
                           <CIcon name="cil-paperclip" />
                           <div className="action-name">Tài liệu đính kèm</div>
                         </div> */}
-                <div className="action-item">
-                  <CIcon name="cil-save" />
-                  <div className="action-name">Lưu</div>
-                </div>
                 <div className="action-item">
                   <CIcon name="cil-share-boxed" />
                   <div className="action-name">Chuyển đến...</div>
