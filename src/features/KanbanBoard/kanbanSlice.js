@@ -33,12 +33,13 @@ const kanbanSlice = createSlice({
 
                 const cloneKanbanLists = JSON.parse(JSON.stringify(state.kanbanBoard.kanbanLists));
 
-                console.log(cloneKanbanLists);
+        //        console.log(cloneKanbanLists);
+            
 
 
                 //source
                 const sourceList = cloneKanbanLists.find(x => x.kanbanListId === source.droppableId);
-                console.log(sourceList);
+          //      console.log(sourceList);
                 const sourceElement = sourceList.taskUIKanbans.find(x => x.orderInList === source.index);
 
                 //set new pos for source
@@ -97,6 +98,7 @@ const kanbanSlice = createSlice({
             };
 
             console.log(newTask);
+            
             kbList.taskUIKanbans[taskIndex] = newTask;
 
             state.kanbanBoard.kanbanLists = cloneKanbanLists;

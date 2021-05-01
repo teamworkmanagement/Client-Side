@@ -66,9 +66,11 @@ function KanbanBoard(props) {
   function onDragEnd(result) {
     //call api update pos (task/list) here
 
-    console.log(result);
+   // console.log(result);
     dispatch(handleDragEnd(result));
+
     const { destination, source, type } = result;
+    if (!destination) return;
     if (type === 'task') {
       if (destination.index === source.index && destination.droppableId === source.droppableId)
         return;

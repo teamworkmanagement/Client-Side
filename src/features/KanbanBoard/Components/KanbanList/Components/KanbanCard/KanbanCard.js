@@ -160,9 +160,9 @@ function KanbanCard(props) {
             }}
             onClick={openEditPopup}
           >
-            {props.data.image && (
+            {props.data.taskImageUrl && (
               <div className="card-image-label">
-                <img alt="" src={props.data.image} />
+                <img alt="" src={props.data.taskImageUrl} />
               </div>
             )}
 

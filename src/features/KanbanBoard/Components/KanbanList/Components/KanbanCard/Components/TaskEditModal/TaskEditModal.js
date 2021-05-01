@@ -31,10 +31,13 @@ import { updateTask } from "src/appSlice";
 import moment from "moment";
 import TextareaAutosize from "react-textarea-autosize";
 import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/CommentItem/CommentItem";
-import { GetFileTypeImage } from "src/utils/file/index";
+import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file/index";
 import CardLoading from "../../CardLoading/CardLoading";
 import taskApi from "src/api/taskApi";
 import { updateEditTask } from "../../../../../../kanbanSlice";
+import { myBucket } from "src/utils/aws/config";
+import { v4 as uuidv4 } from 'uuid';
+import fileApi from "src/api/fileApi";
 
 TaskEditModal.propTypes = {};
 
@@ -58,6 +61,8 @@ function TaskEditModal(props) {
   const [attachments, setAttachments] = useState([]);
   const [triggerUpdateTask, setTriggerUpdateTask] = useState(-1);//cause setState is asynchonous action
 
+  const userId = useSelector(state => state.auth.currentUser.id);
+
   const addToast = () => {
     setToasts([
       ...toasts,
@@ -77,6 +82,9 @@ function TaskEditModal(props) {
     }, {});
   })();
 
+
+  const imageRef = useRef(null);
+  const fileRef = useRef(null);
 
   /*const cmtLists = [
     {
@@ -172,10 +180,7 @@ function TaskEditModal(props) {
 
 
   const dispatchUpdateTask = () => {
-
-
     setTriggerUpdateTask(triggerUpdateTask + 1);
-
   }
 
 
@@ -196,9 +201,11 @@ function TaskEditModal(props) {
       "userAvatar": task.userAvatar,
       "taskCompletedPercent": task.taskCompletedPercent,
       "taskThemeColor": task.taskThemeColor,
+      "taskImageUrl": task.taskImageUrl,
     }
     dispatch(updateEditTask(taskMapObj));
-  }, [triggerUpdateTask])
+  }, [triggerUpdateTask]);
+
   const assignedUserImage = getAssignedUserImage();
   function getAssignedUserImage() {
     //find handleTask
@@ -256,6 +263,7 @@ function TaskEditModal(props) {
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
       taskDeadline: task.taskDeadline,
+      taskImageUrl: task.taskImageUrl,
     }).then(res => { }).catch(err => { });
 
     //dispatch(updateTask(task));
@@ -277,6 +285,7 @@ function TaskEditModal(props) {
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
       taskDeadline: task.taskDeadline,
+      taskImageUrl: task.taskImageUrl,
     }).then(res => { }).catch(err => { });
 
     //dispatch(updateTask(task));
@@ -299,6 +308,7 @@ function TaskEditModal(props) {
       taskThemeColor: task.taskThemeColor,
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
+      taskImageUrl: task.taskImageUrl,
     }).then(res => { }).catch(err => { });
     setTask(newTask);
     dispatchUpdateTask();
@@ -343,6 +353,7 @@ function TaskEditModal(props) {
           taskStatus: 'todo',
           taskCompletedPercent: task.taskCompletedPercent,
           taskDeadline: task.taskDeadline,
+          taskImageUrl: task.taskImageUrl,
         }).then(res => { }).catch(err => { });
 
         setTask(newTask);
@@ -362,6 +373,7 @@ function TaskEditModal(props) {
           taskStatus: 'doing',
           taskCompletedPercent: task.taskCompletedPercent,
           taskDeadline: task.taskDeadline,
+          taskImageUrl: task.taskImageUrl,
         }).then(res => { }).catch(err => { });
         setTask(newTask);
         dispatchUpdateTask();
@@ -380,6 +392,7 @@ function TaskEditModal(props) {
           taskStatus: 'done',
           taskCompletedPercent: task.taskCompletedPercent,
           taskDeadline: task.taskDeadline,
+          taskImageUrl: task.taskImageUrl,
         }).then(res => { }).catch(err => { });
         setTask(newTask);
         dispatchUpdateTask();
@@ -415,6 +428,7 @@ function TaskEditModal(props) {
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
       taskDeadline: task.taskDeadline,
+      taskImageUrl: task.taskImageUrl,
     }).then(res => { }).catch(err => { });
     setTask(newTask);
     dispatchUpdateTask();
@@ -443,6 +457,7 @@ function TaskEditModal(props) {
       taskStatus: task.taskStatus,
       taskCompletedPercent: value,
       taskDeadline: task.taskDeadline,
+      taskImageUrl: task.taskImageUrl,
     }).then(res => { }).catch(err => { });
     setTask(newTask);
     dispatchUpdateTask();
@@ -462,6 +477,115 @@ function TaskEditModal(props) {
     return "#2FB85D";
   }
 
+
+  const onDeleteTaskAvatar = () => {
+    taskApi.updateTask({
+      taskId: task.taskId,
+      taskDeadline: task.taskDeadline,
+      taskThemeColor: task.taskThemeColor,
+      taskStatus: task.taskStatus,
+      taskCompletedPercent: task.taskCompletedPercent,
+      taskImageUrl: null,
+    }).then(res => { }).catch(err => { });
+
+    setTask({
+      ...task,
+      taskImageUrl: null,
+    });
+
+    dispatchUpdateTask();
+  }
+
+
+
+  const onPickImage = () => {
+    imageRef.current.click();
+  }
+  const onImagePickChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const folder = uuidv4();
+      const params = {
+        Body: file,
+        Bucket: 'teamappstorage',
+        Key: `${folder}/${file.name}`,
+      };
+
+      myBucket.putObject(params)
+        .on('httpUploadProgress', (evt) => {
+          let pro = Math.round((evt.loaded / evt.total) * 100);
+          if (pro >= 100) {
+            const imageUrl = `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`;
+            setTask({
+              ...task,
+              taskImageUrl: imageUrl,
+            });
+
+            taskApi.updateTask({
+              taskId: task.taskId,
+              taskDeadline: task.taskDeadline,
+              taskThemeColor: task.taskThemeColor,
+              taskStatus: task.taskStatus,
+              taskCompletedPercent: task.taskCompletedPercent,
+              taskImageUrl: imageUrl,
+            }).then(res => { }).catch(err => { });
+
+            dispatchUpdateTask();
+
+
+          }
+        })
+        .send((err) => {
+
+        });
+    }
+  }
+
+
+  const onFilePickChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const folder = uuidv4();
+      const params = {
+        Body: file,
+        Bucket: 'teamappstorage',
+        Key: `${folder}/${file.name}`,
+      };
+
+      myBucket.putObject(params)
+        .on('httpUploadProgress', (evt) => {
+          let pro = Math.round((evt.loaded / evt.total) * 100);
+          if (pro >= 100) {
+            const fileUrl = `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`;
+            setTask({
+              ...task,
+              filesCount: task.filesCount + 1,
+            });
+
+            fileApi.addFile({
+              fileName: file.name,
+              fileUrl: fileUrl,
+              fileType: GetTypeFromExt(file.name),
+              userId: userId,
+              fileBelongedId: task.taskId,
+            }).then(res => {
+              const attachmentsClone = [...attachments];
+              attachmentsClone.splice(0, 0, res.data);
+              setAttachments(attachmentsClone);
+              dispatchUpdateTask();
+            }).catch(err => { });
+
+          }
+        })
+        .send((err) => {
+
+        });
+    }
+  }
+
+  const onPickFile = () => {
+    fileRef.current.click();
+  }
   return (
     <div>
       <div>
@@ -762,20 +886,22 @@ function TaskEditModal(props) {
                       <CIcon name="cil-image" />
                       <div className="description">Ảnh đại diện</div>
                     </div>
-                    <div className="label-action">
+                    <div onClick={onPickImage} className="label-action">
                       <CIcon name="cil-plus" />
                       <div className="action-name">Tải ảnh lên</div>
+                      <input type="file" accept="image/*" ref={imageRef} onChange={onImagePickChange} style={{ display: "none" }}></input>
                     </div>
                   </div>
-                  <div className="task-avatar">
+
+                  {task.taskImageUrl ? <div className="task-avatar">
                     <img
-                      src={task.userAvatar}
+                      src={task.taskImageUrl}
                       alt=""
                     />
-                    <div className="delete-task-avatar-icon">
+                    <div onClick={onDeleteTaskAvatar} className="delete-task-avatar-icon">
                       <CIcon name="cil-x" />
                     </div>
-                  </div>
+                  </div> : null}
                   <div className="card-divider"></div>
                   <div className="attachment-label">
                     <div className="label-title">
@@ -783,9 +909,10 @@ function TaskEditModal(props) {
                       <div className="description">Tệp đính kèm</div>
                     </div>
 
-                    <div className="label-action">
+                    <div onClick={onPickFile} className="label-action">
                       <CIcon name="cil-plus" />
                       <div className="action-name">Tải tệp lên</div>
+                      <input type="file" ref={fileRef} onChange={onFilePickChange} style={{ display: "none" }}></input>
                     </div>
                   </div>
                   <div className="list-attachments">
