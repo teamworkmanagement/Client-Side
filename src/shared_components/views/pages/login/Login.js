@@ -49,7 +49,10 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     await dispatch(login(loginObject));
-    if (authStatus) history.push("/dashboard");
+    if (authStatus) {
+      history.push("/dashboard");
+      startChatService();
+    }
   };
 
   const loginFacebook = async () => {
@@ -115,7 +118,7 @@ const Login = () => {
 
     if (authStatus) {
       history.push("/dashboard");
-      //startChatService();
+      startChatService();
     }
   };
 

@@ -22,7 +22,7 @@ import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
 KanbanList.propTypes = {};
 
 function KanbanList(props) {
-  const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
+  /*const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const kanbanTasks = useSelector((state) => state.app.tasks);
   const kanbanCardsData = getKanbanCardsData();
@@ -51,8 +51,16 @@ function KanbanList(props) {
     }
 
     return [...clonedCards];
-  }
+  }*/
 
+  const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
+  const [showAddCard, setShowAddCard] = useState(false);
+
+  const { taskUIKanbans } = props.data;
+
+  const handleShowCreateCard = () => {
+    setShowAddCard(true)
+  }
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>
       {(provided) => (
@@ -62,6 +70,8 @@ function KanbanList(props) {
           {...provided.draggableProps}
         >
           <KanbanListHeader
+            handleShowCreateCard={handleShowCreateCard}
+            cardCount={props.data.taskUIKanbans.length}
             title={headerTitle}
             dragHandleProps={{ ...provided.dragHandleProps }}
           />
@@ -72,7 +82,7 @@ function KanbanList(props) {
                 ref={provided.innerRef} //required by dnd
                 {...provided.droppableProps} //required by dnd
               >
-                {kanbanCardsData.map((item, index) => {
+                {taskUIKanbans.map((item, index) => {
                   return (
                     <KanbanCard
                       key={item.taskId}
@@ -97,6 +107,8 @@ function KanbanList(props) {
           <CreateCardModal
             showAddCard={showAddCard}
             setShowAddCard={setShowAddCard}
+            kblistId={props.data.kanbanListId}
+            tasksCount={props.data.taskUIKanbans.length}
           />
         </div>
       )}

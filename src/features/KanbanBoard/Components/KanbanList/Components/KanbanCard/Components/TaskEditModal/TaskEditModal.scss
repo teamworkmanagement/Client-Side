@@ -639,3 +639,26 @@
 .list-attachments::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
+
+
+.load-more-comment {
+    //margin: 0rem 1.25rem 0rem 1.25rem;
+    display: flex;
+    text-align: end;
+    cursor: pointer;
+    justify-content: flex-end;
+    align-items: center;
+    &:hover {
+        font-weight: bold;
+    }
+    .rotate {
+        font-size: 1.1rem;
+        //margin-bottom: -0.2rem;
+
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+}
