@@ -35,6 +35,10 @@ const taskApi = {
     updateTask(params) {
         const url = '/task';
         return axiosClient.put(url, params);
+    },
+    removeTask(params) {
+        const url = `/task/${params}`;
+        return axiosClient.delete(url);
     }
 };
 

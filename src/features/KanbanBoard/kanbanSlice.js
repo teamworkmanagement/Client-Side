@@ -115,6 +115,24 @@ const kanbanSlice = createSlice({
             //console.log(kbLists.taskUIKanbans);
             //console.log(cloneKanbanLists);
             state.kanbanBoard.kanbanLists = cloneKanbanLists;
+        },
+        removeTask(state, action) {
+
+            const cloneKanbanLists = JSON.parse(JSON.stringify(state.kanbanBoard.kanbanLists));
+            const kbList = cloneKanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
+
+            //console.log(kbLists.taskUIKanbans);
+            //console.log(action.payload);
+
+            kbList.taskUIKanbans.forEach(e => {
+                if (e.orderInList > action.payload.orderInList)
+                    e.orderInList--;
+            });
+
+            kbList.taskUIKanbans.splice(action.payload.orderInList, 1);
+
+            //console.log(kbList.taskUIKanbans);
+            state.kanbanBoard.kanbanLists = cloneKanbanLists;
         }
     },
     extraReducers: {
@@ -129,6 +147,7 @@ const { actions, reducer } = kanbanSlice;
 export const {
     handleDragEnd,
     updateEditTask,
-    addNewTask
+    addNewTask,
+    removeTask
 } = actions;
 export default reducer;

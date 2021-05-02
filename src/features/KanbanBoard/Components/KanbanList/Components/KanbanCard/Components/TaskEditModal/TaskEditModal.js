@@ -34,7 +34,7 @@ import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/Co
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file/index";
 import CardLoading from "../../CardLoading/CardLoading";
 import taskApi from "src/api/taskApi";
-import { updateEditTask } from "../../../../../../kanbanSlice";
+import { removeTask, updateEditTask } from "../../../../../../kanbanSlice";
 import { myBucket } from "src/utils/aws/config";
 import { v4 as uuidv4 } from 'uuid';
 import fileApi from "src/api/fileApi";
@@ -646,6 +646,23 @@ function TaskEditModal(props) {
     const newCmts = cloneCmtList.concat(res.data);
     setCmtLists(newCmts);
   }
+
+
+  const onRemoveTask = () => {
+    taskApi.removeTask(task.taskId).then(res => {
+      dispatch(removeTask({
+        "taskId": task.taskId,
+        "kanbanListId": task.kanbanListId,
+        "orderInList": task.orderInList,
+      }));
+
+    }).catch(err => { })
+
+    if (props.closePopup) {
+      props.closePopup();
+    }
+  }
+
   return (
     <div>
       <div>
@@ -1062,7 +1079,7 @@ function TaskEditModal(props) {
                   <CIcon name="cil-sort-numeric-up" />
                   <div className="action-name">Cho điểm</div>
                 </div>
-                <div className="action-item">
+                <div className="action-item" onClick={onRemoveTask}>
                   <CIcon name="cil-trash" />
                   <div className="action-name">Xóa công việc</div>
                 </div>
