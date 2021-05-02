@@ -65,7 +65,7 @@ function KanbanListHeader(props) {
                 </CDropdownItem>
                 <CDropdownItem
                   className="last"
-                  onClick={() => setShowAddCard(true)}
+                  onClick={() => props.handleShowCreateCard()}
                 >
                   <CIcon name="cil-plus" />
                   Thêm thẻ
@@ -75,10 +75,11 @@ function KanbanListHeader(props) {
           </div>
         </div>
       )}
-      <CreateCardModal
+      {/*<CreateCardModal
         showAddCard={showAddCard}
         setShowAddCard={setShowAddCard}
-      />
+        kblistId={props.data}
+      />*/}
       {/* <CModal
         show={showAddCard}
         onClose={() => setShowAddCard(!showAddCard)}

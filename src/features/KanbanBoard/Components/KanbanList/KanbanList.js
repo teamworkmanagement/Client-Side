@@ -57,6 +57,10 @@ function KanbanList(props) {
   const [showAddCard, setShowAddCard] = useState(false);
 
   const { taskUIKanbans } = props.data;
+
+  const handleShowCreateCard = () => {
+    setShowAddCard(true)
+  }
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>
       {(provided) => (
@@ -66,6 +70,7 @@ function KanbanList(props) {
           {...provided.draggableProps}
         >
           <KanbanListHeader
+            handleShowCreateCard={handleShowCreateCard}
             cardCount={props.data.taskUIKanbans.length}
             title={headerTitle}
             dragHandleProps={{ ...provided.dragHandleProps }}
@@ -102,6 +107,8 @@ function KanbanList(props) {
           <CreateCardModal
             showAddCard={showAddCard}
             setShowAddCard={setShowAddCard}
+            kblistId={props.data.kanbanListId}
+            tasksCount={props.data.taskUIKanbans.length}
           />
         </div>
       )}

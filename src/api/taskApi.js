@@ -27,6 +27,11 @@ const taskApi = {
   "taskThemeColor": "string",
   "taskImageUrl": "string"
 } */
+
+    addNewTask(params) {
+        const url = '/task';
+        return axiosClient.post(url, params);
+    },
     updateTask(params) {
         const url = '/task';
         return axiosClient.put(url, params);

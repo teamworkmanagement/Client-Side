@@ -33,13 +33,13 @@ const kanbanSlice = createSlice({
 
                 const cloneKanbanLists = JSON.parse(JSON.stringify(state.kanbanBoard.kanbanLists));
 
-        //        console.log(cloneKanbanLists);
-            
+                //        console.log(cloneKanbanLists);
+
 
 
                 //source
                 const sourceList = cloneKanbanLists.find(x => x.kanbanListId === source.droppableId);
-          //      console.log(sourceList);
+                //      console.log(sourceList);
                 const sourceElement = sourceList.taskUIKanbans.find(x => x.orderInList === source.index);
 
                 //set new pos for source
@@ -98,9 +98,22 @@ const kanbanSlice = createSlice({
             };
 
             console.log(newTask);
-            
+
             kbList.taskUIKanbans[taskIndex] = newTask;
 
+            state.kanbanBoard.kanbanLists = cloneKanbanLists;
+        },
+        addNewTask(state, action) {
+            const cloneKanbanLists = JSON.parse(JSON.stringify(state.kanbanBoard.kanbanLists));
+            const kbLists = cloneKanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
+
+            //console.log(kbLists);
+            //console.log(action.payload);
+
+            //console.log(kbLists.taskUIKanbans);
+            kbLists.taskUIKanbans.push(action.payload);
+            //console.log(kbLists.taskUIKanbans);
+            //console.log(cloneKanbanLists);
             state.kanbanBoard.kanbanLists = cloneKanbanLists;
         }
     },
@@ -115,6 +128,7 @@ const kanbanSlice = createSlice({
 const { actions, reducer } = kanbanSlice;
 export const {
     handleDragEnd,
-    updateEditTask
+    updateEditTask,
+    addNewTask
 } = actions;
 export default reducer;
