@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TeamPage.scss";
 import ChatPage from "../ChatPage/ChatPage";
@@ -16,12 +16,21 @@ import ListFileTable from "../../shared_components/MySharedComponents/ListFileTa
 import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
 import KanbanBoard from "../KanbanBoard/KanbanBoard";
 import TeamTasks from "./Components/TeamTasks/TeamTasks";
+import TeamMembers from "./Components/TeamMembers/TeamMembers";
+import { useDispatch, useSelector } from "react-redux";
+import { getTeamByUserId } from "./teamSlice";
 
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
-  const lorem = "ccc";
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.currentUser);
   const [active, setActive] = useState(1);
+
+
+  useEffect(() => {
+    dispatch(getTeamByUserId(user.id));
+  }, [])
   return (
     <div className="team-container">
       <CTabs activeTab={active} onActiveTabChange={(idx) => setActive(idx)}>
@@ -58,6 +67,14 @@ function TeamPage(props) {
               </CNavLink>
             </CTooltip>
           </CNavItem>
+          <CNavItem>
+            <CTooltip content="Thành viên" placement="right">
+              <CNavLink>
+                <CIcon name="cil-people" />
+                <div className="tab-name">Thành viên</div>
+              </CNavLink>
+            </CTooltip>
+          </CNavItem>
         </CNav>
         <CTabContent>
           <CTabPane>
@@ -71,6 +88,9 @@ function TeamPage(props) {
           </CTabPane>
           <CTabPane>
             <ListFileTable />
+          </CTabPane>
+          <CTabPane>
+            <TeamMembers />
           </CTabPane>
         </CTabContent>
       </CTabs>

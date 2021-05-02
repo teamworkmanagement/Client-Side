@@ -105,7 +105,7 @@ function TaskListItem(props) {
 
   function countDaysLeft() {
     const nowdate = new Date();
-    const deadlineDate = new Date(props.data.taskDeadline);
+    const deadlineDate = new Date(props.data.taskStartDate);
     const spaceTime = Math.round((deadlineDate - nowdate) / 86400000);
     if (spaceTime >= 0) return "Còn " + spaceTime + " ngày";
     return "Trễ " + -spaceTime + " ngày";

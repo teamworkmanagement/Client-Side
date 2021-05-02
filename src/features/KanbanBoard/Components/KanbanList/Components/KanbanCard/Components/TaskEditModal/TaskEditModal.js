@@ -197,7 +197,7 @@ function TaskEditModal(props) {
       "taskId": task.taskId,
       "image": task.taskImageUrl,
       "taskName": task.taskName,
-      "taskDeadline": task.taskDeadline,
+      "taskStartDate": task.taskStartDate,
       "taskDescription": task.taskDescription,
       "taskStatus": task.taskStatus,
       "commentsCount": task.commentsCount,
@@ -207,6 +207,7 @@ function TaskEditModal(props) {
       "taskCompletedPercent": task.taskCompletedPercent,
       "taskThemeColor": task.taskThemeColor,
       "taskImageUrl": task.taskImageUrl,
+      "taskDuration": task.taskDuration,
     }
     dispatch(updateEditTask(taskMapObj));
   }, [triggerUpdateTask]);
@@ -267,8 +268,9 @@ function TaskEditModal(props) {
       taskThemeColor: task.taskThemeColor,
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
-      taskDeadline: task.taskDeadline,
+      taskStartDate: task.taskStartDate,
       taskImageUrl: task.taskImageUrl,
+      taskDuration: task.taskDuration,
     }).then(res => { }).catch(err => { });
 
     //dispatch(updateTask(task));
@@ -289,8 +291,9 @@ function TaskEditModal(props) {
       taskThemeColor: task.taskThemeColor,
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
-      taskDeadline: task.taskDeadline,
+      taskStartDate: task.taskStartDate,
       taskImageUrl: task.taskImageUrl,
+      taskDuration: task.taskDuration,
     }).then(res => { }).catch(err => { });
 
     //dispatch(updateTask(task));
@@ -304,16 +307,17 @@ function TaskEditModal(props) {
     const newDate = new Date(dateParts[0], dateParts[1], dateParts[2]);
     const newTask = {
       ...task,
-      taskDeadline: newDate,
+      taskStartDate: newDate,
     };
 
     taskApi.updateTask({
       taskId: task.taskId,
-      taskDeadline: newDate,
+      taskStartDate: newDate,
       taskThemeColor: task.taskThemeColor,
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
       taskImageUrl: task.taskImageUrl,
+      taskDuration: task.taskDuration,
     }).then(res => { }).catch(err => { });
     setTask(newTask);
     dispatchUpdateTask();
@@ -361,8 +365,9 @@ function TaskEditModal(props) {
           taskThemeColor: task.taskThemeColor,
           taskStatus: 'todo',
           taskCompletedPercent: task.taskCompletedPercent,
-          taskDeadline: task.taskDeadline,
+          taskStartDate: task.taskStartDate,
           taskImageUrl: task.taskImageUrl,
+          taskDuration: task.taskDuration,
         }).then(res => { }).catch(err => { });
 
         setTask(newTask);
@@ -381,8 +386,9 @@ function TaskEditModal(props) {
           taskThemeColor: task.taskThemeColor,
           taskStatus: 'doing',
           taskCompletedPercent: task.taskCompletedPercent,
-          taskDeadline: task.taskDeadline,
+          taskStartDate: task.taskStartDate,
           taskImageUrl: task.taskImageUrl,
+          taskDuration: task.taskDuration,
         }).then(res => { }).catch(err => { });
         setTask(newTask);
         dispatchUpdateTask();
@@ -400,8 +406,9 @@ function TaskEditModal(props) {
           taskThemeColor: task.taskThemeColor,
           taskStatus: 'done',
           taskCompletedPercent: task.taskCompletedPercent,
-          taskDeadline: task.taskDeadline,
+          taskStartDate: task.taskStartDate,
           taskImageUrl: task.taskImageUrl,
+          taskDuration: task.taskDuration,
         }).then(res => { }).catch(err => { });
         setTask(newTask);
         dispatchUpdateTask();
@@ -436,8 +443,9 @@ function TaskEditModal(props) {
       taskThemeColor: colore.hex,
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
-      taskDeadline: task.taskDeadline,
+      taskStartDate: task.taskStartDate,
       taskImageUrl: task.taskImageUrl,
+      taskDuration: task.taskDuration,
     }).then(res => { }).catch(err => { });
     setTask(newTask);
     dispatchUpdateTask();
@@ -465,8 +473,9 @@ function TaskEditModal(props) {
       taskThemeColor: task.taskThemeColor,
       taskStatus: task.taskStatus,
       taskCompletedPercent: value,
-      taskDeadline: task.taskDeadline,
+      taskStartDate: task.taskStartDate,
       taskImageUrl: task.taskImageUrl,
+      taskDuration: task.taskDuration,
     }).then(res => { }).catch(err => { });
     setTask(newTask);
     dispatchUpdateTask();
@@ -490,11 +499,12 @@ function TaskEditModal(props) {
   const onDeleteTaskAvatar = () => {
     taskApi.updateTask({
       taskId: task.taskId,
-      taskDeadline: task.taskDeadline,
+      taskStartDate: task.taskStartDate,
       taskThemeColor: task.taskThemeColor,
       taskStatus: task.taskStatus,
       taskCompletedPercent: task.taskCompletedPercent,
       taskImageUrl: null,
+      taskDuration: task.taskDuration,
     }).then(res => { }).catch(err => { });
 
     setTask({
@@ -532,11 +542,12 @@ function TaskEditModal(props) {
 
             taskApi.updateTask({
               taskId: task.taskId,
-              taskDeadline: task.taskDeadline,
+              taskStartDate: task.taskStartDate,
               taskThemeColor: task.taskThemeColor,
               taskStatus: task.taskStatus,
               taskCompletedPercent: task.taskCompletedPercent,
               taskImageUrl: imageUrl,
+              taskDuration: task.taskDuration,
             }).then(res => { }).catch(err => { });
 
             dispatchUpdateTask();
@@ -828,7 +839,7 @@ function TaskEditModal(props) {
                               id="date-from"
                               name="date-input"
                               placeholder="date"
-                              value={moment(task.taskDeadline).format(
+                              value={moment(task.taskStartDate).format(
                                 "YYYY-MM-DD"
                               )}
                               onChange={onChangeDeadline}
