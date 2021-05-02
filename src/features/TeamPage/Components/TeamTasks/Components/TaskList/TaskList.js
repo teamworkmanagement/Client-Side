@@ -7,7 +7,16 @@ import { useSelector } from "react-redux";
 TaskList.propTypes = {};
 
 function TaskList(props) {
-  const tasks = useSelector((state) => state.app.tasks);
+  //const tasks = useSelector((state) => state.app.tasks);
+
+  
+  const kanbanLists = useSelector((state) => state.kanban.kanbanBoard.kanbanLists);
+  const tasks = [];
+  kanbanLists.map(kl => {
+    kl.taskUIKanbans.map(task => {
+      tasks.push(task);
+    })
+  });
 
   return (
     <div className="task-list-container">

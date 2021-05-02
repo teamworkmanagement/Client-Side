@@ -16,7 +16,7 @@ const startSignalRConnection = async (connection) => {
   } catch (err) {
     console.assert(connection.state === HubConnectionState.Disconnected);
     console.error("SignalR Connection Error: ", err);
-    //setTimeout(() => startSignalRConnection(connection), 5000);
+    setTimeout(() => startSignalRConnection(connection), 5000);
   }
 };
 
