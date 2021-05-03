@@ -1,0 +1,97 @@
+.list-team-container {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    .show-mode {
+        padding: 0.5rem;
+        width: fit-content;
+        justify-content: flex-end;
+        height: 3.5rem;
+        display: flex;
+        padding-right: 0;
+        .mode-btn {
+            width: 3rem;
+            max-width: 3rem;
+            border: 2px solid #e6ebf1;
+
+            background-color: transparent;
+            margin-right: 0.6px;
+            &.active {
+                border-color: #3e79f7;
+            }
+            &.first {
+                margin-right: 1px;
+                border-top-left-radius: 0.625rem;
+                border-bottom-left-radius: 0.625rem;
+            }
+            &.last {
+                border-top-right-radius: 0.625rem;
+                border-bottom-right-radius: 0.625rem;
+            }
+        }
+    }
+    .table-container {
+        padding: 0.5rem;
+        background-color: white;
+        width: 100%;
+        border: 1px solid #e6ebf1;
+        border-radius: 0.625rem;
+        .table {
+            thead {
+                tr {
+                    th {
+                        border: none;
+                        background-color: white;
+                    }
+                }
+                tr.table-sm {
+                    th {
+                        padding-bottom: 0.5rem;
+                    }
+                }
+            }
+            tbody {
+                tr {
+                    cursor: pointer;
+                }
+            }
+        }
+        .c-avatar {
+            img {
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50px;
+            }
+        }
+        .team-cell {
+            display: flex;
+            align-items: center;
+            .team-avatar {
+                width: 2rem;
+                height: 2rem;
+                border-radius: 50px;
+                margin-right: 0.5rem;
+            }
+            .team-name {
+                font-weight: bold;
+            }
+        }
+
+        .leader-cell {
+            display: flex;
+            align-items: center;
+            .team-leader-avatar {
+                width: 2rem;
+                height: 2rem;
+                border-radius: 50px;
+                margin-right: 0.5rem;
+            }
+        }
+        .tasks-cell {
+            .tasks-count {
+                text-align: center;
+            }
+        }
+    }
+}

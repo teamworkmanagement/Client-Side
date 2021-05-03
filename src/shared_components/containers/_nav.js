@@ -89,7 +89,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Quản lý công việc",
-    to: "/kanban",
+    to: "/teams",
     icon: "cib-stackoverflow",
   },
 

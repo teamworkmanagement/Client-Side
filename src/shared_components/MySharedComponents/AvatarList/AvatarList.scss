@@ -1,0 +1,33 @@
+.avatar-list-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .avatar-list-item {
+        padding: 0.1rem;
+        background-color: white;
+        border-radius: 50px;
+        margin-left: -0.5rem;
+        img {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50px;
+        }
+    }
+    .count-more-container {
+        padding: 0rem;
+        background-color: white;
+        margin-left: -0.5rem;
+        border-radius: 50px;
+        .count-more {
+            border-radius: 50px;
+
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    }
+}
