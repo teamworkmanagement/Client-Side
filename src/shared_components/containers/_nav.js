@@ -1,7 +1,11 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
 import { CImg } from "@coreui/react";
+import store from '../../app/store';
 
+
+const state = store.getState();
+const teams = state.team.teams;
 const _nav = [
   {
     _tag: "CSidebarNavItem",
@@ -24,13 +28,13 @@ const _nav = [
     name: "Nhóm",
     to: "/news",
     icon: "cil-group",
-    _children: [
-      {
+    _children: teams.map(x=>{
+      return {
         _tag: "CSidebarNavItem",
         name: (
-          <div className="team-name-dropdown-item">Group Anh Văn Toeic</div>
+          <div className="team-name-dropdown-item">{x.teamName}</div>
         ),
-        to: "/team",
+        to: `/team/${x.teamId}`,
         icon: (
           <CImg
             src={
@@ -44,41 +48,8 @@ const _nav = [
           color: "success",
           text: "NEW",
         },
-      },
-      {
-        _tag: "CSidebarNavItem",
-        name: <div className="team-name-dropdown-item">Hóng hớt Showbiz</div>,
-
-        icon: (
-          <CImg
-            src={
-              "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7"
-            }
-            className="c-avatar-img"
-            alt="admin@bootstrapmaster.com"
-          />
-        ),
-        to: "",
-        badge: {
-          color: "success",
-          text: "NEW",
-        },
-      },
-      {
-        _tag: "CSidebarNavItem",
-        name: <div className="team-name-dropdown-item">J2Team DeathClick</div>,
-        to: "",
-        icon: (
-          <CImg
-            src={
-              "https://scontent.fsgn5-7.fna.fbcdn.net/v/t31.18172-8/15975043_801295790009762_5833023295370153210_o.jpg?_nc_cat=103&ccb=1-3&_nc_sid=825194&_nc_ohc=dgeZuFN3avMAX956AeV&_nc_ht=scontent.fsgn5-7.fna&oh=aee48f31173dee1270bc615946e65024&oe=609D8354"
-            }
-            className="c-avatar-img"
-            alt="admin@bootstrapmaster.com"
-          />
-        ),
-      },
-    ],
+      };
+    }),
   },
   {
     _tag: "CSidebarNavItem",

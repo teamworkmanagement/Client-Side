@@ -112,7 +112,7 @@ const routes = [
   // { path: '/', exact: true, name: 'Home' },
   { path: "/dashboard", name: "Dashboard", component: DashBoardPage },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
-  { path: "/team", name: "Nhóm", component: TeamPage, exact: true },
+  { path: "/team/:teamId", name: "Nhóm", component: TeamPage },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/kanban", name: "Kanban", component: KanbanBoard, exact: true },
   { path: "/toast", name: "Kanban", component: MyToaster, exact: true },

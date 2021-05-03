@@ -173,7 +173,7 @@ function NewsFeedPage(props) {
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
-        <PostList addPostDone={addPostDone} filter={filter} />
+        <PostList addPostDone={addPostDone} isInTeam={props.isInTeam} filter={filter} />
       </div>
       <div className="side-panel-container">
         <div

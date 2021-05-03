@@ -458,8 +458,19 @@ function TaskEditModal(props) {
       taskThemeColor: "",
     };
     changeColor("#FFF");
+    
+    taskApi.updateTask({
+      taskId: task.taskId,
+      taskThemeColor: null,
+      taskStatus: task.taskStatus,
+      taskCompletedPercent: task.taskCompletedPercent,
+      taskStartDate: task.taskStartDate,
+      taskImageUrl: task.taskImageUrl,
+      taskDuration: task.taskDuration,
+    }).then(res => { }).catch(err => { });
     setTask(newTask);
-    dispatch(updateTask(newTask));
+    dispatchUpdateTask();
+    //dispatch(updateTask(newTask));
   }
 
   function handleUpdateTask(value) {

@@ -19,6 +19,7 @@ import TeamTasks from "./Components/TeamTasks/TeamTasks";
 import TeamMembers from "./Components/TeamMembers/TeamMembers";
 import { useDispatch, useSelector } from "react-redux";
 import { getTeamByUserId } from "./teamSlice";
+import { useParams } from "react-router";
 
 TeamPage.propTypes = {};
 
@@ -27,10 +28,9 @@ function TeamPage(props) {
   const user = useSelector(state => state.auth.currentUser);
   const [active, setActive] = useState(1);
 
+  
 
-  useEffect(() => {
-    dispatch(getTeamByUserId(user.id));
-  }, [])
+  
   return (
     <div className="team-container">
       <CTabs activeTab={active} onActiveTabChange={(idx) => setActive(idx)}>

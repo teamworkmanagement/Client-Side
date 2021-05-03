@@ -9,6 +9,14 @@ const teamApi = {
     getAllTeamByUser(userId) {
         const url = `/team/byuserid/${userId}`;
         return axiosClient.get(url);
+    },
+    addTeam(params) {
+        const url = '/team';
+        return axiosClient.post(url, params);
+    },
+    joinTeam(params) {
+        const url = '/team/join-team';
+        return axiosClient.post(url, params);
     }
 };
 

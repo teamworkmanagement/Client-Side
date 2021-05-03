@@ -13,10 +13,12 @@ export const getTeamByUserId = createAsyncThunk(
 const teamSlice = createSlice({
     name: "teams",
     initialState: {
-        teams: {}
+        teams: []
     },
     reducers: {
-
+        addTeam(state, action) {
+            state.teams.push(action.payload);
+        }
     },
     extraReducers: {
         [getTeamByUserId.fulfilled]: (state, action) => {
@@ -26,5 +28,6 @@ const teamSlice = createSlice({
 },
 );
 
-const { reducer } = teamSlice;
+const { actions, reducer } = teamSlice;
+export const { addTeam } = actions;
 export default reducer;
