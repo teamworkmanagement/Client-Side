@@ -210,7 +210,6 @@ function MessageList(props) {
           isLabel: false,
         };
       });
-      //debugger;
       //Thêm label cách cho list mess
       const arrayWithLabels = [];
       for (let i = 0; i < newArray.length - 1; i++) {
@@ -236,6 +235,7 @@ function MessageList(props) {
           });
         }
       }
+      arrayWithLabels.push(newArray[newArray.length - 1]);
       //thêm class cho từng message
       for (let i = 0; i < arrayWithLabels.length; i++) {
         if (arrayWithLabels[i].isLabel) continue;
@@ -383,6 +383,27 @@ function MessageList(props) {
     }
 
     const cloneList = [...latestChat.current];
+    if (cloneList.length > 0 && !cloneList[cloneList.length - 1].isMine) {
+      const date1 = cloneList[cloneList.length - 1].time;
+      const date2 = newMes.time;
+      if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
+        cloneList.push({
+          id: 1 + Math.random() * (10000 - 1),
+          message: moment(date2).format("DD/MM/YYYY, hh:mm a"),
+          class: "",
+          isLabel: true,
+        });
+        newMes.class = "normal";
+      } else {
+        if (cloneList[cloneList.length - 1].class === "end") {
+          cloneList[cloneList.length - 1].class = "middle";
+        } else {
+          cloneList[cloneList.length - 1].class = "start";
+        }
+
+        newMes.class = "end";
+      }
+    }
     cloneList.push(newMes);
     setListMes(cloneList);
 
@@ -414,7 +435,29 @@ function MessageList(props) {
         dispatch(setReceiveMes(props.sendMes.mesObj));
 
         const cloneList = [...latestChat.current];
+        if (cloneList.length > 0 && cloneList[cloneList.length - 1].isMine) {
+          const date1 = cloneList[cloneList.length - 1].time;
+          const date2 = newMes.time;
+          if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
+            cloneList.push({
+              id: 1 + Math.random() * (10000 - 1),
+              message: moment(date2).format("DD/MM/YYYY, hh:mm a"),
+              class: "",
+              isLabel: true,
+            });
+            newMes.class = "normal";
+          } else {
+            if (cloneList[cloneList.length - 1].class === "end") {
+              cloneList[cloneList.length - 1].class = "middle";
+            } else {
+              cloneList[cloneList.length - 1].class = "start";
+            }
+
+            newMes.class = "end";
+          }
+        }
         cloneList.push(newMes);
+        //debugger;
         setListMes(cloneList);
         setTimeout(function () {
           scrollToBottom();

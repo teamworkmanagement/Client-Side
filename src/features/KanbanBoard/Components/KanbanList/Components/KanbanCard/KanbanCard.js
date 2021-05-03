@@ -1,7 +1,5 @@
 import CIcon from "@coreui/icons-react";
-import {
-  CProgress
-} from "@coreui/react";
+import { CProgress } from "@coreui/react";
 import moment from "moment";
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
@@ -170,14 +168,16 @@ function KanbanCard(props) {
               <div className="title">{props.data.taskName}</div>
             </div>
             <div className="card-labels">
-              <div className="deadline">
-                <div className="deadline-icon">
-                  <CIcon name="cil-calendar" />
+              {props.data.taskDeadline && (
+                <div className="deadline">
+                  <div className="deadline-icon">
+                    <CIcon name="cil-calendar" />
+                  </div>
+                  <div className="date">
+                    {removeYearOfDate(props.data.taskDeadline)}
+                  </div>
                 </div>
-                <div className="date">
-                  {removeYearOfDate(props.data.taskDeadline)}
-                </div>
-              </div>
+              )}
               <div
                 style={getStatusColor(props.data.taskStatus)}
                 className="card-status"
@@ -187,25 +187,32 @@ function KanbanCard(props) {
             </div>
             <div className="card-infor">
               <div className="infor-group">
-                <div className="comment-infor">
-                  <div className="comment-icon">
-                    <CIcon name="cil-speech" />
+                {props.data.commentsCount > 0 && (
+                  <div className="comment-infor">
+                    <div className="comment-icon">
+                      <CIcon name="cil-speech" />
+                    </div>
+                    <div className="comment-count">
+                      {props.data.commentsCount}
+                    </div>
                   </div>
-                  <div className="comment-count">{props.data.commentsCount}</div>
-                </div>
+                )}
                 {props.data.filesCount > 0 && (
                   <div className="attachment-infor">
                     <div className="attachment-icon">
                       <CIcon name="cil-paperclip" />
                     </div>
-                    <div className="attachment-count">{props.data.filesCount}</div>
+                    <div className="attachment-count">
+                      {props.data.filesCount}
+                    </div>
                   </div>
                 )}
               </div>
-
-              <div className="user-assign-avatar">
-                <img alt="avatar" src={props.data.userAvatar} />
-              </div>
+              {props.data.userAvatar && (
+                <div className="user-assign-avatar">
+                  <img alt="avatar" src={props.data.userAvatar} />
+                </div>
+              )}
             </div>
             <div className="card-progress">
               <CProgress

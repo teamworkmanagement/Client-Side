@@ -18,6 +18,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
+import CardLoading from "./Components/KanbanCard/Components/CardLoading/CardLoading";
 
 KanbanList.propTypes = {};
 
@@ -59,8 +60,8 @@ function KanbanList(props) {
   const { taskUIKanbans } = props.data;
 
   const handleShowCreateCard = () => {
-    setShowAddCard(true)
-  }
+    setShowAddCard(true);
+  };
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>
       {(provided) => (
@@ -76,11 +77,12 @@ function KanbanList(props) {
             dragHandleProps={{ ...provided.dragHandleProps }}
           />
           <Droppable droppableId={props.data.kanbanListId} type="task">
-            {(provided) => (
+            {(provided, snapshot) => (
               <div
                 className="kanbanlist-cards"
                 ref={provided.innerRef} //required by dnd
                 {...provided.droppableProps} //required by dnd
+                isDraggingOver={snapshot.isDraggingOver}
               >
                 {taskUIKanbans.map((item, index) => {
                   return (
