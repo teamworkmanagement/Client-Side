@@ -8,6 +8,7 @@ import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import Empty from "../Post/Components/Empty/Empty";
 import Loading from "../Post/Components/Loading/Loading";
 import CIcon from "@coreui/icons-react";
+import { useParams } from "react-router";
 
 PostList.propTypes = {};
 
@@ -24,6 +25,8 @@ function PostList(props) {
   const userId = "8650b7fe-2952-4b03-983c-660dddda9029";
   const filterChanged = useSelector((state) => state.app.filterChanged);
 
+  const { teamId } = useParams();
+  //load post
   useEffect(() => {
     async function getPosts() {
       try {
@@ -33,7 +36,16 @@ function PostList(props) {
           SkipItems: filterChanged ? 0 : listPosts.length,
         };
 
-        const outPut = await postApi.getPagination({ params });
+        let outPut = {};
+
+        if (teamId) {
+          params.teamId = teamId;
+          outPut = await postApi.getPaginationTeam({ params });
+        }
+
+        else {
+          outPut = await postApi.getPaginationUser({ params });
+        }
 
         if (filterChanged) {
           dispatch(setFilterChange(false));
@@ -53,6 +65,31 @@ function PostList(props) {
     getPosts();
   }, [pageNumber, props.filter]);
 
+  //o trong team
+  useEffect(() => {
+    if (teamId) {
+      async function getPosts() {
+        try {
+          setIsLoading(true);
+          const params = {
+            ...props.filter,
+            SkipItems: 0,
+          };
+
+          params.teamId = teamId;
+          const outPut = await postApi.getPaginationTeam({ params });
+          setListPosts(outPut.data.items);
+        } catch (err) {
+          console.log(err);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      getPosts();
+    }
+  }, [teamId])
+
+  //sau khi them thanh cong post o newsfeed page truyen qua
   useEffect(() => {
     if (props.addPostDone === null) return;
     const cur = [...latestPosts.current];

@@ -20,6 +20,7 @@ import AvatarList from "src/shared_components/MySharedComponents/AvatarList/Avat
 import CIcon from "@coreui/icons-react";
 import ChartLineSimple from "src/shared_components/views/charts/ChartLineSimple";
 import { getTeamByUserId } from "./teamSlice";
+import { useHistory } from "react-router";
 
 ListTeamPage.propTypes = {};
 
@@ -185,12 +186,18 @@ function ListTeamPage(props) {
   }
 
   const dispatch = useDispatch();
+  const history = useHistory();
   const user = useSelector(state => state.auth.currentUser);
-  const teams=useSelector(state=>state.team.teams);
+  const teams = useSelector(state => state.team.teams);
 
   useEffect(() => {
     dispatch(getTeamByUserId(user.id));
   }, [])
+
+
+  const goToTeam = (teamId) => {
+    history.push(`/team/${teamId}`);
+  }
   return (
     <div className="list-team-container">
       <div className="header-tool-bar">
@@ -225,9 +232,9 @@ function ListTeamPage(props) {
           {teams.map((team, index) => {
             return (
               <CCol
-              
-              sm="6"
-              lg="3"
+
+                sm="6"
+                lg="3"
                 key={team.teamId}
                 style={{ animationDelay: `${index / 20}s` }}
                 className="grid-item-container"
@@ -271,7 +278,7 @@ function ListTeamPage(props) {
                     <img
                       className="team-avatar"
                       alt=""
-                      src={team.teamAvatar}
+                      src={team.teamImageUrl}
                     />
                     <div className="team-name">{team.teamName}</div>
                     <div className="team-description">
@@ -293,14 +300,14 @@ function ListTeamPage(props) {
                           <img
                             className="leader-avatar"
                             alt=""
-                            src={team.teamLeaderAvatar}
+                            src={team.teamLeaderImageUrl}
                           />
                           {team.teamLeaderName}
                         </div>
                       </CTooltip>
                     </div>
                   </div>
-                  <div className="team-action">Vào nhóm</div>
+                  <div className="team-action" onClick={() => goToTeam(team.teamId)}>Vào nhóm</div>
                 </div>
               </CCol>
             );
@@ -326,11 +333,11 @@ function ListTeamPage(props) {
               <tbody>
                 {teams.map((team, index) => {
                   return (
-                    <tr style={{ animationDelay: `${index / 20}s` }}>
+                    <tr onClick={() => goToTeam(team.teamId)} style={{ animationDelay: `${index / 20}s` }}>
                       <td className="text-center">
                         <div className="c-avatar">
                           <img
-                            src={team.teamAvatar}
+                            src={team.teamImageUrl}
                             className="c-avatar-img"
                             alt="admin@bootstrapmaster.com"
                           />
@@ -347,7 +354,7 @@ function ListTeamPage(props) {
                           <img
                             className="team-leader-avatar"
                             alt=""
-                            src={team.teamLeaderAvatar}
+                            src={team.teamLeaderImageUrl}
                           />
                           <div className="">{team.teamLeaderName}</div>
                         </div>

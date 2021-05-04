@@ -20,7 +20,7 @@ import UploadItem from "./ProgressBottom/UploadItem";
 import moment from "moment";
 import 'moment/locale/vi';
 import prettyBytes from "pretty-bytes";
-import { Prompt, useHistory } from "react-router";
+import { Prompt, useHistory, useParams } from "react-router";
 import useExitPrompt from "../../../utils/customHook/useExitPrompt";
 import { setTimeout } from "core-js";
 
@@ -398,7 +398,7 @@ function ListFileTable(props) {
               "fileUrl": `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
               "fileType": GetTypeFromExt(file.name),
               "userId": "8650b7fe-2952-4b03-983c-660dddda9029",
-              "fileBelongedId": "team2",
+              "fileBelongedId": teamId,
               "fileSize": file.size,
             }
 
@@ -420,12 +420,15 @@ function ListFileTable(props) {
     }
   }
 
+
+  const { teamId } = useParams();
+
   //pagination
   useEffect(() => {
     async function getDatas() {
       try {
         const params = {
-          BelongedId: 'team2',
+          BelongedId: teamId,
           PageNumber: page,
           PageSize: pageSize,
         };
@@ -453,7 +456,7 @@ function ListFileTable(props) {
       }
     }
     getDatas();
-  }, [page, triggerLoad]);
+  }, [page, triggerLoad, teamId]);
 
   useEffect(() => {
     setShowExitPrompt(upload);
@@ -553,16 +556,16 @@ function ListFileTable(props) {
         }}
       />
       {
-        totals!==0?<CPagination
-        activePage={page}
-        pages={totals}
-        dots
-        align="center"
-        doubleArrows={false}
-        onActivePageChange={(i) => setActivePage(i)}
-      />:null
+        totals !== 0 ? <CPagination
+          activePage={page}
+          pages={totals}
+          dots
+          align="center"
+          doubleArrows={false}
+          onActivePageChange={(i) => setActivePage(i)}
+        /> : null
       }
-      
+
       {upload ?
         <UploadItem progress={progress} name={cfile.name} /> : null
       }
