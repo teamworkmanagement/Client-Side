@@ -235,6 +235,15 @@ function MessageList(props) {
           });
         }
       }
+      if (newArray.length === 1) {
+        arrayWithLabels.push({
+          id: 1 + Math.random() * (100000 - 1),
+          message: moment(newArray[0].time).format("DD/MM/YYYY, hh:mm a"),
+          class: "",
+          isLabel: true,
+        });
+        arrayWithLabels.push(newArray[0]);
+      }
       arrayWithLabels.push(newArray[newArray.length - 1]);
       //thêm class cho từng message
       for (let i = 0; i < arrayWithLabels.length; i++) {
