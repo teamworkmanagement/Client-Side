@@ -15,12 +15,12 @@ import authReducer from "../shared_components/views/pages/login/authSlice";
 import testReducer from "../api/testSlice";
 import chatReducer from "../features/ChatPage/chatSlice";
 import kanbanReducer from "../features/KanbanBoard/kanbanSlice";
-
+import teamReducer from "../features/ListTeamPage/teamSlice";
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: ["app", "test", "chat", "kanban"],
+  blacklist: ["app", "test", "chat", "kanban", "team"],
 };
 
 const rootReducer = combineReducers({
@@ -29,6 +29,7 @@ const rootReducer = combineReducers({
   test: testReducer,
   chat: chatReducer,
   kanban: kanbanReducer,
+  team: teamReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
