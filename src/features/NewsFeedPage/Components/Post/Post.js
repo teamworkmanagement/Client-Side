@@ -9,6 +9,7 @@ import "moment/locale/vi";
 import commentApi from "src/api/commentApi";
 import classNames from "classnames";
 import postApi from "src/api/postApi";
+import { useSelector } from "react-redux";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -18,6 +19,7 @@ function Post(props) {
   const [loadComment, setLoadComment] = useState(0);
   const [post, setPost] = useState({ ...props.post });
   const [commentContent, setCommentContent] = useState("");
+  const user = useSelector(state => state.auth.currentUser);
 
   useEffect(() => {
     async function getComments() {
@@ -40,17 +42,17 @@ function Post(props) {
   const onLoveClick = () => {
     const params = {
       postId: post.postId,
-      userId: "8650b7fe-2952-4b03-983c-660dddda9029",
+      userId: user.id,
     };
     post.isReacted
       ? postApi
-          .deleteReactPost({ params })
-          .then((res) => {})
-          .catch((err) => {})
+        .deleteReactPost({ params })
+        .then((res) => { })
+        .catch((err) => { })
       : postApi
-          .reactPost(params)
-          .then((res) => {})
-          .catch((err) => {});
+        .reactPost(params)
+        .then((res) => { })
+        .catch((err) => { });
 
     setPost({
       ...post,
@@ -68,7 +70,7 @@ function Post(props) {
         commentApi
           .addComment({
             commentPostId: post.postId,
-            commentUserId: "8650b7fe-2952-4b03-983c-660dddda9029",
+            commentUserId: user.id,
             commentContent: commentContent,
             commentCreatedAt: new Date().toISOString(),
             commentIsDeleted: false,
@@ -85,14 +87,14 @@ function Post(props) {
                 commentPostId: res.data.commentPostId,
                 commentUserId: res.data.commentUserId,
                 commentContent: res.data.commentContent,
-                userName: "Dungx Nguyeenx",
+                userName: user.fullName,
                 commentCreatedAt: res.data.commentCreatedAt,
               },
             ].concat([...cmtLists]);
 
             setComments(newArrr);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -109,7 +111,7 @@ function Post(props) {
           </div>
           <div className="poster-infor">
             <div className="name-and-group">
-              <strong>{post.userName}</strong> đã đăng trong nhóm{" "}
+              <strong>{user.id === post.postUserId ? user.fullName : post.userName}</strong> đã đăng trong nhóm{" "}
               <strong>{post.teamName}</strong>
             </div>
             <div className="post-date">

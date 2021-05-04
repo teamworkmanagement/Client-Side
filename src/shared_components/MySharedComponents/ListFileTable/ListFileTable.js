@@ -23,6 +23,7 @@ import prettyBytes from "pretty-bytes";
 import { Prompt, useHistory, useParams } from "react-router";
 import useExitPrompt from "../../../utils/customHook/useExitPrompt";
 import { setTimeout } from "core-js";
+import { useSelector } from "react-redux";
 
 moment.locale("vi");
 ListFileTable.propTypes = {};
@@ -337,6 +338,7 @@ function ListFileTable(props) {
   const [showExitPrompt, setShowExitPrompt] = useExitPrompt(false);
   const [triggerLoad, setTriggerLoad] = useState(0);//call api khi thêm file...
   const [showError, setShowError] = useState(false);
+  const user = useSelector(state => state.auth.currentUser);
   const pickerRef = useRef(null);
   const history = useHistory();
   const pageSize = 5;
@@ -401,7 +403,7 @@ function ListFileTable(props) {
               "fileName": file.name,
               "fileUrl": `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
               "fileType": GetTypeFromExt(file.name),
-              "userId": "8650b7fe-2952-4b03-983c-660dddda9029",
+              "userId": user.id,
               "fileBelongedId": teamId,
               "fileSize": file.size,
             }
@@ -557,16 +559,16 @@ function ListFileTable(props) {
         }}
       />
       {
-        totals!==0?<CPagination
-        activePage={page}
-        pages={totals}
-        dots
-        align="center"
-        doubleArrows={false}
-        onActivePageChange={(i) => setActivePage(i)}
-      />:null
+        totals !== 0 ? <CPagination
+          activePage={page}
+          pages={totals}
+          dots
+          align="center"
+          doubleArrows={false}
+          onActivePageChange={(i) => setActivePage(i)}
+        /> : null
       }
-      
+
       {upload ?
         <UploadItem progress={progress} name={cfile.name} /> : null
       }

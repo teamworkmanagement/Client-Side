@@ -22,12 +22,14 @@ import ChartLineSimple from "src/shared_components/views/charts/ChartLineSimple"
 import { useHistory } from "react-router";
 import { getTeamByUserId } from "./teamSlice";
 import CreateTeamModal from "./CreateTeam/CreateTeamModal";
+import TeamLoading from "../TeamPage/TeamLoading/TeamLoading";
 
 ListTeamPage.propTypes = {};
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
   const [showAddTeam, setShowAddTeam] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const onCloseAddTeam = () => {
@@ -207,11 +209,19 @@ function ListTeamPage(props) {
 
 
   useEffect(() => {
-    dispatch(getTeamByUserId(user.id));
+    async function loadData() {
+      setIsLoading(true);
+      await dispatch(getTeamByUserId(user.id));
+      setIsLoading(false);
+    }
+
+    loadData();
   }, [])
+
   const navigateToTeam = (teamId) => {
     history.push(`/team/${teamId}`);
   }
+
   return (
     <div className="list-team-container">
       <div className="header-tool-bar">
@@ -401,6 +411,7 @@ function ListTeamPage(props) {
         </div>
       )}
 
+      <TeamLoading isLoading={isLoading} />
       <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
     </div>
   );
