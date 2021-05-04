@@ -159,7 +159,9 @@ function ListTeamPage(props) {
     //   teamImageUrl:
     //     "https://saigontranslation.com/vi/wp-content/uploads/2015/11/the_duc_the_thao.jpg",
     // },
+
   ];*/
+
   const fields = [
     { key: "name", label: "Tên nhóm", _style: { width: "30%" }, filter: true },
     { key: "leader", label: "Trưởng nhóm", _style: { width: "15%" } },
