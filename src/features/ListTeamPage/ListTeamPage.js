@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./ListTeamPage.scss";
 import {
@@ -15,10 +15,12 @@ import {
   CTooltip,
   CWidgetDropdown,
 } from "@coreui/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import CIcon from "@coreui/icons-react";
 import ChartLineSimple from "src/shared_components/views/charts/ChartLineSimple";
+import { useHistory } from "react-router";
+import { getTeamByUserId } from "./teamSlice";
 
 ListTeamPage.propTypes = {};
 
@@ -30,7 +32,7 @@ function ListTeamPage(props) {
     if (index === showMode) return;
     setShowMode(index);
   }
-  const teams = [
+  /*const teams = [
     {
       teamId: "team_1",
       teamLeaderId: "user_1",
@@ -157,7 +159,7 @@ function ListTeamPage(props) {
     //   teamImageUrl:
     //     "https://saigontranslation.com/vi/wp-content/uploads/2015/11/the_duc_the_thao.jpg",
     // },
-  ];
+  ];*/
   const fields = [
     { key: "name", label: "Tên nhóm", _style: { width: "30%" }, filter: true },
     { key: "leader", label: "Trưởng nhóm", _style: { width: "15%" } },
@@ -178,11 +180,23 @@ function ListTeamPage(props) {
     // },
   ];
   const members = useSelector((state) => state.app.users);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const teams = useSelector(state => state.team.teams);
+  const user = useSelector(state => state.auth.currentUser);
 
   function getMemberCount() {
     return members.length;
   }
 
+
+
+  useEffect(() => {
+    dispatch(getTeamByUserId(user.id));
+  }, [])
+  const navigateToTeam = (teamId) => {
+    history.push(`/team/${teamId}`);
+  }
   return (
     <div className="list-team-container">
       <div className="header-tool-bar">
@@ -272,7 +286,7 @@ function ListTeamPage(props) {
                   <div className="team-detail-infor">
                     <div className="member-infor">
                       <CIcon name="cil-group" />
-                      <div className="member-count">23</div>
+                      <div className="member-count">{team.teamMemberCount}</div>
                     </div>
                     <div className="divider"></div>
                     <div className="leader-infor">
@@ -291,7 +305,7 @@ function ListTeamPage(props) {
                       </CTooltip>
                     </div>
                   </div>
-                  <div className="team-action">Vào nhóm</div>
+                  <div className="team-action" onClick={() => navigateToTeam(team.teamId)}>Vào nhóm</div>
                 </div>
               </CCol>
             );
@@ -317,7 +331,7 @@ function ListTeamPage(props) {
               <tbody>
                 {teams.map((team, index) => {
                   return (
-                    <tr style={{ animationDelay: `${index / 20}s` }}>
+                    <tr onClick={() => navigateToTeam(team.teamId)} style={{ animationDelay: `${index / 20}s` }}>
                       <td className="text-center">
                         <div className="c-avatar">
                           <img
