@@ -39,6 +39,14 @@ const taskApi = {
     removeTask(params) {
         const url = `/task/${params}`;
         return axiosClient.delete(url);
+    },
+    addHandleTask(params) {
+        const url = '/handletask';
+        return axiosClient.post(url, params);
+    },
+    reAssignTask(params) {
+        const url = '/handletask/reassign-task';
+        return axiosClient.post(url, params);
     }
 };
 

@@ -39,6 +39,8 @@ import { myBucket } from "src/utils/aws/config";
 import { v4 as uuidv4 } from 'uuid';
 import fileApi from "src/api/fileApi";
 import commentApi from "src/api/commentApi";
+import Select from "react-select";
+import UserSelector from "./UserSelector/UserSelector";
 
 TaskEditModal.propTypes = {};
 
@@ -211,6 +213,16 @@ function TaskEditModal(props) {
     }
     dispatch(updateEditTask(taskMapObj));
   }, [triggerUpdateTask]);
+
+  const onSelectedUser = (obj) => {
+    setTask({
+      ...task,
+      userId: obj.value ? obj.value : null,
+      userAvatar: obj.img ? obj.img : null,
+    });
+
+    dispatchUpdateTask();
+  }
 
   const assignedUserImage = getAssignedUserImage();
   function getAssignedUserImage() {
@@ -458,7 +470,7 @@ function TaskEditModal(props) {
       taskThemeColor: "",
     };
     changeColor("#FFF");
-    
+
     taskApi.updateTask({
       taskId: task.taskId,
       taskThemeColor: null,
@@ -799,9 +811,12 @@ function TaskEditModal(props) {
                             <CIcon name="cil-user-follow" />
                             Giao cho
                           </div>
-                          <div className="assigned-user-avatar">
+                          {/*<div className="assigned-user-avatar">
                             <img src={task.userAvatar} alt="" />
-                          </div>
+                </div>*/}
+                          <UserSelector onSelectedUser={onSelectedUser} currentValue={task} />
+
+
                         </div>
                         <div className="theme-group item-group">
                           <div className="theme-label label">
