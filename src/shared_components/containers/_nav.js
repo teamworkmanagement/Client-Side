@@ -1,11 +1,7 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
 import { CImg } from "@coreui/react";
-import store from '../../app/store';
 
-
-const state = store.getState();
-const teams = state.team.teams;
 const _nav = [
   {
     _tag: "CSidebarNavItem",
@@ -28,13 +24,13 @@ const _nav = [
     name: "Nhóm",
     to: "/news",
     icon: "cil-group",
-    _children: teams.map(x=>{
-      return {
+    _children: [
+      {
         _tag: "CSidebarNavItem",
         name: (
-          <div className="team-name-dropdown-item">{x.teamName}</div>
+          <div className="team-name-dropdown-item">Group Anh Văn Toeic</div>
         ),
-        to: `/team/${x.teamId}`,
+        to: "/team/a78a2d84-05a7-40a8-a278-814a10df9cbf",
         icon: (
           <CImg
             src={
@@ -48,8 +44,41 @@ const _nav = [
           color: "success",
           text: "NEW",
         },
-      };
-    }),
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: <div className="team-name-dropdown-item">Hóng hớt Showbiz</div>,
+
+        icon: (
+          <CImg
+            src={
+              "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7"
+            }
+            className="c-avatar-img"
+            alt="admin@bootstrapmaster.com"
+          />
+        ),
+        to: "/team/f095798c-1ece-4127-893d-59d38767c017",
+        badge: {
+          color: "success",
+          text: "NEW",
+        },
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: <div className="team-name-dropdown-item">J2Team DeathClick</div>,
+        to: "/team/0b10dead-689d-44a7-87ca-2588aae3320e",
+        icon: (
+          <CImg
+            src={
+              "https://scontent.fsgn5-7.fna.fbcdn.net/v/t31.18172-8/15975043_801295790009762_5833023295370153210_o.jpg?_nc_cat=103&ccb=1-3&_nc_sid=825194&_nc_ohc=dgeZuFN3avMAX956AeV&_nc_ht=scontent.fsgn5-7.fna&oh=aee48f31173dee1270bc615946e65024&oe=609D8354"
+            }
+            className="c-avatar-img"
+            alt="admin@bootstrapmaster.com"
+          />
+        ),
+      },
+    ],
   },
   {
     _tag: "CSidebarNavItem",
@@ -60,7 +89,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Quản lý công việc",
-    to: "/kanban",
+    to: "/teams",
     icon: "cib-stackoverflow",
   },
 

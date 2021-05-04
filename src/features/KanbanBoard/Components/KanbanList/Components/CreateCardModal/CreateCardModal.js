@@ -43,6 +43,7 @@ function CreateCardModal(props) {
           "taskImageUrl": null,
           "taskName": taskName,
           "taskStartDate": null,
+          "taskDeadline": null,
           "taskDescription": null,
           "taskStatus": null,
           "commentsCount": 0,

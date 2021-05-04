@@ -175,7 +175,7 @@ function KanbanCard(props) {
                   <CIcon name="cil-calendar" />
                 </div>
                 <div className="date">
-                  {removeYearOfDate(props.data.taskStartDate)}
+                  {removeYearOfDate(props.data.taskDeadline)}
                 </div>
               </div>
               <div
