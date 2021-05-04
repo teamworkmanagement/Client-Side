@@ -6,12 +6,8 @@ const postApi = {
         const url = '/post/allforuser?userId=8650b7fe-2952-4b03-983c-660dddda9029';
         return axiosClient.get(url);
     },
-    getPaginationUser(params) {
-        const url = `/post/paging-multi-user`;
-        return axiosClient.get(url, params);
-    },
-    getPaginationTeam(params) {
-        const url = `/post/paging-multi-team`;
+    getPagination(params) {
+        const url = `/post/paging-multi`;
         return axiosClient.get(url, params);
     },
     reactPost(params) {
