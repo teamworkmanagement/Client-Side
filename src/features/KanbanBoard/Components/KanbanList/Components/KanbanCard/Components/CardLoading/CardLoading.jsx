@@ -17,7 +17,7 @@ function CardLoading(props) {
     }
     return (
         <div style={{ display: getDisplay() }}
-         className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+         className="lds-ellipsis2"><div></div><div></div><div></div><div></div></div>
     );
 }
 

@@ -22,7 +22,7 @@ function PostList(props) {
   latestPosts.current = listPosts;
 
   const pageNumber = useSelector((state) => state.app.currentPostPage);
-  
+
   const filterChanged = useSelector((state) => state.app.filterChanged);
 
   const { teamId } = useParams();
@@ -36,13 +36,11 @@ function PostList(props) {
           SkipItems: filterChanged ? 0 : listPosts.length,
         };
 
-        let outPut={};
+        let outPut = {};
         if (teamId) {
           params.teamId = teamId;
           outPut = await postApi.getPaginationTeam({ params });
-        }
-
-        else {
+        } else {
           outPut = await postApi.getPaginationUser({ params });
         }
 
@@ -63,7 +61,6 @@ function PostList(props) {
 
     getPosts();
   }, [pageNumber, props.filter]);
-
 
   //o trong team
   useEffect(() => {
@@ -87,8 +84,7 @@ function PostList(props) {
       }
       getPosts();
     }
-  }, [teamId])
-
+  }, [teamId]);
 
   useEffect(() => {
     if (props.addPostDone === null) return;
@@ -99,9 +95,9 @@ function PostList(props) {
 
   useEffect(() => {
     window.onscroll = function (ev) {
-      if (window.pageYOffset > 600) {
+      if (window.pageYOffset > 100) {
         setShowScroll(true);
-      } else if (window.pageYOffset <= 600) {
+      } else {
         setShowScroll(false);
       }
 
@@ -113,7 +109,10 @@ function PostList(props) {
   }, []);
 
   const scrollTop = () => {
-    window.scrollTo(0, 0);
+    //window.scrollTo(0, 0);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 2);
   };
 
   const renderListPost = listPosts.map((item) => {
@@ -122,11 +121,25 @@ function PostList(props) {
 
   return (
     <div className="post-list">
-      {listPosts.length === 0 && !isLoading ? <Empty /> : renderListPost}
+      {listPosts.length === 0 && !isLoading ? (
+        <div className="nodata-image">
+          <CIcon name="cil-newspaper" />
+          <CIcon className="icon-x" name="cil-x" />
+          <CIcon className="icon-glass" name="cil-magnifying-glass" />
+
+          <div className="noti-infor">
+            Chưa có bài viết nào trong các nhóm của bạn
+          </div>
+          <div className="create-post-btn">Tạo bài viết mới</div>
+        </div>
+      ) : (
+        renderListPost
+      )}
       {isLoading ? <Loading className="loading-bar" /> : null}
+
       {showScroll ? (
-        <div className="show-scroll" onClick={scrollTop}>
-          GO TOP
+        <div className="go-top-btn" onClick={scrollTop}>
+          <CIcon name="cil-chevron-top" />
         </div>
       ) : null}
     </div>

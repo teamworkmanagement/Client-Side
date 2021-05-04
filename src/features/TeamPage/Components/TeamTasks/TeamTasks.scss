@@ -5,33 +5,56 @@
     flex-direction: column;
     overflow-x: hidden;
     position: absolute;
-    .show-mode {
-        padding: 0.5rem;
-        width: 100%;
-        justify-content: flex-end;
-        height: 3.5rem;
+    .tasks-header {
         display: flex;
-        .mode-btn {
-            width: 3rem;
-            max-width: 3rem;
-            border: 2px solid #e6ebf1;
-
-            background-color: transparent;
-            margin-right: 0.6px;
-            &.active {
-                border-color: #3e79f7;
+        justify-content: flex-end;
+        align-items: center;
+        .add-btn {
+            background-color: #3e79f7;
+            color: white;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.625rem;
+            height: fit-content;
+            margin: 0rem 0.5rem;
+            cursor: pointer;
+            .c-icon {
+                margin-right: 0.2rem;
             }
-            &.first {
-                margin-right: 1px;
-                border-top-left-radius: 0.625rem;
-                border-bottom-left-radius: 0.625rem;
+            &:hover {
+                background-color: #3464ca;
             }
-            &.last {
-                border-top-right-radius: 0.625rem;
-                border-bottom-right-radius: 0.625rem;
+        }
+        .show-mode {
+            padding: 0.5rem;
+            width: fit-content;
+            justify-content: flex-end;
+            height: 3.5rem;
+            display: flex;
+            .mode-btn {
+                width: 3rem;
+                max-width: 3rem;
+                border: 2px solid #e6ebf1;
 
-                .c-icon {
-                    transform: rotate(90deg);
+                background-color: transparent;
+                margin-right: 0.6px;
+                &.active {
+                    border-color: #3e79f7;
+                }
+                &.first {
+                    margin-right: 1px;
+                    border-top-left-radius: 0.625rem;
+                    border-bottom-left-radius: 0.625rem;
+                }
+                &.last {
+                    border-top-right-radius: 0.625rem;
+                    border-bottom-right-radius: 0.625rem;
+
+                    .c-icon {
+                        transform: rotate(90deg);
+                    }
                 }
             }
         }

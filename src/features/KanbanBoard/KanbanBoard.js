@@ -4,7 +4,11 @@ import "./KanbanBoard.scss";
 import { useDispatch, useSelector } from "react-redux";
 import KanbanList from "./Components/KanbanList/KanbanList";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { setKanbanBoardData, setKanbanLists, setTeamLoading } from "src/appSlice";
+import {
+  setKanbanBoardData,
+  setKanbanLists,
+  setTeamLoading,
+} from "src/appSlice";
 import { CButton, CButtonGroup } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { getBoardDataForUI, handleDragEnd } from "./kanbanSlice";
@@ -108,10 +112,10 @@ function KanbanBoard(props) {
       dispatch(setTeamLoading(false));
     }
   }, []);
-  console.log(isLoading);
+
   return (
     <div className="kanban-board-container">
-      <CardLoading isLoading={isLoading} />
+      {/* <CardLoading isLoading={isLoading} /> */}
       <DragDropContext
         style={{ display: isLoading ? "none" : "flex" }}
         onDragEnd={onDragEnd}
@@ -132,6 +136,7 @@ function KanbanBoard(props) {
                   />
                 );
               })}
+
               {provided.placeholder}
             </div>
           )}

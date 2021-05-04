@@ -31,15 +31,13 @@ function ListTeamPage(props) {
   const [showAddTeam, setShowAddTeam] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const onCloseAddTeam = () => {
     setShowAddTeam(false);
-  }
+  };
 
   const onShowAddTeam = () => {
     setShowAddTeam(true);
-  }
-
+  };
 
   function switchShowMode(index) {
     //debugger;
@@ -199,14 +197,12 @@ function ListTeamPage(props) {
   const members = useSelector((state) => state.app.users);
   const history = useHistory();
   const dispatch = useDispatch();
-  const teams = useSelector(state => state.team.teams);
-  const user = useSelector(state => state.auth.currentUser);
+  const teams = useSelector((state) => state.team.teams);
+  const user = useSelector((state) => state.auth.currentUser);
 
   function getMemberCount() {
     return members.length;
   }
-
-
 
   useEffect(() => {
     async function loadData() {
@@ -216,11 +212,11 @@ function ListTeamPage(props) {
     }
 
     loadData();
-  }, [])
+  }, []);
 
   const navigateToTeam = (teamId) => {
     history.push(`/team/${teamId}`);
-  }
+  };
 
   return (
     <div className="list-team-container">
@@ -252,90 +248,99 @@ function ListTeamPage(props) {
         </CButtonGroup>
       </div>
       {showMode === 1 && (
-        <CRow className="grid-view-container">
-          {teams.map((team, index) => {
-            return (
-              <CCol
-                sm="6"
-                lg="3"
-                key={index}
-                style={{ animationDelay: `${index / 20}s` }}
-                className="grid-item-container"
-              >
-                <div className="item-content">
-                  <div className="team-header">
-                    <div className="header-actions-dropdown">
-                      <CDropdown>
-                        <CDropdownToggle id="dropdownMenuButton" caret>
-                          <div className="lane-actions">
-                            <CIcon name="cil-options" />
-                          </div>
-                        </CDropdownToggle>
-                        <CDropdownMenu
-                          aria-labelledby="dropdownMenuButton"
-                          placement="bottom-end"
-                        >
-                          <CDropdownItem className="first">
-                            <CIcon name="cil-arrow-circle-right" />
-                            Vào nhóm
-                          </CDropdownItem>
-                          <CDropdownItem className="middle">
-                            <div className="dropdown-icon-group">
-                              <CIcon name="cil-bell" />
-                              <CIcon
-                                className="rotate-45"
-                                name="cil-window-minimize"
-                              />
+        <div className="grid-view-container">
+          <CRow className="grid-view">
+            {teams.map((team, index) => {
+              return (
+                <CCol
+                  sm="6"
+                  lg="3"
+                  key={index}
+                  style={{ animationDelay: `${index / 20}s` }}
+                  className="grid-item-container"
+                >
+                  <div className="item-content">
+                    <div className="team-header">
+                      <div className="header-actions-dropdown">
+                        <CDropdown>
+                          <CDropdownToggle id="dropdownMenuButton" caret>
+                            <div className="lane-actions">
+                              <CIcon name="cil-options" />
                             </div>
-                            <div className="special-text">Tắt thông báo</div>
-                          </CDropdownItem>
-                          <CDropdownItem className="last">
-                            <CIcon name="cil-account-logout" />
-                            Rời nhóm
-                          </CDropdownItem>
-                        </CDropdownMenu>
-                      </CDropdown>
-                    </div>
-                  </div>
-                  <div className="team-infor">
-                    <img
-                      className="team-avatar"
-                      alt=""
-                      src={team.teamImageUrl}
-                    />
-                    <div className="team-name">{team.teamName}</div>
-                    <div className="team-description">
-                      {team.teamDescription}
-                    </div>
-                  </div>
-                  <div className="team-detail-infor">
-                    <div className="member-infor">
-                      <CIcon name="cil-group" />
-                      <div className="member-count">{team.teamMemberCount}</div>
-                    </div>
-                    <div className="divider"></div>
-                    <div className="leader-infor">
-                      <div className="icon-group">
-                        <CIcon name="cil-flag-alt" />
+                          </CDropdownToggle>
+                          <CDropdownMenu
+                            aria-labelledby="dropdownMenuButton"
+                            placement="bottom-end"
+                          >
+                            <CDropdownItem className="first">
+                              <CIcon name="cil-arrow-circle-right" />
+                              Vào nhóm
+                            </CDropdownItem>
+                            <CDropdownItem className="middle">
+                              <div className="dropdown-icon-group">
+                                <CIcon name="cil-bell" />
+                                <CIcon
+                                  className="rotate-45"
+                                  name="cil-window-minimize"
+                                />
+                              </div>
+                              <div className="special-text">Tắt thông báo</div>
+                            </CDropdownItem>
+                            <CDropdownItem className="last">
+                              <CIcon name="cil-account-logout" />
+                              Rời nhóm
+                            </CDropdownItem>
+                          </CDropdownMenu>
+                        </CDropdown>
                       </div>
-                      <CTooltip placement="top" content={team.teamLeaderName}>
-                        <div className="leader-name">
-                          <img
-                            className="leader-avatar"
-                            alt=""
-                            src={team.teamLeaderImageUrl}
-                          />
-                          {team.teamLeaderName}
+                    </div>
+                    <div className="team-infor">
+                      <img
+                        className="team-avatar"
+                        alt=""
+                        src={team.teamImageUrl}
+                      />
+                      <div className="team-name">{team.teamName}</div>
+                      <div className="team-description">
+                        {team.teamDescription}
+                      </div>
+                    </div>
+                    <div className="team-detail-infor">
+                      <div className="member-infor">
+                        <CIcon name="cil-group" />
+                        <div className="member-count">
+                          {team.teamMemberCount}
                         </div>
-                      </CTooltip>
+                      </div>
+                      <div className="divider"></div>
+                      <div className="leader-infor">
+                        <div className="icon-group">
+                          <CIcon name="cil-flag-alt" />
+                        </div>
+                        <CTooltip placement="top" content={team.teamLeaderName}>
+                          <div className="leader-name">
+                            <img
+                              className="leader-avatar"
+                              alt=""
+                              src={team.teamLeaderImageUrl}
+                            />
+                            {team.teamLeaderName}
+                          </div>
+                        </CTooltip>
+                      </div>
+                    </div>
+                    <div
+                      className="team-action"
+                      onClick={() => navigateToTeam(team.teamId)}
+                    >
+                      Vào nhóm
                     </div>
                   </div>
-                  <div className="team-action" onClick={() => navigateToTeam(team.teamId)}>Vào nhóm</div>
-                </div>
-              </CCol>
-            );
-          })}
-        </CRow>
+                </CCol>
+              );
+            })}
+          </CRow>
+        </div>
       )}
       {showMode === 2 && (
         <div className="table-view-container">
@@ -356,7 +361,10 @@ function ListTeamPage(props) {
               <tbody>
                 {teams.map((team, index) => {
                   return (
-                    <tr onClick={() => navigateToTeam(team.teamId)} style={{ animationDelay: `${index / 20}s` }}>
+                    <tr
+                      onClick={() => navigateToTeam(team.teamId)}
+                      style={{ animationDelay: `${index / 20}s` }}
+                    >
                       <td className="text-center">
                         <div className="c-avatar">
                           <img

@@ -34,6 +34,7 @@ import {
   cilArrowCircleRight,
   cilAccountLogout,
   cilWindowMinimize,
+  cilBolt,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -154,6 +155,7 @@ import {
   cilXCircle,
   cilWarning,
   cilExitToApp,
+  cilHealing,
   cilGroup, //myimport
   cilNewspaper,
   cilChatBubble,
@@ -202,6 +204,7 @@ export const icons = Object.assign(
     cilArrowCircleRight,
     cilAccountLogout,
     cilWindowMinimize,
+    cilHealing,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,
@@ -213,6 +216,7 @@ export const icons = Object.assign(
     cilBan,
     cilBasket,
     cilBell,
+    cilBolt,
     cilBold,
     cilBookmark,
     cilCalculator,

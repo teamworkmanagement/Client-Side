@@ -24,7 +24,7 @@ TeamPage.propTypes = {};
 function TeamPage(props) {
   const lorem = "ccc";
   const [active, setActive] = useState(1);
-  const teamLoading = useSelector(state => state.app.teamLoading);
+  const teamLoading = useSelector((state) => state.app.teamLoading);
   return (
     <div className="team-container">
       <CTabs activeTab={0} onActiveTabChange={(idx) => setActive(idx)}>

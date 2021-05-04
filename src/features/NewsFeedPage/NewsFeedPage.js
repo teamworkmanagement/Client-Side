@@ -23,14 +23,13 @@ import Loading from "./Components/Post/Components/Loading/Loading";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 import postApi from "src/api/postApi";
 
-
 NewsFeedPage.propTypes = {};
 
 function NewsFeedPage(props) {
   const [showFilter, setShowFilter] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
 
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   const [filter, setFilter] = useState({
     UserId: user.id,
@@ -41,7 +40,7 @@ function NewsFeedPage(props) {
   const [addPostDone, setAddPostDone] = useState(null);
 
   const [grAddPost, setGrAddPost] = useState(null);
-  const [newPostContent, setNewPostContent] = useState('');
+  const [newPostContent, setNewPostContent] = useState("");
 
   const dispatch = useDispatch();
 
@@ -106,21 +105,21 @@ function NewsFeedPage(props) {
   function toggleShowFilter() {
     const clonedShowFilter = { ...showFilter };
     setShowFilter(!showFilter);
-    console.log(showFilter);
   }
 
   const getFilter = (obj) => {
-    if (obj === null || obj === undefined)
-      return;
+    if (obj === null || obj === undefined) return;
     for (var propName in obj) {
       if (obj[propName] === null || obj[propName] === undefined) {
         delete obj[propName];
       }
     }
-    if (filter === obj || JSON.stringify(filter) === JSON.stringify(obj) || JSON.stringify(obj) === JSON.stringify({}))
+    if (
+      filter === obj ||
+      JSON.stringify(filter) === JSON.stringify(obj) ||
+      JSON.stringify(obj) === JSON.stringify({})
+    )
       return;
-
-    console.log(obj, '-----', filter);
 
     setFilter({
       ...obj,
@@ -129,49 +128,42 @@ function NewsFeedPage(props) {
     });
 
     dispatch(setFilterChange(true));
-  }
-
+  };
 
   const getGroupPost = (gr) => {
     setGrAddPost(gr === null ? null : gr.value);
-  }
+  };
 
   const addPostClick = () => {
-
-    console.log('group : ', grAddPost);
-    console.log('content : ', newPostContent);
-
     if (!grAddPost || !newPostContent) {
-      alert('Xem lại');
+      alert("Xem lại");
       return;
     }
 
-
-    postApi.addPost({
-      postUserId: user.id,
-      postTeamId: grAddPost,
-      postContent: newPostContent,
-    }).then(res => {
-      console.log(res.data);
-      setAddPostDone(res.data);
-    }).catch(err => {
-
-    });
+    postApi
+      .addPost({
+        postUserId: user.id,
+        postTeamId: grAddPost,
+        postContent: newPostContent,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setAddPostDone(res.data);
+      })
+      .catch((err) => {});
 
     setShowCreatePost(false);
-  }
+  };
 
   const onTextAreaChange = (e) => {
     setNewPostContent(e.target.value);
-  }
+  };
 
   const onModalClose = () => {
-    console.log('modal close');
-
     setClearFilter(clearSelect + 1);
-    setNewPostContent('');
+    setNewPostContent("");
     setShowCreatePost(false);
-  }
+  };
 
   return (
     <div className="newsfeed-page-container">
@@ -194,15 +186,15 @@ function NewsFeedPage(props) {
           style={
             showFilter
               ? {
-                borderBottomLeftRadius: "0",
-                borderBottomRightRadius: "0",
-                borderBottom: "none",
-              }
+                  borderBottomLeftRadius: "0",
+                  borderBottomRightRadius: "0",
+                  borderBottom: "none",
+                }
               : {
-                borderBottomLeftRadius: "10px",
-                borderBottomRightRadius: "10px",
-                borderBottom: "1px solid #e6ebf1",
-              }
+                  borderBottomLeftRadius: "10px",
+                  borderBottomRightRadius: "10px",
+                  borderBottom: "1px solid #e6ebf1",
+                }
           }
         >
           <div className="title">
@@ -210,9 +202,17 @@ function NewsFeedPage(props) {
             Lọc bản tin
           </div>
           {showFilter ? (
-            <img className="expand-icon" src="images/expand_less.png" alt="" />
+            <img
+              className="expand-icon"
+              src="../images/expand_less.png"
+              alt=""
+            />
           ) : (
-            <img className="expand-icon" src="images/expand_more.png" alt="" />
+            <img
+              className="expand-icon"
+              src="../images/expand_more.png"
+              alt=""
+            />
           )}
         </div>
         <CCollapse show={showFilter}>
@@ -249,12 +249,9 @@ function NewsFeedPage(props) {
         )}
       </div>
 
-      <CModal
-        show={showCreatePost}
-        onClosed={onModalClose}
-      >
+      <CModal show={showCreatePost} onClosed={onModalClose}>
+        <CModalHeader closeButton></CModalHeader>
         <CModalBody>
-          <button className="button-close" onClick={() => setShowCreatePost(false)}>X</button>
           <GroupFilter clearSelect={clearSelect} getGroupPost={getGroupPost} />
           <TextareaAutosize
             className="input-post"

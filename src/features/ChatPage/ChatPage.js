@@ -37,7 +37,7 @@ function ChatPage(props) {
     if (element.scrollTop === 0) {
       setReachTop(reachTop + 1);
     }
-    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+    if (element.scrollHeight - element.scrollTop - element.clientHeight < 2) {
       setReachBot(true);
     } else setReachBot(false);
   };

@@ -1,41 +1,41 @@
 export const GetFileTypeImage = (file_type_name) => {
   switch (file_type_name.toString().toLowerCase()) {
     case "word":
-      return "images/file_type_icons/doc.png";
+      return "../images/file_type_icons/doc.png";
     case "excel":
-      return "images/file_type_icons/xls.png";
+      return "../images/file_type_icons/xls.png";
     case "powerpoint":
-      return "images/file_type_icons/ppt.png";
+      return "../images/file_type_icons/ppt.png";
     case "video":
-      return "images/file_type_icons/mp4.png";
+      return "../images/file_type_icons/mp4.png";
     case "audio":
-      return "images/file_type_icons/mp3.png";
+      return "../images/file_type_icons/mp3.png";
     case "pdf":
-      return "images/file_type_icons/pdf.png";
+      return "../images/file_type_icons/pdf.png";
     case "zip":
-      return "images/file_type_icons/zip.png";
+      return "../images/file_type_icons/zip.png";
     case "text":
-      return "images/file_type_icons/txt.png";
+      return "../images/file_type_icons/txt.png";
     case "png":
-      return "images/file_type_icons/png.png";
+      return "../images/file_type_icons/png.png";
     case "css":
-      return "images/file_type_icons/css.png";
+      return "../images/file_type_icons/css.png";
     case "csv":
-      return "images/file_type_icons/csv.png";
+      return "../images/file_type_icons/csv.png";
     case "exe":
-      return "images/file_type_icons/exe.png";
+      return "../images/file_type_icons/exe.png";
     case "html":
-      return "images/file_type_icons/html.png";
+      return "../images/file_type_icons/html.png";
     case "javascript":
-      return "images/file_type_icons/javascript.png";
+      return "../images/file_type_icons/javascript.png";
     case "json":
-      return "images/file_type_icons/json-file.png";
+      return "../images/file_type_icons/json-file.png";
     case "svg":
-      return "images/file_type_icons/svg.png";
+      return "../images/file_type_icons/svg.png";
     case "xml":
-      return "images/file_type_icons/xml.png";
+      return "../images/file_type_icons/xml.png";
     default:
-      return "images/file_type_icons/file.png";
+      return "../images/file_type_icons/file.png";
   }
 };
 

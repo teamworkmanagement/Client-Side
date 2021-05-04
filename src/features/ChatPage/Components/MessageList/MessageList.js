@@ -351,16 +351,13 @@ function MessageList(props) {
     getMessage();
   }, [props.reachTop, currentGroup]);
 
-
   useEffect(() => {
     console.log(teamId);
     if (teamId) {
       setListMes([]);
       dispatch(setCurrentGroup(teamId));
     }
-
-  }, [teamId])
-
+  }, [teamId]);
 
   function calculateDistanceScroll(newMessages) {
     var result = 0;
@@ -381,7 +378,6 @@ function MessageList(props) {
       }
     }
 
-    console.log("result " + result + " - " + newMessages.length);
     return result;
   }
 
@@ -429,9 +425,12 @@ function MessageList(props) {
     cloneList.push(newMes);
     setListMes(cloneList);
 
+    // const timeOut = setTimeout(() => {
+    //   if (props.reachBot) scrollToBottom();
+    // }, 1);
     const timeOut = setTimeout(() => {
       if (props.reachBot) scrollToBottom();
-    }, 1);
+    }, 0);
 
     return () => {
       clearTimeout(timeOut);
@@ -485,7 +484,7 @@ function MessageList(props) {
           scrollToBottom();
         }, 1);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [props.sendMes]);
 
   return (
@@ -497,8 +496,9 @@ function MessageList(props) {
           <div
             key={index}
             animationDelay={index + 2}
-            className={`message-item-container ${item.class ? item.class : ""
-              } ${item.isMine ? "mine" : ""} `}
+            className={`message-item-container ${
+              item.class ? item.class : ""
+            } ${item.isMine ? "mine" : ""} `}
           >
             <img
               className="avatar"

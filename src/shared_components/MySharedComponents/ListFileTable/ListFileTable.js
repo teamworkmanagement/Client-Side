@@ -12,13 +12,13 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import reactDom from "react-dom";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import fileApi from "src/api/fileApi";
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
 import UploadItem from "./ProgressBottom/UploadItem";
 import moment from "moment";
-import 'moment/locale/vi';
+import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
 import { Prompt, useHistory, useParams } from "react-router";
 import useExitPrompt from "../../../utils/customHook/useExitPrompt";
@@ -334,16 +334,15 @@ function ListFileTable(props) {
   const [datas, setDatas] = useState([]);
   const [totals, setTotals] = useState(0);
   const [page, setPage] = useState(1);
-  const [cfile, setCfile] = useState(null);//current file
+  const [cfile, setCfile] = useState(null); //current file
   const [showExitPrompt, setShowExitPrompt] = useExitPrompt(false);
-  const [triggerLoad, setTriggerLoad] = useState(0);//call api khi thêm file...
+  const [triggerLoad, setTriggerLoad] = useState(0); //call api khi thêm file...
   const [showError, setShowError] = useState(false);
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
   const pickerRef = useRef(null);
   const history = useHistory();
   const pageSize = 5;
-  const maxSize = 30;//MB
-
+  const maxSize = 30; //MB
 
   const { teamId } = useParams();
 
@@ -368,9 +367,8 @@ function ListFileTable(props) {
   ];
 
   const onClick = () => {
-    if (!upload)
-      pickerRef.current.click();
-  }
+    if (!upload) pickerRef.current.click();
+  };
 
   const onPick = async (e) => {
     const file = e.target.files[0];
@@ -386,36 +384,39 @@ function ListFileTable(props) {
       const folder = uuidv4();
       const params = {
         Body: file,
-        Bucket: 'teamappstorage',
+        Bucket: "teamappstorage",
         Key: `${folder}/${file.name}`,
       };
 
       setUpload(true);
       setCfile(file);
 
-      myBucket.putObject(params)
-        .on('httpUploadProgress', (evt) => {
+      myBucket
+        .putObject(params)
+        .on("httpUploadProgress", (evt) => {
           let pro = Math.round((evt.loaded / evt.total) * 100);
           setProgress(pro);
 
           if (pro >= 100) {
             const body = {
-              "fileName": file.name,
-              "fileUrl": `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
-              "fileType": GetTypeFromExt(file.name),
-              "userId": user.id,
-              "fileBelongedId": teamId,
-              "fileSize": file.size,
-            }
+              fileName: file.name,
+              fileUrl: `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
+              fileType: GetTypeFromExt(file.name),
+              userId: user.id,
+              fileBelongedId: teamId,
+              fileSize: file.size,
+            };
 
-            fileApi.addFile(body).then(res => {
-              setUpload(false);
-              setTriggerLoad(triggerLoad + 1);
-            }).catch(err => {
-              setUpload(false);
-            });
+            fileApi
+              .addFile(body)
+              .then((res) => {
+                setUpload(false);
+                setTriggerLoad(triggerLoad + 1);
+              })
+              .catch((err) => {
+                setUpload(false);
+              });
           }
-
         })
         .send((err) => {
           if (err) {
@@ -424,7 +425,7 @@ function ListFileTable(props) {
           }
         });
     }
-  }
+  };
 
   //pagination
   useEffect(() => {
@@ -437,7 +438,7 @@ function ListFileTable(props) {
         };
         const outPut = await fileApi.getFile({ params });
 
-        const dts = outPut.data.items.map(f => {
+        const dts = outPut.data.items.map((f) => {
           return {
             id: f.fileId,
             name: f.fileName,
@@ -446,17 +447,15 @@ function ListFileTable(props) {
             owner: f.fileUserName,
             type: f.fileType,
             ownerImageURL: f.userImage,
-            downloadIcon: "images/download.png",
+            downloadIcon: "../images/download.png",
             fileUrl: f.fileUrl,
-          }
+          };
         });
 
         setDatas(dts);
         setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         console.log(outPut.data.items);
-      } catch (err) {
-
-      }
+      } catch (err) {}
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -465,21 +464,25 @@ function ListFileTable(props) {
     setShowExitPrompt(upload);
   }, [upload]);
 
-
-
   const setActivePage = (i) => {
-    if (i !== 0)
-      setPage(i);
-  }
+    if (i !== 0) setPage(i);
+  };
 
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
       <div onClick={onClick} className="upload-container">
-        <img className="upload-image" src={"images/upload.png"} alt="" />
+        <img className="upload-image" src={"../images/upload.png"} alt="" />
         <div>Tải tệp lên nhóm</div>
-        <input onChange={onPick} ref={pickerRef} type="file" style={{ display: "none" }} />
+        <input
+          onChange={onPick}
+          ref={pickerRef}
+          type="file"
+          style={{ display: "none" }}
+        />
       </div>
-      <label className="mt-2 text-danger">*Dung lượng mỗi file không quá 30MB.</label>
+      <label className="mt-2 text-danger">
+        *Dung lượng mỗi file không quá 30MB.
+      </label>
       <CDataTable
         items={datas}
         fields={fields}
@@ -500,14 +503,14 @@ function ListFileTable(props) {
           createdAt: (item) => {
             return (
               <td>
-                <div >{moment(item.createdAt).format("lll")}</div>
+                <div>{moment(item.createdAt).format("lll")}</div>
               </td>
             );
           },
           size: (item) => {
             return (
               <td>
-                <div >{prettyBytes(item.size, { locale: 'vi' })}</div>
+                <div>{prettyBytes(item.size, { locale: "vi" })}</div>
               </td>
             );
           },
@@ -543,11 +546,10 @@ function ListFileTable(props) {
             return (
               <td>
                 <div className="download-btn-container">
-
                   <a href={item.fileUrl}>
                     <img
                       className="download-btn"
-                      src={"images/download.png"}
+                      src={"../images/download.png"}
                       alt=""
                       onClick={handleDownload}
                     ></img>
@@ -558,23 +560,22 @@ function ListFileTable(props) {
           },
         }}
       />
-      {
-        totals !== 0 ? <CPagination
+      {totals !== 0 ? (
+        <CPagination
           activePage={page}
           pages={totals}
           dots
           align="center"
           doubleArrows={false}
           onActivePageChange={(i) => setActivePage(i)}
-        /> : null
-      }
+        />
+      ) : null}
 
-      {upload ?
-        <UploadItem progress={progress} name={cfile.name} /> : null
-      }
-      <Prompt when={upload}
-        message="Cancel uploading file?" />
-      {showError ? <div id="snackbar">Dung lượng file lớn hơn 30MB!</div> : null}
+      {upload ? <UploadItem progress={progress} name={cfile.name} /> : null}
+      <Prompt when={upload} message="Cancel uploading file?" />
+      {showError ? (
+        <div id="snackbar">Dung lượng file lớn hơn 30MB!</div>
+      ) : null}
     </div>
   );
 }

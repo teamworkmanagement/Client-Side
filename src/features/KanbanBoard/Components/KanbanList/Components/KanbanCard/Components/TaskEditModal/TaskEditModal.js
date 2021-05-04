@@ -1066,7 +1066,7 @@ function TaskEditModal(props) {
                   </div>
                   <div className="my-comment">
                     <div className="my-avatar">
-                      <img alt="" src="avatars/6.jpg" />
+                      <img alt="" src="../avatars/6.jpg" />
                     </div>
                     <div className="input-container">
                       <CInput

@@ -19,7 +19,7 @@ function Post(props) {
   const [loadComment, setLoadComment] = useState(0);
   const [post, setPost] = useState({ ...props.post });
   const [commentContent, setCommentContent] = useState("");
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   useEffect(() => {
     async function getComments() {
@@ -46,13 +46,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-        .deleteReactPost({ params })
-        .then((res) => { })
-        .catch((err) => { })
+          .deleteReactPost({ params })
+          .then((res) => {})
+          .catch((err) => {})
       : postApi
-        .reactPost(params)
-        .then((res) => { })
-        .catch((err) => { });
+          .reactPost(params)
+          .then((res) => {})
+          .catch((err) => {});
 
     setPost({
       ...post,
@@ -94,7 +94,7 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
@@ -111,8 +111,10 @@ function Post(props) {
           </div>
           <div className="poster-infor">
             <div className="name-and-group">
-              <strong>{user.id === post.postUserId ? user.fullName : post.userName}</strong> đã đăng trong nhóm{" "}
-              <strong>{post.teamName}</strong>
+              <strong>
+                {user.id === post.postUserId ? user.fullName : post.userName}
+              </strong>{" "}
+              đã đăng trong nhóm <strong>{post.teamName}</strong>
             </div>
             <div className="post-date">
               {moment(post.postCreatedAt).format("l")}
@@ -137,7 +139,7 @@ function Post(props) {
       </div>
       <div className="my-comment">
         <div className="my-avatar">
-          <img alt="" src="avatars/6.jpg" />
+          <img alt="" src="../avatars/6.jpg" />
         </div>
         <div className="input-container">
           <CInput
