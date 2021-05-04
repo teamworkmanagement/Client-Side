@@ -16,12 +16,15 @@ import ListFileTable from "../../shared_components/MySharedComponents/ListFileTa
 import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
 import KanbanBoard from "../KanbanBoard/KanbanBoard";
 import TeamTasks from "./Components/TeamTasks/TeamTasks";
+import { useSelector } from "react-redux";
+import TeamLoading from "./TeamLoading/TeamLoading";
 
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
   const lorem = "ccc";
   const [active, setActive] = useState(1);
+  const teamLoading = useSelector(state => state.app.teamLoading);
   return (
     <div className="team-container">
       <CTabs activeTab={0} onActiveTabChange={(idx) => setActive(idx)}>
@@ -74,6 +77,7 @@ function TeamPage(props) {
           </CTabPane>
         </CTabContent>
       </CTabs>
+      <TeamLoading isLoading={teamLoading} />
     </div>
   );
 }
