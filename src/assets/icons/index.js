@@ -8,6 +8,8 @@ import //brand
 "@coreui/icons";
 
 import {
+  cilFlagAlt,
+  cilUserPlus,
   cilSortNumericUp,
   cilPlus,
   cilClock,
@@ -29,6 +31,9 @@ import {
   cilArrowBottom,
   cilCaretBottom,
   cilCaretTop,
+  cilArrowCircleRight,
+  cilAccountLogout,
+  cilWindowMinimize,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -148,6 +153,7 @@ import {
   cilX,
   cilXCircle,
   cilWarning,
+  cilExitToApp,
   cilGroup, //myimport
   cilNewspaper,
   cilChatBubble,
@@ -190,6 +196,12 @@ export const icons = Object.assign(
     cilArrowBottom,
     cilCaretBottom,
     cilCaretTop,
+    cilUserPlus,
+    cilFlagAlt,
+    cilExitToApp,
+    cilArrowCircleRight,
+    cilAccountLogout,
+    cilWindowMinimize,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

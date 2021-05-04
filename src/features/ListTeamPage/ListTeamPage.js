@@ -4,13 +4,21 @@ import "./ListTeamPage.scss";
 import {
   CButton,
   CButtonGroup,
+  CCol,
   CDataTable,
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
   CProgress,
+  CRow,
   CTooltip,
+  CWidgetDropdown,
 } from "@coreui/react";
 import { useSelector } from "react-redux";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import CIcon from "@coreui/icons-react";
+import ChartLineSimple from "src/shared_components/views/charts/ChartLineSimple";
 
 ListTeamPage.propTypes = {};
 
@@ -77,7 +85,7 @@ function ListTeamPage(props) {
       teamCode: "IU8O9K",
       teamIsDeleted: false,
       teamImageUrl:
-        "https://lh3.googleusercontent.com/proxy/BhyZmAz6pPxf0gqgWS2SZ8TOEyHheaGjbeyZOFnYuXtA_fZ3pvd5RkYPx1g8NGxOs0SVPvkeqVlAZaXc7GWGmm1M5H71gQ5nzO7D2wV9oF0",
+        "https://s35691.pcdn.co/wp-content/uploads/2018/12/meta-teaching-181210.jpg",
     },
     {
       teamId: "team_5",
@@ -177,97 +185,190 @@ function ListTeamPage(props) {
 
   return (
     <div className="list-team-container">
-      <CButtonGroup className="show-mode">
-        <CTooltip placement="top" content="Lưới">
-          <CButton
-            className={`first mode-btn ${showMode === 1 && "active"}`}
-            color="secondary"
-            onClick={() => switchShowMode(1)}
-            type="button"
-          >
-            <CIcon name="cil-grid" />
-          </CButton>
-        </CTooltip>
-        <CTooltip placement="top" content="Danh sách">
-          <CButton
-            className={`last mode-btn ${showMode === 2 && "active"}`}
-            color="secondary"
-            onClick={() => switchShowMode(2)}
-          >
-            <CIcon name="cil-list" />
-          </CButton>
-        </CTooltip>
-      </CButtonGroup>
+      <div className="header-tool-bar">
+        <div className="create-team-btn">
+          <CIcon name="cil-plus" />
+          Tạo nhóm mới
+        </div>
+        <CButtonGroup className="show-mode">
+          <CTooltip placement="top" content="Lưới">
+            <CButton
+              className={`first mode-btn ${showMode === 1 && "active"}`}
+              color="secondary"
+              onClick={() => switchShowMode(1)}
+              type="button"
+            >
+              <CIcon name="cil-grid" />
+            </CButton>
+          </CTooltip>
+          <CTooltip placement="top" content="Danh sách">
+            <CButton
+              className={`last mode-btn ${showMode === 2 && "active"}`}
+              color="secondary"
+              onClick={() => switchShowMode(2)}
+            >
+              <CIcon name="cil-list" />
+            </CButton>
+          </CTooltip>
+        </CButtonGroup>
+      </div>
       {showMode === 1 && (
-        <div className="table-container">
-          <table className="table table-hover  mb-0 d-none d-sm-table">
-            <thead className="thead-light">
-              <tr>
-                <th className="text-center">
-                  <CIcon name="cil-people" />
-                </th>
-                <th>Tên nhóm</th>
-                <th>Trưởng nhóm</th>
-
-                <th>Tiến độ</th>
-                <th className="text-center">Thành viên</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teams.map((team) => {
-                return (
-                  <tr>
-                    <td className="text-center">
-                      <div className="c-avatar">
-                        <img
-                          src={team.teamImageUrl}
-                          className="c-avatar-img"
-                          alt="admin@bootstrapmaster.com"
-                        />
+        <CRow className="grid-view-container">
+          {teams.map((team, index) => {
+            return (
+              <CCol
+                sm="6"
+                lg="3"
+                key={index}
+                style={{ animationDelay: `${index / 20}s` }}
+                className="grid-item-container"
+              >
+                <div className="item-content">
+                  <div className="team-header">
+                    <div className="header-actions-dropdown">
+                      <CDropdown>
+                        <CDropdownToggle id="dropdownMenuButton" caret>
+                          <div className="lane-actions">
+                            <CIcon name="cil-options" />
+                          </div>
+                        </CDropdownToggle>
+                        <CDropdownMenu
+                          aria-labelledby="dropdownMenuButton"
+                          placement="bottom-end"
+                        >
+                          <CDropdownItem className="first">
+                            <CIcon name="cil-arrow-circle-right" />
+                            Vào nhóm
+                          </CDropdownItem>
+                          <CDropdownItem className="middle">
+                            <div className="dropdown-icon-group">
+                              <CIcon name="cil-bell" />
+                              <CIcon
+                                className="rotate-45"
+                                name="cil-window-minimize"
+                              />
+                            </div>
+                            <div className="special-text">Tắt thông báo</div>
+                          </CDropdownItem>
+                          <CDropdownItem className="last">
+                            <CIcon name="cil-account-logout" />
+                            Rời nhóm
+                          </CDropdownItem>
+                        </CDropdownMenu>
+                      </CDropdown>
+                    </div>
+                  </div>
+                  <div className="team-infor">
+                    <img
+                      className="team-avatar"
+                      alt=""
+                      src={team.teamImageUrl}
+                    />
+                    <div className="team-name">{team.teamName}</div>
+                    <div className="team-description">
+                      {team.teamDescription}
+                    </div>
+                  </div>
+                  <div className="team-detail-infor">
+                    <div className="member-infor">
+                      <CIcon name="cil-group" />
+                      <div className="member-count">23</div>
+                    </div>
+                    <div className="divider"></div>
+                    <div className="leader-infor">
+                      <div className="icon-group">
+                        <CIcon name="cil-flag-alt" />
                       </div>
-                    </td>
-
-                    <td>
-                      <div>{team.teamName}</div>
-                      <div className="small text-muted">
-                        {team.teamDescription}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="leader-cell">
-                        <img
-                          className="team-leader-avatar"
-                          alt=""
-                          src={team.teamLeaderImageUrl}
-                        />
-                        <div className="">{team.teamLeaderName}</div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="clearfix">
-                        <div className="float-left">
-                          <strong>50%</strong>
+                      <CTooltip placement="top" content={team.teamLeaderName}>
+                        <div className="leader-name">
+                          <img
+                            className="leader-avatar"
+                            alt=""
+                            src={team.teamLeaderImageUrl}
+                          />
+                          {team.teamLeaderName}
                         </div>
-                        <div className="float-right">
-                          <small className="text-muted">
-                            11/01/2021 - 20/04/2021
-                          </small>
+                      </CTooltip>
+                    </div>
+                  </div>
+                  <div className="team-action">Vào nhóm</div>
+                </div>
+              </CCol>
+            );
+          })}
+        </CRow>
+      )}
+      {showMode === 2 && (
+        <div className="table-view-container">
+          <div className="table-content">
+            <table className="table table-hover  mb-0 d-none d-sm-table">
+              <thead className="thead-light">
+                <tr>
+                  <th className="text-center">
+                    <CIcon name="cil-people" />
+                  </th>
+                  <th>Tên nhóm</th>
+                  <th>Trưởng nhóm</th>
+
+                  <th>Tiến độ</th>
+                  <th className="text-center">Thành viên</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teams.map((team, index) => {
+                  return (
+                    <tr style={{ animationDelay: `${index / 20}s` }}>
+                      <td className="text-center">
+                        <div className="c-avatar">
+                          <img
+                            src={team.teamImageUrl}
+                            className="c-avatar-img"
+                            alt="admin@bootstrapmaster.com"
+                          />
                         </div>
-                      </div>
-                      <CProgress
-                        className="progress-xs"
-                        color="success"
-                        value="50"
-                      />
-                    </td>
-                    <td className="text-center">
-                      <AvatarList users={members} />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      </td>
+                      <td>
+                        <div>{team.teamName}</div>
+                        <div className="small text-muted">
+                          {team.teamDescription}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="leader-cell">
+                          <img
+                            className="team-leader-avatar"
+                            alt=""
+                            src={team.teamLeaderImageUrl}
+                          />
+                          <div className="">{team.teamLeaderName}</div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="clearfix">
+                          <div className="float-left">
+                            <strong>50%</strong>
+                          </div>
+                          <div className="float-right">
+                            <small className="text-muted">
+                              11/01/2021 - 20/04/2021
+                            </small>
+                          </div>
+                        </div>
+                        <CProgress
+                          className="progress-xs"
+                          color="success"
+                          value="50"
+                        />
+                      </td>
+                      <td className="text-center">
+                        <AvatarList users={members} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
