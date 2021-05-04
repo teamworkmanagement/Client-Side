@@ -51,11 +51,12 @@ const chatSlice = createSlice({
   extraReducers: {
     [getAllGroupChatForUser.fulfilled]: (state, action) => {
       state.groupChat = action.payload;
+      state.currentGroup=action.payload[0]?.groupChatId;
       state.loadDone = true;
-      state.currentGroup =
+      /*state.currentGroup =
         action.payload.length > 0
           ? action.payload[1].groupChatId
-          : state.currentGroup;
+          : state.currentGroup;*/
     },
     [getAllGroupChatForUser.rejected]: (state, action) => {},
   },

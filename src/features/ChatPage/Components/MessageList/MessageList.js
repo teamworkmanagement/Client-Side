@@ -5,8 +5,9 @@ import { CTooltip } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import messageApi from "src/api/messageApi";
-import { setIsSelected, setReceiveMes } from "../../chatSlice";
+import { setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
 import chatApi from "src/api/chatApi";
+import { useParams } from "react-router";
 
 MessageList.propTypes = {};
 
@@ -167,6 +168,7 @@ function MessageList(props) {
   const messagesEndRef = useRef(null);
   const latestChat = useRef(null);
   const newMessage = useSelector((state) => state.chat.newMessage);
+  const { teamId } = useParams();
 
   latestChat.current = listMes;
 
@@ -191,7 +193,7 @@ function MessageList(props) {
         skipItems = 0;
       }
       const params = {
-        GroupId: currentGroup,
+        GroupId: teamId ? teamId : currentGroup,
         SkipItems: skipItems,
         PageSize: 12,
       };
@@ -349,6 +351,17 @@ function MessageList(props) {
     getMessage();
   }, [props.reachTop, currentGroup]);
 
+
+  useEffect(() => {
+    console.log(teamId);
+    if (teamId) {
+      setListMes([]);
+      dispatch(setCurrentGroup(teamId));
+    }
+
+  }, [teamId])
+
+
   function calculateDistanceScroll(newMessages) {
     var result = 0;
 
@@ -472,7 +485,7 @@ function MessageList(props) {
           scrollToBottom();
         }, 1);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [props.sendMes]);
 
   return (
@@ -484,9 +497,8 @@ function MessageList(props) {
           <div
             key={index}
             animationDelay={index + 2}
-            className={`message-item-container ${
-              item.class ? item.class : ""
-            } ${item.isMine ? "mine" : ""} `}
+            className={`message-item-container ${item.class ? item.class : ""
+              } ${item.isMine ? "mine" : ""} `}
           >
             <img
               className="avatar"
