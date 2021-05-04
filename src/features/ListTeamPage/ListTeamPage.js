@@ -21,11 +21,24 @@ import CIcon from "@coreui/icons-react";
 import ChartLineSimple from "src/shared_components/views/charts/ChartLineSimple";
 import { useHistory } from "react-router";
 import { getTeamByUserId } from "./teamSlice";
+import CreateTeamModal from "./CreateTeam/CreateTeamModal";
 
 ListTeamPage.propTypes = {};
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
+  const [showAddTeam, setShowAddTeam] = useState(false);
+
+
+  const onCloseAddTeam = () => {
+    setShowAddTeam(false);
+  }
+
+  const onShowAddTeam = () => {
+    setShowAddTeam(true);
+  }
+
+
   function switchShowMode(index) {
     //debugger;
     console.log(index);
@@ -202,7 +215,7 @@ function ListTeamPage(props) {
   return (
     <div className="list-team-container">
       <div className="header-tool-bar">
-        <div className="create-team-btn">
+        <div onClick={onShowAddTeam} className="create-team-btn">
           <CIcon name="cil-plus" />
           Tạo nhóm mới
         </div>
@@ -387,6 +400,8 @@ function ListTeamPage(props) {
           </div>
         </div>
       )}
+
+      <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
     </div>
   );
 }

@@ -533,6 +533,7 @@ const appSlice = createSlice({
     kanbanBoards: KanbanBoards,
     kanbanLists: KanbanLists,
     files: Files,
+    teamLoading: false,
   },
   reducers: {
     changeState(state, payload) {
@@ -545,6 +546,9 @@ const appSlice = createSlice({
     },
     setDarkMode(state, action) {
       state.darkMode = !state.darkMode;
+    },
+    setTeamLoading(state, action) {
+      state.teamLoading = action.payload;
     },
     setKanbanBoardData(state, payload) {
       if (payload.payload.type === 1) {
@@ -744,5 +748,6 @@ export const {
   setKanbanLists,
   handleDragEnd,
   updateTask,
+  setTeamLoading
 } = actions; // named export
 export default reducer; // default export

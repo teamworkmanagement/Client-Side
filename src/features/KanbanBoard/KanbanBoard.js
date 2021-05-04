@@ -4,7 +4,7 @@ import "./KanbanBoard.scss";
 import { useDispatch, useSelector } from "react-redux";
 import KanbanList from "./Components/KanbanList/KanbanList";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { setKanbanBoardData, setKanbanLists } from "src/appSlice";
+import { setKanbanBoardData, setKanbanLists, setTeamLoading } from "src/appSlice";
 import { CButton, CButtonGroup } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { getBoardDataForUI, handleDragEnd } from "./kanbanSlice";
@@ -99,11 +99,13 @@ function KanbanBoard(props) {
 
   useEffect(() => {
     try {
+      dispatch(setTeamLoading(true));
       setIsLoading(true);
       dispatch(getBoardDataForUI("board1"));
     } catch (err) {
     } finally {
       setIsLoading(false);
+      dispatch(setTeamLoading(false));
     }
   }, []);
   console.log(isLoading);
