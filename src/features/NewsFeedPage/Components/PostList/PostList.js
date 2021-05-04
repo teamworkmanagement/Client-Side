@@ -22,7 +22,7 @@ function PostList(props) {
   latestPosts.current = listPosts;
 
   const pageNumber = useSelector((state) => state.app.currentPostPage);
-  const userId = "8650b7fe-2952-4b03-983c-660dddda9029";
+  
   const filterChanged = useSelector((state) => state.app.filterChanged);
 
   const { teamId } = useParams();

@@ -29,8 +29,11 @@ NewsFeedPage.propTypes = {};
 function NewsFeedPage(props) {
   const [showFilter, setShowFilter] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
+
+  const user = useSelector(state => state.auth.currentUser);
+
   const [filter, setFilter] = useState({
-    UserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+    UserId: user.id,
     PageSize: 3,
   });
 
@@ -121,7 +124,7 @@ function NewsFeedPage(props) {
 
     setFilter({
       ...obj,
-      UserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+      UserId: user.id,
       PageSize: 3,
     });
 
@@ -145,7 +148,7 @@ function NewsFeedPage(props) {
 
 
     postApi.addPost({
-      postUserId: '8650b7fe-2952-4b03-983c-660dddda9029',
+      postUserId: user.id,
       postTeamId: grAddPost,
       postContent: newPostContent,
     }).then(res => {
