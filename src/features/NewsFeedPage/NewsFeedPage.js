@@ -22,10 +22,12 @@ import { setFilterChange } from "src/appSlice";
 import Loading from "./Components/Post/Components/Loading/Loading";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 import postApi from "src/api/postApi";
+import { useParams } from "react-router";
 
 NewsFeedPage.propTypes = {};
 
 function NewsFeedPage(props) {
+  const dispatch = useDispatch();
   const [showFilter, setShowFilter] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
 
@@ -42,7 +44,7 @@ function NewsFeedPage(props) {
   const [grAddPost, setGrAddPost] = useState(null);
   const [newPostContent, setNewPostContent] = useState("");
 
-  const dispatch = useDispatch();
+  const { teamId } = useParams();
 
   const groupList = [
     {
@@ -135,7 +137,7 @@ function NewsFeedPage(props) {
   };
 
   const addPostClick = () => {
-    if (!grAddPost || !newPostContent) {
+    if ((!grAddPost && !teamId) || !newPostContent) {
       alert("Xem lại");
       return;
     }
@@ -143,14 +145,14 @@ function NewsFeedPage(props) {
     postApi
       .addPost({
         postUserId: user.id,
-        postTeamId: grAddPost,
+        postTeamId: teamId ? teamId : grAddPost,
         postContent: newPostContent,
       })
       .then((res) => {
         console.log(res.data);
         setAddPostDone(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     setShowCreatePost(false);
   };
@@ -186,15 +188,15 @@ function NewsFeedPage(props) {
           style={
             showFilter
               ? {
-                  borderBottomLeftRadius: "0",
-                  borderBottomRightRadius: "0",
-                  borderBottom: "none",
-                }
+                borderBottomLeftRadius: "0",
+                borderBottomRightRadius: "0",
+                borderBottom: "none",
+              }
               : {
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  borderBottom: "1px solid #e6ebf1",
-                }
+                borderBottomLeftRadius: "10px",
+                borderBottomRightRadius: "10px",
+                borderBottom: "1px solid #e6ebf1",
+              }
           }
         >
           <div className="title">
@@ -252,7 +254,7 @@ function NewsFeedPage(props) {
       <CModal show={showCreatePost} onClosed={onModalClose}>
         <CModalHeader closeButton></CModalHeader>
         <CModalBody>
-          <GroupFilter clearSelect={clearSelect} getGroupPost={getGroupPost} />
+          {!teamId ? <GroupFilter clearSelect={clearSelect} getGroupPost={getGroupPost} /> : null}
           <TextareaAutosize
             className="input-post"
             minRows={1}
