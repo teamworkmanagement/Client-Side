@@ -7,6 +7,9 @@ import ChatList from "./Components/ChatList/ChatList";
 import MessageList from "./Components/MessageList/MessageList";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllGroupChatForUser, setLoadDone } from "./chatSlice";
+import { v4 as uuidv4 } from "uuid";
+import { myBucket } from "src/utils/aws/config";
+import firebaseConfig from "src/utils/firebase/firebaseConfig";
 
 ChatPage.propTypes = {};
 
@@ -24,6 +27,8 @@ function ChatPage(props) {
   const [reachBot, setReachBot] = useState(true);
   const scrollRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const imgPickerRef = useRef(null);
+  const filePickerRef = useRef(null);
 
   useEffect(() => {
     dispatch(getAllGroupChatForUser(userId));
@@ -64,6 +69,23 @@ function ChatPage(props) {
     }
   };
 
+  const sendMessage = () => {
+    if (msg === "") return;
+
+    const chatMessage = {
+      userName: user.fullName,
+      message: msg,
+      userId: user.id,
+      groupId: currentGroup,
+      timeSend: Date.now(),
+    };
+    setSend({
+      mesObj: chatMessage,
+    });
+    setMsg("");
+  }
+
+
   const scrollToBottom = () => {
     //messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     scrollRef.current?.scrollTo(0, 10000);
@@ -77,6 +99,72 @@ function ChatPage(props) {
     //     scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
     // }
   }, [props.tabActiveTeam]);
+
+
+  const onPickFile = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size / 1024 / 1024 >= 30) {
+        return;
+      }
+
+      const folder = uuidv4();
+      const params = {
+        Body: file,
+        Bucket: "teamappstorage",
+        Key: `${folder}/${file.name}`,
+      };
+
+      myBucket
+        .putObject(params)
+        .on("httpUploadProgress", (evt) => {
+          let pro = Math.round((evt.loaded / evt.total) * 100);
+          if (pro >= 100) {
+            const chatMessage = {
+              userName: user.fullName,
+              message: `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
+              userId: user.id,
+              groupId: currentGroup,
+              timeSend: Date.now(),
+              messageType: 'file',
+            };
+
+            setSend({
+              mesObj: chatMessage,
+            });
+          }
+        })
+        .send((err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+    }
+  }
+
+  const onPickImage = (e) => {
+    const file = e.target.files[0];
+    const storageRef = firebaseConfig.storage().ref();
+    const fileRef = storageRef.child(`${uuidv4()}/${file.name}`);
+    fileRef.put(file).then((data) => {
+      console.log("Uploaded a file");
+      data.ref.getDownloadURL().then(url => {
+        console.log(url);
+        const chatMessage = {
+          userName: user.fullName,
+          message: url,
+          userId: user.id,
+          groupId: currentGroup,
+          timeSend: Date.now(),
+          messageType: 'image',
+        };
+
+        setSend({
+          mesObj: chatMessage,
+        });
+      });
+    });
+  }
 
   return (
     <div className="chat-page-container">
@@ -131,10 +219,23 @@ function ChatPage(props) {
                   type="text"
                 />
                 <div className="input-actions-group">
-                  <CIcon name="cil-paperclip" />
-                  <CIcon name="cil-image-plus" />
+                  <CIcon name="cil-paperclip" onClick={() => { filePickerRef.current.click() }} />
+                  <input
+                    onChange={onPickFile}
+                    ref={filePickerRef}
+                    type="file"
+                    style={{ display: "none" }}
+                  />
+                  <CIcon name="cil-image-plus" onClick={() => { imgPickerRef.current.click() }} />
+                  <input
+                    accept="image/*"
+                    onChange={onPickImage}
+                    ref={imgPickerRef}
+                    type="file"
+                    style={{ display: "none" }}
+                  />
                   <div className="send-button">
-                    <CIcon name="cil-send" />
+                    <CIcon name="cil-send" onClick={sendMessage} />
                   </div>
                 </div>
               </div>

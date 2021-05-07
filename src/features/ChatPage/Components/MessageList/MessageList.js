@@ -8,6 +8,7 @@ import messageApi from "src/api/messageApi";
 import { setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
 import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
+import Message from "./Message";
 
 MessageList.propTypes = {};
 
@@ -210,6 +211,7 @@ function MessageList(props) {
           isMine: mes.messageUserId === userId ? true : false,
           time: mes.messageCreatedAt,
           isLabel: false,
+          messageType: mes.messageType,
         };
       });
       //Thêm label cách cho list mess
@@ -391,6 +393,7 @@ function MessageList(props) {
       isMine: false,
       time: newMessage.timeSend,
       isLabel: false,
+      messageType: newMessage.messageType,
     };
 
     const messageObj = { ...newMessage };
@@ -451,6 +454,7 @@ function MessageList(props) {
           isMine: true,
           time: props.sendMes.mesObj.timeSend,
           isLabel: false,
+          messageType: props.sendMes.mesObj.messageType,
         };
 
         dispatch(setReceiveMes(props.sendMes.mesObj));
@@ -484,43 +488,15 @@ function MessageList(props) {
           scrollToBottom();
         }, 1);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [props.sendMes]);
 
   return (
     <div>
       {listMes.map((item, index) => {
-        return item.isLabel ? (
-          <div className="message-label">{item.message}</div>
-        ) : (
-          <div
-            key={index}
-            animationDelay={index + 2}
-            className={`message-item-container ${
-              item.class ? item.class : ""
-            } ${item.isMine ? "mine" : ""} `}
-          >
-            <img
-              className="avatar"
-              alt=""
-              src="http://emilus.themenate.net/img/avatars/thumb-2.jpg"
-            />
-
-            <div className="message-content">
-              <CTooltip
-                className="my-tooltip"
-                content={moment(item.time).format("DD/MM/YYYY hh:mma")}
-                placement={item.isMine ? "left" : "right"}
-              >
-                <div className="message-text">{item.message}</div>
-              </CTooltip>
-              <div className="message-time">
-                {moment(item.time).format("DD/MM/YYYY hh:mma")}
-              </div>
-            </div>
-          </div>
-        );
-      })}
+        return <Message item={item} key={item.messageId} index={index} />
+      })
+      }
       <div ref={messagesEndRef} />
     </div>
   );

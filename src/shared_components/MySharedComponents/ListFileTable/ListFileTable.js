@@ -1,29 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
-import "./ListFileTable.scss";
 import {
-  CBadge,
-  CButton,
-  CCardBody,
-  CCollapse,
   CDataTable,
-  CPagination,
-  CProgress,
+  CPagination
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import reactDom from "react-dom";
-import { v4 as uuidv4 } from "uuid";
-import { myBucket } from "src/utils/aws/config";
-import fileApi from "src/api/fileApi";
-import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
-import UploadItem from "./ProgressBottom/UploadItem";
+import { setTimeout } from "core-js";
 import moment from "moment";
 import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
-import { Prompt, useHistory, useParams } from "react-router";
-import useExitPrompt from "../../../utils/customHook/useExitPrompt";
-import { setTimeout } from "core-js";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { Prompt, useHistory, useParams } from "react-router";
+import fileApi from "src/api/fileApi";
+import { myBucket } from "src/utils/aws/config";
+import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
+import { v4 as uuidv4 } from "uuid";
+import useExitPrompt from "../../../utils/customHook/useExitPrompt";
+import "./ListFileTable.scss";
+import UploadItem from "./ProgressBottom/UploadItem";
 
 moment.locale("vi");
 ListFileTable.propTypes = {};
