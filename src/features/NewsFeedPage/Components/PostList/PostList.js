@@ -94,7 +94,13 @@ function PostList(props) {
   }, [props.addPostDone]);
 
   useEffect(() => {
-    window.onscroll = function (ev) {
+    window.onscroll = function (e) {
+      const element = e.target;
+      // console.log(e.currentTarget);
+      // console.log(
+      //   element.scrollHeight - element.scrollTop + "-" + element.clientHeight
+      // );
+
       if (window.pageYOffset > 100) {
         setShowScroll(true);
       } else {
@@ -102,8 +108,8 @@ function PostList(props) {
       }
 
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        console.log("vl");
         dispatch(setCurrentPostPage());
-        console.log("k");
       }
     };
   }, []);
@@ -116,11 +122,15 @@ function PostList(props) {
   };
 
   const renderListPost = listPosts.map((item) => {
-    return <Post post={item} key={item.postId} />;
+    return <Post isInTeam={props.isInTeam} post={item} key={item.postId} />;
   });
 
+  const onScroll = (e) => {
+    const element = e.target;
+  };
+
   return (
-    <div className="post-list">
+    <div className="post-list" onscroll={onScroll}>
       {listPosts.length === 0 && !isLoading ? (
         <div className="nodata-image">
           <CIcon name="cil-newspaper" />

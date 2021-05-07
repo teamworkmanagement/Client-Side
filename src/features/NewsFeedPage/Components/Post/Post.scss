@@ -31,6 +31,7 @@
     padding-bottom: 1rem;
     border: 1px solid #e6ebf1;
     transition: all 0.3s;
+    width: fit-content;
     .post-header {
         display: flex;
         justify-content: space-between;
@@ -85,7 +86,8 @@
             &:hover {
                 background-color: rgba(0, 0, 0, 0.05);
             }
-            .c-icon {
+            .c-icon.rotate-90 {
+                transform: rotate(90deg);
             }
         }
     }
@@ -168,6 +170,13 @@
             -webkit-transform: rotate(-90deg);
             transform: rotate(-90deg);
         }
+    }
+
+    @media (min-width: 1300px) {
+        width: 45rem;
+    }
+    @media (min-width: 900) and (max-width: 1199) {
+        width: fit-content;
     }
 }
 

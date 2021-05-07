@@ -24,6 +24,9 @@
 
 .post-list {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .nodata-image {
         margin-top: 2rem;
         display: flex;

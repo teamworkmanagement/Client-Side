@@ -114,16 +114,17 @@ function Post(props) {
               <strong>
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
-              đã đăng trong nhóm <strong>{post.teamName}</strong>
+              {!props.isInTeam && `đã đăng trong nhóm `}
+              {!props.isInTeam && <strong>{post.teamName}</strong>}
             </div>
             <div className="post-date">
-              {moment(post.postCreatedAt).format("l")}
+              {moment(post.postCreatedAt).format("hh:mm, DD/MM/YYYY")}
               <CIcon name="cil-clock" />
             </div>
           </div>
         </div>
         <div className="post-actions">
-          <CIcon name="cil-options" />
+          <CIcon className="rotate-90" name="cil-options" />
         </div>
       </div>
       <div className="post-content">{post.postContent}</div>
