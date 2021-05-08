@@ -66,16 +66,33 @@ function GanttChart(props) {
       // console.log(moment(task.taskStartDate).format("YYYY-MM-DD"));
       // console.log();
       // console.log("======");
-      ganttTasks.push({
-        id: task.taskId,
-        text: task.taskName,
-        start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
-        owner: "no one",
-        duration: calculateDaysDistance(task.taskDeadline, task.taskStartDate),
-        progress: task.taskCompletedPercent / 100,
-        filesCount: task.filesCount,
-        commentsCount: task.commentsCount,
-      });
+
+      if (task.taskThemeColor) {
+        ganttTasks.push({
+          id: task.taskId,
+          text: task.taskName,
+          start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
+          end_date: moment(task.taskDeadline).format("YYYY-MM-DD"),
+          owner: "no one",
+          progress: task.taskCompletedPercent / 100,
+          filesCount: task.filesCount,
+          commentsCount: task.commentsCount,
+          color: "white",
+          progressColor: task.taskThemeColor,
+          textColor: "#3c4b64",
+        });
+      } else {
+        ganttTasks.push({
+          id: task.taskId,
+          text: task.taskName,
+          start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
+          end_date: moment(task.taskDeadline).format("YYYY-MM-DD"),
+          owner: "no one",
+          progress: task.taskCompletedPercent / 100,
+          filesCount: task.filesCount,
+          commentsCount: task.commentsCount,
+        });
+      }
     }
     return ganttTasks;
   }
@@ -122,6 +139,18 @@ function GanttChart(props) {
         return "weekend";
       }
     };
+    gantt.templates.task_row_class = function (start, end, task) {
+      return "#EBF1FE";
+    };
+    gantt.showLightbox = function (id) {
+      var task = gantt.getTask(id);
+      openEditPoup(id, task);
+      setIsShowEditPopup(true);
+    };
+
+    gantt.hideLightbox = function () {
+      setIsShowEditPopup(false);
+    };
 
     gantt.init(input.current);
 
@@ -144,18 +173,37 @@ function GanttChart(props) {
     });
   };
 
-  gantt.showLightbox = function (id) {
-    var task = gantt.getTask(id);
-    openEditPoup(id, task);
-    setIsShowEditPopup(true);
-  };
-
-  gantt.hideLightbox = function () {
-    setIsShowEditPopup(false);
-  };
-
   function closeForm() {
     gantt.hideLightbox();
+  }
+
+  gantt.attachEvent("onAfterTaskUpdate", function (id, newTaskData) {
+    //lấy data của newtaskdata => update task cũ ở đây
+    console.log(newTaskData);
+  });
+
+  function updateGanttTask(task) {
+    //     id: task.taskId,
+    //     text: task.taskName,
+    //     start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
+    //     end_date: moment(task.taskDeadline).format("YYYY-MM-DD"),
+    //     owner: "no one",
+    //     progress: task.taskCompletedPercent / 100,
+    //     filesCount: task.filesCount,
+    //     commentsCount: task.commentsCount,
+
+    //changes task's data
+    console.log(moment(task.taskStartDate).format("DD-MM-YYYY"));
+
+    debugger;
+    gantt.getTask(task.taskId).text = task.taskName;
+    gantt.getTask(task.taskId).start_date = new Date(task.taskStartDate);
+    gantt.getTask(task.taskId).end_date = new Date(task.taskDeadline);
+    gantt.getTask(task.taskId).progress = task.taskCompletedPercent / 100;
+    if (task.taskThemeColor) {
+      gantt.getTask(task.taskId).progressColor = task.taskThemeColor;
+    }
+    gantt.updateTask(task.taskId); //renders the updated task
   }
 
   return (
@@ -165,16 +213,8 @@ function GanttChart(props) {
         closePopup={closeForm}
         isShowEditPopup={isShowEditPopup}
         data={modalTask}
+        updateGanttTask={updateGanttTask}
       />
-      {/* <CModal
-        show={isShowEditPopup}
-        onClose={closeForm}
-        size="lg"
-        style={{ zIndex: 1000 }}
-      >
-        <CModalHeader closeButton></CModalHeader>
-        <CModalBody>ok</CModalBody>
-      </CModal> */}
     </div>
   );
 }

@@ -74,6 +74,7 @@
                 .icon-up-down {
                     width: 0.8rem;
                     height: 0.8rem;
+                    transition: all 1.5s;
                 }
             }
             .advanced-collapse {
@@ -140,6 +141,7 @@
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
+                    margin-bottom: 1.5rem;
                     .label {
                         display: flex;
                         //width: 100%;
@@ -162,6 +164,9 @@
                         border-radius: 50px;
                         margin-top: 0.4rem;
                     }
+                    &.hidden-group {
+                        visibility: hidden;
+                    }
                 }
                 .due-group {
                     .due-label {
@@ -176,8 +181,20 @@
                         border-color: #d8dbe0;
                     }
                 }
+                .start-group {
+                    .start-label {
+                    }
+                    input {
+                        margin-top: 0.4rem;
+                        background-color: transparent;
+                        border: none;
+                        width: fit-content;
+                        border: 1px solid #e6ebf1;
+                        border-radius: 0.625rem;
+                        border-color: #d8dbe0;
+                    }
+                }
                 .theme-group {
-                    margin-top: 1rem;
                     .theme-label {
                     }
                     .theme-color {
@@ -235,7 +252,6 @@
                 }
 
                 .status-group {
-                    margin-top: 1rem;
                     .status-infor {
                         margin-top: 0.4rem;
                         .dropdown-toggle.btn {
@@ -298,7 +314,6 @@
                     }
                 }
                 .progress-group {
-                    margin-top: 1rem;
                     .progress {
                         height: 0.5rem;
                         width: 100%;
@@ -571,7 +586,52 @@
             }
         }
         .form-actions {
-            margin-top: 4rem;
+            margin-top: 0rem;
+
+            .tippy-box {
+                box-shadow: rgb(0 0 0 / 16%) 0px 1px 2px -2px, rgb(0 0 0 / 12%) 0px 3px 6px 0px,
+                    rgb(0 0 0 / 9%) 0px 5px 12px 4px;
+                border-radius: 0.625rem;
+                .tippy-content {
+                    width: max-content;
+                    .popover-header {
+                        border-top-left-radius: 0.625rem;
+                        border-top-right-radius: 0.625rem;
+                    }
+                    .popover-body {
+                        font-size: 0.875rem;
+                        z-index: 10000;
+                        .list-item {
+                            display: flex;
+                            margin-bottom: 0.5rem;
+                            align-items: center;
+                            background-color: white;
+                            border-radius: 0.5rem;
+                            padding: 0.5rem;
+                            cursor: pointer;
+                            z-index: 10001;
+                            transition: all 0.3s;
+                            .c-icon {
+                                margin-right: 0.3rem;
+                                visibility: hidden;
+                            }
+                            &.active {
+                                background-color: #eaecf0;
+                                .c-icon {
+                                    visibility: visible;
+                                }
+                            }
+                            &:hover {
+                                background-color: rgba(#eaecf0, 0.8);
+                                .c-icon {
+                                    visibility: visible;
+                                    color: rgba(#3c4b64, 0.8);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             .action-item {
                 display: flex;
                 background-color: #eaecf0;
@@ -639,7 +699,6 @@
 .list-attachments::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
-
 
 .load-more-comment {
     //margin: 0rem 1.25rem 0rem 1.25rem;
