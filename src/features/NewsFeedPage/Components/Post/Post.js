@@ -10,6 +10,9 @@ import commentApi from "src/api/commentApi";
 import classNames from "classnames";
 import postApi from "src/api/postApi";
 import { useSelector } from "react-redux";
+import PostEditor from "../PostEditor/PostEditor";
+import CustomInput from "../CustomInput/CustomInput";
+import { convertToRaw } from "draft-js";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -20,6 +23,7 @@ function Post(props) {
   const [post, setPost] = useState({ ...props.post });
   const [commentContent, setCommentContent] = useState("");
   const user = useSelector((state) => state.auth.currentUser);
+  const [resetEditor, setResetEditor] = useState(0);
 
   useEffect(() => {
     async function getComments() {
@@ -46,13 +50,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-          .deleteReactPost({ params })
-          .then((res) => {})
-          .catch((err) => {})
+        .deleteReactPost({ params })
+        .then((res) => { })
+        .catch((err) => { })
       : postApi
-          .reactPost(params)
-          .then((res) => {})
-          .catch((err) => {});
+        .reactPost(params)
+        .then((res) => { })
+        .catch((err) => { });
 
     setPost({
       ...post,
@@ -94,11 +98,69 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
   };
+
+
+  const saveContent = (editorState) => {
+    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+    let value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('<br>');
+
+
+    //tags
+    const obj = convertToRaw(editorState.getCurrentContent());
+
+    const mentions = [];
+    const entityMap = obj.entityMap;
+
+    for (const property in entityMap) {
+      if (entityMap[property].type === 'mention')
+        mentions.push(entityMap[property].data.mention);
+    }
+
+
+
+    //add tag to
+    mentions.forEach(m => {
+      value = value.replace(m.name, '<strong className="tag-user">@' + m.name + '</strong>');
+    });
+
+
+    commentApi
+      .addComment({
+        commentPostId: post.postId,
+        commentUserId: user.id,
+        commentContent: value,
+        commentCreatedAt: new Date().toISOString(),
+        commentIsDeleted: false,
+      })
+      .then((res) => {
+        setPost({
+          ...post,
+          postCommentCount: post.postCommentCount + 1,
+        });
+
+        const newArrr = [
+          {
+            commentId: res.data.commentId,
+            commentPostId: res.data.commentPostId,
+            commentUserId: res.data.commentUserId,
+            commentContent: res.data.commentContent,
+            userName: user.fullName,
+            commentCreatedAt: res.data.commentCreatedAt,
+          },
+        ].concat([...cmtLists]);
+
+        setComments(newArrr);
+      })
+      .catch((err) => { });
+
+    console.log(value);
+  }
+
   return (
     <div className="post-container">
       <div className="post-header">
@@ -126,7 +188,9 @@ function Post(props) {
           <CIcon name="cil-options" />
         </div>
       </div>
-      <div className="post-content">{post.postContent}</div>
+      <div className="post-content" dangerouslySetInnerHTML={{ __html: post.postContent }}>
+
+      </div>
       <div className="interaction-bar">
         <CIcon
           name="cil-heart"
@@ -142,13 +206,15 @@ function Post(props) {
           <img alt="" src="../avatars/6.jpg" />
         </div>
         <div className="input-container">
-          <CInput
+          {/*<CInput
             type="text"
             placeholder="Viết bình luận..."
             value={commentContent}
-            onKeyDown={onAddComment}
+            onKeyDown={() => { }}
             onChange={(e) => setCommentContent(e.target.value)}
-          />
+          />*/}
+
+          <CustomInput saveContent={saveContent} teamId={post.postTeamId} />
         </div>
       </div>
       <div className="comment-list">

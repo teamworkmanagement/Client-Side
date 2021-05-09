@@ -91,6 +91,14 @@
     }
     .post-content {
         margin-bottom: 1rem;
+        
+            strong {
+                color: #03c2fc83;
+                &:hover{
+                    cursor: pointer;
+                }
+            }
+        
     }
     .interaction-bar {
         display: flex;

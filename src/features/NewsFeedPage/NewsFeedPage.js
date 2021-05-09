@@ -23,6 +23,8 @@ import Loading from "./Components/Post/Components/Loading/Loading";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 import postApi from "src/api/postApi";
 import { useParams } from "react-router";
+import PostEditor from "./Components/PostEditor/PostEditor";
+import { convertToRaw } from "draft-js";
 
 NewsFeedPage.propTypes = {};
 
@@ -43,6 +45,7 @@ function NewsFeedPage(props) {
 
   const [grAddPost, setGrAddPost] = useState(null);
   const [newPostContent, setNewPostContent] = useState("");
+  const [tags, setTags] = useState([]);
 
   const { teamId } = useParams();
 
@@ -142,11 +145,22 @@ function NewsFeedPage(props) {
       return;
     }
 
+    var cloneContent = (' ' + newPostContent).slice(1);
+
+    //cloneContent += "dsghfvdsg";
+    tags.forEach(m => {
+      cloneContent = cloneContent.replace(m.name, '<strong className="tag-user">@' + m.name + '</strong>');
+    });
+
+    console.log(cloneContent);
+
+    //cloneContent = '<p>' + cloneContent + '</p>';
+
     postApi
       .addPost({
         postUserId: user.id,
         postTeamId: teamId ? teamId : grAddPost,
-        postContent: newPostContent,
+        postContent: cloneContent,
       })
       .then((res) => {
         console.log(res.data);
@@ -159,6 +173,7 @@ function NewsFeedPage(props) {
 
   const onTextAreaChange = (e) => {
     setNewPostContent(e.target.value);
+    console.log(e.target.value);
   };
 
   const onModalClose = () => {
@@ -166,6 +181,30 @@ function NewsFeedPage(props) {
     setNewPostContent("");
     setShowCreatePost(false);
   };
+
+
+  const onTextChange = (editorState) => {
+    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+    const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('<br>');
+    //console.log(convertToRaw(editorState.getCurrentContent()));
+    const obj = convertToRaw(editorState.getCurrentContent());
+
+
+    //console.log(obj);
+    //console.log('value :', value);
+    //console.log('blocks :', blocks);
+
+    const mentions = [];
+    const entityMap = obj.entityMap;
+
+    for (const property in entityMap) {
+      if (entityMap[property].type === 'mention')
+        mentions.push(entityMap[property].data.mention);
+    }
+
+    setNewPostContent(value);
+    setTags(mentions);
+  }
 
   return (
     <div className="newsfeed-page-container">
@@ -254,15 +293,17 @@ function NewsFeedPage(props) {
       <CModal show={showCreatePost} onClosed={onModalClose}>
         <CModalHeader closeButton></CModalHeader>
         <CModalBody>
-          {!teamId ? <GroupFilter clearSelect={clearSelect} getGroupPost={getGroupPost} /> : null}
-          <TextareaAutosize
+          {!teamId ? <GroupFilter className="mb-3" clearSelect={clearSelect} getGroupPost={getGroupPost} /> : null}
+          {/*<TextareaAutosize
             className="input-post"
             minRows={1}
             maxRows={20}
             placeholder="Viết bản tin mới..."
             onChange={onTextAreaChange}
             value={newPostContent}
-          />
+          />*/}
+
+          <PostEditor onTextChange={onTextChange} />
         </CModalBody>
         <CModalFooter>
           <CButton

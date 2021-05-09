@@ -8,7 +8,7 @@ moment.locale('vi');
 
 CommentItem.propTypes = {};
 
-function CommentItem({comment}) {
+function CommentItem({ comment }) {
   return (
     <div className="comment-item-container">
       <div className="commenter-avatar">
@@ -19,8 +19,8 @@ function CommentItem({comment}) {
           <div className="commenter-name">{comment.userName}</div>
           <div className="comment-date">{moment(comment.commentCreatedAt).format('l')}</div>
         </div>
-        <div className="comment-content">
-          {comment.commentContent}
+        <div className="comment-content" dangerouslySetInnerHTML={{ __html: comment.commentContent }}>
+
         </div>
       </div>
     </div>
