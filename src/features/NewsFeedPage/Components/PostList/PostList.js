@@ -60,31 +60,31 @@ function PostList(props) {
     }
 
     getPosts();
-  }, [pageNumber, props.filter]);
+  }, [pageNumber, props.filter, teamId]);
 
   //o trong team
-  useEffect(() => {
-    if (teamId) {
-      async function getPosts() {
-        try {
-          setIsLoading(true);
-          const params = {
-            ...props.filter,
-            SkipItems: 0,
-          };
-
-          params.teamId = teamId;
-          const outPut = await postApi.getPaginationTeam({ params });
-          setListPosts(outPut.data.items);
-        } catch (err) {
-          console.log(err);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      getPosts();
-    }
-  }, [teamId]);
+  /* useEffect(() => {
+     if (teamId) {
+       async function getPosts() {
+         try {
+           setIsLoading(true);
+           const params = {
+             ...props.filter,
+             SkipItems: 0,
+           };
+ 
+           params.teamId = teamId;
+           const outPut = await postApi.getPaginationTeam({ params });
+           setListPosts(outPut.data.items);
+         } catch (err) {
+           console.log(err);
+         } finally {
+           setIsLoading(false);
+         }
+       }
+       getPosts();
+     }
+   }, [teamId]);*/
 
   useEffect(() => {
     if (props.addPostDone === null) return;
@@ -117,7 +117,8 @@ function PostList(props) {
   const scrollTop = () => {
     //window.scrollTo(0, 0);
     setTimeout(() => {
-      window.scrollTo(0, 0);
+      //window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 2);
   };
 

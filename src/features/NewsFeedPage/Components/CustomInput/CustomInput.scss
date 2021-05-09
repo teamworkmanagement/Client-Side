@@ -1,0 +1,33 @@
+.editor {
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    cursor: text;
+    padding: 16px;
+    border-radius: 2px;
+    margin-bottom: 2em;
+    box-shadow: inset 0px 1px 8px -3px #ababab;
+    background: #fefefe;
+    max-height: 30px;
+}
+
+.editor :global(.public-DraftEditor-content) {
+    min-height: 140px;
+}
+
+div.DraftEditor-root {
+    margin: auto;
+    border: 1px solid  rgb(186, 186, 193);;
+    border-radius: 6px;
+}
+
+div.public-DraftEditorPlaceholder-root {
+}
+
+div.DraftEditor-editorContainer {
+}
+
+div.public-DraftEditorPlaceholder-root {
+    margin: auto;
+    padding-top: 3px;
+    padding-left: 3px;    
+}

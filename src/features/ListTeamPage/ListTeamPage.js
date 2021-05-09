@@ -23,12 +23,16 @@ import { useHistory } from "react-router";
 import { getTeamByUserId } from "./teamSlice";
 import CreateTeamModal from "./CreateTeam/CreateTeamModal";
 import TeamLoading from "../TeamPage/TeamLoading/TeamLoading";
+import JoinTeamModal from "./JoinTeam/JoinTeamModal";
 
 ListTeamPage.propTypes = {};
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
   const [showAddTeam, setShowAddTeam] = useState(false);
+  const [showJoinTeam, setShowJoinTeam] = useState(false);
+
+
   const [isLoading, setIsLoading] = useState(false);
 
   const onCloseAddTeam = () => {
@@ -38,6 +42,14 @@ function ListTeamPage(props) {
   const onShowAddTeam = () => {
     setShowAddTeam(true);
   };
+
+  const onCloseJoinTeam = () => {
+    setShowJoinTeam(false);
+  }
+
+  const onShowJoinTeam = () => {
+    setShowJoinTeam(true);
+  }
 
   function switchShowMode(index) {
     //debugger;
@@ -221,6 +233,10 @@ function ListTeamPage(props) {
   return (
     <div className="list-team-container">
       <div className="header-tool-bar">
+        <div onClick={onShowJoinTeam} className="create-team-btn">
+          <CIcon name="cil-plus" />
+          Tham gia nhóm
+        </div>
         <div onClick={onShowAddTeam} className="create-team-btn">
           <CIcon name="cil-plus" />
           Tạo nhóm mới
@@ -421,6 +437,7 @@ function ListTeamPage(props) {
 
       <TeamLoading isLoading={isLoading} />
       <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
+      <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
     </div>
   );
 }
