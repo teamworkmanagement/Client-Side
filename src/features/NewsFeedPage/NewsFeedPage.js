@@ -209,7 +209,11 @@ function NewsFeedPage(props) {
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
-        <PostList addPostDone={addPostDone} filter={filter} />
+        <PostList
+          addPostDone={addPostDone}
+          isInTeam={props.isInTeam}
+          filter={filter}
+        />
       </div>
       <div className="side-panel-container">
         <div
@@ -293,8 +297,17 @@ function NewsFeedPage(props) {
       <CModal show={showCreatePost} onClosed={onModalClose}>
         <CModalHeader closeButton></CModalHeader>
         <CModalBody>
+
           {!teamId ? <GroupFilter className="mb-3" clearSelect={clearSelect} getGroupPost={getGroupPost} /> : null}
           {/*<TextareaAutosize
+
+          {!props.isInTeam && (
+            <GroupFilter
+              clearSelect={clearSelect}
+              getGroupPost={getGroupPost}
+            />
+          )}
+          <TextareaAutosize
             className="input-post"
             minRows={1}
             maxRows={20}

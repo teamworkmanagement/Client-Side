@@ -16,6 +16,7 @@ import {
   CModal,
   CModalBody,
   CModalHeader,
+  CPopover,
   CProgress,
   CRow,
   CTextarea,
@@ -64,6 +65,24 @@ function TaskEditModal(props) {
 
   const curUser = useSelector((state) => state.auth.currentUser);
   const [commentContent, setCommentContent] = useState("");
+  const kanbanLists = useSelector(
+    (state) => state.kanban.kanbanBoard.kanbanLists
+  );
+  const [kanbanLocal, setKanbanLocal] = useState(
+    refactorKanbanListWithActive()
+  );
+
+  function refactorKanbanListWithActive() {
+    var cloneLists = [...kanbanLists];
+    for (let i = 0; i < cloneLists.length; i++) {
+      cloneLists[i] = {
+        ...cloneLists[i],
+        active: false,
+      };
+    }
+    cloneLists[0].active = true;
+    return cloneLists;
+  }
 
   const addToast = () => {
     setToasts([
@@ -190,6 +209,7 @@ function TaskEditModal(props) {
       taskId: task.taskId,
       image: task.taskImageUrl,
       taskName: task.taskName,
+      taskStartDate: task.taskStartDate,
       taskDeadline: task.taskDeadline,
       taskDescription: task.taskDescription,
       taskStatus: task.taskStatus,
@@ -202,6 +222,9 @@ function TaskEditModal(props) {
       taskImageUrl: task.taskImageUrl,
     };
     dispatch(updateEditTask(taskMapObj));
+    if (props.updateGanttTask) {
+      props.updateGanttTask(task);
+    }
   }, [triggerUpdateTask]);
 
   const assignedUserImage = getAssignedUserImage();
@@ -262,6 +285,7 @@ function TaskEditModal(props) {
         taskThemeColor: task.taskThemeColor,
         taskStatus: task.taskStatus,
         taskCompletedPercent: task.taskCompletedPercent,
+        taskStartDate: task.taskStartDate,
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
@@ -287,6 +311,7 @@ function TaskEditModal(props) {
         taskThemeColor: task.taskThemeColor,
         taskStatus: task.taskStatus,
         taskCompletedPercent: task.taskCompletedPercent,
+        taskStartDate: task.taskStartDate,
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
@@ -301,7 +326,6 @@ function TaskEditModal(props) {
 
   function onChangeDeadline(e) {
     const dateParts = e.target.value.split("-");
-    console.log(dateParts[1]);
     const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     const newTask = {
       ...task,
@@ -311,7 +335,33 @@ function TaskEditModal(props) {
     taskApi
       .updateTask({
         taskId: task.taskId,
+        taskStartDate: task.taskStartDate,
         taskDeadline: newDate,
+        taskThemeColor: task.taskThemeColor,
+        taskStatus: task.taskStatus,
+        taskCompletedPercent: task.taskCompletedPercent,
+        taskImageUrl: task.taskImageUrl,
+      })
+      .then((res) => {})
+      .catch((err) => {});
+    setTask(newTask);
+    dispatchUpdateTask();
+
+    //dispatch(updateTask(newTask));
+  }
+  function onChangeStartDate(e) {
+    const dateParts = e.target.value.split("-");
+    const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    const newTask = {
+      ...task,
+      taskStartDate: newDate,
+    };
+
+    taskApi
+      .updateTask({
+        taskId: task.taskId,
+        taskStartDate: newDate,
+        taskDeadline: task.taskDeadline,
         taskThemeColor: task.taskThemeColor,
         taskStatus: task.taskStatus,
         taskCompletedPercent: task.taskCompletedPercent,
@@ -366,6 +416,7 @@ function TaskEditModal(props) {
             taskThemeColor: task.taskThemeColor,
             taskStatus: "todo",
             taskCompletedPercent: task.taskCompletedPercent,
+            taskStartDate: task.taskStartDate,
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
@@ -389,6 +440,7 @@ function TaskEditModal(props) {
             taskThemeColor: task.taskThemeColor,
             taskStatus: "doing",
             taskCompletedPercent: task.taskCompletedPercent,
+            taskStartDate: task.taskStartDate,
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
@@ -411,6 +463,7 @@ function TaskEditModal(props) {
             taskThemeColor: task.taskThemeColor,
             taskStatus: "done",
             taskCompletedPercent: task.taskCompletedPercent,
+            taskStartDate: task.taskStartDate,
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
@@ -450,6 +503,7 @@ function TaskEditModal(props) {
         taskThemeColor: colore.hex,
         taskStatus: task.taskStatus,
         taskCompletedPercent: task.taskCompletedPercent,
+        taskStartDate: task.taskStartDate,
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
@@ -482,6 +536,7 @@ function TaskEditModal(props) {
         taskThemeColor: task.taskThemeColor,
         taskStatus: task.taskStatus,
         taskCompletedPercent: value,
+        taskStartDate: task.taskStartDate,
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
@@ -553,6 +608,7 @@ function TaskEditModal(props) {
             taskApi
               .updateTask({
                 taskId: task.taskId,
+                taskStartDate: task.taskStartDate,
                 taskDeadline: task.taskDeadline,
                 taskThemeColor: task.taskThemeColor,
                 taskStatus: task.taskStatus,
@@ -684,6 +740,35 @@ function TaskEditModal(props) {
     }
   };
 
+  function moveToList(listId) {
+    var cloneKanbanList = [...kanbanLocal];
+    for (let i = 0; i < cloneKanbanList.length; i++) {
+      cloneKanbanList[i].active = false;
+      if (cloneKanbanList[i].kanbanListId === listId) {
+        cloneKanbanList[i].active = true;
+      }
+    }
+    setKanbanLocal(cloneKanbanList);
+  }
+
+  function renderContent() {
+    return kanbanLocal.map((list) => {
+      return (
+        <div
+          className={`list-item ${list.active ? "active" : ""}`}
+          onClick={() => console.log("click")}
+        >
+          <CIcon name="cil-check-alt" />
+          <div onClick={() => console.log("click")}>{list.kanbanListTitle}</div>
+        </div>
+      );
+    });
+  }
+
+  function clickPopover(e) {
+    console.log(e.target);
+  }
+
   return (
     <div>
       <div>
@@ -791,7 +876,7 @@ function TaskEditModal(props) {
                     </div>
                     <CIcon
                       className="icon-up-down"
-                      name={showDetail ? "cil-caret-top" : "cil-caret-bottom"}
+                      name={showDetail ? "cil-caret-bottom" : "cil-caret-left"}
                     />
                   </div>
                   <CCollapse className="advanced-collapse" show={showDetail}>
@@ -805,6 +890,24 @@ function TaskEditModal(props) {
                             </div>
                             <div className="assigned-user-avatar">
                               <img src={task.userAvatar} alt="" />
+                            </div>
+                          </div>
+                          <div className="start-group item-group">
+                            <div className=" start-label label">
+                              <CIcon name="cil-clock" />
+                              Ngày bắt đầu
+                            </div>
+                            <div className="start-date">
+                              <CInput
+                                type="date"
+                                id="date-from"
+                                name="date-input"
+                                placeholder="date"
+                                value={moment(task.taskStartDate).format(
+                                  "YYYY-MM-DD"
+                                )}
+                                onChange={onChangeStartDate}
+                              />
                             </div>
                           </div>
                           <div className="theme-group item-group">
@@ -843,6 +946,15 @@ function TaskEditModal(props) {
                           </div>
                         </CCol>
                         <CCol className="col-6 my-col right">
+                          <div className="hidden-group assign-group item-group">
+                            <div className="assign-label label">
+                              <CIcon name="cil-user-follow" />
+                              Giao cho
+                            </div>
+                            <div className="assigned-user-avatar">
+                              <img src={task.userAvatar} alt="" />
+                            </div>
+                          </div>
                           <div className="due-group item-group">
                             <div className=" due-label label">
                               <CIcon name="cil-clock" />
@@ -1099,30 +1211,23 @@ function TaskEditModal(props) {
               </CCol>
               <CCol className="col-3">
                 <div className="form-actions">
-                  {/* <div className="action-item">
-                          <CIcon name="cil-clock" />
-                          <div className="action-name">Hạn hoàn thành</div>
-                        </div> */}
-                  {/* <div className="action-item">
-                          <CIcon name="cil-paperclip" />
-                          <div className="action-name">Tài liệu đính kèm</div>
-                        </div> */}
-                  <div className="action-item">
-                    <CIcon name="cil-share-boxed" />
-                    <div className="action-name">Chuyển đến...</div>
-                  </div>
-                  {/* <div className="action-item">
-                          <CIcon name="cil-chart-line" />
-                          <div className="action-name">Tiến độ</div>
-                        </div> */}
-                  {/* <div className="action-item">
-                          <CIcon name="cil-task" />
-                          <div className="action-name">Trạng thái</div>
-                        </div> */}
-                  {/* <div className="action-item">
-                          <CIcon name="cil-color-palette" />
-                          <div className="action-name">Màu chủ đề</div>
-                        </div> */}
+                  <CPopover
+                    header="Danh sách"
+                    className="lists-select-popover"
+                    placement={"left-start"}
+                    interactive={true}
+                    trigger="click"
+                    onClick={clickPopover}
+                    html="true"
+                    container="body"
+                    content={renderContent()}
+                  >
+                    <div className="action-item">
+                      <CIcon name="cil-share-boxed" />
+                      <div className="action-name">Chuyển đến...</div>
+                    </div>
+                  </CPopover>
+
                   <div className="action-item">
                     <CIcon name="cil-sort-numeric-up" />
                     <div className="action-name">Cho điểm</div>

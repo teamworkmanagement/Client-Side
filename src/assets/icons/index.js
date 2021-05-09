@@ -31,10 +31,12 @@ import {
   cilArrowBottom,
   cilCaretBottom,
   cilCaretTop,
+  cilCaretLeft,
   cilArrowCircleRight,
   cilAccountLogout,
   cilWindowMinimize,
   cilBolt,
+  cilCheckAlt,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -205,6 +207,8 @@ export const icons = Object.assign(
     cilAccountLogout,
     cilWindowMinimize,
     cilHealing,
+    cilCaretLeft,
+    cilCheckAlt,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

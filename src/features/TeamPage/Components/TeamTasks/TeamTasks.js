@@ -5,6 +5,7 @@ import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
 import { CButton, CButtonGroup, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import TaskList from "./Components/TaskList/TaskList";
+import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
 
 TeamTasks.propTypes = {};
 
@@ -67,6 +68,7 @@ function TeamTasks(props) {
 
       {showMode === 1 && <KanbanBoard />}
       {showMode === 2 && <TaskList />}
+      {showMode === 3 && <GanttChart />}
     </div>
   );
 }
