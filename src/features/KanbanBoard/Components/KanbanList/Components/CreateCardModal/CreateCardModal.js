@@ -23,11 +23,20 @@ function CreateCardModal(props) {
       props.setShowAddCard(false);
     }
   }
+
+
+  Date.prototype.addDays = function (days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+
   function onCreateCard() {
     if (props.setShowAddCard) {
       console.log(taskName, props.kblistId);
       if (!taskName) alert("Tên task rỗng");
 
+      var date = new Date();
       taskApi
         .addNewTask({
           taskName: taskName,
@@ -35,6 +44,9 @@ function CreateCardModal(props) {
           taskCompletedPercent: 0,
           taskBelongedId: props.kblistId,
           taskOrderInList: props.tasksCount,
+          taskStartDate: date,
+          taskStatus: 'todo',
+          taskDeadline: date.addDays(1),
         })
         .then((res) => {
           const newTask = {
@@ -43,7 +55,8 @@ function CreateCardModal(props) {
             taskId: res.data,
             taskImageUrl: null,
             taskName: taskName,
-            taskDeadline: null,
+            taskStartDate: date,
+            taskDeadline: date.addDays(1),
             taskDescription: null,
             taskStatus: "todo",
             commentsCount: 0,
@@ -56,7 +69,7 @@ function CreateCardModal(props) {
 
           dispatch(addNewTask(newTask));
         })
-        .catch((err) => {});
+        .catch((err) => { });
 
       setTaskName("");
       props.setShowAddCard(false);

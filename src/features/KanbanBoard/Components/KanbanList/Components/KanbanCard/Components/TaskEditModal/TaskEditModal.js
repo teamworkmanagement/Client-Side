@@ -40,8 +40,34 @@ import { myBucket } from "src/utils/aws/config";
 import { v4 as uuidv4 } from "uuid";
 import fileApi from "src/api/fileApi";
 import commentApi from "src/api/commentApi";
+import UserSelector from "./UserSelector/UserSelector";
+import Select, { components } from 'react-select';
+import axiosClient from "src/api/axiosClient";
 
 TaskEditModal.propTypes = {};
+
+
+const ValueOption = (props) => (
+  <components.SingleValue {...props}>
+    <div style={{ display: 'flex', marginTop: 'auto', marginBottom: 'auto' }}>
+      <img src={props.data.img} style={{ width: 30 }} alt="" />
+      <span style={{ marginTop: 'auto', marginBottom: 'auto' }}>{props.data.label}</span>
+    </div>
+  </components.SingleValue>
+);
+
+
+export const CustomOption = (props) => {
+  return (
+    <components.Option {...props}>
+      <div style={{ display: 'flex', marginTop: 'auto', marginBottom: 'auto', justifyContent: 'space-between' }}>
+        <img height={20} width={20} src={props.data.img} />
+        <label>{props.data.label}</label>
+      </div>
+    </components.Option>
+  );
+};
+
 
 function TaskEditModal(props) {
   const [toasts, setToasts] = useState([]);
@@ -72,6 +98,13 @@ function TaskEditModal(props) {
     refactorKanbanListWithActive()
   );
 
+
+  const [options, setOptions] = useState([]);
+  const [current, setCurrent] = useState(null);
+  const [isFocused, setFocus] = useState(false);
+  const user = useSelector(state => state.auth.currentUser);
+
+
   function refactorKanbanListWithActive() {
     var cloneLists = [...kanbanLists];
     for (let i = 0; i < cloneLists.length; i++) {
@@ -80,7 +113,7 @@ function TaskEditModal(props) {
         active: false,
       };
     }
-    cloneLists[0].active = true;
+    //cloneLists[0].active = true;
     return cloneLists;
   }
 
@@ -198,6 +231,70 @@ function TaskEditModal(props) {
     }
   }, [props.data]);
 
+
+  useEffect(() => {
+    if (props.data) {
+      axiosClient.get(`/post/search-user?userId=${user.id}`)
+        .then(res => {
+          const ops = res.data.map(x => {
+            return {
+              value: x.userId,
+              label: x.userFullname,
+              img: x.userImageUrl,
+            }
+          });
+
+          setOptions(ops);
+
+
+          const findObj = ops.find(x => x.value === props.data.userId);
+          if (findObj)
+            setCurrent(findObj);
+
+        }).catch(err => {
+
+        })
+    }
+
+  }, [props.data])
+
+  const onChange = (e) => {
+    setCurrent(e);
+  }
+
+  useEffect(() => {
+    console.log(current);
+    if (JSON.stringify(task) === JSON.stringify({}))
+      return;
+
+    const taskMapObj = {
+      kanbanListId: task.kanbanListId,
+      taskId: task.taskId,
+      image: task.taskImageUrl,
+      taskName: task.taskName,
+      taskStartDate: task.taskStartDate,
+      taskDeadline: task.taskDeadline,
+      taskDescription: task.taskDescription,
+      taskStatus: task.taskStatus,
+      commentsCount: task.commentsCount,
+      filesCount: task.filesCount,
+      userId: current ? current.value : null,
+      userAvatar: current ? current.img : null,
+      taskCompletedPercent: task.taskCompletedPercent,
+      taskThemeColor: task.taskThemeColor,
+      taskImageUrl: task.taskImageUrl,
+    };
+
+    taskApi.reAssignTask({
+      "currentUserId": current?.value,
+      "taskId": task.taskId,
+    }).then(res => {
+      dispatch(updateEditTask(taskMapObj));
+    }).catch(err => { });
+
+
+  }, [current])
+
   const dispatchUpdateTask = () => {
     setTriggerUpdateTask(triggerUpdateTask + 1);
   };
@@ -289,8 +386,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     //dispatch(updateTask(task));
 
@@ -315,8 +412,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     //dispatch(updateTask(task));
 
@@ -342,8 +439,8 @@ function TaskEditModal(props) {
         taskCompletedPercent: task.taskCompletedPercent,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
 
@@ -367,8 +464,8 @@ function TaskEditModal(props) {
         taskCompletedPercent: task.taskCompletedPercent,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
 
@@ -420,8 +517,8 @@ function TaskEditModal(props) {
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
-          .then((res) => {})
-          .catch((err) => {});
+          .then((res) => { })
+          .catch((err) => { });
 
         setTask(newTask);
         dispatchUpdateTask();
@@ -444,8 +541,8 @@ function TaskEditModal(props) {
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
-          .then((res) => {})
-          .catch((err) => {});
+          .then((res) => { })
+          .catch((err) => { });
         setTask(newTask);
         dispatchUpdateTask();
         //dispatch(updateTask(newTask));
@@ -467,8 +564,8 @@ function TaskEditModal(props) {
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
-          .then((res) => {})
-          .catch((err) => {});
+          .then((res) => { })
+          .catch((err) => { });
         setTask(newTask);
         dispatchUpdateTask();
         //dispatch(updateTask(newTask));
@@ -507,8 +604,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
     //dispatch(updateTask(newTask));
@@ -519,6 +616,20 @@ function TaskEditModal(props) {
       ...task,
       taskThemeColor: "",
     };
+
+    taskApi
+      .updateTask({
+        taskId: task.taskId,
+        taskThemeColor: null,
+        taskStatus: task.taskStatus,
+        taskCompletedPercent: task.taskCompletedPercent,
+        taskStartDate: task.taskStartDate,
+        taskDeadline: task.taskDeadline,
+        taskImageUrl: task.taskImageUrl,
+      })
+      .then((res) => { })
+      .catch((err) => { });
+
     changeColor("#FFF");
     setTask(newTask);
     dispatch(updateTask(newTask));
@@ -540,8 +651,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
     //dispatch(updateTask(newTask));
@@ -570,8 +681,8 @@ function TaskEditModal(props) {
         taskCompletedPercent: task.taskCompletedPercent,
         taskImageUrl: null,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     setTask({
       ...task,
@@ -584,6 +695,7 @@ function TaskEditModal(props) {
   const onPickImage = () => {
     imageRef.current.click();
   };
+
   const onImagePickChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -615,13 +727,13 @@ function TaskEditModal(props) {
                 taskCompletedPercent: task.taskCompletedPercent,
                 taskImageUrl: imageUrl,
               })
-              .then((res) => {})
-              .catch((err) => {});
+              .then((res) => { })
+              .catch((err) => { });
 
             dispatchUpdateTask();
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -658,7 +770,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -699,10 +811,10 @@ function TaskEditModal(props) {
                 setAttachments(attachmentsClone);
                 dispatchUpdateTask();
               })
-              .catch((err) => {});
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -722,6 +834,12 @@ function TaskEditModal(props) {
   };
 
   const onRemoveTask = () => {
+    const confirmBox = window.confirm(
+      "Bạn có chắc chắn muốn xóa task?"
+    )
+    if (confirmBox !== true) {
+      return;
+    }
     taskApi
       .removeTask(task.taskId)
       .then((res) => {
@@ -733,7 +851,7 @@ function TaskEditModal(props) {
           })
         );
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -766,8 +884,21 @@ function TaskEditModal(props) {
   }
 
   function clickPopover(e) {
-    console.log(e.target);
+    console.log(e);
   }
+
+  const onSelectedUser = (obj) => {
+    setTask({
+      ...task,
+      userId: obj?.value ? obj?.value : null,
+      userAvatar: obj?.img ? obj?.img : null,
+    });
+
+    //dispatchUpdateTask();
+  }
+
+
+  //selector region
 
   return (
     <div>
@@ -888,8 +1019,24 @@ function TaskEditModal(props) {
                               <CIcon name="cil-user-follow" />
                               Giao cho
                             </div>
-                            <div className="assigned-user-avatar">
+                            {/*<div className="assigned-user-avatar">
                               <img src={task.userAvatar} alt="" />
+                  </div>*/}
+
+                            {/*<UserSelector onSelectedUser={onSelectedUser} currentValue={task} />*/}
+                            <div style={{ width: '175%' }}>
+
+                              <Select
+                                value={isFocused ? null : current}
+                                onChange={onChange}
+                                options={options}
+                                placeholder='Nhập thành viên'
+                                components={{ Option: CustomOption, SingleValue: ValueOption }}
+                                onFocus={() => { setFocus(true); setCurrent(null) }}
+                                onBlur={() => setFocus(false)}
+                                blurInputOnSelect={true}
+                              />
+
                             </div>
                           </div>
                           <div className="start-group item-group">
@@ -1241,7 +1388,7 @@ function TaskEditModal(props) {
             </CRow>
           ) : (
             <div>
-              <CardLoading />
+              <CardLoading isLoading={true} />
             </div>
           )}
         </CModalBody>
