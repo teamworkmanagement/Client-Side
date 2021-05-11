@@ -145,11 +145,14 @@ function NewsFeedPage(props) {
       return;
     }
 
-    var cloneContent = (' ' + newPostContent).slice(1);
+    var cloneContent = (" " + newPostContent).slice(1);
 
     //cloneContent += "dsghfvdsg";
-    tags.forEach(m => {
-      cloneContent = cloneContent.replace(m.name, '<strong className="tag-user">@' + m.name + '</strong>');
+    tags.forEach((m) => {
+      cloneContent = cloneContent.replace(
+        m.name,
+        '<strong className="tag-user">@' + m.name + "</strong>"
+      );
     });
 
     console.log(cloneContent);
@@ -166,7 +169,7 @@ function NewsFeedPage(props) {
         console.log(res.data);
         setAddPostDone(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
 
     setShowCreatePost(false);
   };
@@ -182,13 +185,13 @@ function NewsFeedPage(props) {
     setShowCreatePost(false);
   };
 
-
   const onTextChange = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('<br>');
+    const value = blocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
     //console.log(convertToRaw(editorState.getCurrentContent()));
     const obj = convertToRaw(editorState.getCurrentContent());
-
 
     //console.log(obj);
     //console.log('value :', value);
@@ -198,13 +201,39 @@ function NewsFeedPage(props) {
     const entityMap = obj.entityMap;
 
     for (const property in entityMap) {
-      if (entityMap[property].type === 'mention')
+      if (entityMap[property].type === "mention")
         mentions.push(entityMap[property].data.mention);
     }
 
     setNewPostContent(value);
     setTags(mentions);
-  }
+  };
+
+  const listImages = [
+    {
+      link:
+        "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
+    },
+    {
+      link:
+        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+    },
+    {
+      link: "https://ohay.vn/blog/wp-content/uploads/2020/06/ba-lo-laza11.jpg",
+    },
+    {
+      link:
+        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+    },
+    {
+      link:
+        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+    },
+    {
+      link:
+        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+    },
+  ];
 
   return (
     <div className="newsfeed-page-container">
@@ -231,15 +260,15 @@ function NewsFeedPage(props) {
           style={
             showFilter
               ? {
-                borderBottomLeftRadius: "0",
-                borderBottomRightRadius: "0",
-                borderBottom: "none",
-              }
+                  borderBottomLeftRadius: "0",
+                  borderBottomRightRadius: "0",
+                  borderBottom: "none",
+                }
               : {
-                borderBottomLeftRadius: "10px",
-                borderBottomRightRadius: "10px",
-                borderBottom: "1px solid #e6ebf1",
-              }
+                  borderBottomLeftRadius: "10px",
+                  borderBottomRightRadius: "10px",
+                  borderBottom: "1px solid #e6ebf1",
+                }
           }
         >
           <div className="title">
@@ -297,26 +326,35 @@ function NewsFeedPage(props) {
       <CModal show={showCreatePost} onClosed={onModalClose}>
         <CModalHeader closeButton></CModalHeader>
         <CModalBody>
-
-          {!teamId ? <GroupFilter className="mb-3" clearSelect={clearSelect} getGroupPost={getGroupPost} /> : null}
-          {/*<TextareaAutosize
-
-          {!props.isInTeam && (
+          {!teamId ? (
             <GroupFilter
+              className="mb-3"
               clearSelect={clearSelect}
               getGroupPost={getGroupPost}
             />
-          )}
-          <TextareaAutosize
-            className="input-post"
-            minRows={1}
-            maxRows={20}
-            placeholder="Viết bản tin mới..."
-            onChange={onTextAreaChange}
-            value={newPostContent}
-          />*/}
+          ) : null}
 
           <PostEditor onTextChange={onTextChange} />
+          {listImages.length > 0 && (
+            <div className="list-images-container">
+              {listImages.map((image) => {
+                return (
+                  <div className="img-container">
+                    <img className="upload-img" alt="" src={image.link} />
+                    <div className="delete-img-btn">
+                      <CIcon name="cil-x" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div className="add-image-btn-container">
+            <div className="add-image-btn">
+              <CIcon name="cil-image-plus" />
+              Thêm ảnh
+            </div>
+          </div>
         </CModalBody>
         <CModalFooter>
           <CButton

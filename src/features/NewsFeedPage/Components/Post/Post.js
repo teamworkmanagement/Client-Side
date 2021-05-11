@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import PostEditor from "../PostEditor/PostEditor";
 import CustomInput from "../CustomInput/CustomInput";
 import { convertToRaw } from "draft-js";
+import FbImageLibrary from "react-fb-image-grid";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -50,13 +51,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-        .deleteReactPost({ params })
-        .then((res) => { })
-        .catch((err) => { })
+          .deleteReactPost({ params })
+          .then((res) => {})
+          .catch((err) => {})
       : postApi
-        .reactPost(params)
-        .then((res) => { })
-        .catch((err) => { });
+          .reactPost(params)
+          .then((res) => {})
+          .catch((err) => {});
 
     setPost({
       ...post,
@@ -98,17 +99,17 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
   };
 
-
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    let value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('<br>');
-
+    let value = blocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
 
     //tags
     const obj = convertToRaw(editorState.getCurrentContent());
@@ -117,17 +118,17 @@ function Post(props) {
     const entityMap = obj.entityMap;
 
     for (const property in entityMap) {
-      if (entityMap[property].type === 'mention')
+      if (entityMap[property].type === "mention")
         mentions.push(entityMap[property].data.mention);
     }
 
-
-
     //add tag to
-    mentions.forEach(m => {
-      value = value.replace(m.name, '<strong className="tag-user">@' + m.name + '</strong>');
+    mentions.forEach((m) => {
+      value = value.replace(
+        m.name,
+        '<strong className="tag-user">@' + m.name + "</strong>"
+      );
     });
-
 
     commentApi
       .addComment({
@@ -156,10 +157,24 @@ function Post(props) {
 
         setComments(newArrr);
       })
-      .catch((err) => { });
+      .catch((err) => {});
 
     console.log(value);
-  }
+  };
+
+  const listImages = [
+    "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
+
+    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+
+    "https://ohay.vn/blog/wp-content/uploads/2020/06/ba-lo-laza11.jpg",
+
+    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+
+    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+
+    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+  ];
 
   return (
     <div className="post-container">
@@ -189,8 +204,12 @@ function Post(props) {
           <CIcon className="rotate-90" name="cil-options" />
         </div>
       </div>
-      <div className="post-content" dangerouslySetInnerHTML={{ __html: post.postContent }}>
-
+      <div
+        className="post-content"
+        dangerouslySetInnerHTML={{ __html: post.postContent }}
+      ></div>
+      <div className="post-images-list-container">
+        <FbImageLibrary images={listImages} />
       </div>
       <div className="interaction-bar">
         <CIcon
