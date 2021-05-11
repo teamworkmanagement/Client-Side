@@ -26,7 +26,7 @@ function TeamTasks(props) {
             Tạo danh sách
           </div>
         )}
-        {showMode === 2 && (
+        {(showMode === 2 || showMode === 3) && (
           <div className="add-btn add-task-btn">
             <CIcon name="cil-plus" />
             Tạo công việc

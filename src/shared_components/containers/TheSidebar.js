@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   CCreateElement,
@@ -18,13 +18,12 @@ import CIcon from "@coreui/icons-react";
 import navigation from "./_nav";
 import { changeState } from "src/appSlice";
 
-const TheSidebar = () => {
+const TheSidebar = (props) => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.app.sidebarShow);
   const darkMode = useSelector((state) => state.app.darkMode);
 
   const onChange = (val) => {
-    console.log("change : ", val);
     const param = { type: "set", sidebarShow: val };
     const action = changeState(param);
     dispatch(action);

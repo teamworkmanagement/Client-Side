@@ -42,13 +42,12 @@ const TheHeader = () => {
     const val = [false, "responsive"].includes(sidebarShow)
       ? true
       : "responsive";
-    console.log("val toggleSidebarMobile: ", val);
+
     dispatch(changeState({ type: "set", sidebarShow: val }));
   };
 
   const changeDarkMode = () => {
     dispatch(setDarkMode());
-    console.log("switch");
   };
 
   return (

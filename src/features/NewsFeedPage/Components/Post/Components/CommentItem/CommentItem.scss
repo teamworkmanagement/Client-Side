@@ -14,6 +14,7 @@
     }
     .comment-infor {
         flex-grow: 1;
+        width: 2rem;
         .comment-header {
             display: flex;
             justify-content: space-between;
@@ -27,6 +28,7 @@
             }
         }
         .comment-content {
+            word-break: break-all;
         }
     }
 }

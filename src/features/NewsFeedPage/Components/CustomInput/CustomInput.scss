@@ -1,3 +1,23 @@
+.custom-input-container {
+    height: 100%;
+    .DraftEditor-root {
+        border-radius: 0.625rem;
+        .public-DraftEditorPlaceholder-root {
+            padding: 0rem 0.5rem;
+            display: flex;
+            height: 100%;
+            align-items: center;
+        }
+        .DraftEditor-editorContainer {
+            padding: 0rem 0.5rem;
+            .notranslate.public-DraftEditor-content {
+                display: flex;
+                height: 100%;
+                align-items: center;
+            }
+        }
+    }
+}
 .editor {
     box-sizing: border-box;
     border: 1px solid #ddd;
@@ -16,7 +36,7 @@
 
 div.DraftEditor-root {
     margin: auto;
-    border: 1px solid  rgb(186, 186, 193);;
+    border: 1px solid rgb(186, 186, 193);
     border-radius: 6px;
 }
 
@@ -29,5 +49,5 @@ div.DraftEditor-editorContainer {
 div.public-DraftEditorPlaceholder-root {
     margin: auto;
     padding-top: 3px;
-    padding-left: 3px;    
+    padding-left: 3px;
 }

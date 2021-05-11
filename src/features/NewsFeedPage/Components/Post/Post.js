@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import PostEditor from "../PostEditor/PostEditor";
 import CustomInput from "../CustomInput/CustomInput";
 import { convertToRaw } from "draft-js";
-import FbImageLibrary from "react-fb-image-grid";
+import GridImages from "./Components/GridImages/GridImages";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -167,13 +167,13 @@ function Post(props) {
 
     "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
 
-    "https://ohay.vn/blog/wp-content/uploads/2020/06/ba-lo-laza11.jpg",
+    "https://cdn.yeudulich.com/940x630/media/attraction/attraction/9c/91/5a99-5766-4a6e-ac6b-fbd54edbc450.jpg",
 
-    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+    "https://cdn3.yame.vn/pimg/ao-thun-co-tron-y-original-ver1-0020237/3f339682-7f04-1000-a86f-0017ebe78d1d.jpg?w=540&h=756&c=true",
 
-    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+    "https://cdn3.yame.vn/pimg/giay-casual-anubis-ver1-0019901/a1f616a6-ea76-0200-c9c5-00176e430b9f.jpg?w=540&h=540&c=true",
 
-    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+    "https://cdn3.yame.vn/cimg/qua-tang-mien-phi/33181116-e676-0100-78ff-0017d2c5ac31.jpg?w=800",
   ];
 
   return (
@@ -209,7 +209,7 @@ function Post(props) {
         dangerouslySetInnerHTML={{ __html: post.postContent }}
       ></div>
       <div className="post-images-list-container">
-        <FbImageLibrary images={listImages} />
+        <GridImages images={listImages} />
       </div>
       <div className="interaction-bar">
         <CIcon

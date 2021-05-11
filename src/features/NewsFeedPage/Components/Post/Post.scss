@@ -27,12 +27,14 @@
     background-color: white;
     margin-bottom: 1rem;
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: 1.5rem 0rem;
     padding-bottom: 1rem;
     border: 1px solid #e6ebf1;
     transition: all 0.3s;
     width: fit-content;
     .post-header {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
@@ -93,21 +95,28 @@
     }
     .post-content {
         margin-bottom: 1rem;
-        
-            strong {
-                color: #03c2fc83;
-                &:hover{
-                    cursor: pointer;
-                }
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        strong {
+            color: #03c2fc83;
+            &:hover {
+                cursor: pointer;
             }
-        
+        }
+    }
+    .post-images-list-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
     }
     .interaction-bar {
         display: flex;
         align-items: center;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         .is-love-icon {
-            width: 1.5rem;
-            height: 1.5rem;
+            width: 1.4rem;
+            height: 1.4rem;
             margin-right: 0.3rem;
             cursor: pointer;
             color: rgba(#3c4b64, 0.8);
@@ -122,8 +131,8 @@
             margin-right: 1rem;
         }
         .comment-icon {
-            width: 1.4rem;
-            height: 1.4rem;
+            width: 1.25rem;
+            height: 1.25rem;
             margin-right: 0.3rem;
             cursor: pointer;
             color: rgba(#3c4b64, 0.8);
@@ -139,6 +148,8 @@
         display: flex;
         padding: 0;
         margin: 1rem 0rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         .my-avatar {
             width: 2rem;
             height: 2rem;
@@ -151,12 +162,16 @@
         }
         .input-container {
             flex-grow: 1;
-
+            width: 2rem;
             input {
                 color: #3c4b64;
                 border-radius: 0.625rem;
             }
         }
+    }
+    .comment-list {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
     }
     .load-more-comment {
         //margin: 0rem 1.25rem 0rem 1.25rem;
@@ -165,6 +180,8 @@
         cursor: pointer;
         justify-content: flex-end;
         align-items: center;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         &:hover {
             font-weight: bold;
         }
@@ -181,7 +198,7 @@
     }
 
     @media (min-width: 1300px) {
-        width: 45rem;
+        width: 35rem;
     }
     @media (min-width: 900) and (max-width: 1199) {
         width: fit-content;

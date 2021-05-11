@@ -32,7 +32,6 @@ function ListTeamPage(props) {
   const [showAddTeam, setShowAddTeam] = useState(false);
   const [showJoinTeam, setShowJoinTeam] = useState(false);
 
-
   const [isLoading, setIsLoading] = useState(false);
 
   const onCloseAddTeam = () => {
@@ -45,11 +44,11 @@ function ListTeamPage(props) {
 
   const onCloseJoinTeam = () => {
     setShowJoinTeam(false);
-  }
+  };
 
   const onShowJoinTeam = () => {
     setShowJoinTeam(true);
-  }
+  };
 
   function switchShowMode(index) {
     //debugger;
@@ -233,7 +232,7 @@ function ListTeamPage(props) {
   return (
     <div className="list-team-container">
       <div className="header-tool-bar">
-        <div onClick={onShowJoinTeam} className="create-team-btn">
+        <div onClick={onShowJoinTeam} className="join-team-btn">
           <CIcon name="cil-plus" />
           Tham gia nhóm
         </div>

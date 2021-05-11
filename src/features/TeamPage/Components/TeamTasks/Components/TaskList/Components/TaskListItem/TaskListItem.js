@@ -111,7 +111,6 @@ function TaskListItem(props) {
     return "Trễ " + -spaceTime + " ngày";
   }
 
-
   const openEditPoup = async () => {
     setModaTask(null);
     setIsShowEditPopup(true);
@@ -121,22 +120,26 @@ function TaskListItem(props) {
       filesCount: props.data.filesCount,
       commentsCount: props.data.commentsCount,
     });
-  }
-
+  };
 
   const onRemoveTask = () => {
-    taskApi.removeTask(props.data.taskId).then(res => {
-      dispatch(removeTask({
-        "taskId": props.data.taskId,
-        "kanbanListId": props.data.kanbanListId,
-        "orderInList": props.data.orderInList,
-      }));
-    }).catch(err => { })
+    taskApi
+      .removeTask(props.data.taskId)
+      .then((res) => {
+        dispatch(
+          removeTask({
+            taskId: props.data.taskId,
+            kanbanListId: props.data.kanbanListId,
+            orderInList: props.data.orderInList,
+          })
+        );
+      })
+      .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
     }
-  }
+  };
   return (
     <div>
       <div
@@ -154,7 +157,7 @@ function TaskListItem(props) {
             <div
               className="attachment infor"
               style={{ display: props.data.filesCount === 0 ? "none" : "flex" }}
-            // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+              // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
             >
               <CIcon name="cil-paperclip" className=""></CIcon>
               <div className="">{props.data.filesCount} </div>
@@ -163,10 +166,13 @@ function TaskListItem(props) {
               <CIcon name="cil-speech" className=""></CIcon>
               <div className="">{props.data.commentsCount}</div>
             </div>
-            <div className="deadline infor">
-              <CIcon name="cil-clock" className=""></CIcon>
-              {countDaysLeft()}
-            </div>
+            {props.data.taskDeadline && (
+              <div className="deadline infor">
+                <CIcon name="cil-clock" className=""></CIcon>
+                {countDaysLeft()}
+              </div>
+            )}
+
             <div className="progress infor">
               <CProgress
                 className="progress-bar"
@@ -201,10 +207,7 @@ function TaskListItem(props) {
                 aria-labelledby="dropdownMenuButton"
                 placement="bottom-end"
               >
-                <CDropdownItem
-                  className="first"
-                  onClick={openEditPoup}
-                >
+                <CDropdownItem className="first" onClick={openEditPoup}>
                   <CIcon name="cil-pencil" />
                   Chỉnh sửa
                 </CDropdownItem>

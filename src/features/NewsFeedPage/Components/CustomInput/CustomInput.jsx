@@ -94,7 +94,7 @@ function CustomInput(props) {
     }
 
     return (
-        <div >
+        <div className="custom-input-container">
             <Editor
                 placeholder="Viết bình luận..."
                 className="editor"

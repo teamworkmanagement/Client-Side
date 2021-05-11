@@ -170,6 +170,7 @@
                 height: 10rem;
                 overflow-x: auto;
                 margin-top: 0.5rem;
+                padding-bottom: 0.2rem;
                 .img-container {
                     position: relative;
                     display: contents;
@@ -247,7 +248,7 @@
 }
 
 .ReactModal__Overlay.ReactModal__Overlay--after-open {
-    z-index: 10000;
+    z-index: 10000 !important;
 }
 
 .input-post::-webkit-scrollbar {

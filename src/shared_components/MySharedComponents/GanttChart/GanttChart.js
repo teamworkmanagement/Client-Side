@@ -116,8 +116,15 @@ function GanttChart(props) {
         label: "",
         width: 75,
         template: function (task) {
-          const img = getAssignedUserImage(task.id);
-          return `<img alt="" class="assigned-user-avatar" src="` + task.userAvatar + `"/>`;
+          //const img = getAssignedUserImage(task.id);
+          if (!task.userAvatar) {
+            return "";
+          }
+          return (
+            `<img alt="" class="assigned-user-avatar" src="` +
+            task.userAvatar +
+            `"/>`
+          );
         },
       },
     ];
@@ -178,9 +185,8 @@ function GanttChart(props) {
           taskDeadline: newTaskData.end_date,
           taskImageUrl: newTaskData.taskImageUrl,
         })
-        .then((res) => { })
-        .catch((err) => { });
-
+        .then((res) => {})
+        .catch((err) => {});
     });
   }, [data]);
 
@@ -199,10 +205,8 @@ function GanttChart(props) {
     gantt.hideLightbox();
   }
 
-
   function updateGanttTask(task) {
-
-    console.log('update gantt task', task);
+    console.log("update gantt task", task);
     //     id: task.taskId,
     //     text: task.taskName,
     //     start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),

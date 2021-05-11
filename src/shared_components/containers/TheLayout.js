@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
 import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
 

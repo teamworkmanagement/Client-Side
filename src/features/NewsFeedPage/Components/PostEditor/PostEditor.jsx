@@ -1,7 +1,7 @@
 import Editor, { createEditorStateWithText } from '@draft-js-plugins/editor';
 import createEmojiPlugin from '@draft-js-plugins/emoji';
 import createMentionPlugin from '@draft-js-plugins/mention';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultSuggestionsFilter } from '@draft-js-plugins/mention';
 import mentions from './mentionsdata';
 import { EditorState } from 'draft-js';
@@ -22,8 +22,7 @@ function PostEditor(props) {
 
     //const mentionPlugin = createMentionPlugin();
     //const { MentionSuggestions } = mentionPlugin;
-
-
+    const editorRef = useRef();
     const [editorState, setEditorState] = useState(() =>
         EditorState.createEmpty()
     );
@@ -62,13 +61,19 @@ function PostEditor(props) {
         props.onTextChange(e);
     }
 
+    useEffect(()=>{
+        editorRef.current.focus();
+    },[])
+    
+    
     return (
         <div className={editorStyles.editor}>
-            <Editor
+            <Editor ref={editorRef}
                 editorKey={'editor'}
                 editorState={editorState}
                 onChange={onChange}
                 plugins={plugins}
+                placeholder="Viết bài..."
             />
             <EmojiSuggestions />
 
