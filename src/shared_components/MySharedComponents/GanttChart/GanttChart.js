@@ -69,6 +69,7 @@ function GanttChart(props) {
 
       if (task.taskThemeColor) {
         ganttTasks.push({
+          ...task,
           id: task.taskId,
           text: task.taskName,
           start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
@@ -83,6 +84,7 @@ function GanttChart(props) {
         });
       } else {
         ganttTasks.push({
+          ...task,
           id: task.taskId,
           text: task.taskName,
           start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
@@ -115,7 +117,7 @@ function GanttChart(props) {
         width: 75,
         template: function (task) {
           const img = getAssignedUserImage(task.id);
-          return `<img alt="" class="assigned-user-avatar" src="` + img + `"/>`;
+          return `<img alt="" class="assigned-user-avatar" src="` + task.userAvatar + `"/>`;
         },
       },
     ];
@@ -160,6 +162,26 @@ function GanttChart(props) {
       //any custom logic here
       props.onAfterTaskAdd(id, item);
     });
+
+    gantt.attachEvent("onAfterTaskUpdate", function (id, newTaskData) {
+      //lấy data của newtaskdata => update task cũ ở đây
+      console.log(newTaskData);
+
+      taskApi
+        .updateTask({
+          taskId: newTaskData.taskId,
+          taskName: newTaskData.taskName,
+          taskThemeColor: newTaskData.taskThemeColor,
+          taskStatus: newTaskData.taskStatus,
+          taskCompletedPercent: Number.parseInt(newTaskData.progress * 100),
+          taskStartDate: newTaskData.start_date,
+          taskDeadline: newTaskData.end_date,
+          taskImageUrl: newTaskData.taskImageUrl,
+        })
+        .then((res) => { })
+        .catch((err) => { });
+
+    });
   }, [data]);
 
   const openEditPoup = async (taskId, task) => {
@@ -177,12 +199,10 @@ function GanttChart(props) {
     gantt.hideLightbox();
   }
 
-  gantt.attachEvent("onAfterTaskUpdate", function (id, newTaskData) {
-    //lấy data của newtaskdata => update task cũ ở đây
-    console.log(newTaskData);
-  });
 
   function updateGanttTask(task) {
+
+    console.log('update gantt task', task);
     //     id: task.taskId,
     //     text: task.taskName,
     //     start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
@@ -195,7 +215,7 @@ function GanttChart(props) {
     //changes task's data
     console.log(moment(task.taskStartDate).format("DD-MM-YYYY"));
 
-    debugger;
+    //debugger;
     gantt.getTask(task.taskId).text = task.taskName;
     gantt.getTask(task.taskId).start_date = new Date(task.taskStartDate);
     gantt.getTask(task.taskId).end_date = new Date(task.taskDeadline);
