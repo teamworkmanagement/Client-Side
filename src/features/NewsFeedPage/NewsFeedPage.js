@@ -55,6 +55,11 @@ function NewsFeedPage(props) {
 
   const { teamId } = useParams();
 
+  useEffect(() => {
+    if (teamId)
+      setGrAddPost(teamId);
+  }, [teamId])
+
   const pickImgRef = useRef(null);
 
   const groupList = [
@@ -212,8 +217,9 @@ function NewsFeedPage(props) {
 
     //cloneContent = '<p>' + cloneContent + '</p>';
 
-    let linkDowload = [];
-    linkDowload = await uploadImage();
+    //const linkDowload = [];
+    const links = await uploadImage();
+    //inkDowload.concat(links);
 
     postApi
       .addPost({
@@ -222,17 +228,19 @@ function NewsFeedPage(props) {
         postContent: cloneContent,
       })
       .then((res) => {
-        res.data.postImages = linkDowload.map(x => x.link);
+        res.data.postImages = links?.map(x => x.link);
+        console.log(addPostDone);
+        console.log(res.data);
         setAddPostDone(res.data);
 
-        if (linkDowload.length > 0) {
+        if (links?.length > 0) {
           fileApi.uploadImagesPost({
             postId: res.data.postId,
-            imageUrls: linkDowload,
+            imageUrls: links,
           }).then(res => { }).catch(err => { })
         }
       })
-      .catch((err) => { });
+      .catch((err) => { console.log(err) });
 
     setResetEditorText(resetEditorText + 1);
     setShowCreatePost(false);
@@ -419,7 +427,7 @@ function NewsFeedPage(props) {
             />
           ) : null}
 
-          <PostEditor reset={resetEditorText} onTextChange={onTextChange} />
+          <PostEditor postTeamId={grAddPost} reset={resetEditorText} onTextChange={onTextChange} />
           {listPictures.length > 0 && (
             <div className="list-images-container">
               {listPictures.map((image, index) => {

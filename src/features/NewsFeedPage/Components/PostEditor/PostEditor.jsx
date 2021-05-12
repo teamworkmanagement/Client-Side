@@ -3,13 +3,14 @@ import createEmojiPlugin from '@draft-js-plugins/emoji';
 import createMentionPlugin from '@draft-js-plugins/mention';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultSuggestionsFilter } from '@draft-js-plugins/mention';
-import mentions from './mentionsdata';
 import { EditorState } from 'draft-js';
 import './PostEditor.scss';
 import editorStyles from './SimpleMentionEditor.module.css';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import axiosClient from 'src/api/axiosClient';
 import { getResetEditorState } from 'src/utils/draftjs';
+import axios from 'axios';
+import teamApi from 'src/api/teamApi';
 
 
 const emojiPlugin = createEmojiPlugin();
@@ -28,9 +29,11 @@ function PostEditor(props) {
         EditorState.createEmpty()
     );
 
+    const [mentions, setMentions] = useState([]);
+
 
     const [open, setOpen] = useState(false);
-    const [suggestions, setSuggestions] = useState(mentions);
+    const [suggestions, setSuggestions] = useState([]);
 
 
     const { MentionSuggestions, plugins } = useMemo(() => {
@@ -47,21 +50,35 @@ function PostEditor(props) {
     }, []);
 
     const onSearchChange = useCallback(({ value }) => {
-
-        axiosClient.get('https://jsonplaceholder.typicode.com/todos/1')
-            .then(res => {
-                console.log(res);
-            }).catch(err => {
-
-            })
         setSuggestions(defaultSuggestionsFilter(value, mentions));
-    }, []);
+    }, [mentions]);
 
     const onChange = (e) => {
         setEditorState(e);
         props.onTextChange(e);
     }
 
+    /*useEffect(() => {
+        axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10&_skip=10')
+            .then(res => {
+
+                const myDatas = res.data.map(x => {
+                    return {
+                        name: x.title.substring(0, 5),
+                        id: x.id,
+                        avatar:
+                            'https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png',
+                    }
+                })
+
+                console.log(myDatas);
+
+                //setSuggestions(myDatas);
+                setMentions(myDatas);
+            }).catch(err => {
+
+            })
+    }, [])
     /*useEffect(() => {
         editorRef.current.focus();
     }, [])*/
@@ -73,6 +90,24 @@ function PostEditor(props) {
         setEditorState(newState);
     }, [props.reset])
 
+
+    useEffect(() => {
+        console.log(props.postTeamId);
+        teamApi.getAllUserByTeam(props.postTeamId)
+            .then(res => {
+                const myDatas = res.data.map(x => {
+                    return {
+                        name: x.userFullname,
+                        id: x.userId,
+                        avatar: x.userImageUrl,
+                    }
+                })
+                console.log(myDatas);
+                setMentions(myDatas);
+            }).catch(err => {
+
+            })
+    }, [props.postTeamId])
 
     return (
         <div onClick={() => {

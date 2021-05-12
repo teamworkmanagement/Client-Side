@@ -88,6 +88,9 @@ function PostList(props) {
 
   useEffect(() => {
     if (props.addPostDone === null) return;
+
+    console.log(props.addPostDone);
+
     const cur = [...latestPosts.current];
     const las = [props.addPostDone].concat(cur);
     setListPosts(las);
