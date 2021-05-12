@@ -193,7 +193,7 @@ function NewsFeedPage(props) {
 
   const addPostClick = async () => {
 
-    if ((!grAddPost && !teamId) || !newPostContent) {
+    if ((!grAddPost && !teamId) || !newPostContent || newPostContent === '\n') {
       alert("Xem lại");
       return;
     }
@@ -225,10 +225,12 @@ function NewsFeedPage(props) {
         res.data.postImages = linkDowload.map(x => x.link);
         setAddPostDone(res.data);
 
-        fileApi.uploadImagesPost({
-          postId: res.data.postId,
-          imageUrls: linkDowload,
-        }).then(res => { }).catch(err => { })
+        if (linkDowload.length > 0) {
+          fileApi.uploadImagesPost({
+            postId: res.data.postId,
+            imageUrls: linkDowload,
+          }).then(res => { }).catch(err => { })
+        }
       })
       .catch((err) => { });
 

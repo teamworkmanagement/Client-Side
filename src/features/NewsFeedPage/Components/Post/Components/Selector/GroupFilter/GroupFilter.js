@@ -82,7 +82,7 @@ function GroupFilter(props) {
           setFocus(true);
           setCurrentGroup(null);
         }}
-        onBlur={() => setFocus(true)}
+        onBlur={() => setFocus(false)}
         blurInputOnSelect={true}
         styles={{
           // Fixes the overlapping problem of the component

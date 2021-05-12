@@ -62,9 +62,9 @@ function PostEditor(props) {
         props.onTextChange(e);
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         editorRef.current.focus();
-    }, [])
+    }, [])*/
 
     useEffect(() => {
         if (props.reset < 0)
@@ -75,7 +75,9 @@ function PostEditor(props) {
 
 
     return (
-        <div className={editorStyles.editor}>
+        <div onClick={() => {
+            editorRef.current.focus();
+        }} className={editorStyles.editor}>
             <Editor ref={editorRef}
                 editorKey={'editor'}
                 editorState={editorState}
