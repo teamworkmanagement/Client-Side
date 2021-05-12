@@ -209,7 +209,7 @@ function Post(props) {
         dangerouslySetInnerHTML={{ __html: post.postContent }}
       ></div>
       <div className="post-images-list-container">
-        <GridImages images={listImages} />
+        <GridImages images={post.postImages} />
       </div>
       <div className="interaction-bar">
         <CIcon

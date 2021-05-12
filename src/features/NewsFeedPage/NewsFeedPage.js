@@ -25,6 +25,10 @@ import postApi from "src/api/postApi";
 import { useParams } from "react-router";
 import PostEditor from "./Components/PostEditor/PostEditor";
 import { convertToRaw } from "draft-js";
+import uuid from "src/utils/file/uuid";
+import firebaseConfig from "src/utils/firebase/firebaseConfig";
+import firebase from 'firebase/app';
+import fileApi from "src/api/fileApi";
 
 NewsFeedPage.propTypes = {};
 
@@ -46,8 +50,13 @@ function NewsFeedPage(props) {
   const [grAddPost, setGrAddPost] = useState(null);
   const [newPostContent, setNewPostContent] = useState("");
   const [tags, setTags] = useState([]);
+  const [listPictures, setListPictures] = useState([]);
+  const [linkPictures, setLinkPictures] = useState([]);
+  const [resetEditorText, setResetEditorText] = useState(-1);
 
   const { teamId } = useParams();
+
+  const pickImgRef = useRef(null);
 
   const groupList = [
     {
@@ -139,11 +148,47 @@ function NewsFeedPage(props) {
     setGrAddPost(gr === null ? null : gr.value);
   };
 
-  const addPostClick = () => {
+  let newArr = [];
+  const uploadImage = () => {
+    newArr = [];
+    const promises = [];
+    if (listPictures.length === 0)
+      return;
+
+    listPictures.forEach((pic, index) => {
+      const uploadTask =
+        firebaseConfig.storage().ref().child(`${uuid()}/${pic.file.name}`).put(pic.file);
+      promises.push(uploadTask);
+      uploadTask.on(
+        firebase.storage.TaskEvent.STATE_CHANGED,
+        snapshot => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          if (snapshot.state === firebase.storage.TaskState.RUNNING) {
+            console.log(`Progress: ${progress}%`);
+          }
+        },
+        error => console.log(error.code),
+        async () => {
+          const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+          const cloneLinks = [...linkPictures];
+          newArr.push(downloadURL);
+          console.log(newArr);
+        });
+    });
+    Promise.all(promises)
+      .then(() => setListPictures([]))
+      .catch(err => console.log(err.code));
+
+
+  }
+
+  const addPostClick = async () => {
     if ((!grAddPost && !teamId) || !newPostContent) {
       alert("Xem lại");
       return;
     }
+
 
     var cloneContent = (" " + newPostContent).slice(1);
 
@@ -159,6 +204,8 @@ function NewsFeedPage(props) {
 
     //cloneContent = '<p>' + cloneContent + '</p>';
 
+    uploadImage();
+
     postApi
       .addPost({
         postUserId: user.id,
@@ -167,10 +214,17 @@ function NewsFeedPage(props) {
       })
       .then((res) => {
         console.log(res.data);
+        res.data.postImages = newArr;
         setAddPostDone(res.data);
-      })
-      .catch((err) => {});
 
+        fileApi.uploadImagesPost({
+          postId: res.data.postId,
+          imageUrls: newArr,
+        }).then(res => { }).catch(err => { })
+      })
+      .catch((err) => { });
+
+    setResetEditorText(resetEditorText + 1);
     setShowCreatePost(false);
   };
 
@@ -183,6 +237,7 @@ function NewsFeedPage(props) {
     setClearFilter(clearSelect + 1);
     setNewPostContent("");
     setShowCreatePost(false);
+    setListPictures([]);
   };
 
   const onTextChange = (editorState) => {
@@ -235,6 +290,26 @@ function NewsFeedPage(props) {
     },
   ];
 
+
+  const onPickImageChange = (e) => {
+    const newLists = Array.from(e.target.files).map(f => {
+      return {
+        url: URL.createObjectURL(f),
+        file: f,
+      }
+    });
+
+    setListPictures([...listPictures, ...newLists]);
+  }
+
+
+  const removePicture = (index) => {
+    const cloneListPictures = [...listPictures];
+    cloneListPictures.splice(index, 1);
+    setListPictures(cloneListPictures);
+  }
+
+
   return (
     <div className="newsfeed-page-container">
       <div className="post-list-container">
@@ -260,15 +335,15 @@ function NewsFeedPage(props) {
           style={
             showFilter
               ? {
-                  borderBottomLeftRadius: "0",
-                  borderBottomRightRadius: "0",
-                  borderBottom: "none",
-                }
+                borderBottomLeftRadius: "0",
+                borderBottomRightRadius: "0",
+                borderBottom: "none",
+              }
               : {
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  borderBottom: "1px solid #e6ebf1",
-                }
+                borderBottomLeftRadius: "10px",
+                borderBottomRightRadius: "10px",
+                borderBottom: "1px solid #e6ebf1",
+              }
           }
         >
           <div className="title">
@@ -334,14 +409,14 @@ function NewsFeedPage(props) {
             />
           ) : null}
 
-          <PostEditor onTextChange={onTextChange} />
-          {listImages.length > 0 && (
+          <PostEditor reset={resetEditorText} onTextChange={onTextChange} />
+          {listPictures.length > 0 && (
             <div className="list-images-container">
-              {listImages.map((image) => {
+              {listPictures.map((image, index) => {
                 return (
                   <div className="img-container">
-                    <img className="upload-img" alt="" src={image.link} />
-                    <div className="delete-img-btn">
+                    <img className="upload-img" alt="" src={image.url} />
+                    <div className="delete-img-btn" onClick={() => removePicture(index)}>
                       <CIcon name="cil-x" />
                     </div>
                   </div>
@@ -349,10 +424,11 @@ function NewsFeedPage(props) {
               })}
             </div>
           )}
-          <div className="add-image-btn-container">
+          <div onClick={() => pickImgRef.current.click()} className="add-image-btn-container">
             <div className="add-image-btn">
               <CIcon name="cil-image-plus" />
               Thêm ảnh
+              <input type="file" onChange={onPickImageChange} multiple ref={pickImgRef} style={{ display: 'none' }} accept="image/*" />
             </div>
           </div>
         </CModalBody>

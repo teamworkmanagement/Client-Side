@@ -9,6 +9,7 @@ import './PostEditor.scss';
 import editorStyles from './SimpleMentionEditor.module.css';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import axiosClient from 'src/api/axiosClient';
+import { getResetEditorState } from 'src/utils/draftjs';
 
 
 const emojiPlugin = createEmojiPlugin();
@@ -46,13 +47,13 @@ function PostEditor(props) {
     }, []);
 
     const onSearchChange = useCallback(({ value }) => {
-        
-        axiosClient.get('https://jsonplaceholder.typicode.com/todos/1')
-        .then(res=>{
-            console.log(res);
-        }).catch(err=>{
 
-        })
+        axiosClient.get('https://jsonplaceholder.typicode.com/todos/1')
+            .then(res => {
+                console.log(res);
+            }).catch(err => {
+
+            })
         setSuggestions(defaultSuggestionsFilter(value, mentions));
     }, []);
 
@@ -61,11 +62,18 @@ function PostEditor(props) {
         props.onTextChange(e);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         editorRef.current.focus();
-    },[])
-    
-    
+    }, [])
+
+    useEffect(() => {
+        if (props.reset < 0)
+            return;
+        const newState = getResetEditorState(editorState);
+        setEditorState(newState);
+    }, [props.reset])
+
+
     return (
         <div className={editorStyles.editor}>
             <Editor ref={editorRef}
