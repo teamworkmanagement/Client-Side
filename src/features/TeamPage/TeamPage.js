@@ -18,6 +18,7 @@ import KanbanBoard from "../KanbanBoard/KanbanBoard";
 import TeamTasks from "./Components/TeamTasks/TeamTasks";
 import { useSelector } from "react-redux";
 import TeamLoading from "./TeamLoading/TeamLoading";
+import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
 
 TeamPage.propTypes = {};
 
@@ -61,6 +62,14 @@ function TeamPage(props) {
               </CNavLink>
             </CTooltip>
           </CNavItem>
+          <CNavItem>
+            <CTooltip content="Thành viên nhóm" placement="right">
+              <CNavLink>
+                <CIcon name="cil-user" />
+                <div className="tab-name">Thành viên nhóm</div>
+              </CNavLink>
+            </CTooltip>
+          </CNavItem>
         </CNav>
         <CTabContent>
           <CTabPane>
@@ -74,6 +83,9 @@ function TeamPage(props) {
           </CTabPane>
           <CTabPane>
             <ListFileTable />
+          </CTabPane>
+          <CTabPane>
+            <TeamMembersList />
           </CTabPane>
         </CTabContent>
       </CTabs>

@@ -154,6 +154,7 @@
 
                 .assign-group {
                     .assign-label {
+                        margin-bottom: 0.5rem;
                         .c-icon {
                             margin-top: -0.2rem;
                         }
@@ -678,9 +679,63 @@
     }
 }
 
+.gantt_task_line.gantt_task_inline_color.gantt_project,
+.gantt_task_line.gantt_task_inline_color {
+    box-shadow: 0 0 5px #ccc;
+}
+.css-yk16xz-control {
+    border: 1px solid #d8dbe0;
+    border-radius: 0.625rem;
+}
+.css-1wa3eu0-placeholder {
+    color: #7c8697;
+    font-weight: normal;
+}
+
 .list-attachments::-webkit-scrollbar {
     width: 0.3rem;
     height: 0.4rem;
+}
+.css-2613qy-menu {
+    display: block !important;
+}
+.css-1pahdxg-control {
+    border-radius: 0.625rem !important;
+}
+
+.css-1n7v3ny-option,
+.css-yt9ioa-option,
+.css-9gakcf-option {
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    width: auto !important;
+    div {
+        cursor: pointer;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        img {
+            margin: 0 !important;
+            margin-right: 0.5rem !important;
+            cursor: pointer;
+        }
+        label {
+            margin: 0;
+            cursor: pointer;
+        }
+    }
+}
+.css-1uccc91-singleValue {
+    div {
+        img {
+            width: 1.7rem !important;
+            height: 1.7rem !important;
+            margin: 0rem 0.5rem 0rem 0rem !important;
+        }
+    }
+}
+.css-yk16xz-control {
+    border-radius: 0.625rem !important;
 }
 
 /* Track */

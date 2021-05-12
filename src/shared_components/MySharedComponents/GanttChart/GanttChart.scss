@@ -46,6 +46,17 @@
     }
 }
 
+.gantt_task_line.gantt_bar_task.gantt_task_inline_color {
+    border: none !important;
+}
+div.gantt_grid_scale:after,
+div.gantt_scale_line:last-child:after {
+    box-shadow: none;
+}
+.gantt_scale_cell.weekend {
+    background-color: white !important;
+}
+
 .gantt_layout_root.gantt_layout {
     border: 1px solid #e6ebf1;
     border-radius: 0.625rem;

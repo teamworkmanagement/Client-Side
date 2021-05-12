@@ -1,0 +1,137 @@
+.team-members-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    .members-list-header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .add-btn {
+            background-color: #3e79f7;
+            color: white;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.625rem;
+            height: fit-content;
+            margin: 0rem 0.5rem;
+            cursor: pointer;
+            .c-icon {
+                margin-right: 0.2rem;
+            }
+            &:hover {
+                background-color: #3464ca;
+            }
+        }
+        .show-mode {
+            padding: 0.5rem;
+            width: fit-content;
+            justify-content: flex-end;
+            height: 3.5rem;
+            display: flex;
+            .mode-btn {
+                width: 3rem;
+                max-width: 3rem;
+                border: 2px solid #e6ebf1;
+
+                background-color: transparent;
+                margin-right: 0.6px;
+                &.active {
+                    border-color: #3e79f7;
+                }
+                &.first {
+                    margin-right: 1px;
+                    border-top-left-radius: 0.625rem;
+                    border-bottom-left-radius: 0.625rem;
+                }
+                &.last {
+                    border-top-right-radius: 0.625rem;
+                    border-bottom-right-radius: 0.625rem;
+                }
+            }
+        }
+    }
+    .table {
+        thead {
+            display: none;
+        }
+        tbody {
+            td {
+                vertical-align: middle;
+            }
+        }
+        .member-avatar {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 100px;
+        }
+        .member-infor {
+            .member-name {
+                font-weight: bold;
+            }
+            .member-email {
+                color: #768192;
+                font-size: 90%;
+            }
+        }
+    }
+    .pagination-team-members {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        .pagination {
+            margin-bottom: 0;
+            .page-item {
+                width: 2.3rem;
+                height: 2.3rem;
+                margin: 0rem 0.2rem;
+                border-radius: 50px;
+                .page-link {
+                    text-align: center;
+                    border-radius: 50px;
+                    width: 2.3rem;
+                    height: 2.3rem;
+                    color: #3c4b64;
+                    padding: 0;
+                    margin: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                &.active {
+                    .page-link {
+                        background-color: #3c4b64;
+                        color: white;
+                        border-color: #3c4b64;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.table-responsive::-webkit-scrollbar {
+    width: 0.5rem;
+
+    height: 0.3rem;
+}
+
+/* Track */
+.table-responsive::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+    border-radius: 10px;
+    border: 0.1rem solid #fafafb;
+}
+
+/* Handle on hover */
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

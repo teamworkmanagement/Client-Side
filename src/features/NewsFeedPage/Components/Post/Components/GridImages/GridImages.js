@@ -113,14 +113,14 @@ class GridImages extends Component {
   renderThree(more) {
     const { images } = this.props;
     const { countFrom } = this.state;
+    const conditionalRender =
+      images.length == 4 || (images.length > +countFrom && +countFrom == 4);
     const overlay =
       !countFrom ||
       countFrom > 5 ||
       (images.length > countFrom && [4, 5].includes(+countFrom))
         ? this.renderCountOverlay(true)
         : this.renderOverlay(conditionalRender ? 3 : 4);
-    const conditionalRender =
-      images.length == 4 || (images.length > +countFrom && +countFrom == 4);
 
     return (
       <CRow>

@@ -1,7 +1,4 @@
-import {
-  CDataTable,
-  CPagination
-} from "@coreui/react";
+import { CDataTable, CPagination } from "@coreui/react";
 import { setTimeout } from "core-js";
 import moment from "moment";
 import "moment/locale/vi";
@@ -495,7 +492,7 @@ function ListFileTable(props) {
           createdAt: (item) => {
             return (
               <td>
-                <div>{moment(item.createdAt).format("lll")}</div>
+                <div>{moment(item.createdAt).format("DD/MM/YYYY")}</div>
               </td>
             );
           },
@@ -554,6 +551,7 @@ function ListFileTable(props) {
       />
       {totals !== 0 ? (
         <CPagination
+          className="pagination-team-files"
           activePage={page}
           pages={totals}
           dots

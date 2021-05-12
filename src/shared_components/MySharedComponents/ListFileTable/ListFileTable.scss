@@ -23,7 +23,7 @@ $animation-offset: 0s;
 }
 
 .list-file-table-container {
-    height: 100%;
+    height: auto;
     padding: 1rem;
     background-color: white;
     border-radius: 0.625rem;
@@ -66,7 +66,7 @@ $animation-offset: 0s;
                 th {
                     border: none;
                     input.form-control {
-                        border-color: #3c4b64;
+                        border-color: rgba(#3c4b64, 0.2);
                     }
                 }
             }
@@ -98,17 +98,22 @@ $animation-offset: 0s;
                 vertical-align: middle;
                 padding: 0.5rem 1rem;
                 border: 1px solid #3c4b64;
+                border: 1px solid rgba(#3c4b64, 0.2);
                 border-left: none;
                 border-right: none;
                 &:first-child {
                     border-left: 1px solid #3c4b64;
-                    border-top-left-radius: 50px;
-                    border-bottom-left-radius: 50px;
+                    border-left: 1px solid rgba(#3c4b64, 0.2);
+                    //border-top-left-radius: 50px;
+                    //border-bottom-left-radius: 50px;
+                    border-top-left-radius: 0.625rem;
+                    border-bottom-left-radius: 0.625rem;
                 }
                 &:last-child {
                     border-right: 1px solid black;
-                    border-top-right-radius: 50px;
-                    border-bottom-right-radius: 50px;
+                    border-right: 1px solid rgba(#3c4b64, 0.2);
+                    border-top-right-radius: 0.625rem;
+                    border-bottom-right-radius: 0.625rem;
                 }
                 .download-btn-container {
                     .download-btn {
@@ -133,8 +138,8 @@ $animation-offset: 0s;
                     display: flex;
                     align-items: center;
                     .owner-image {
-                        width: 2rem;
-                        height: 2rem;
+                        width: 1.7rem;
+                        height: 1.7rem;
                         border-radius: 50px;
                         margin-right: 0.5rem;
                     }
@@ -143,8 +148,8 @@ $animation-offset: 0s;
                     display: flex;
                     align-items: center;
                     .type-image {
-                        width: 2rem;
-                        height: 2rem;
+                        width: 1.7rem;
+                        height: 1.7rem;
                         margin-right: 0.5rem;
                     }
                 }
@@ -206,6 +211,39 @@ $animation-offset: 0s;
         to {
             bottom: 0;
             opacity: 0;
+        }
+    }
+}
+
+.pagination-team-files {
+    display: flex;
+    justify-content: center;
+    .pagination {
+        margin-bottom: 0;
+        .page-item {
+            width: 2.3rem;
+            height: 2.3rem;
+            margin: 0rem 0.2rem;
+            border-radius: 50px;
+            .page-link {
+                text-align: center;
+                border-radius: 50px !important;
+                width: 2.3rem;
+                height: 2.3rem;
+                color: #3c4b64;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            &.active {
+                .page-link {
+                    background-color: #3c4b64;
+                    color: white;
+                    border-color: #3c4b64;
+                }
+            }
         }
     }
 }
