@@ -4,13 +4,13 @@ import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins
 import '@draft-js-plugins/mention/lib/plugin.css';
 import { EditorState, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axiosClient from 'src/api/axiosClient';
 import userApi from 'src/api/userApi';
 import { getResetEditorState } from 'src/utils/draftjs';
 import './CustomInput.scss';
-import mentions from './mentionsdata';
+
 
 
 
@@ -24,7 +24,8 @@ function CustomInput(props) {
 
     const user = useSelector(state => state.auth.currentUser);
     const [open, setOpen] = useState(false);
-    const [suggestions, setSuggestions] = useState(mentions);
+    const [suggestions, setSuggestions] = useState([]);
+    const [mentions, setMentions] = useState([]);
 
 
     const { MentionSuggestions, plugins } = useMemo(() => {
@@ -40,29 +41,10 @@ function CustomInput(props) {
         setOpen(_open);
     }, []);
 
-    
+
     const onSearchChange = useCallback(({ value }) => {
-        const params = {
-            userId: user.id,
-            teamId: props.teamId,
-        }
-        userApi.getAllUserInTeam({ params }).then(res => {
-            console.log(res.data);
-            const newMentions = res.data.map(x => {
-                return {
-                    name: x.userFullname,
-                    id: x.userId,
-                    avatar: x.userImageUrl,
-                }
-            });
-
-            setSuggestions(defaultSuggestionsFilter(value, newMentions));
-        }).catch(err => {
-
-        });
-
-        //setSuggestions(defaultSuggestionsFilter(value, mentions));
-    }, []);
+        setSuggestions(defaultSuggestionsFilter(value, mentions));
+    }, [mentions]);
 
     const onChange = (e) => {
         setEditorState(e);
@@ -93,6 +75,27 @@ function CustomInput(props) {
         return 'not-handled';
     }
 
+    useEffect(() => {
+        const params = {
+            userId: user.id,
+            teamId: props.teamId,
+        }
+        userApi.getAllUserInTeam({ params }).then(res => {
+            console.log(res.data);
+            const newMentions = res.data.map(x => {
+                return {
+                    name: x.userFullname,
+                    id: x.userId,
+                    avatar: x.userImageUrl,
+                }
+            });
+
+            setMentions(newMentions);
+        }).catch(err => {
+
+        });
+    }, [props.teamId])
+
     return (
         <div className="custom-input-container">
             <Editor
@@ -105,7 +108,6 @@ function CustomInput(props) {
                 keyBindingFn={keyBindingFn}
                 handleKeyCommand={handleKeyCommand}
             />
-            <EmojiSuggestions />
 
             <MentionSuggestions
                 open={open}
