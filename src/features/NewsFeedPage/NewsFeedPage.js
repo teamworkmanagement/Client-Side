@@ -51,7 +51,6 @@ function NewsFeedPage(props) {
   const [newPostContent, setNewPostContent] = useState("");
   const [tags, setTags] = useState([]);
   const [listPictures, setListPictures] = useState([]);
-  const [linkPictures, setLinkPictures] = useState([]);
   const [resetEditorText, setResetEditorText] = useState(-1);
 
   const { teamId } = useParams();
@@ -148,14 +147,11 @@ function NewsFeedPage(props) {
     setGrAddPost(gr === null ? null : gr.value);
   };
 
-  let newArr = [];
   const uploadImage = () => {
-    newArr = [];
-    const promises = [];
     if (listPictures.length === 0)
       return;
 
-    listPictures.forEach((pic, index) => {
+    /*listPictures.forEach((pic, index) => {
       const uploadTask =
         firebaseConfig.storage().ref().child(`${uuid()}/${pic.file.name}`).put(pic.file);
       promises.push(uploadTask);
@@ -172,23 +168,35 @@ function NewsFeedPage(props) {
         async () => {
           const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
           const cloneLinks = [...linkPictures];
-          newArr.push(downloadURL);
-          console.log(newArr);
+          cloneLinks.push(downloadURL);
+
+          setLinkPictures(cloneLinks);
+
         });
     });
-    Promise.all(promises)
-      .then(() => setListPictures([]))
-      .catch(err => console.log(err.code));
+    return Promise.all(promises);*/
 
+
+    const promises = listPictures.map((pic, index) => {
+      let ref = firebaseConfig.storage().ref().child(`${uuid()}/${pic.file.name}`);
+      return ref.put(pic.file).then(async () => {
+        const link = await ref.getDownloadURL();
+        return {
+          index: index,
+          link: link,
+        }
+      }).catch(err => console.log(err.code));
+    })
+    return Promise.all(promises);
 
   }
 
   const addPostClick = async () => {
+
     if ((!grAddPost && !teamId) || !newPostContent) {
       alert("Xem lại");
       return;
     }
-
 
     var cloneContent = (" " + newPostContent).slice(1);
 
@@ -204,7 +212,8 @@ function NewsFeedPage(props) {
 
     //cloneContent = '<p>' + cloneContent + '</p>';
 
-    uploadImage();
+    let linkDowload = [];
+    linkDowload = await uploadImage();
 
     postApi
       .addPost({
@@ -213,13 +222,12 @@ function NewsFeedPage(props) {
         postContent: cloneContent,
       })
       .then((res) => {
-        console.log(res.data);
-        res.data.postImages = newArr;
+        res.data.postImages = linkDowload.map(x => x.link);
         setAddPostDone(res.data);
 
         fileApi.uploadImagesPost({
           postId: res.data.postId,
-          imageUrls: newArr,
+          imageUrls: linkDowload,
         }).then(res => { }).catch(err => { })
       })
       .catch((err) => { });

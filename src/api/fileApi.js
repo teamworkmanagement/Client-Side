@@ -10,7 +10,7 @@ const fileApi = {
         return axiosClient.get(url, payload);
     },
     uploadImagesPost(payload) {
-        const url = 'file/upload-images-post';
+        const url = '/file/upload-images-post';
         return axiosClient.post(url, payload);
     }
 };

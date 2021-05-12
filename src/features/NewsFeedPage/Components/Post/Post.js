@@ -51,13 +51,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-          .deleteReactPost({ params })
-          .then((res) => {})
-          .catch((err) => {})
+        .deleteReactPost({ params })
+        .then((res) => { })
+        .catch((err) => { })
       : postApi
-          .reactPost(params)
-          .then((res) => {})
-          .catch((err) => {});
+        .reactPost(params)
+        .then((res) => { })
+        .catch((err) => { });
 
     setPost({
       ...post,
@@ -99,7 +99,7 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -157,7 +157,7 @@ function Post(props) {
 
         setComments(newArrr);
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     console.log(value);
   };
@@ -172,8 +172,6 @@ function Post(props) {
     "https://cdn3.yame.vn/pimg/ao-thun-co-tron-y-original-ver1-0020237/3f339682-7f04-1000-a86f-0017ebe78d1d.jpg?w=540&h=756&c=true",
 
     "https://cdn3.yame.vn/pimg/giay-casual-anubis-ver1-0019901/a1f616a6-ea76-0200-c9c5-00176e430b9f.jpg?w=540&h=540&c=true",
-
-    "https://cdn3.yame.vn/cimg/qua-tang-mien-phi/33181116-e676-0100-78ff-0017d2c5ac31.jpg?w=800",
   ];
 
   return (
@@ -192,7 +190,7 @@ function Post(props) {
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
               {!props.isInTeam && `đã đăng trong nhóm `}
-              {!props.isInTeam && <strong>{post.teamName}</strong>}
+              {!props.isInTeam && <strong dangerouslySetInnerHTML={{ __html: post.teamName }} />}
             </div>
             <div className="post-date">
               {moment(post.postCreatedAt).format("hh:mm, DD/MM/YYYY")}
