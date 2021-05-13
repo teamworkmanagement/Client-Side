@@ -137,7 +137,7 @@ const kanbanSlice = createSlice({
     },
     extraReducers: {
         [getBoardDataForUI.fulfilled]: (state, action) => {
-            state.kanbanBoard.kanbanLists = action.payload.kanbanListUIs;
+            state.kanbanBoard.kanbanLists = action.payload ? action.payload.kanbanListUIs : [];
         }
     }
 },
