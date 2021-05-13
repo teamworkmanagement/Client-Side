@@ -31,7 +31,9 @@ const chatSlice = createSlice({
     setCurrentGroup: (state, action) => {
       state.currentGroup = action.payload;
       const gr = state.groupChat.find((x) => x.groupChatId === action.payload);
-      gr.newMessage = false;
+      if (gr) {
+        gr.newMessage = false;
+      }
     },
     setIsSelected: (state, action) => {
       state.isSelected = action.payload;
@@ -51,7 +53,7 @@ const chatSlice = createSlice({
   extraReducers: {
     [getAllGroupChatForUser.fulfilled]: (state, action) => {
       state.groupChat = action.payload;
-      state.currentGroup=action.payload[0]?.groupChatId;
+      state.currentGroup = action.payload[0]?.groupChatId;
       state.loadDone = true;
       /*state.currentGroup =
         action.payload.length > 0

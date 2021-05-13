@@ -93,6 +93,9 @@ function GanttChart(props) {
           progress: task.taskCompletedPercent / 100,
           filesCount: task.filesCount,
           commentsCount: task.commentsCount,
+          color: "white",
+          textColor: "#3c4b64",
+          progressColor: "#448AFF",
         });
       }
     }

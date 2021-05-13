@@ -173,7 +173,7 @@ function Post(props) {
 
     "https://cdn3.yame.vn/pimg/giay-casual-anubis-ver1-0019901/a1f616a6-ea76-0200-c9c5-00176e430b9f.jpg?w=540&h=540&c=true",
   ];
-
+  console.log(post.userName + "-" + user.fullName);
   return (
     <div className="post-container">
       <div className="post-header">
@@ -207,7 +207,7 @@ function Post(props) {
         dangerouslySetInnerHTML={{ __html: post.postContent }}
       ></div>
       <div className="post-images-list-container">
-        <GridImages images={post.postImages} />
+        <GridImages countFrom={5} images={listImages} />
       </div>
       <div className="interaction-bar">
         <CIcon
@@ -216,7 +216,7 @@ function Post(props) {
           onClick={onLoveClick}
         />
         <div className="love-count">{post.postReactCount}</div>
-        <CIcon name="cil-comment-square" className="comment-icon" />
+        <CIcon name="cil-speech" className="comment-icon" />
         <div className="comment-count">{post.postCommentCount}</div>
       </div>
       <div className="my-comment">

@@ -9,6 +9,7 @@ import { setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
 import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
 import Message from "./Message";
+import "./Message.scss";
 
 MessageList.propTypes = {};
 
@@ -488,15 +489,14 @@ function MessageList(props) {
           scrollToBottom();
         }, 1);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [props.sendMes]);
 
   return (
     <div>
       {listMes.map((item, index) => {
-        return <Message item={item} key={item.messageId} index={index} />
-      })
-      }
+        return <Message item={item} key={item.messageId} index={index} />;
+      })}
       <div ref={messagesEndRef} />
     </div>
   );
