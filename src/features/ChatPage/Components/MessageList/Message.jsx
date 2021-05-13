@@ -14,13 +14,13 @@ function Message({ item, index }) {
             case 'file':
                 return <strong>{item.message.split('/').pop()}</strong>;
             case 'image':
-                return <img style={{ width: '50%', height: '50%' }} src={item.message}></img>
+                return <img style={{ width: '30%', height: '30%' }} src={item.message}></img>
             default:
                 return <div className="message-text">{item.message}</div>;
         }
     }
     return (
-        <div>
+        <div className="message">
             {
                 item.isLabel ? (
                     <div className="message-label">{item.message}</div>

@@ -37,6 +37,7 @@ import {
   cilWindowMinimize,
   cilBolt,
   cilCheckAlt,
+  cilFindInPage,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -209,6 +210,7 @@ export const icons = Object.assign(
     cilHealing,
     cilCaretLeft,
     cilCheckAlt,
+    cilFindInPage,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

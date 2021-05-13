@@ -1,0 +1,25 @@
+@keyframes showInGanttTask {
+    0% {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@mixin GanttTaskAppear {
+    transition: all 0.3s ease-out;
+    transform: scale(0);
+    animation-name: showInGanttTask;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+    transform-origin: left;
+}
+.message {
+    @include GanttTaskAppear;
+}
