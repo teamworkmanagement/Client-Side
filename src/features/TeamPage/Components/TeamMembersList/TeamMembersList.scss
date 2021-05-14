@@ -29,16 +29,16 @@
     height: 100%;
     .members-list-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
-
+        margin-top: -0.5rem;
         .search-bar-container {
             height: 100%;
 
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding: 0rem 1rem;
+            margin-right: 0.5rem;
             padding-left: 0.1rem;
             .input-container {
                 position: relative;

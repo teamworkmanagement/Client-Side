@@ -658,6 +658,93 @@
     }
 }
 
+.react-tiny-popover-container {
+    left: -0.5rem !important;
+    .lists-popover-container {
+        background-color: white;
+        box-shadow: rgb(0 0 0 / 16%) 0px 1px 2px -2px, rgb(0 0 0 / 12%) 0px 3px 6px 0px,
+            rgb(0 0 0 / 9%) 0px 5px 12px 4px;
+        border-radius: 0.625rem;
+        border-color: rgba(0, 0, 21, 0.2);
+        .lists-header {
+            padding: 0.5rem;
+            border-top-left-radius: 0.625rem;
+            border-top-right-radius: 0.625rem;
+            background-color: #f7f7f7;
+            border-bottom-color: #ebebeb;
+        }
+        .lists-body {
+            padding: 0.5rem;
+            .list-item {
+                display: flex;
+                margin-bottom: 0.5rem;
+                align-items: center;
+                background-color: white;
+                border-radius: 0.5rem;
+                padding: 0.5rem;
+                cursor: pointer;
+                z-index: 10001;
+                transition: all 0.3s;
+                .c-icon {
+                    margin-right: 0.3rem;
+                    visibility: hidden;
+                }
+                &.active {
+                    background-color: #eaecf0;
+                    .c-icon {
+                        visibility: visible;
+                    }
+                }
+                &:hover {
+                    background-color: rgba(#eaecf0, 0.8);
+                    .c-icon {
+                        visibility: visible;
+                        color: rgba(#3c4b64, 0.8);
+                    }
+                }
+            }
+        }
+    }
+    .scores-popover-container {
+        background-color: white;
+        box-shadow: rgb(0 0 0 / 16%) 0px 1px 2px -2px, rgb(0 0 0 / 12%) 0px 3px 6px 0px,
+            rgb(0 0 0 / 9%) 0px 5px 12px 4px;
+        border-radius: 0.625rem;
+        border-color: rgba(0, 0, 21, 0.2);
+        .scores-body {
+            padding: 0.5rem;
+            .score-item {
+                display: flex;
+                margin-bottom: 0.5rem;
+                align-items: center;
+                background-color: white;
+                border-radius: 0.5rem;
+                padding: 0.5rem;
+                cursor: pointer;
+                z-index: 10001;
+                transition: all 0.3s;
+                .c-icon {
+                    margin-right: 0.3rem;
+                    visibility: hidden;
+                }
+                &.active {
+                    background-color: #eaecf0;
+                    .c-icon {
+                        visibility: visible;
+                    }
+                }
+                &:hover {
+                    background-color: rgba(#eaecf0, 0.8);
+                    .c-icon {
+                        visibility: visible;
+                        color: rgba(#3c4b64, 0.8);
+                    }
+                }
+            }
+        }
+    }
+}
+
 .toaster {
     width: fit-content;
     border-radius: 0.625rem;
@@ -677,6 +764,9 @@
             }
         }
     }
+}
+.react-tiny-popover-container {
+    z-index: 100000;
 }
 
 .gantt_task_line.gantt_task_inline_color.gantt_project,

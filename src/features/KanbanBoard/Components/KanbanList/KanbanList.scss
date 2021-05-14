@@ -12,6 +12,9 @@
     overflow-y: hidden;
     overflow-x: hidden;
     justify-content: space-between;
+    &:first-child {
+        margin-left: 0;
+    }
     .kanbanlist-header {
         //margin-bottom: 1rem;
         //color: #d6d7dc;

@@ -19,13 +19,23 @@ import TeamTasks from "./Components/TeamTasks/TeamTasks";
 import { useSelector } from "react-redux";
 import TeamLoading from "./TeamLoading/TeamLoading";
 import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
+import BoardsPage from "./Components/BoardsPage/BoardsPage";
 
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
   const lorem = "ccc";
   const [active, setActive] = useState(1);
+  const [isOpeningBoard, setIsOpeningBoard] = useState(false);
   const teamLoading = useSelector((state) => state.app.teamLoading);
+
+  function openBoard(boardId) {
+    setIsOpeningBoard(true);
+  }
+  function goBackListBoards() {
+    setIsOpeningBoard(false);
+  }
+
   return (
     <div className="team-container">
       <CTabs activeTab={0} onActiveTabChange={(idx) => setActive(idx)}>
@@ -41,7 +51,7 @@ function TeamPage(props) {
           <CNavItem>
             <CTooltip content="Công việc" placement="right">
               <CNavLink>
-                <CIcon name="cil-line-weight" />
+                <CIcon name="cil-storage" />
                 <div className="tab-name">Công việc</div>
               </CNavLink>
             </CTooltip>
@@ -76,7 +86,12 @@ function TeamPage(props) {
             <NewsFeedPage isInTeam={true} />
           </CTabPane>
           <CTabPane>
-            <TeamTasks />
+            {isOpeningBoard ? (
+              <TeamTasks goBackListBoards={goBackListBoards} />
+            ) : (
+              <BoardsPage openBoard={openBoard} />
+            )}
+            {false && <BoardsPage openBoard={openBoard} />}
           </CTabPane>
           <CTabPane>
             <ChatPage isInTeam={true} tabActiveTeam={active} />

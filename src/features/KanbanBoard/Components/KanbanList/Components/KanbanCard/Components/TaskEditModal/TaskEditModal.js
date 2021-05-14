@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "./TaskEditModal.scss";
 import CIcon from "@coreui/icons-react";
 import { Range, getTrackBackground } from "react-range";
+import { Popover, ArrowContainer, useArrowContainer } from "react-tiny-popover";
 
 import {
   CButton,
@@ -104,12 +105,56 @@ function TaskEditModal(props) {
     refactorKanbanListWithActive()
   );
 
+  const [listScores, setListScores] = useState([
+    {
+      score: "1",
+      active: true,
+    },
+    {
+      score: "2",
+      active: false,
+    },
+    {
+      score: "3",
+      active: false,
+    },
+    {
+      score: "4",
+      active: false,
+    },
+    {
+      score: "5",
+      active: false,
+    },
+    {
+      score: "6",
+      active: false,
+    },
+    {
+      score: "7",
+      active: false,
+    },
+    {
+      score: "8",
+      active: false,
+    },
+    {
+      score: "9",
+      active: false,
+    },
+    {
+      score: "10",
+      active: false,
+    },
+  ]);
+
   const [options, setOptions] = useState([]);
   const [current, setCurrent] = useState(null);
   const [isFocused, setFocus] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
 
   function refactorKanbanListWithActive() {
+    //set active cho list mà task này đang nằm trong đó, list đang dc chọn (active) sẽ có dấu check
     var cloneLists = [...kanbanLists];
     for (let i = 0; i < cloneLists.length; i++) {
       cloneLists[i] = {
@@ -117,7 +162,11 @@ function TaskEditModal(props) {
         active: false,
       };
     }
-    //cloneLists[0].active = true;
+    //set active cho list đang chứa task này
+    cloneLists[0] = {
+      ...cloneLists[0],
+      active: true,
+    };
     return cloneLists;
   }
 
@@ -866,35 +915,83 @@ function TaskEditModal(props) {
     setKanbanLocal(cloneKanbanList);
   }
 
-  function renderContent() {
-    return kanbanLocal.map((list) => {
-      return (
-        <div
-          className={`list-item ${list.active ? "active" : ""}`}
-          onClick={() => console.log("click")}
-        >
-          <CIcon name="cil-check-alt" />
-          <div onClick={() => console.log("click")}>{list.kanbanListTitle}</div>
+  function selectList(index) {
+    var cloneLists = [...kanbanLocal];
+    for (let i = 0; i < cloneLists.length; i++) {
+      cloneLists[i] = {
+        ...cloneLists[i],
+        active: false,
+      };
+      if (i === index) {
+        cloneLists[i] = {
+          ...cloneLists[i],
+          active: true,
+        };
+      }
+    }
+    setKanbanLocal(cloneLists);
+  }
+
+  function renderContentList() {
+    return (
+      <div className="lists-popover-container">
+        <div className="lists-header">Danh sách</div>
+        <div className="lists-body">
+          {kanbanLocal.map((list, index) => {
+            return (
+              <div
+                className={`list-item ${list.active ? "active" : ""}`}
+                onClick={() => selectList(index)}
+              >
+                <CIcon name="cil-check-alt" />
+                <div>{list.kanbanListTitle}</div>
+              </div>
+            );
+          })}
         </div>
-      );
-    });
+      </div>
+    );
   }
 
-  function clickPopover(e) {
-    console.log(e);
+  function selectScore(index) {
+    var cloneLists = [...listScores];
+    for (let i = 0; i < cloneLists.length; i++) {
+      cloneLists[i] = {
+        ...cloneLists[i],
+        active: false,
+      };
+      if (i === index) {
+        cloneLists[i] = {
+          ...cloneLists[i],
+          active: true,
+        };
+      }
+    }
+    setListScores(cloneLists);
   }
 
-  const onSelectedUser = (obj) => {
-    setTask({
-      ...task,
-      userId: obj?.value ? obj?.value : null,
-      userAvatar: obj?.img ? obj?.img : null,
-    });
+  function renderContentScore() {
+    return (
+      <div className="scores-popover-container">
+        <div className="scores-body">
+          {listScores.map((item, index) => {
+            return (
+              <div
+                className={`score-item ${item.active ? "active" : ""}`}
+                onClick={() => selectScore(index)}
+              >
+                <CIcon name="cil-check-alt" />
+                <div>{item.score}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
-    //dispatchUpdateTask();
-  };
-
-  //selector region
+  const [openPopoverLists, setOpenPopoverLists] = useState(false);
+  const [openPopoverScores, setOpenPopoverScores] = useState(false);
 
   return (
     <div>
@@ -1372,27 +1469,40 @@ function TaskEditModal(props) {
               </CCol>
               <CCol className="col-3">
                 <div className="form-actions">
-                  <CPopover
-                    header="Danh sách"
+                  <Popover
                     className="lists-select-popover"
-                    placement={"left-start"}
-                    interactive={true}
-                    trigger="click"
-                    onClick={clickPopover}
-                    html="true"
-                    container="body"
-                    content={renderContent()}
+                    isOpen={openPopoverLists}
+                    align="start"
+                    position={["left"]} // preferred positions by priority
+                    onClickOutside={() => setOpenPopoverLists(false)}
+                    content={renderContentList()}
                   >
-                    <div className="action-item">
+                    <div
+                      className="action-item"
+                      onClick={() => setOpenPopoverLists(!openPopoverLists)}
+                    >
                       <CIcon name="cil-share-boxed" />
                       <div className="action-name">Chuyển đến...</div>
                     </div>
-                  </CPopover>
+                  </Popover>
 
-                  <div className="action-item">
-                    <CIcon name="cil-sort-numeric-up" />
-                    <div className="action-name">Cho điểm</div>
-                  </div>
+                  <Popover
+                    className="lists-select-popover"
+                    isOpen={openPopoverScores}
+                    align="start"
+                    position={["left"]} // preferred positions by priority
+                    onClickOutside={() => setOpenPopoverScores(false)}
+                    content={renderContentScore()}
+                  >
+                    <div
+                      className="action-item"
+                      onClick={() => setOpenPopoverScores(!openPopoverScores)}
+                    >
+                      <CIcon name="cil-sort-numeric-up" />
+                      <div className="action-name">Cho điểm</div>
+                    </div>
+                  </Popover>
+
                   <div className="action-item" onClick={onRemoveTask}>
                     <CIcon name="cil-trash" />
                     <div className="action-name">Xóa công việc</div>

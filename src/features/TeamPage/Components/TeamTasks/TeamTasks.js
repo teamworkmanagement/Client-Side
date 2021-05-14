@@ -17,22 +17,32 @@ function TeamTasks(props) {
     if (index === showMode) return;
     setShowMode(index);
   }
+  function goBackListBoards() {
+    if (props.goBackListBoards) {
+      props.goBackListBoards();
+    }
+  }
   return (
     <div className="tasks-team-container">
       <div className="tasks-header">
-        <div className="search-bar-container">
-          <div className="input-container">
-            <CInput
-              class="input-field"
-              placeholder="...tìm công việc"
-              type="text"
-            />
-            <div className="input-actions-group">
-              <CIcon name="cil-search" />
-            </div>
-          </div>
+        <div className="goback-label" onClick={goBackListBoards}>
+          <CIcon className="one" name="cil-check-alt" />
+          <CIcon className="two" name="cil-check-alt" />
+          <div className="label-text">Trở lại màn hình danh sách công việc</div>
         </div>
         <div className="other-actions">
+          <div className="search-bar-container">
+            <div className="input-container">
+              <CInput
+                class="input-field"
+                placeholder="...tìm công việc"
+                type="text"
+              />
+              <div className="input-actions-group">
+                <CIcon name="cil-search" />
+              </div>
+            </div>
+          </div>
           {showMode === 1 && (
             <div className="add-btn add-list-btn">
               <CIcon name="cil-plus" />
