@@ -27,7 +27,7 @@ import PostEditor from "./Components/PostEditor/PostEditor";
 import { convertToRaw } from "draft-js";
 import uuid from "src/utils/file/uuid";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import fileApi from "src/api/fileApi";
 
 NewsFeedPage.propTypes = {};
@@ -56,9 +56,8 @@ function NewsFeedPage(props) {
   const { teamId } = useParams();
 
   useEffect(() => {
-    if (teamId)
-      setGrAddPost(teamId);
-  }, [teamId])
+    if (teamId) setGrAddPost(teamId);
+  }, [teamId]);
 
   const pickImgRef = useRef(null);
 
@@ -153,8 +152,7 @@ function NewsFeedPage(props) {
   };
 
   const uploadImage = () => {
-    if (listPictures.length === 0)
-      return;
+    if (listPictures.length === 0) return;
 
     /*listPictures.forEach((pic, index) => {
       const uploadTask =
@@ -181,24 +179,27 @@ function NewsFeedPage(props) {
     });
     return Promise.all(promises);*/
 
-
     const promises = listPictures.map((pic, index) => {
-      let ref = firebaseConfig.storage().ref().child(`${uuid()}/${pic.file.name}`);
-      return ref.put(pic.file).then(async () => {
-        const link = await ref.getDownloadURL();
-        return {
-          index: index,
-          link: link,
-        }
-      }).catch(err => console.log(err.code));
-    })
+      let ref = firebaseConfig
+        .storage()
+        .ref()
+        .child(`${uuid()}/${pic.file.name}`);
+      return ref
+        .put(pic.file)
+        .then(async () => {
+          const link = await ref.getDownloadURL();
+          return {
+            index: index,
+            link: link,
+          };
+        })
+        .catch((err) => console.log(err.code));
+    });
     return Promise.all(promises);
-
-  }
+  };
 
   const addPostClick = async () => {
-
-    if ((!grAddPost && !teamId) || !newPostContent || newPostContent === '\n') {
+    if ((!grAddPost && !teamId) || !newPostContent || newPostContent === "\n") {
       alert("Xem lại");
       return;
     }
@@ -228,19 +229,24 @@ function NewsFeedPage(props) {
         postContent: cloneContent,
       })
       .then((res) => {
-        res.data.postImages = links?.map(x => x.link);
+        res.data.postImages = links?.map((x) => x.link);
         console.log(addPostDone);
         console.log(res.data);
         setAddPostDone(res.data);
 
         if (links?.length > 0) {
-          fileApi.uploadImagesPost({
-            postId: res.data.postId,
-            imageUrls: links,
-          }).then(res => { }).catch(err => { })
+          fileApi
+            .uploadImagesPost({
+              postId: res.data.postId,
+              imageUrls: links,
+            })
+            .then((res) => {})
+            .catch((err) => {});
         }
       })
-      .catch((err) => { console.log(err) });
+      .catch((err) => {
+        console.log(err);
+      });
 
     setResetEditorText(resetEditorText + 1);
     setShowCreatePost(false);
@@ -284,137 +290,145 @@ function NewsFeedPage(props) {
 
   const listImages = [
     {
-      link:
-        "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
+      link: "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
     },
     {
-      link:
-        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
     },
     {
       link: "https://ohay.vn/blog/wp-content/uploads/2020/06/ba-lo-laza11.jpg",
     },
     {
-      link:
-        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
     },
     {
-      link:
-        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
     },
     {
-      link:
-        "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
+      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
     },
   ];
 
-
   const onPickImageChange = (e) => {
-    const newLists = Array.from(e.target.files).map(f => {
+    const newLists = Array.from(e.target.files).map((f) => {
       return {
         url: URL.createObjectURL(f),
         file: f,
-      }
+      };
     });
 
     setListPictures([...listPictures, ...newLists]);
-  }
-
+  };
 
   const removePicture = (index) => {
     const cloneListPictures = [...listPictures];
     cloneListPictures.splice(index, 1);
     setListPictures(cloneListPictures);
-  }
-
+  };
 
   return (
     <div className="newsfeed-page-container">
-      <div className="post-list-container">
-        <PostList
-          addPostDone={addPostDone}
-          isInTeam={props.isInTeam}
-          filter={filter}
-        />
-      </div>
-      <div className="side-panel-container">
-        <div
-          className="create-post-btn"
-          onClick={() => setShowCreatePost(!showCreatePost)}
-        >
-          <div className="title">
-            <CIcon name="cil-pencil" />
-            Viết bài mới
-          </div>
-        </div>
-        <div
-          className="toggle-filter-btn"
-          onClick={toggleShowFilter}
-          style={
-            showFilter
-              ? {
-                borderBottomLeftRadius: "0",
-                borderBottomRightRadius: "0",
-                borderBottom: "none",
+      <CRow>
+        <CCol xl="9" lg="9" md="9" sm="12" className="post-list-col ">
+          <CRow className="row-inside-list-post">
+            <CCol
+              xl="10"
+              md="10"
+              sm="10"
+              xs="12"
+              className="post-list-inside-col"
+            >
+              <div className="post-list-container">
+                <PostList
+                  addPostDone={addPostDone}
+                  isInTeam={props.isInTeam}
+                  filter={filter}
+                />
+              </div>
+            </CCol>
+          </CRow>
+        </CCol>
+        <CCol xl="3" lg="3" md="3" sm="0" className="side-panel-col">
+          <div className="side-panel-container">
+            <div
+              className="create-post-btn"
+              onClick={() => setShowCreatePost(!showCreatePost)}
+            >
+              <div className="title">
+                <CIcon name="cil-pencil" />
+                Viết bài mới
+              </div>
+            </div>
+            <div
+              className="toggle-filter-btn"
+              onClick={toggleShowFilter}
+              style={
+                showFilter
+                  ? {
+                      borderBottomLeftRadius: "0",
+                      borderBottomRightRadius: "0",
+                      borderBottom: "none",
+                    }
+                  : {
+                      borderBottomLeftRadius: "10px",
+                      borderBottomRightRadius: "10px",
+                      borderBottom: "1px solid #e6ebf1",
+                    }
               }
-              : {
-                borderBottomLeftRadius: "10px",
-                borderBottomRightRadius: "10px",
-                borderBottom: "1px solid #e6ebf1",
-              }
-          }
-        >
-          <div className="title">
-            <CIcon name="cil-list-filter" />
-            Lọc bản tin
-          </div>
-          {showFilter ? (
-            <img
-              className="expand-icon"
-              src="../images/expand_less.png"
-              alt=""
-            />
-          ) : (
-            <img
-              className="expand-icon"
-              src="../images/expand_more.png"
-              alt=""
-            />
-          )}
-        </div>
-        <CCollapse show={showFilter}>
-          <PostToolBar getFilter={getFilter} />
-        </CCollapse>
-        {!props.isInTeam && (
-          <div className="post-group-list-container">
-            <div className="group-list-title">Bài viết trong nhóm</div>
-            {groupList.map((item, index) => {
-              return (
-                <div
-                  key={item.groupId}
-                  className="post-group-item"
-                  style={{ animationDelay: `${(index + 2) / 10}s` }}
-                >
-                  <div className="group-avatar">
-                    <img src={item.groupAvatar} alt="" />
-                  </div>
-                  <div className="group-infor">
-                    <div className="group-name">{item.groupName}</div>
-                    <div className="group-member-count">
-                      {item.groupMemberCount} Thành viên
+            >
+              <div className="title">
+                <CIcon name="cil-list-filter" />
+                Lọc bản tin
+              </div>
+              {showFilter ? (
+                <img
+                  className="expand-icon"
+                  src="../images/expand_less.png"
+                  alt=""
+                />
+              ) : (
+                <img
+                  className="expand-icon"
+                  src="../images/expand_more.png"
+                  alt=""
+                />
+              )}
+            </div>
+            <CCollapse show={showFilter}>
+              <PostToolBar getFilter={getFilter} />
+            </CCollapse>
+            {!props.isInTeam && (
+              <div className="post-group-list-container">
+                <div className="group-list-title">Bài viết trong nhóm</div>
+                {groupList.map((item, index) => {
+                  return (
+                    <div
+                      key={item.groupId}
+                      className="post-group-item"
+                      style={{ animationDelay: `${(index + 2) / 10}s` }}
+                    >
+                      <div className="group-avatar">
+                        <img src={item.groupAvatar} alt="" />
+                      </div>
+                      <div className="group-infor">
+                        <div className="group-name">{item.groupName}</div>
+                        <div className="group-member-count">
+                          {item.groupMemberCount} Thành viên
+                        </div>
+                      </div>
+                      <div className="group-new-count">
+                        <CBadge className="badge-danger">
+                          {item.groupNewPostCount}
+                        </CBadge>
+                      </div>
                     </div>
-                  </div>
-                  <div className="group-new-count">
-                    <CBadge className="badge-danger">
-                      {item.groupNewPostCount}
-                    </CBadge>
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </CCol>
+      </CRow>
 
       <CModal show={showCreatePost} onClosed={onModalClose}>
         <CModalHeader closeButton></CModalHeader>
@@ -427,14 +441,21 @@ function NewsFeedPage(props) {
             />
           ) : null}
 
-          <PostEditor postTeamId={grAddPost} reset={resetEditorText} onTextChange={onTextChange} />
+          <PostEditor
+            postTeamId={grAddPost}
+            reset={resetEditorText}
+            onTextChange={onTextChange}
+          />
           {listPictures.length > 0 && (
             <div className="list-images-container">
               {listPictures.map((image, index) => {
                 return (
                   <div className="img-container">
                     <img className="upload-img" alt="" src={image.url} />
-                    <div className="delete-img-btn" onClick={() => removePicture(index)}>
+                    <div
+                      className="delete-img-btn"
+                      onClick={() => removePicture(index)}
+                    >
                       <CIcon name="cil-x" />
                     </div>
                   </div>
@@ -442,11 +463,21 @@ function NewsFeedPage(props) {
               })}
             </div>
           )}
-          <div onClick={() => pickImgRef.current.click()} className="add-image-btn-container">
+          <div
+            onClick={() => pickImgRef.current.click()}
+            className="add-image-btn-container"
+          >
             <div className="add-image-btn">
               <CIcon name="cil-image-plus" />
               Thêm ảnh
-              <input type="file" onChange={onPickImageChange} multiple ref={pickImgRef} style={{ display: 'none' }} accept="image/*" />
+              <input
+                type="file"
+                onChange={onPickImageChange}
+                multiple
+                ref={pickImgRef}
+                style={{ display: "none" }}
+                accept="image/*"
+              />
             </div>
           </div>
         </CModalBody>

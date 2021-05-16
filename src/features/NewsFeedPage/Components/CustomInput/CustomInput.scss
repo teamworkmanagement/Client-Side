@@ -3,7 +3,7 @@
     .DraftEditor-root {
         border-radius: 0.625rem;
         .public-DraftEditorPlaceholder-root {
-            padding: 0rem 0.5rem;
+            padding: 0rem 0.5rem !important;
             display: flex;
             height: 100%;
             align-items: center;
@@ -17,6 +17,9 @@
             }
         }
     }
+}
+.public-DraftStyleDefault-block.public-DraftStyleDefault-ltr {
+    padding-left: 0.1rem;
 }
 .editor {
     box-sizing: border-box;

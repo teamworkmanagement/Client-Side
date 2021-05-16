@@ -6,6 +6,7 @@ import NewsFeedPage from "./features/NewsFeedPage/NewsFeedPage";
 import KanbanBoard from "./features/KanbanBoard/KanbanBoard";
 import MyToaster from "./features/ToastTest/ToastTest";
 import ListTeamPage from "./features/ListTeamPage/ListTeamPage";
+import UserProfilePage from "./shared_components/MySharedComponents/UserProfilePage/UserProfilePage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -116,6 +117,12 @@ const routes = [
   { path: "/team/:teamId", name: "Nhóm", component: TeamPage, exact: true },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/kanban", name: "Kanban", component: KanbanBoard, exact: true },
+  {
+    path: "/userprofile",
+    name: "Thông tin",
+    component: UserProfilePage,
+    exact: true,
+  },
   { path: "/toast", name: "Kanban", component: MyToaster, exact: true },
   {
     path: "/teams",

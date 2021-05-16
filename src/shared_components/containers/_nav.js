@@ -34,7 +34,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Quản lý công việc",
-    to: "/",
+    to: "/userprofile",
     icon: "cib-stackoverflow",
   },
 
