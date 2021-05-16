@@ -201,7 +201,7 @@ function Post(props) {
           <div className="poster-avatar">
             <img
               alt="avatar"
-              src="http://emilus.themenate.net/img/avatars/thumb-4.jpg"
+              src={post.userAvatar}
             />
           </div>
           <div className="poster-infor">
@@ -241,7 +241,7 @@ function Post(props) {
       </div>
       <div className="my-comment">
         <div className="my-avatar">
-          <img alt="" src="../avatars/6.jpg" />
+          <img alt="" src={user.userAvatar} />
         </div>
         <div className="input-container">
           {/*<CInput

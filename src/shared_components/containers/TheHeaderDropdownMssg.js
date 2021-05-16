@@ -26,6 +26,7 @@ const TheHeaderDropdownMssg = () => {
   const [notis, setNotis] = useState([]);
   const newNoti = useSelector(state => state.app.newNotfication);
   const [itemsCount, setItemsCount] = useState(0);
+  const user = useSelector(state => state.auth.currentUser);
 
   useEffect(() => {
     const params = {
@@ -59,9 +60,25 @@ const TheHeaderDropdownMssg = () => {
     })
 
     setNotis(clone);
-    alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
+    console.log(newNoti);
+    //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
   }, [newNoti])
 
+
+  const onClick = (noti) => {
+    console.log('onclick: ', noti);
+    const payload = {
+      groupId: noti.notificationGroup,
+      userId: user.id,
+    }
+    notiApi.readNoti(payload).then(res => { }).catch(err => { });
+    let cloneNotis = [...notis];
+    let obj = cloneNotis.find(n => n.notificationId === noti.notificationId);
+    obj.notificationStatus = true;
+
+    setNotis(cloneNotis);
+    setItemsCount(itemsCount - 1);
+  }
   return (
     <CDropdown
       inNav
@@ -86,7 +103,7 @@ const TheHeaderDropdownMssg = () => {
             return <CDropdownItem
               key={noti.notificationId}
               className={classNames({ "bg-light": !!noti.notificationStatus === false })}
-              href="#">
+              onClick={() => onClick(noti)}>
               <div className="message">
                 <div className="pt-3 mr-3 float-left">
                   <div className="c-avatar">

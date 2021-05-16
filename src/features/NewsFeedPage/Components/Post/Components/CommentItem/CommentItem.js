@@ -12,7 +12,7 @@ function CommentItem({ comment }) {
   return (
     <div className="comment-item-container">
       <div className="commenter-avatar">
-        <img alt="" src="http://emilus.themenate.net/img/avatars/thumb-6.jpg" />
+        <img alt="" src={comment.userAvatar} />
       </div>
       <div className="comment-infor">
         <div className="comment-header">
