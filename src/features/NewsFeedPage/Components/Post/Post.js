@@ -26,6 +26,7 @@ function Post(props) {
   const user = useSelector((state) => state.auth.currentUser);
   const newAddReact = useSelector(state => state.signalr.newAddReact);
   const removeReact = useSelector(state => state.signalr.removeReact);
+  const newComment = useSelector(state => state.signalr.newComment);
   const [resetEditor, setResetEditor] = useState(0);
 
   useEffect(() => {
@@ -189,7 +190,7 @@ function Post(props) {
   useEffect(() => {
     if (!newAddReact)
       return;
-    
+
     if (newAddReact.postId === post.postId) {
       setPost({
         ...post,
@@ -221,6 +222,19 @@ function Post(props) {
 
     "https://cdn3.yame.vn/pimg/giay-casual-anubis-ver1-0019901/a1f616a6-ea76-0200-c9c5-00176e430b9f.jpg?w=540&h=540&c=true",
   ];
+
+  useEffect(() => {
+    if (!newComment)
+      return;
+    if (newComment.commentPostId === post.postId) {
+      setComments([newComment].concat([...cmtLists]));
+      setPost({
+        ...post,
+        postCommentCount: post.postCommentCount + 1,
+      });
+      console.log(newComment);
+    }
+  }, [newComment])
 
   return (
     <div className="post-container">

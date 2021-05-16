@@ -4,6 +4,7 @@ const signalrSlice = createSlice({
     initialState: {
         newAddReact: null,
         removeReact: null,
+        newComment: null,
     },
     reducers: {
         setNewAddReact(state, action) {
@@ -11,12 +12,17 @@ const signalrSlice = createSlice({
         },
         setRemoveReact(state, action) {
             state.removeReact = action.payload;
+        },
+        setNewComment(state, action) {
+            state.newComment = action.payload;
         }
     },
 });
 
 const { actions, reducer } = signalrSlice;
 export const {
-    setNewAddReact, setRemoveReact
+    setNewAddReact,
+    setRemoveReact,
+    setNewComment
 } = actions;
 export default reducer;

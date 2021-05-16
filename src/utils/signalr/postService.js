@@ -1,6 +1,6 @@
 import { setupSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
-import { setNewAddReact, setRemoveReact } from "./signalrSlice";
+import { setNewAddReact, setNewComment, setRemoveReact } from "./signalrSlice";
 
 const connection = setupSignalRConnection('https://localhost:9001/hubpost');
 export const startPostService = () => {
@@ -11,6 +11,10 @@ export const startPostService = () => {
 
     connection.on('RemoveReact', payload => {
         store.dispatch(setRemoveReact(payload));
+    })
+
+    connection.on('NewComment', payload => {
+        store.dispatch(setNewComment(payload));
     })
 }
 
