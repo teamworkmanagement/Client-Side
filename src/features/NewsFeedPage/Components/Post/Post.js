@@ -105,11 +105,17 @@ function Post(props) {
     }
   };
 
+  String.prototype.replaceBetween = function (start, end, what) {
+    return this.substring(0, start) + what + this.substring(end);
+  };
+
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    let value = blocks
-      .map((block) => (!block.text.trim() && "\n") || block.text)
-      .join("<br>");
+    if (blocks.length === 1) {
+      if (blocks[0].text === "")
+        return;
+    }
+    const cloneBlocks = [...blocks];
 
     //tags
     const obj = convertToRaw(editorState.getCurrentContent());
@@ -117,19 +123,31 @@ function Post(props) {
     const mentions = [];
     const entityMap = obj.entityMap;
 
+    //console.log(entityMap);
+    console.log(obj);
     for (const property in entityMap) {
       if (entityMap[property].type === "mention")
         mentions.push(entityMap[property].data.mention);
     }
 
-    //add tag to
-    mentions.forEach((m) => {
-      value = value.replace(
-        m.name,
-        '<strong className="tag-user">@' + m.name + "</strong>"
-      );
+    //console.log(cloneBlocks);
+
+    cloneBlocks.forEach((block, index) => {
+      let blockText = '';
+      if (block.entityRanges.length > 0) {
+        block.entityRanges.forEach(entity => {
+          var nameTag = block.text.substring(entity.offset, entity.offset + entity.length);
+          block.text = block.text.replaceBetween(entity.offset, entity.offset + entity.length, `<strong>@${nameTag}</strong>`)
+          console.log(block.text);
+        });
+      }
     });
 
+    let value = cloneBlocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
+
+    console.log(value);
     commentApi
       .addComment({
         commentPostId: post.postId,
@@ -158,8 +176,6 @@ function Post(props) {
         setComments(newArrr);
       })
       .catch((err) => { });
-
-    console.log(value);
   };
 
   const listImages = [
@@ -173,7 +189,7 @@ function Post(props) {
 
     "https://cdn3.yame.vn/pimg/giay-casual-anubis-ver1-0019901/a1f616a6-ea76-0200-c9c5-00176e430b9f.jpg?w=540&h=540&c=true",
   ];
-  console.log(post.userName + "-" + user.fullName);
+
   return (
     <div className="post-container">
       <div className="post-header">
