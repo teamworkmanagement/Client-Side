@@ -17,6 +17,7 @@ import vi from 'timeago.js/lib/lang/vi';
 import classNames from "classnames";
 import { useSelector } from 'react-redux';
 import uuid from 'src/utils/file/uuid';
+import './notification.scss';
 
 // register it.
 timeago.register('vi', vi);
@@ -71,7 +72,7 @@ const TheHeaderDropdownMssg = () => {
       groupId: noti.notificationGroup,
       userId: user.id,
     }
-    notiApi.readNoti(payload).then(res => { }).catch(err => { });
+    //notiApi.readNoti(payload).then(res => { }).catch(err => { });
     let cloneNotis = [...notis];
     let obj = cloneNotis.find(n => n.notificationId === noti.notificationId);
     obj.notificationStatus = true;
@@ -83,53 +84,67 @@ const TheHeaderDropdownMssg = () => {
     <CDropdown
       inNav
       className="c-header-nav-item mx-2"
-      style={{ left: "-450px" }}
       direction="down"
-
+      style={{ left: '-450px' }}
     >
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <CIcon name="cil-bell" /><CBadge shape="pill" color="info">{itemsCount}</CBadge>
       </CDropdownToggle>
-      <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownItem
-          header
-          tag="div"
-          color="transparent"
-        >
-          <strong>Bạn có {itemsCount} thông báo chưa đọc</strong>
-        </CDropdownItem>
-        {
-          notis.map(noti => {
-            return <CDropdownItem
-              key={noti.notificationId}
-              className={classNames({ "bg-light": !!noti.notificationStatus === false })}
-              onClick={() => onClick(noti)}>
-              <div className="message">
-                <div className="pt-3 mr-3 float-left">
-                  <div className="c-avatar">
-                    <CImg
-                      src={noti.notificationImage}
-                      className="c-avatar-img"
-                      alt="admin@bootstrapmaster.com"
-                    />
-                    <span className="c-avatar-status bg-info"></span>
-                  </div>
-                </div>
-                <div>
-                  <small className="text-muted float-right mt-1">
-                    <TimeAgo locale='vi'
-                      datetime={noti.notificationCreatedAt}></TimeAgo>
-                  </small>
-                </div>
-                <div className="small text-muted text-truncate">{noti.notificationContent}
-                </div>
-              </div>
-            </CDropdownItem>
-          })
-        }
+      <div>
+        <CDropdownMenu className="pt-0" placement="bottom-end">
+          <CDropdownItem
+            header
+            tag="div"
+            color="transparent"
 
-        <CDropdownItem href="#" className="text-center border-top"><strong>Xem thêm</strong></CDropdownItem>
-      </CDropdownMenu>
+          >
+            <strong>Bạn có {itemsCount} thông báo chưa đọc</strong>
+          </CDropdownItem>
+
+          <div className="fixed-noti">
+            {
+              notis.map(noti => {
+                return <CDropdownItem
+                  key={noti.notificationId}
+                  className={classNames({ "bg-light": !!noti.notificationStatus === false })}
+                  onClick={() => onClick(noti)}>
+                  <div className="message">
+
+                    <div className="pt-3 mr-3 float-left">
+                      <div className="c-avatar">
+                        <CImg
+                          src={noti.notificationImage}
+                          className="c-avatar-img"
+                          alt="notiimg"
+                        />
+                        <span className="c-avatar-status bg-info"></span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="d-flex justify-content-start flex-column">
+                        <div className="text-muted">
+                          <span className="truncate">{noti.notificationContent}</span>
+                        </div>
+                        <small className="text-muted float-right mt-1">
+                          <TimeAgo locale='vi'
+                            datetime={noti.notificationCreatedAt}></TimeAgo>
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </CDropdownItem>
+
+              })
+            }
+          </div>
+
+          <CDropdownItem href="#" className="justify-content-center border-top"><strong>Xem thêm</strong></CDropdownItem>
+        </CDropdownMenu>
+      </div>
     </CDropdown>
   )
 }
