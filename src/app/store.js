@@ -16,11 +16,13 @@ import testReducer from "../api/testSlice";
 import chatReducer from "../features/ChatPage/chatSlice";
 import kanbanReducer from "../features/KanbanBoard/kanbanSlice";
 import teamReducer from "../features/ListTeamPage/teamSlice";
+import signalrReducer from "../utils/signalr/signalrSlice";
+
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: ["app", "test", "chat", "kanban", "team"],
+  blacklist: ["app", "test", "chat", "kanban", "team", "signalr"],
 };
 
 const rootReducer = combineReducers({
@@ -30,6 +32,7 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   kanban: kanbanReducer,
   team: teamReducer,
+  signalr: signalrReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

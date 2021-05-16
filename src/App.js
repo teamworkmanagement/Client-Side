@@ -8,6 +8,7 @@ import PublicRoute from "./shared_components/team_route/PublicRoute";
 import { islogin } from "./shared_components/views/pages/login/authSlice";
 import { startChatService } from "./utils/signalr/chatService";
 import { startNotiService } from "./utils/signalr/notiService";
+import { startPostService } from "./utils/signalr/postService";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -46,6 +47,7 @@ function App() {
     }
     startChatService();
     startNotiService();
+    startPostService();
   }, []);
 
   return (

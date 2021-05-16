@@ -24,6 +24,8 @@ function Post(props) {
   const [post, setPost] = useState({ ...props.post });
   const [commentContent, setCommentContent] = useState("");
   const user = useSelector((state) => state.auth.currentUser);
+  const newAddReact = useSelector(state => state.signalr.newAddReact);
+  const removeReact = useSelector(state => state.signalr.removeReact);
   const [resetEditor, setResetEditor] = useState(0);
 
   useEffect(() => {
@@ -150,7 +152,7 @@ function Post(props) {
     if (mentions.length > 0) {
       userIds = mentions.map(m => m.id);
     }
-    
+
     console.log(value);
     commentApi
       .addComment({
@@ -183,6 +185,31 @@ function Post(props) {
       .catch((err) => { });
   };
 
+
+  useEffect(() => {
+    if (!newAddReact)
+      return;
+    
+    if (newAddReact.postId === post.postId) {
+      setPost({
+        ...post,
+        postReactCount: post.postReactCount + 1
+      });
+    }
+  }, [newAddReact])
+
+
+  useEffect(() => {
+    if (!removeReact)
+      return;
+
+    if (removeReact.postId === post.postId) {
+      setPost({
+        ...post,
+        postReactCount: post.postReactCount - 1
+      })
+    }
+  }, [removeReact])
   const listImages = [
     "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
 
