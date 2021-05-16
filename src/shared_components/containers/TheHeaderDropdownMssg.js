@@ -55,11 +55,11 @@ const TheHeaderDropdownMssg = () => {
       notificationCreatedAt: new Date(),
       notificationImage: 'https://firebasestorage.googleapis.com/v0/b/fir-fcm-5eb6f.appspot.com/o/notification_500px.png?alt=media&token=e68bc511-fdd4-4f76-90d9-11e86a143f21',
       notificationStatus: false,
-      notificationContent: newNoti.content,
+      notificationContent: newNoti.notificationContent,
     })
 
     setNotis(clone);
-    //alert(`${newNoti.title} --------- ${newNoti.content}`);
+    alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
   }, [newNoti])
 
   return (

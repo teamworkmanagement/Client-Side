@@ -133,7 +133,6 @@ function Post(props) {
     //console.log(cloneBlocks);
 
     cloneBlocks.forEach((block, index) => {
-      let blockText = '';
       if (block.entityRanges.length > 0) {
         block.entityRanges.forEach(entity => {
           var nameTag = block.text.substring(entity.offset, entity.offset + entity.length);
@@ -147,6 +146,10 @@ function Post(props) {
       .map((block) => (!block.text.trim() && "\n") || block.text)
       .join("<br>");
 
+    let userIds = [];
+    if (mentions.length > 0) {
+      userIds = mentions.map(m => m.id);
+    }
     console.log(value);
     commentApi
       .addComment({
@@ -155,6 +158,7 @@ function Post(props) {
         commentContent: value,
         commentCreatedAt: new Date().toISOString(),
         commentIsDeleted: false,
+        commentUserTagIds: userIds,
       })
       .then((res) => {
         setPost({
