@@ -79,8 +79,8 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
-        <TheHeaderDropdownNotif />
-        <TheHeaderDropdownTasks />
+        {/*<TheHeaderDropdownNotif />
+        <TheHeaderDropdownTasks />*/}
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />
       </CHeaderNav>
