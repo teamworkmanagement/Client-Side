@@ -156,32 +156,6 @@ function NewsFeedPage(props) {
     if (listPictures.length === 0)
       return;
 
-    /*listPictures.forEach((pic, index) => {
-      const uploadTask =
-        firebaseConfig.storage().ref().child(`${uuid()}/${pic.file.name}`).put(pic.file);
-      promises.push(uploadTask);
-      uploadTask.on(
-        firebase.storage.TaskEvent.STATE_CHANGED,
-        snapshot => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          if (snapshot.state === firebase.storage.TaskState.RUNNING) {
-            console.log(`Progress: ${progress}%`);
-          }
-        },
-        error => console.log(error.code),
-        async () => {
-          const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-          const cloneLinks = [...linkPictures];
-          cloneLinks.push(downloadURL);
-
-          setLinkPictures(cloneLinks);
-
-        });
-    });
-    return Promise.all(promises);*/
-
-
     const promises = listPictures.map((pic, index) => {
       let ref = firebaseConfig.storage().ref().child(`${uuid()}/${pic.file.name}`);
       return ref.put(pic.file).then(async () => {
@@ -196,90 +170,16 @@ function NewsFeedPage(props) {
 
   }
 
-  const addPostClick = async () => {
-
-    if ((!grAddPost && !teamId) || !newPostContent || newPostContent === '\n') {
-      alert("Xem lại");
-      return;
-    }
-
-    var cloneContent = (" " + newPostContent).slice(1);
-
-    //cloneContent += "dsghfvdsg";
-    tags.forEach((m) => {
-      cloneContent = cloneContent.replace(
-        m.name,
-        '<strong className="tag-user">@' + m.name + "</strong>"
-      );
-    });
-
-    console.log(cloneContent);
-
-    //cloneContent = '<p>' + cloneContent + '</p>';
-
-    //const linkDowload = [];
-    const links = await uploadImage();
-    //inkDowload.concat(links);
-
-    postApi
-      .addPost({
-        postUserId: user.id,
-        postTeamId: teamId ? teamId : grAddPost,
-        postContent: cloneContent,
-      })
-      .then((res) => {
-        res.data.postImages = links?.map(x => x.link);
-        console.log(addPostDone);
-        console.log(res.data);
-        setAddPostDone(res.data);
-
-        if (links?.length > 0) {
-          fileApi.uploadImagesPost({
-            postId: res.data.postId,
-            imageUrls: links,
-          }).then(res => { }).catch(err => { })
-        }
-      })
-      .catch((err) => { console.log(err) });
-
+  const addPostClick = () => {
     setResetEditorText(resetEditorText + 1);
-    setShowCreatePost(false);
   };
 
-  const onTextAreaChange = (e) => {
-    setNewPostContent(e.target.value);
-    console.log(e.target.value);
-  };
 
   const onModalClose = () => {
     setClearFilter(clearSelect + 1);
     setNewPostContent("");
     setShowCreatePost(false);
     setListPictures([]);
-  };
-
-  const onTextChange = (editorState) => {
-    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    const value = blocks
-      .map((block) => (!block.text.trim() && "\n") || block.text)
-      .join("<br>");
-    //console.log(convertToRaw(editorState.getCurrentContent()));
-    const obj = convertToRaw(editorState.getCurrentContent());
-
-    //console.log(obj);
-    //console.log('value :', value);
-    //console.log('blocks :', blocks);
-
-    const mentions = [];
-    const entityMap = obj.entityMap;
-
-    for (const property in entityMap) {
-      if (entityMap[property].type === "mention")
-        mentions.push(entityMap[property].data.mention);
-    }
-
-    setNewPostContent(value);
-    setTags(mentions);
   };
 
   const listImages = [
@@ -327,6 +227,86 @@ function NewsFeedPage(props) {
     setListPictures(cloneListPictures);
   }
 
+  const onAddPost =async (editorState) => {
+
+    if (!grAddPost) {
+      alert("Xem lại");
+      return;
+    }
+
+
+    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+    if (blocks.length === 1) {
+      if (blocks[0].text === "") {
+        alert("Xem lại!");
+        return;
+      }
+    }
+
+    const cloneBlocks = [...blocks];
+
+    //tags
+    const obj = convertToRaw(editorState.getCurrentContent());
+
+    const mentions = [];
+    const entityMap = obj.entityMap;
+
+    for (const property in entityMap) {
+      if (entityMap[property].type === "mention")
+        mentions.push(entityMap[property].data.mention);
+    }
+
+    cloneBlocks.forEach((block, index) => {
+      if (block.entityRanges.length > 0) {
+        block.entityRanges.forEach(entity => {
+          var nameTag = block.text.substring(entity.offset, entity.offset + entity.length);
+          block.text = block.text.replaceBetween(entity.offset, entity.offset + entity.length, `<strong>@${nameTag}</strong>`)
+          console.log(block.text);
+        });
+      }
+    });
+
+    let value = cloneBlocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
+
+    let userIds = [];
+    if (mentions.length > 0) {
+      userIds = mentions.map(m => m.id);
+    }
+
+    console.log(value);
+    console.log(userIds);
+
+    const links = await uploadImage();
+
+    postApi
+      .addPost({
+        postUserId: user.id,
+        postTeamId: teamId ? teamId : grAddPost,
+        postContent: value,
+        userIds: userIds,
+      })
+      .then((res) => {
+        res.data.postImages = links?.map(x => x.link);
+        console.log(addPostDone);
+        console.log(res.data);
+        setAddPostDone(res.data);
+
+        if (links?.length > 0) {
+          fileApi.uploadImagesPost({
+            postId: res.data.postId,
+            imageUrls: links,
+          }).then(res => { }).catch(err => { })
+        }
+      })
+      .catch((err) => { console.log(err) });
+
+
+
+    setShowCreatePost(false);
+    setListPictures([]);
+  }
 
   return (
     <div className="newsfeed-page-container">
@@ -427,7 +407,7 @@ function NewsFeedPage(props) {
             />
           ) : null}
 
-          <PostEditor postTeamId={grAddPost} reset={resetEditorText} onTextChange={onTextChange} />
+          <PostEditor postTeamId={grAddPost} reset={resetEditorText} onAddPost={onAddPost} />
           {listPictures.length > 0 && (
             <div className="list-images-container">
               {listPictures.map((image, index) => {

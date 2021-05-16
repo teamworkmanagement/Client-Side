@@ -150,6 +150,7 @@ function Post(props) {
     if (mentions.length > 0) {
       userIds = mentions.map(m => m.id);
     }
+    
     console.log(value);
     commentApi
       .addComment({

@@ -5,3 +5,13 @@
 }
 
 
+.truncate {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fixedsize{
+    left: -400px !important;
+}

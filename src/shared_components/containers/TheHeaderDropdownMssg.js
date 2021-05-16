@@ -85,13 +85,13 @@ const TheHeaderDropdownMssg = () => {
       inNav
       className="c-header-nav-item mx-2"
       direction="down"
-      style={{ left: '-450px' }}
+      
     >
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <CIcon name="cil-bell" /><CBadge shape="pill" color="info">{itemsCount}</CBadge>
       </CDropdownToggle>
       <div>
-        <CDropdownMenu className="pt-0" placement="bottom-end">
+        <CDropdownMenu className="pt-0 fixedsize" placement="bottom-end">
           <CDropdownItem
             header
             tag="div"

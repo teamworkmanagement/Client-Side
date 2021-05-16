@@ -1,20 +1,13 @@
-import Editor, { createEditorStateWithText } from '@draft-js-plugins/editor';
-import createEmojiPlugin from '@draft-js-plugins/emoji';
-import createMentionPlugin from '@draft-js-plugins/mention';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { defaultSuggestionsFilter } from '@draft-js-plugins/mention';
+import Editor from '@draft-js-plugins/editor';
+import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention';
+import '@draft-js-plugins/mention/lib/plugin.css';
 import { EditorState } from 'draft-js';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import teamApi from 'src/api/teamApi';
+import { getResetEditorState } from 'src/utils/draftjs';
 import './PostEditor.scss';
 import editorStyles from './SimpleMentionEditor.module.css';
-import '@draft-js-plugins/mention/lib/plugin.css';
-import axiosClient from 'src/api/axiosClient';
-import { getResetEditorState } from 'src/utils/draftjs';
-import axios from 'axios';
-import teamApi from 'src/api/teamApi';
 
-
-const emojiPlugin = createEmojiPlugin();
-const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 
 function PostEditor(props) {
     //const [editorState, setEditorState] = useState(createEditorStateWithText('asgsfgdfg'));
@@ -41,7 +34,7 @@ function PostEditor(props) {
         // eslint-disable-next-line no-shadow
         const { MentionSuggestions } = mentionPlugin;
         // eslint-disable-next-line no-shadow
-        const plugins = [emojiPlugin, mentionPlugin];
+        const plugins = [mentionPlugin];
         return { plugins, MentionSuggestions };
     }, []);
 
@@ -55,37 +48,13 @@ function PostEditor(props) {
 
     const onChange = (e) => {
         setEditorState(e);
-        props.onTextChange(e);
     }
-
-    /*useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10&_skip=10')
-            .then(res => {
-
-                const myDatas = res.data.map(x => {
-                    return {
-                        name: x.title.substring(0, 5),
-                        id: x.id,
-                        avatar:
-                            'https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png',
-                    }
-                })
-
-                console.log(myDatas);
-
-                //setSuggestions(myDatas);
-                setMentions(myDatas);
-            }).catch(err => {
-
-            })
-    }, [])
-    /*useEffect(() => {
-        editorRef.current.focus();
-    }, [])*/
 
     useEffect(() => {
         if (props.reset < 0)
             return;
+
+        props.onAddPost(editorState);
         const newState = getResetEditorState(editorState);
         setEditorState(newState);
     }, [props.reset])
@@ -120,8 +89,6 @@ function PostEditor(props) {
                 plugins={plugins}
                 placeholder="Viết bài..."
             />
-            <EmojiSuggestions />
-
             <MentionSuggestions
                 open={open}
                 onOpenChange={onOpenChange}
@@ -131,7 +98,6 @@ function PostEditor(props) {
                     // get the mention object selected
                 }}
             />
-            {/*<EmojiSelect />*/}
         </div>
     );
 }
