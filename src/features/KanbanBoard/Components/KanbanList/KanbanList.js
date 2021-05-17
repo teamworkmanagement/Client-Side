@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./KanbanList.scss";
 import KanbanCard from "./Components/KanbanCard/KanbanCard";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CButton,
   CDropdown,
@@ -19,6 +19,8 @@ import CIcon from "@coreui/icons-react";
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
 import CardLoading from "./Components/KanbanCard/Components/CardLoading/CardLoading";
+import { removeList } from "../../kanbanSlice";
+import kanbanApi from "src/api/kanbanApi";
 
 KanbanList.propTypes = {};
 
@@ -54,6 +56,7 @@ function KanbanList(props) {
     return [...clonedCards];
   }*/
 
+  const dispatch = useDispatch();
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const [showAddCard, setShowAddCard] = useState(false);
 
@@ -62,6 +65,13 @@ function KanbanList(props) {
   const handleShowCreateCard = () => {
     setShowAddCard(true);
   };
+
+  const removeKbList = () => {
+    dispatch(removeList(props.data.kanbanListId));
+    kanbanApi.removeKanbanList(props.data.kanbanListId)
+      .then(res => { })
+      .catch(err => { });
+  }
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>
       {(provided) => (
@@ -71,6 +81,7 @@ function KanbanList(props) {
           {...provided.draggableProps}
         >
           <KanbanListHeader
+            removeList={removeKbList}
             handleShowCreateCard={handleShowCreateCard}
             cardCount={props.data.taskUIKanbans.length}
             title={headerTitle}

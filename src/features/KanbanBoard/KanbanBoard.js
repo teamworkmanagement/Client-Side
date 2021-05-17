@@ -66,6 +66,7 @@ function KanbanBoard(props) {
   );
 
   const boardId = "board1";
+  const curentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
 
   function onDragEnd(result) {
     //call api update pos (task/list) here
@@ -94,7 +95,7 @@ function KanbanBoard(props) {
       )
         return;
       kanbanApi.swapList({
-        kanbanBoardId: boardId,
+        kanbanBoardId: curentBoard,
         sourceIndex: source.index,
         destinationIndex: destination.index,
       });
@@ -102,16 +103,18 @@ function KanbanBoard(props) {
   }
 
   useEffect(() => {
+    if (!props.boardId)
+      return;
     try {
       dispatch(setTeamLoading(true));
       setIsLoading(true);
-      dispatch(getBoardDataForUI("board1"));
+      dispatch(getBoardDataForUI(props.boardId));
     } catch (err) {
     } finally {
       setIsLoading(false);
       dispatch(setTeamLoading(false));
     }
-  }, []);
+  }, [props.boardId]);
 
   return (
     <div className="kanban-board-container">

@@ -18,7 +18,8 @@ const kanbanSlice = createSlice({
     name: "kanban",
     initialState: {
         kanbanBoard: {
-            kanbanLists: []
+            kanbanLists: [],
+            currentBoard: null
         }
     },
     reducers: {
@@ -133,11 +134,24 @@ const kanbanSlice = createSlice({
 
             //console.log(kbList.taskUIKanbans);
             state.kanbanBoard.kanbanLists = cloneKanbanLists;
+        },
+        removeList(state, action) {
+            var index = state.kanbanBoard.kanbanLists.findIndex(x => x.kanbanListId === action.payload);
+
+            for (var i = index + 1; i < state.kanbanBoard.kanbanLists.length; i++) {
+                state.kanbanBoard.kanbanLists[i].kanbanListOrderInBoard = state.kanbanBoard.kanbanLists[i].kanbanListOrderInBoard - 1;
+            }
+
+            state.kanbanBoard.kanbanLists.splice(index, 1);
+        },
+        addList(state, action) {
+            state.kanbanBoard.kanbanLists.push(action.payload);
         }
     },
     extraReducers: {
         [getBoardDataForUI.fulfilled]: (state, action) => {
             state.kanbanBoard.kanbanLists = action.payload ? action.payload.kanbanListUIs : [];
+            state.kanbanBoard.currentBoard = action.payload ? action.payload.kanbanBoardId : null;
         }
     }
 },
@@ -148,6 +162,8 @@ export const {
     handleDragEnd,
     updateEditTask,
     addNewTask,
-    removeTask
+    removeTask,
+    removeList,
+    addList
 } = actions;
 export default reducer;

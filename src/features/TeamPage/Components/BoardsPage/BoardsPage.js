@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./BoardsPage.scss";
 import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { useParams } from "react-router";
+import kanbanApi from "src/api/kanbanApi";
+import CreateBoardModal from "./CreateBoardModal/CreateBoardModal";
 
 BoardsPage.propTypes = {};
 
@@ -30,6 +33,29 @@ function BoardsPage(props) {
     }
   }
 
+  const [boardLists, setBoardLists] = useState([]);
+  const [showAddBoard, setShowAddBoard] = useState(false);
+  const { teamId } = useParams();
+
+  useEffect(() => {
+    kanbanApi.getAllKanbanForTeam(teamId).then(res => {
+      setBoardLists(res.data);
+    }).catch(err => {
+
+    })
+  }, [])
+
+  const showModalAddBoard = () => {
+    setShowAddBoard(true);
+  }
+
+  const onCloseBoard = (e) => {
+    setShowAddBoard(false);
+    if (!e) {
+      return;
+    }
+    setBoardLists([...boardLists, e.data]);
+  }
   return (
     <div className="list-boards-container">
       <div className="list-boards-header">
@@ -46,7 +72,7 @@ function BoardsPage(props) {
           </div>
         </div>
         <div className="other-actions">
-          <div className="add-btn add-task-btn">
+          <div className="add-btn add-task-btn" onClick={showModalAddBoard}>
             <CIcon name="cil-plus" />
             Tạo danh sách mới
           </div>
@@ -54,7 +80,7 @@ function BoardsPage(props) {
       </div>
       <div className="list-boards">
         <CRow xl={{ cols: 5, gutter: 3 }}>
-          {listBoards.map((item, index) => {
+          {boardLists.map((item, index) => {
             return (
               <CCol
                 xs="12"
@@ -67,18 +93,20 @@ function BoardsPage(props) {
               >
                 <div
                   className="board-item"
-                  onClick={() => openBoard(item.boardId)}
+                  onClick={() => openBoard(item.kanbanBoardId)}
                 >
-                  <div className="board-title">{item.name}</div>
+                  <div className="board-title">{item.kanbanBoardName}</div>
                   <div className="tasks-count">
                     <CIcon name="cil-storage" />
-                    {item.tasksCount}
+                    {item.taskCount}
                   </div>
                 </div>
               </CCol>
             );
           })}
         </CRow>
+
+        <CreateBoardModal showAddBoard={showAddBoard} onClose={onCloseBoard} />
       </div>
     </div>
   );
