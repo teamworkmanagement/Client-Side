@@ -244,7 +244,7 @@ function Post(props) {
           <div className="poster-avatar">
             <img
               alt="avatar"
-              src={post.userAvatar}
+              src={user.id === post.postUserId ? user.userAvatar : post.userAvatar}
             />
           </div>
           <div className="poster-infor">
@@ -270,7 +270,7 @@ function Post(props) {
         dangerouslySetInnerHTML={{ __html: post.postContent }}
       ></div>
       <div className="post-images-list-container">
-        <GridImages countFrom={5} images={listImages} />
+        <GridImages countFrom={5} images={post.postImages} />
       </div>
       <div className="interaction-bar">
         <CIcon

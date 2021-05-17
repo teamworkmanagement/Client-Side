@@ -91,8 +91,8 @@ const TheHeader = () => {
             <CIcon name="cil-search" />
           </div>
         </div>
-        <TheHeaderDropdownNotif />
-        <TheHeaderDropdownTasks />
+        {/*<TheHeaderDropdownNotif />
+        <TheHeaderDropdownTasks />*/}
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />
       </CHeaderNav>

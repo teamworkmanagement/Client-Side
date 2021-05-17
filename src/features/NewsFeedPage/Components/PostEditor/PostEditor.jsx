@@ -10,13 +10,6 @@ import editorStyles from './SimpleMentionEditor.module.css';
 
 
 function PostEditor(props) {
-    //const [editorState, setEditorState] = useState(createEditorStateWithText('asgsfgdfg'));
-
-    // Creates an Instance. At this step, a configuration object can be passed in
-    // as an argument.
-
-    //const mentionPlugin = createMentionPlugin();
-    //const { MentionSuggestions } = mentionPlugin;
     const editorRef = useRef();
     const [editorState, setEditorState] = useState(() =>
         EditorState.createEmpty()
