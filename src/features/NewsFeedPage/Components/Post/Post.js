@@ -177,6 +177,7 @@ function Post(props) {
             commentUserId: res.data.commentUserId,
             commentContent: res.data.commentContent,
             userName: user.fullName,
+            userAvatar: user.userAvatar,
             commentCreatedAt: res.data.commentCreatedAt,
           },
         ].concat([...cmtLists]);
