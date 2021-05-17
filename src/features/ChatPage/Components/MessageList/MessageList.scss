@@ -194,3 +194,45 @@ $message-font-weight: normal;
     text-align: center;
     margin: 0.1rem 0rem;
 }
+
+.nodata-image {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .c-icon {
+        color: rgba(#3c4b64, 0.7);
+        width: 5rem;
+        height: 5rem;
+        &.icon-x {
+            width: 1.5rem;
+            height: 2rem;
+            margin-top: -4.5rem;
+            margin-right: -6.8rem;
+        }
+        &.icon-glass {
+            width: 3rem;
+            height: 3rem;
+        }
+    }
+    .noti-infor {
+        font-size: 130%;
+        text-align: center;
+        font-weight: bold;
+        color: rgba(#3c4b64, 0.7);
+    }
+    .create-post-btn {
+        font-size: 120%;
+        background-color: #3e79f7;
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 0.625rem;
+        margin-top: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+        &:hover {
+            background-color: #3363ca;
+        }
+    }
+}

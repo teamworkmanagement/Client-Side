@@ -31,7 +31,7 @@ const TheHeaderDropdownMssg = () => {
 
   useEffect(() => {
     const params = {
-      UserId: "f3997f78-4723-4332-8171-add514ae91cd",
+      UserId: user.id,
       PageSize: 5,
       SkipItems: 0
     };
