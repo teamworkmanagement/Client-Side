@@ -5,7 +5,7 @@ import { CTooltip } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import messageApi from "src/api/messageApi";
-import { setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
+import { changeGroupPosition, setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
 import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
 import Message from "./Message";
@@ -222,7 +222,7 @@ function MessageList(props) {
         if (i === 0) {
           arrayWithLabels.push({
             id: 1 + Math.random() * (100000 - 1),
-            message: moment(newArray[i].time).format("DD/MM/YYYY, hh:mm a"),
+            message: moment(newArray[i].time).format("LLL"),
             class: "",
             isLabel: true,
           });
@@ -235,7 +235,7 @@ function MessageList(props) {
         if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
           arrayWithLabels.push({
             id: 1 + Math.random() * (10000 - 1),
-            message: moment(date2).format("DD/MM/YYYY, hh:mm a"),
+            message: moment(date2).format("LLL"),
             class: "",
             isLabel: true,
           });
@@ -244,7 +244,7 @@ function MessageList(props) {
       if (newArray.length === 1) {
         arrayWithLabels.push({
           id: 1 + Math.random() * (100000 - 1),
-          message: moment(newArray[0].time).format("DD/MM/YYYY, hh:mm a"),
+          message: moment(newArray[0].time).format("LLL"),
           class: "",
           isLabel: true,
         });
@@ -414,7 +414,7 @@ function MessageList(props) {
       if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
         cloneList.push({
           id: 1 + Math.random() * (10000 - 1),
-          message: moment(date2).format("DD/MM/YYYY, hh:mm a"),
+          message: moment(date2).format("LLL"),
           class: "",
           isLabel: true,
         });
@@ -462,6 +462,7 @@ function MessageList(props) {
         };
 
         dispatch(setReceiveMes(props.sendMes.mesObj));
+        dispatch(changeGroupPosition(props.sendMes.mesObj.groupId))
 
         const cloneList = [...latestChat.current];
         if (cloneList.length > 0 && cloneList[cloneList.length - 1].isMine) {
@@ -470,7 +471,7 @@ function MessageList(props) {
           if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
             cloneList.push({
               id: 1 + Math.random() * (10000 - 1),
-              message: moment(date2).format("DD/MM/YYYY, hh:mm a"),
+              message: moment(date2).format("LLL"),
               class: "",
               isLabel: true,
             });

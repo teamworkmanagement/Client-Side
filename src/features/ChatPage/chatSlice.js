@@ -27,7 +27,7 @@ const chatSlice = createSlice({
     setLoadDone: (state, action) => {
       state.loadDone = action.payload;
     },
-    editChatGroup: (state, action) => {},
+    editChatGroup: (state, action) => { },
     setCurrentGroup: (state, action) => {
       state.currentGroup = action.payload;
       const gr = state.groupChat.find((x) => x.groupChatId === action.payload);
@@ -48,6 +48,30 @@ const chatSlice = createSlice({
     },
     setNewMessage(state, action) {
       state.newMessage = action.payload;
+
+      let grChat = state.groupChat.findIndex(x => x.groupChatId === action.payload.groupId);
+      if (grChat === null) {
+        state.groupChat = [{
+          groupChatId: action.payload.groupId,
+          groupChatName: 'No name',
+          groupChatUpdatedAt: Date.now(),
+          newMessage: true,
+          groupAvatar: "",
+          lastestMes: action.payload.message
+        }].concat(state.groupChat);
+      }
+      else {
+        const backupdata = state.groupChat[grChat];
+        state.groupChat.splice(grChat, 1);
+        state.groupChat = [backupdata].concat(state.groupChat);
+      }
+    },
+
+    changeGroupPosition(state, action) {
+      let grChat = state.groupChat.findIndex(x => x.groupChatId === action.payload);
+      const backupdata = state.groupChat[grChat];
+      state.groupChat.splice(grChat, 1);
+      state.groupChat = [backupdata].concat(state.groupChat);
     },
   },
   extraReducers: {
@@ -60,7 +84,7 @@ const chatSlice = createSlice({
           ? action.payload[1].groupChatId
           : state.currentGroup;*/
     },
-    [getAllGroupChatForUser.rejected]: (state, action) => {},
+    [getAllGroupChatForUser.rejected]: (state, action) => { },
   },
 });
 
@@ -72,5 +96,6 @@ export const {
   setIsSelected,
   setReceiveMes,
   setNewMessage,
+  changeGroupPosition
 } = actions;
 export default reducer; // default export
