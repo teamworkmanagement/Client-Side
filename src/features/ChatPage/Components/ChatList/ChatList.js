@@ -116,6 +116,7 @@ function ChatList(props) {
           <ChatListItem
             key={index}
             data={item}
+            index={index}
             animationDelay={index + 1}
             hanelSelectItem={hanelSelectItem}
           ></ChatListItem>

@@ -39,6 +39,9 @@ import {
   cilCheckAlt,
   cilFindInPage,
   cilStorage,
+  cilScreenSmartphone,
+  cilHouse,
+  cilPen,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -213,6 +216,9 @@ export const icons = Object.assign(
     cilCheckAlt,
     cilFindInPage,
     cilStorage,
+    cilScreenSmartphone,
+    cilHouse,
+    cilPen,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

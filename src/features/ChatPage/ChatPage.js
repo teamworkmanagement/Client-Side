@@ -83,8 +83,7 @@ function ChatPage(props) {
       mesObj: chatMessage,
     });
     setMsg("");
-  }
-
+  };
 
   const scrollToBottom = () => {
     //messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -99,7 +98,6 @@ function ChatPage(props) {
     //     scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
     // }
   }, [props.tabActiveTeam]);
-
 
   const onPickFile = (e) => {
     const file = e.target.files[0];
@@ -126,7 +124,7 @@ function ChatPage(props) {
               userId: user.id,
               groupId: currentGroup,
               timeSend: Date.now(),
-              messageType: 'file',
+              messageType: "file",
             };
 
             setSend({
@@ -140,7 +138,7 @@ function ChatPage(props) {
           }
         });
     }
-  }
+  };
 
   const onPickImage = (e) => {
     const file = e.target.files[0];
@@ -148,7 +146,7 @@ function ChatPage(props) {
     const fileRef = storageRef.child(`${uuidv4()}/${file.name}`);
     fileRef.put(file).then((data) => {
       console.log("Uploaded a file");
-      data.ref.getDownloadURL().then(url => {
+      data.ref.getDownloadURL().then((url) => {
         console.log(url);
         const chatMessage = {
           userName: user.fullName,
@@ -156,7 +154,7 @@ function ChatPage(props) {
           userId: user.id,
           groupId: currentGroup,
           timeSend: Date.now(),
-          messageType: 'image',
+          messageType: "image",
         };
 
         setSend({
@@ -164,7 +162,7 @@ function ChatPage(props) {
         });
       });
     });
-  }
+  };
 
   return (
     <div className="chat-page-container">
@@ -174,7 +172,11 @@ function ChatPage(props) {
             <div className="chat-list">
               <div className="chat-list-header">
                 <CInputGroup className="chat-list-search">
-                  <CInput id="appendedInputButton" type="text" />
+                  <CInput
+                    placeholder="...tìm kiếm đoạn chat"
+                    id="appendedInputButton"
+                    type="text"
+                  />
                   <CInputGroupAppend>
                     <CButton color="secondary">
                       <CIcon name="cil-search" />
@@ -219,14 +221,24 @@ function ChatPage(props) {
                   type="text"
                 />
                 <div className="input-actions-group">
-                  <CIcon name="cil-paperclip" onClick={() => { filePickerRef.current.click() }} />
+                  <CIcon
+                    name="cil-paperclip"
+                    onClick={() => {
+                      filePickerRef.current.click();
+                    }}
+                  />
                   <input
                     onChange={onPickFile}
                     ref={filePickerRef}
                     type="file"
                     style={{ display: "none" }}
                   />
-                  <CIcon name="cil-image-plus" onClick={() => { imgPickerRef.current.click() }} />
+                  <CIcon
+                    name="cil-image-plus"
+                    onClick={() => {
+                      imgPickerRef.current.click();
+                    }}
+                  />
                   <input
                     accept="image/*"
                     onChange={onPickImage}

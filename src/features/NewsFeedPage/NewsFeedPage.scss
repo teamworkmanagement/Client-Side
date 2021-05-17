@@ -25,127 +25,146 @@
 .newsfeed-page-container {
     padding: 1.5rem;
     display: flex;
-    justify-content: space-between;
-    .post-list-container {
-        flex-grow: 1;
-        width: 2rem;
-        margin-right: 1rem;
+    justify-content: center;
+    @media (max-width: 576px) {
+        padding: 1rem;
     }
-    .side-panel-container {
-        width: 20rem;
-        .create-post-btn {
-            cursor: pointer;
-            padding: 1rem;
-            background-color: white;
-            border-radius: 10px;
-            border: 1px solid #e6ebf1;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-            z-index: 1000 !important;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            .title {
-                .c-icon {
-                    width: 1.3rem;
-                    height: 1.3rem;
-                    margin-right: 0.5rem;
-                }
-            }
-            .expand-icon {
-                transition: all 0.8s;
-                width: 1.2rem;
-                height: 1.2rem;
-            }
-            &:hover {
-                background-color: #e6ebf1;
-            }
-        }
-
-        .toggle-filter-btn {
-            cursor: pointer;
-            padding: 1rem;
-            background-color: white;
-            border-radius: 10px;
-            border-bottom-left-radius: 0px;
-            border-bottom-right-radius: 0px;
-
-            border: 1px solid #e6ebf1;
-            border-bottom: none;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-            z-index: 1000 !important;
-            justify-content: space-between;
-            .title {
-                .c-icon {
-                    width: 1.3rem;
-                    height: 1.3rem;
-                    margin-right: 0.5rem;
-                }
-            }
-            .expand-icon {
-                transition: all 0.8s;
-                width: 1.2rem;
-                height: 1.2rem;
-            }
-            &:hover {
-                background-color: #e6ebf1;
-            }
-        }
-        .post-group-list-container {
-            padding: 1rem;
-
-            background-color: white;
-            border-radius: 10px;
-            border: 1px solid #e6ebf1;
-            margin-top: 1rem;
-            .group-list-title {
-                font-weight: 550;
-            }
-            .post-group-item {
-                @include ListGroupItemApear;
+    .post-list-col,
+    .post-list-inside-col {
+        padding: 0;
+    }
+    .row {
+        width: 100%;
+    }
+    .row-inside-list-post {
+        display: flex;
+        justify-content: center;
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .post-list-container {
+        //flex-grow: 1;
+        //width: 2rem;
+        //margin-right: 1rem;
+    }
+    .side-panel-col {
+        padding: 0;
+        .side-panel-container {
+            //width: 20rem;
+            .create-post-btn {
+                cursor: pointer;
+                padding: 1rem;
+                background-color: white;
+                border-radius: 10px;
+                border: 1px solid #e6ebf1;
                 display: flex;
                 align-items: center;
-                margin-top: 0.5rem;
-                cursor: pointer;
-                border-radius: 10px;
-                padding: 0.5rem;
                 transition: all 0.3s;
+                z-index: 1000 !important;
+                justify-content: space-between;
+                margin-bottom: 1rem;
+                .title {
+                    .c-icon {
+                        width: 1.3rem;
+                        height: 1.3rem;
+                        margin-right: 0.5rem;
+                    }
+                }
+                .expand-icon {
+                    transition: all 0.8s;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
                 &:hover {
                     background-color: #e6ebf1;
                 }
-                .group-avatar {
-                    width: 2rem;
-                    height: 2rem;
-                    img {
-                        width: inherit;
-                        height: inherit;
-                        border-radius: 50px;
+            }
+
+            .toggle-filter-btn {
+                cursor: pointer;
+                padding: 1rem;
+                background-color: white;
+                border-radius: 10px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+
+                border: 1px solid #e6ebf1;
+                border-bottom: none;
+                display: flex;
+                align-items: center;
+                transition: all 0.3s;
+                z-index: 1000 !important;
+                justify-content: space-between;
+                .title {
+                    .c-icon {
+                        width: 1.3rem;
+                        height: 1.3rem;
+                        margin-right: 0.5rem;
                     }
                 }
-                .group-infor {
+                .expand-icon {
+                    transition: all 0.8s;
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
+                &:hover {
+                    background-color: #e6ebf1;
+                }
+            }
+            .post-group-list-container {
+                padding: 1rem;
+
+                background-color: white;
+                border-radius: 10px;
+                border: 1px solid #e6ebf1;
+                margin-top: 1rem;
+                .group-list-title {
+                    font-weight: 550;
+                }
+                .post-group-item {
+                    @include ListGroupItemApear;
                     display: flex;
-                    flex-direction: column;
-                    width: 1rem;
-                    flex-grow: 1;
-                    margin-left: 0.5rem;
-                    .group-name {
-                        font-weight: 550;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: pre;
+                    align-items: center;
+                    margin-top: 0.5rem;
+                    cursor: pointer;
+                    border-radius: 10px;
+                    padding: 0.5rem;
+                    transition: all 0.3s;
+                    &:hover {
+                        background-color: #e6ebf1;
                     }
-                    .group-member-count {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: pre;
-                        font-size: 85%;
-                        color: rgba(0, 0, 0, 0.5);
+                    .group-avatar {
+                        width: 2rem;
+                        height: 2rem;
+                        img {
+                            width: inherit;
+                            height: inherit;
+                            border-radius: 50px;
+                        }
                     }
-                }
-                .group-new-count {
-                    margin-left: 1rem;
+                    .group-infor {
+                        display: flex;
+                        flex-direction: column;
+                        width: 1rem;
+                        flex-grow: 1;
+                        margin-left: 0.5rem;
+                        .group-name {
+                            font-weight: 550;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: pre;
+                        }
+                        .group-member-count {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: pre;
+                            font-size: 85%;
+                            color: rgba(0, 0, 0, 0.5);
+                        }
+                    }
+                    .group-new-count {
+                        margin-left: 1rem;
+                    }
                 }
             }
         }

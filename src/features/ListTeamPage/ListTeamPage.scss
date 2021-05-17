@@ -297,24 +297,24 @@
                         margin-top: 1rem;
                         display: flex;
                         align-items: center;
-                        justify-content: space-between;
+                        justify-content: center;
                         width: 100%;
                         .member-infor {
                             display: flex;
                             align-items: center;
-                            margin-right: 0.5rem;
+                            //margin-right: 0.5rem;
                             .c-icon {
                                 margin-right: 0.2rem;
                             }
                             .member-count {
                             }
                         }
-                        // .divider {
-                        //     width: 1px;
-                        //     height: 15px;
-                        //     background-color: #3c4b64;
-                        //     margin: 0px 5px;
-                        // }
+                        .divider {
+                            width: 1.2px;
+                            height: 18px;
+                            background-color: #3c4b64;
+                            margin: 0rem 0.5rem;
+                        }
 
                         .leader-infor {
                             display: flex;
@@ -343,7 +343,7 @@
                         background-color: rgba(#3e79f7, 1);
                         color: white;
                         font-weight: bold;
-                        padding: 0.5rem 1.5rem;
+                        padding: 0.5rem 0.5rem;
                         border-radius: 50px;
                         cursor: pointer;
                         text-align: center;

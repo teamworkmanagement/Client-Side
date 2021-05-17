@@ -47,6 +47,10 @@
             }
         }
         .header-actions-dropdown {
+            .dropdown-menu.show {
+                transform: translate(0, 2rem) !important;
+                margin-top: -0.3rem !important;
+            }
             .dropdown-toggle.btn {
                 background-color: transparent;
                 outline: none;

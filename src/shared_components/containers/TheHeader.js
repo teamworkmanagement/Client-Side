@@ -11,6 +11,7 @@ import {
   CBreadcrumbRouter,
   CLink,
   CSwitch,
+  CInput,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
@@ -24,6 +25,7 @@ import {
   TheHeaderDropdownTasks,
 } from "./index";
 import { changeState, setDarkMode } from "src/appSlice";
+import "./TheHeader.scss";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
@@ -66,7 +68,7 @@ const TheHeader = () => {
         <CIcon name="logo" height="48" alt="Logo" />
       </CHeaderBrand>
 
-      <CHeaderNav className="d-md-down-none mr-auto">
+      {/* <CHeaderNav className="d-md-down-none mr-auto">
         <CHeaderNavItem className="px-3">
           <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
         </CHeaderNavItem>
@@ -76,11 +78,21 @@ const TheHeader = () => {
         <CHeaderNavItem className="px-3">
           <CHeaderNavLink>Settings</CHeaderNavLink>
         </CHeaderNavItem>
-      </CHeaderNav>
+      </CHeaderNav> */}
 
       <CHeaderNav className="px-3">
-        {/*<TheHeaderDropdownNotif />
-        <TheHeaderDropdownTasks />*/}
+        <div className="header-input-container mr-auto">
+          <CInput
+            class="input-field"
+            type="text"
+            placeholder="...bạn tìm gì?"
+          />
+          <div className="input-actions-group">
+            <CIcon name="cil-search" />
+          </div>
+        </div>
+        <TheHeaderDropdownNotif />
+        <TheHeaderDropdownTasks />
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />
       </CHeaderNav>
@@ -90,7 +102,7 @@ const TheHeader = () => {
           className="border-0 c-subheader-nav m-0 px-0 px-md-3"
           routes={routes}
         />
-        <div className="dark-theme-container">
+        {/* <div className="dark-theme-container">
           <div>Dark Theme</div>
           <CSwitch
             className={"mx-1"}
@@ -102,9 +114,9 @@ const TheHeader = () => {
             onClick={changeDarkMode}
             defaultChecked={darkMode}
           />
-        </div>
+        </div> */}
 
-        <div className="d-md-down-none mfe-2 c-subheader-nav nodisplay">
+        {/* <div className="d-md-down-none mfe-2 c-subheader-nav ">
           <CLink className="c-subheader-nav-link" href="#">
             <CIcon name="cil-speech" alt="Settings" />
           </CLink>
@@ -120,7 +132,7 @@ const TheHeader = () => {
             <CIcon name="cil-settings" alt="Settings" />
             &nbsp;Settings
           </CLink>
-        </div>
+        </div> */}
       </CSubheader>
     </CHeader>
   );

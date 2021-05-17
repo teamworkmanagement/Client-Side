@@ -4,6 +4,7 @@ import "./TeamMembersList.scss";
 import {
   CButton,
   CButtonGroup,
+  CCol,
   CDataTable,
   CDropdown,
   CDropdownItem,
@@ -11,6 +12,7 @@ import {
   CDropdownToggle,
   CInput,
   CPagination,
+  CRow,
   CTooltip,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
@@ -42,12 +44,6 @@ function TeamMembersList(props) {
       name: "Võ Anh Tấn",
       email: "demotan14@gmail.com",
       isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-3.jpg",
-      name: "Thanh Nguyễn",
-      email: "nguyenlethanhze@gmail.com",
-      isLeader: true,
     },
     {
       avatar: "https://emilus.themenate.net/img/avatars/thumb-4.jpg",
@@ -84,6 +80,14 @@ function TeamMembersList(props) {
       name: "Nguyễn Tiến Dũng",
       email: "dungnguyen@gmail.com",
       isLeader: false,
+    },
+  ];
+  const leaderData = [
+    {
+      avatar: "https://emilus.themenate.net/img/avatars/thumb-4.jpg",
+      name: "Huy Lê",
+      email: "huylengoc12@gmail.com",
+      isLeader: true,
     },
   ];
 
@@ -131,76 +135,179 @@ function TeamMembersList(props) {
           </CButtonGroup>
         </div>
       </div>
-      <CDataTable
-        items={usersData}
-        fields={fields}
-        scopedSlots={{
-          infor: (item) => {
-            return (
-              <td>
-                <div className="member-infor-container">
-                  <img className="member-avatar" alt="" src={item.avatar} />
+      <CRow>
+        <CCol lg="3" md="12" className="col-leader">
+          <div className="leader-infor-container d-md-down-none">
+            <div className="label">Trưởng nhóm </div>
+            <img
+              alt=""
+              src="https://emilus.themenate.net/img/avatars/thumb-4.jpg"
+            />
+            <div className="leader-name">Huy Lê</div>
+            <div className="leader-email">huylengoc12@gmail.com</div>
+          </div>
+          <div className="leader-infor-container row-infor d-lg-none">
+            <div className="label">Trưởng nhóm </div>
+            {/* <img
+              alt=""
+              src="https://emilus.themenate.net/img/avatars/thumb-4.jpg"
+            />
+            <div className="leader-name">Huy Lê</div>
+            <div className="leader-email">huylengoc12@gmail.com</div> */}
+            <CDataTable
+              items={leaderData}
+              fields={fields}
+              scopedSlots={{
+                infor: (item) => {
+                  return (
+                    <td>
+                      <div className="member-infor-container">
+                        <img
+                          className="member-avatar"
+                          alt=""
+                          src={item.avatar}
+                        />
 
-                  <div className="member-infor">
-                    <div className="member-name">{item.name}</div>
-                    <div className="member-email">{item.email}</div>
-                  </div>
-                </div>
-              </td>
-            );
-          },
-          role: (item) => {
-            return (
-              <td>
-                <div className="member-role">
-                  <div
-                    className={`role-color ${item.isLeader ? "leader" : ""}`}
-                  ></div>
-                  {item.isLeader ? "Trưởng nhóm" : "Thành viên"}
-                </div>
-              </td>
-            );
-          },
-          actions: (item) => {
-            return (
-              <td>
-                <div className="member-actions-dropdown">
-                  <CDropdown>
-                    <CDropdownToggle id="dropdownMenuButton" caret>
-                      <div className="lane-actions">
-                        <CIcon name="cil-options" className="rotate-90" />
+                        <div className="member-infor">
+                          <div className="member-name">{item.name}</div>
+                          <div className="member-email">{item.email}</div>
+                        </div>
                       </div>
-                    </CDropdownToggle>
-                    <CDropdownMenu
-                      aria-labelledby="dropdownMenuButton"
-                      placement="bottom-end"
-                    >
-                      <CDropdownItem className="first">
-                        <CIcon name="cil-send" />
-                        Nhắn tin
-                      </CDropdownItem>
-                      <CDropdownItem className="normal">
-                        <CIcon name="cil-find-in-page" />
-                        Xem thông tin
-                      </CDropdownItem>
-                      <CDropdownItem className="last">
-                        <CIcon name="cil-account-logout" />
-                        Mời rời nhóm
-                      </CDropdownItem>
-                    </CDropdownMenu>
-                  </CDropdown>
-                </div>
-              </td>
-            );
-          },
-        }}
-      />
-      <CPagination
-        className="pagination-team-members"
-        activePage={currentPage}
-        pages={10}
-        onActivePageChange={setCurrentPage}
-      />
+                    </td>
+                  );
+                },
+                role: (item) => {
+                  return (
+                    <td>
+                      <div className="member-role">
+                        <div
+                          className={`role-color ${
+                            item.isLeader ? "leader" : ""
+                          }`}
+                        ></div>
+                        {item.isLeader ? "Trưởng nhóm" : "Thành viên"}
+                      </div>
+                    </td>
+                  );
+                },
+                actions: (item) => {
+                  return (
+                    <td>
+                      <div className="member-actions-dropdown">
+                        <CDropdown>
+                          <CDropdownToggle id="dropdownMenuButton" caret>
+                            <div className="lane-actions">
+                              <CIcon name="cil-options" className="rotate-90" />
+                            </div>
+                          </CDropdownToggle>
+                          <CDropdownMenu
+                            aria-labelledby="dropdownMenuButton"
+                            placement="bottom-end"
+                          >
+                            <CDropdownItem className="first">
+                              <CIcon name="cil-send" />
+                              Nhắn tin
+                            </CDropdownItem>
+                            <CDropdownItem className="normal">
+                              <CIcon name="cil-find-in-page" />
+                              Xem thông tin
+                            </CDropdownItem>
+                            <CDropdownItem className="last">
+                              <CIcon name="cil-account-logout" />
+                              Mời rời nhóm
+                            </CDropdownItem>
+                          </CDropdownMenu>
+                        </CDropdown>
+                      </div>
+                    </td>
+                  );
+                },
+              }}
+            />
+          </div>
+        </CCol>
+        <CCol lg="9" md="12" className="col-members">
+          <div className="members-container">
+            <div className="label">Thành viên</div>
+            <CDataTable
+              items={usersData}
+              fields={fields}
+              scopedSlots={{
+                infor: (item) => {
+                  return (
+                    <td>
+                      <div className="member-infor-container">
+                        <img
+                          className="member-avatar"
+                          alt=""
+                          src={item.avatar}
+                        />
+
+                        <div className="member-infor">
+                          <div className="member-name">{item.name}</div>
+                          <div className="member-email">{item.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                  );
+                },
+                role: (item) => {
+                  return (
+                    <td>
+                      <div className="member-role">
+                        <div
+                          className={`role-color ${
+                            item.isLeader ? "leader" : ""
+                          }`}
+                        ></div>
+                        {item.isLeader ? "Trưởng nhóm" : "Thành viên"}
+                      </div>
+                    </td>
+                  );
+                },
+                actions: (item) => {
+                  return (
+                    <td>
+                      <div className="member-actions-dropdown">
+                        <CDropdown>
+                          <CDropdownToggle id="dropdownMenuButton" caret>
+                            <div className="lane-actions">
+                              <CIcon name="cil-options" className="rotate-90" />
+                            </div>
+                          </CDropdownToggle>
+                          <CDropdownMenu
+                            aria-labelledby="dropdownMenuButton"
+                            placement="bottom-end"
+                          >
+                            <CDropdownItem className="first">
+                              <CIcon name="cil-send" />
+                              Nhắn tin
+                            </CDropdownItem>
+                            <CDropdownItem className="normal">
+                              <CIcon name="cil-find-in-page" />
+                              Xem thông tin
+                            </CDropdownItem>
+                            <CDropdownItem className="last">
+                              <CIcon name="cil-account-logout" />
+                              Mời rời nhóm
+                            </CDropdownItem>
+                          </CDropdownMenu>
+                        </CDropdown>
+                      </div>
+                    </td>
+                  );
+                },
+              }}
+            />
+            <CPagination
+              className="pagination-team-members"
+              activePage={currentPage}
+              pages={10}
+              onActivePageChange={setCurrentPage}
+            />
+          </div>
+        </CCol>
+      </CRow>
     </div>
   );
 }

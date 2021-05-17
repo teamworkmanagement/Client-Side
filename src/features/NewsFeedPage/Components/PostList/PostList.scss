@@ -7,8 +7,8 @@
     border-radius: 50px;
     cursor: pointer;
     color: white;
-    width: 4rem;
-    height: 4rem;
+    width: 3.5rem;
+    height: 3.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,6 +16,7 @@
         width: 2rem !important;
         height: 2rem !important;
         border-radius: 50px;
+        margin-top: -0.2rem;
     }
     &:hover {
         background-color: rgba(#3e79f7, 0.8);
