@@ -51,7 +51,6 @@ const Login = () => {
     await dispatch(login(loginObject));
     if (authStatus) {
       history.push("/dashboard");
-      startChatService();
     }
   };
 
@@ -118,7 +117,6 @@ const Login = () => {
 
     if (authStatus) {
       history.push("/dashboard");
-      startChatService();
     }
   };
 

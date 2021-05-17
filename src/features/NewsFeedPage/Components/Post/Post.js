@@ -24,6 +24,9 @@ function Post(props) {
   const [post, setPost] = useState({ ...props.post });
   const [commentContent, setCommentContent] = useState("");
   const user = useSelector((state) => state.auth.currentUser);
+  const newAddReact = useSelector(state => state.signalr.newAddReact);
+  const removeReact = useSelector(state => state.signalr.removeReact);
+  const newComment = useSelector(state => state.signalr.newComment);
   const [resetEditor, setResetEditor] = useState(0);
 
   useEffect(() => {
@@ -105,11 +108,17 @@ function Post(props) {
     }
   };
 
+  String.prototype.replaceBetween = function (start, end, what) {
+    return this.substring(0, start) + what + this.substring(end);
+  };
+
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    let value = blocks
-      .map((block) => (!block.text.trim() && "\n") || block.text)
-      .join("<br>");
+    if (blocks.length === 1) {
+      if (blocks[0].text === "")
+        return;
+    }
+    const cloneBlocks = [...blocks];
 
     //tags
     const obj = convertToRaw(editorState.getCurrentContent());
@@ -117,26 +126,46 @@ function Post(props) {
     const mentions = [];
     const entityMap = obj.entityMap;
 
+    //console.log(entityMap);
+    console.log(obj);
     for (const property in entityMap) {
       if (entityMap[property].type === "mention")
         mentions.push(entityMap[property].data.mention);
     }
 
-    //add tag to
-    mentions.forEach((m) => {
-      value = value.replace(
-        m.name,
-        '<strong className="tag-user">@' + m.name + "</strong>"
-      );
+    //console.log(cloneBlocks);
+
+    cloneBlocks.forEach((block, index) => {
+      if (block.entityRanges.length > 0) {
+        block.entityRanges.forEach(entity => {
+          var nameTag = block.text.substring(entity.offset, entity.offset + entity.length);
+          block.text = block.text.replaceBetween(entity.offset, entity.offset + entity.length, `<strong>@${nameTag}</strong>`)
+          console.log(block.text);
+        });
+      }
     });
 
+    let value = cloneBlocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
+
+    let userIds = [];
+    if (mentions.length > 0) {
+      userIds = mentions.map(m => m.id);
+    }
+
+    console.log(value);
     commentApi
       .addComment({
         commentPostId: post.postId,
         commentUserId: user.id,
+        commentUserAvatar: user.userAvatar,
+        commentUserName: user.fullName,
+        commentTeamId: post.postTeamId,
         commentContent: value,
         commentCreatedAt: new Date().toISOString(),
         commentIsDeleted: false,
+        commentUserTagIds: userIds,
       })
       .then((res) => {
         setPost({
@@ -151,6 +180,7 @@ function Post(props) {
             commentUserId: res.data.commentUserId,
             commentContent: res.data.commentContent,
             userName: user.fullName,
+            userAvatar: user.userAvatar,
             commentCreatedAt: res.data.commentCreatedAt,
           },
         ].concat([...cmtLists]);
@@ -158,10 +188,33 @@ function Post(props) {
         setComments(newArrr);
       })
       .catch((err) => { });
-
-    console.log(value);
   };
 
+
+  useEffect(() => {
+    if (!newAddReact)
+      return;
+
+    if (newAddReact.postId === post.postId) {
+      setPost({
+        ...post,
+        postReactCount: post.postReactCount + 1
+      });
+    }
+  }, [newAddReact])
+
+
+  useEffect(() => {
+    if (!removeReact)
+      return;
+
+    if (removeReact.postId === post.postId) {
+      setPost({
+        ...post,
+        postReactCount: post.postReactCount - 1
+      })
+    }
+  }, [removeReact])
   const listImages = [
     "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
 
@@ -173,7 +226,20 @@ function Post(props) {
 
     "https://cdn3.yame.vn/pimg/giay-casual-anubis-ver1-0019901/a1f616a6-ea76-0200-c9c5-00176e430b9f.jpg?w=540&h=540&c=true",
   ];
-  console.log(post.userName + "-" + user.fullName);
+
+  useEffect(() => {
+    if (!newComment)
+      return;
+    if (newComment.commentPostId === post.postId) {
+      setComments([newComment].concat([...cmtLists]));
+      setPost({
+        ...post,
+        postCommentCount: post.postCommentCount + 1,
+      });
+      console.log(newComment);
+    }
+  }, [newComment])
+
   return (
     <div className="post-container">
       <div className="post-header">
@@ -181,7 +247,7 @@ function Post(props) {
           <div className="poster-avatar">
             <img
               alt="avatar"
-              src="http://emilus.themenate.net/img/avatars/thumb-4.jpg"
+              src={user.id === post.postUserId ? user.userAvatar : post.userAvatar}
             />
           </div>
           <div className="poster-infor">
@@ -207,7 +273,7 @@ function Post(props) {
         dangerouslySetInnerHTML={{ __html: post.postContent }}
       ></div>
       <div className="post-images-list-container">
-        <GridImages countFrom={5} images={listImages} />
+        <GridImages countFrom={5} images={post.postImages} />
       </div>
       <div className="interaction-bar">
         <CIcon
@@ -221,7 +287,7 @@ function Post(props) {
       </div>
       <div className="my-comment">
         <div className="my-avatar">
-          <img alt="" src="../avatars/6.jpg" />
+          <img alt="" src={user.userAvatar} />
         </div>
         <div className="input-container">
           {/*<CInput

@@ -1,0 +1,13 @@
+.fixed-noti{
+    width: 450px;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+
+.truncate {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

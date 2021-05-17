@@ -544,12 +544,16 @@ const appSlice = createSlice({
     kanbanLists: KanbanLists,
     files: Files,
     teamLoading: false,
+    newNotfication: null,
   },
   reducers: {
     changeState(state, payload) {
       if (payload.payload.type === "set") {
         state.sidebarShow = payload.payload.sidebarShow;
       }
+    },
+    setNewNoti(state, action) {
+      state.newNotfication = action.payload;
     },
     setCurrentPostPage(state) {
       state.currentPostPage++;
@@ -759,5 +763,6 @@ export const {
   handleDragEnd,
   updateTask,
   setTeamLoading,
+  setNewNoti
 } = actions; // named export
 export default reducer; // default export

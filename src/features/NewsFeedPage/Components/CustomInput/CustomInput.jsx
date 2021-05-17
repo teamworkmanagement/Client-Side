@@ -1,6 +1,9 @@
 import Editor from '@draft-js-plugins/editor';
 import createEmojiPlugin from '@draft-js-plugins/emoji';
-import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention';
+import createMentionPlugin, {
+    defaultSuggestionsFilter, MentionData,
+    MentionPluginTheme,
+} from '@draft-js-plugins/mention';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import { EditorState, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
@@ -29,7 +32,8 @@ function CustomInput(props) {
 
 
     const { MentionSuggestions, plugins } = useMemo(() => {
-        const mentionPlugin = createMentionPlugin();
+        const mentionPlugin = createMentionPlugin(
+        );
         // eslint-disable-next-line no-shadow
         const { MentionSuggestions } = mentionPlugin;
         // eslint-disable-next-line no-shadow
@@ -57,6 +61,7 @@ function CustomInput(props) {
                 console.log('shift enter');
             } else {
                 console.log('enter');
+
                 return 'custom-input-save';
             }
         }
@@ -81,7 +86,7 @@ function CustomInput(props) {
             teamId: props.teamId,
         }
         userApi.getAllUserInTeam({ params }).then(res => {
-            console.log(res.data);
+            //console.log(res.data);
             const newMentions = res.data.map(x => {
                 return {
                     name: x.userFullname,

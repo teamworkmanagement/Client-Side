@@ -28,7 +28,6 @@ import { convertToRaw } from "draft-js";
 import uuid from "src/utils/file/uuid";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import firebase from "firebase/app";
-import fileApi from "src/api/fileApi";
 
 NewsFeedPage.propTypes = {};
 
@@ -198,63 +197,8 @@ function NewsFeedPage(props) {
     return Promise.all(promises);
   };
 
-  const addPostClick = async () => {
-    if ((!grAddPost && !teamId) || !newPostContent || newPostContent === "\n") {
-      alert("Xem lại");
-      return;
-    }
-
-    var cloneContent = (" " + newPostContent).slice(1);
-
-    //cloneContent += "dsghfvdsg";
-    tags.forEach((m) => {
-      cloneContent = cloneContent.replace(
-        m.name,
-        '<strong className="tag-user">@' + m.name + "</strong>"
-      );
-    });
-
-    console.log(cloneContent);
-
-    //cloneContent = '<p>' + cloneContent + '</p>';
-
-    //const linkDowload = [];
-    const links = await uploadImage();
-    //inkDowload.concat(links);
-
-    postApi
-      .addPost({
-        postUserId: user.id,
-        postTeamId: teamId ? teamId : grAddPost,
-        postContent: cloneContent,
-      })
-      .then((res) => {
-        res.data.postImages = links?.map((x) => x.link);
-        console.log(addPostDone);
-        console.log(res.data);
-        setAddPostDone(res.data);
-
-        if (links?.length > 0) {
-          fileApi
-            .uploadImagesPost({
-              postId: res.data.postId,
-              imageUrls: links,
-            })
-            .then((res) => {})
-            .catch((err) => {});
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
+  const addPostClick = () => {
     setResetEditorText(resetEditorText + 1);
-    setShowCreatePost(false);
-  };
-
-  const onTextAreaChange = (e) => {
-    setNewPostContent(e.target.value);
-    console.log(e.target.value);
   };
 
   const onModalClose = () => {
@@ -264,17 +208,26 @@ function NewsFeedPage(props) {
     setListPictures([]);
   };
 
-  const onTextChange = (editorState) => {
-    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    const value = blocks
-      .map((block) => (!block.text.trim() && "\n") || block.text)
-      .join("<br>");
-    //console.log(convertToRaw(editorState.getCurrentContent()));
-    const obj = convertToRaw(editorState.getCurrentContent());
+  const onAddPost = async (editorState) => {
 
-    //console.log(obj);
-    //console.log('value :', value);
-    //console.log('blocks :', blocks);
+    if (!grAddPost) {
+      alert("Xem lại");
+      return;
+    }
+
+
+    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+    if (blocks.length === 1) {
+      if (blocks[0].text === "") {
+        alert("Xem lại!");
+        return;
+      }
+    }
+
+    const cloneBlocks = [...blocks];
+
+    //tags
+    const obj = convertToRaw(editorState.getCurrentContent());
 
     const mentions = [];
     const entityMap = obj.entityMap;
@@ -284,9 +237,51 @@ function NewsFeedPage(props) {
         mentions.push(entityMap[property].data.mention);
     }
 
-    setNewPostContent(value);
-    setTags(mentions);
-  };
+    cloneBlocks.forEach((block, index) => {
+      if (block.entityRanges.length > 0) {
+        block.entityRanges.forEach(entity => {
+          var nameTag = block.text.substring(entity.offset, entity.offset + entity.length);
+          block.text = block.text.replaceBetween(entity.offset, entity.offset + entity.length, `<strong>@${nameTag}</strong>`)
+          console.log(block.text);
+        });
+      }
+    });
+
+    let value = cloneBlocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
+
+    let userIds = [];
+    if (mentions.length > 0) {
+      userIds = mentions.map(m => m.id);
+    }
+
+    console.log(value);
+    console.log(userIds);
+
+    const links = await uploadImage();
+
+    postApi
+      .addPost({
+        postUserId: user.id,
+        postTeamId: teamId ? teamId : grAddPost,
+        postContent: value,
+        userIds: userIds,
+        postImages: links
+      })
+      .then((res) => {
+        res.data.postImages = links?.map(x => x.link);
+        console.log(addPostDone);
+        console.log(res.data);
+        setAddPostDone(res.data);
+      })
+      .catch((err) => { console.log(err) });
+
+
+
+    setShowCreatePost(false);
+    setListPictures([]);
+  }
 
   const listImages = [
     {
@@ -365,15 +360,15 @@ function NewsFeedPage(props) {
               style={
                 showFilter
                   ? {
-                      borderBottomLeftRadius: "0",
-                      borderBottomRightRadius: "0",
-                      borderBottom: "none",
-                    }
+                    borderBottomLeftRadius: "0",
+                    borderBottomRightRadius: "0",
+                    borderBottom: "none",
+                  }
                   : {
-                      borderBottomLeftRadius: "10px",
-                      borderBottomRightRadius: "10px",
-                      borderBottom: "1px solid #e6ebf1",
-                    }
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    borderBottom: "1px solid #e6ebf1",
+                  }
               }
             >
               <div className="title">
@@ -444,7 +439,7 @@ function NewsFeedPage(props) {
           <PostEditor
             postTeamId={grAddPost}
             reset={resetEditorText}
-            onTextChange={onTextChange}
+            onAddPost={onAddPost}
           />
           {listPictures.length > 0 && (
             <div className="list-images-container">

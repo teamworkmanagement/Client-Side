@@ -10,6 +10,7 @@ import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
 import Message from "./Message";
 import "./Message.scss";
+import CIcon from "@coreui/icons-react";
 
 MessageList.propTypes = {};
 
@@ -388,6 +389,8 @@ function MessageList(props) {
   useEffect(() => {
     if (newMessage === null) return;
 
+    console.log(newMessage);
+
     const newMes = {
       message: newMessage.message,
       class: "normal",
@@ -489,15 +492,27 @@ function MessageList(props) {
           scrollToBottom();
         }, 1);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [props.sendMes]);
 
-  return (
-    <div>
+  const render = () => {
+    return <div>
       {listMes.map((item, index) => {
         return <Message item={item} key={item.messageId} index={index} />;
       })}
       <div ref={messagesEndRef} />
+    </div>
+  }
+  return (
+    <div>
+      {listMes.length == 0 ? <div className="nodata-image">
+        <CIcon className="icon-glass" name="cil-envelope-closed" />
+
+        <div className="noti-infor">
+          Chưa có tin nhắn nào trong nhóm của bạn
+    </div>
+      </div> : render()}
+
     </div>
   );
 }

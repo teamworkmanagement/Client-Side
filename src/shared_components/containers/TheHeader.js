@@ -64,9 +64,9 @@ const TheHeader = () => {
         className="ml-3 d-md-down-none"
         onClick={toggleSidebar}
       />
-      <CHeaderBrand className="mx-auto d-lg-none" to="/">
+      {/*<CHeaderBrand className="mx-auto d-lg-none" to="/">
         <CIcon name="logo" height="48" alt="Logo" />
-      </CHeaderBrand>
+  </CHeaderBrand>*/}
 
       {/* <CHeaderNav className="d-md-down-none mr-auto">
         <CHeaderNavItem className="px-3">
@@ -91,8 +91,8 @@ const TheHeader = () => {
             <CIcon name="cil-search" />
           </div>
         </div>
-        <TheHeaderDropdownNotif />
-        <TheHeaderDropdownTasks />
+        {/*<TheHeaderDropdownNotif />
+        <TheHeaderDropdownTasks />*/}
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />
       </CHeaderNav>
