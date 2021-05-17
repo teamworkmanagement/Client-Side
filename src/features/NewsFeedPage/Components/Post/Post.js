@@ -159,6 +159,9 @@ function Post(props) {
       .addComment({
         commentPostId: post.postId,
         commentUserId: user.id,
+        commentUserAvatar: user.userAvatar,
+        commentUserName: user.fullName,
+        commentTeamId: post.postTeamId,
         commentContent: value,
         commentCreatedAt: new Date().toISOString(),
         commentIsDeleted: false,
