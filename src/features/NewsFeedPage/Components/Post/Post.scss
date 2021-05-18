@@ -32,6 +32,7 @@
     border: 1px solid #e6ebf1;
     transition: all 0.3s;
     width: fit-content;
+    width: 100%;
     .post-header {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
@@ -60,7 +61,7 @@
                 .name-and-group {
                     strong {
                         cursor: pointer;
-                        a{
+                        a {
                             color: inherit;
                         }
                     }
@@ -210,17 +211,17 @@
 
 ::-webkit-input-placeholder {
     font-style: italic;
-    color: rgba(#3c4b64, 0.6);
+    color: #c5ccd5;
 }
 :-moz-placeholder {
     font-style: italic;
-    color: rgba(#3c4b64, 0.6);
+    color: #c5ccd5;
 }
 ::-moz-placeholder {
     font-style: italic;
-    color: rgba(#3c4b64, 0.6);
+    color: #c5ccd5;
 }
 :-ms-input-placeholder {
     font-style: italic;
-    color: rgba(#3c4b64, 0.6);
+    color: #c5ccd5;
 }

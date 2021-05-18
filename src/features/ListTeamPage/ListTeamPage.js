@@ -226,7 +226,7 @@ function ListTeamPage(props) {
   }, []);
 
   const navigateToTeam = (teamId) => {
-    history.push(`/team/${teamId}`);
+    history.push(`/teams/team/${teamId}`);
   };
 
   const teamImages = [

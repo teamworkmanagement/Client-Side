@@ -7,6 +7,8 @@ import KanbanBoard from "./features/KanbanBoard/KanbanBoard";
 import MyToaster from "./features/ToastTest/ToastTest";
 import ListTeamPage from "./features/ListTeamPage/ListTeamPage";
 import UserProfilePage from "./shared_components/MySharedComponents/UserProfilePage/UserProfilePage";
+import MyFilesPage from "./features/MyFilesPage/MyFilesPage";
+import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -114,9 +116,25 @@ const routes = [
   // { path: '/', exact: true, name: 'Home' },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
-  { path: "/team/:teamId", name: "Nhóm", component: TeamPage, exact: true },
+  {
+    path: "/teams/team/:teamId",
+    name: "Nhóm",
+    component: TeamPage,
+    exact: true,
+  },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
-  { path: "/kanban", name: "Kanban", component: KanbanBoard, exact: true },
+  {
+    path: "/managetask/mytasks",
+    name: "Công việc của tôi",
+    component: ManageMyTasksPage,
+    exact: true,
+  },
+  {
+    path: "/myfiles",
+    name: "Tệp của tôi",
+    component: MyFilesPage,
+    exact: true,
+  },
   {
     path: "/userprofile",
     name: "Thông tin",

@@ -39,7 +39,7 @@ function TeamPage(props) {
 
   return (
     <div className="team-container">
-      <CTabs activeTab={5} onActiveTabChange={(idx) => setActive(idx)}>
+      <CTabs activeTab={0} onActiveTabChange={(idx) => setActive(idx)}>
         <CNav variant="tabs">
           <CNavItem>
             <CTooltip content="Bản tin nhóm" placement="right">

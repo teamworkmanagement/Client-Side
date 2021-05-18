@@ -1,3 +1,6 @@
+.container-fluid {
+    height: 100% !important;
+}
 .team-container {
     padding: 1.5rem;
     padding-right: 0;
@@ -5,13 +8,16 @@
     display: flex;
     flex-direction: row-reverse;
     height: 100%;
-    position: absolute;
+    //position: absolute;
     width: 100%;
     background-color: #fafafb;
     .nav-tabs {
+        //position: fixed;
+        //bottom: 5rem;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        height: fit-content;
         align-items: center;
         border: none;
         margin-left: 1rem;
@@ -43,6 +49,9 @@
             width: 100%;
             display: flex;
             justify-content: center;
+            &:last-child {
+                margin-bottom: 1rem;
+            }
             .nav-link {
                 width: 100% !important;
                 border-radius: 0rem;
@@ -105,13 +114,14 @@
     .tab-content {
         border: none;
         flex-grow: 1;
+        width: 5rem;
         padding-top: 1.5rem;
-        overflow-y: scroll;
+        //overflow-y: scroll;
         display: flex;
         border-radius: 0.625rem;
         //background-color: white;
         padding: 0rem;
-
+        //margin-right: 7rem;
         .tab-pane {
             position: relative;
             flex-grow: 1;
@@ -123,12 +133,13 @@
             .chat-page-container {
                 padding: 0;
                 position: relative;
+                height: 30rem;
             }
             .newsfeed-page-container {
                 padding: 0;
-                .side-panel-container {
-                    width: 20rem;
-                }
+                // .side-panel-container {
+                //     width: 20rem;
+                // }
             }
         }
     }

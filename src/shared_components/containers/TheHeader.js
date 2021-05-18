@@ -85,7 +85,7 @@ const TheHeader = () => {
           <CInput
             class="input-field"
             type="text"
-            placeholder="...bạn tìm gì?"
+            placeholder="Bạn tìm gì?..."
           />
           <div className="input-actions-group">
             <CIcon name="cil-search" />

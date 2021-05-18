@@ -11,6 +11,7 @@ import {
   CSidebarNavDropdown,
   CSidebarNavItem,
 } from "@coreui/react";
+import "./TheSidebar.scss";
 
 import CIcon from "@coreui/icons-react";
 

@@ -32,10 +32,44 @@ const _nav = [
     icon: "cil-chat-bubble",
   },
   {
+    _tag: "CSidebarNavDropdown",
+    name: "Quản lý công việc",
+    route: "/managetask",
+    icon: "cil-task",
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: (
+          <div className="manage-mytasks-dropdown-item custom-dropdown-item">
+            <CIcon name="cil-user" />
+            <div className="overlay-icon"></div>
+            <CIcon name="cil-clipboard" className="icon-task" />
+            Công việc của tôi
+          </div>
+        ),
+        to: "/managetask/mytasks",
+        //icon: "cil-user",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: (
+          <div className="manage-mytasks-dropdown-item custom-dropdown-item">
+            <CIcon name="cil-group" />
+            <div className="overlay-icon"></div>
+            <CIcon name="cil-clipboard" className="icon-task-group" />
+            Công việc trong nhóm
+          </div>
+        ),
+        to: "/managetask/teamtasks",
+        //icon: "cil-group",
+      },
+    ],
+  },
+  {
     _tag: "CSidebarNavItem",
-    name: "Quản lý thông tin",
-    to: "/userprofile",
-    icon: "cib-stackoverflow",
+    name: "Tài liệu",
+    to: "/myfiles",
+    icon: "cil-folder-open",
   },
 
   {
