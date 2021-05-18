@@ -145,6 +145,9 @@ function KanbanBoard(props) {
           )}
         </Droppable>
       </DragDropContext>
+      <div>
+        <CardLoading isLoading={isLoading} />
+      </div>
     </div>
   );
 }
