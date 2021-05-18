@@ -1,0 +1,167 @@
+.team-statistics-container {
+    .header-label {
+        //font-weight: bold;
+        font-size: 150%;
+        margin-bottom: 0.5rem;
+    }
+    .board-select-group {
+        //padding: 0rem 0.5rem;
+        .label {
+            margin-bottom: 0.3rem;
+        }
+        .col-select {
+            padding: 0rem;
+            margin-left: 0.1rem;
+            margin-right: 0.1rem;
+            margin-bottom: 1rem;
+        }
+    }
+    .chart-progress-container {
+        background-color: white;
+        border-radius: 0.625rem;
+        border: 1px solid #e6ebf1;
+        margin-bottom: 1rem;
+        .chart-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            .chart-name {
+                font-weight: bold;
+            }
+            .timeline-mode {
+                width: 8rem;
+                flex-grow: 1;
+                .btn-group {
+                    .btn {
+                        padding: 0.3rem 0.6rem;
+                        border-color: #5186f8;
+                        color: #5186f8;
+                        &:hover {
+                            background-color: #ebf1fe;
+                        }
+                        &.active {
+                            background-color: #5186f8;
+                            color: white;
+                        }
+                        &:focus {
+                            box-shadow: 0 0 0 0.2rem #ebf1fe;
+                        }
+                        &:first-child {
+                            border-top-left-radius: 0.625rem;
+                            border-bottom-left-radius: 0.625rem;
+                        }
+                        &:last-child {
+                            border-top-right-radius: 0.625rem;
+                            border-bottom-right-radius: 0.625rem;
+                        }
+                    }
+                }
+            }
+            .export-btn {
+                border-radius: 0.625rem;
+                border: 1px solid #5186f8;
+                background-color: white;
+                padding: 0.3rem 1rem;
+                color: #5186f8;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                &:hover {
+                    background-color: #5186f8;
+                    color: white;
+                }
+                .c-icon {
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+        .chartjs-render-monitor {
+            padding: 1rem;
+            height: inherit;
+        }
+    }
+    .chart-contribute-container {
+        background-color: white;
+        border-radius: 0.625rem;
+        border: 1px solid #e6ebf1;
+        margin-bottom: 2rem;
+        .chart-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            .chart-name {
+                font-weight: bold;
+            }
+            .timeline-mode {
+                width: 8rem;
+                flex-grow: 1;
+                .btn-group {
+                    .btn {
+                        padding: 0.3rem 0.6rem;
+                        border-color: #5186f8;
+                        color: #5186f8;
+                        &:hover {
+                            background-color: #ebf1fe;
+                        }
+                        &.active {
+                            background-color: #5186f8;
+                            color: white;
+                        }
+                        &:focus {
+                            box-shadow: 0 0 0 0.2rem #ebf1fe;
+                        }
+                        &:first-child {
+                            border-top-left-radius: 0.625rem;
+                            border-bottom-left-radius: 0.625rem;
+                        }
+                        &:last-child {
+                            border-top-right-radius: 0.625rem;
+                            border-bottom-right-radius: 0.625rem;
+                        }
+                    }
+                }
+            }
+            .export-btn {
+                border-radius: 0.625rem;
+                border: 1px solid #5186f8;
+                background-color: white;
+                padding: 0.3rem 1rem;
+                color: #5186f8;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                &:hover {
+                    background-color: #5186f8;
+                    color: white;
+                }
+                .c-icon {
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+        .chartjs-render-monitor {
+            padding: 1rem;
+            height: inherit;
+        }
+    }
+}
+.option-board-item {
+    display: flex !important;
+    .divider {
+        width: 1px;
+        height: 15px;
+        background-color: #3c4b64;
+        margin: 0rem 0.5rem;
+    }
+}
+.css-9gakcf-option {
+    .option-board-item {
+        .divider {
+            background-color: white;
+        }
+    }
+}

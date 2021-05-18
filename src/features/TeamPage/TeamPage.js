@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import TeamLoading from "./TeamLoading/TeamLoading";
 import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
 import BoardsPage from "./Components/BoardsPage/BoardsPage";
+import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
 
 TeamPage.propTypes = {};
 
@@ -38,7 +39,7 @@ function TeamPage(props) {
 
   return (
     <div className="team-container">
-      <CTabs activeTab={0} onActiveTabChange={(idx) => setActive(idx)}>
+      <CTabs activeTab={5} onActiveTabChange={(idx) => setActive(idx)}>
         <CNav variant="tabs">
           <CNavItem>
             <CTooltip content="Bản tin nhóm" placement="right">
@@ -80,6 +81,14 @@ function TeamPage(props) {
               </CNavLink>
             </CTooltip>
           </CNavItem>
+          <CNavItem>
+            <CTooltip content="Thống kê" placement="right">
+              <CNavLink>
+                <CIcon name="cil-chart-line" />
+                <div className="tab-name">Thống kê</div>
+              </CNavLink>
+            </CTooltip>
+          </CNavItem>
         </CNav>
         <CTabContent>
           <CTabPane>
@@ -101,6 +110,9 @@ function TeamPage(props) {
           </CTabPane>
           <CTabPane>
             <TeamMembersList />
+          </CTabPane>
+          <CTabPane>
+            <TeamStatistics />
           </CTabPane>
         </CTabContent>
       </CTabs>
