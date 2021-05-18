@@ -20,8 +20,10 @@ function TaskList(props) {
   });
 
   useEffect(() => {
-    dispatch(getBoardDataForUI('board1'));
-  }, []);
+    if (!props.boardId)
+      return;
+    dispatch(getBoardDataForUI(props.boardId));
+  }, [props.boardId]);
   return (
     <div className="task-list-container">
       {tasks.map((item, index) => {

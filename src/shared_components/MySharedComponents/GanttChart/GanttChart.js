@@ -30,8 +30,10 @@ function GanttChart(props) {
   });
 
   useEffect(() => {
-    dispatch(getBoardDataForUI("board1"));
-  }, []);
+    if (!props.boardId)
+      return;
+    dispatch(getBoardDataForUI(props.boardId));
+  }, [props.boardId]);
 
   var initData = {
     data: refactorTasksForGantt(),
@@ -188,8 +190,8 @@ function GanttChart(props) {
           taskDeadline: newTaskData.end_date,
           taskImageUrl: newTaskData.taskImageUrl,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     });
   }, [data]);
 
