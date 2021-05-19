@@ -27,20 +27,6 @@ function ChatListItem(props) {
     }
   };
 
-  const chatImages = [
-    "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7",
-    "https://i.ytimg.com/vi/u2ypkUBGEHI/maxresdefault.jpg",
-    "https://scontent-sin6-3.xx.fbcdn.net/v/t1.6435-9/70944423_1289407744573535_1300646982062178304_n.jpg?_nc_cat=104&ccb=1-3&_nc_sid=825194&_nc_ohc=30N8un2vPewAX8QcAkk&_nc_ht=scontent-sin6-3.xx&oh=5ece776d1f0b830ca2f8e106d6452719&oe=609EBA21",
-    "https://emilus.themenate.net/img/avatars/thumb-3.jpg",
-    "https://emilus.themenate.net/img/avatars/thumb-6.jpg",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-  ];
-
   return (
     <div
       onClick={() => handelSelect()}
@@ -52,11 +38,7 @@ function ChatListItem(props) {
       <div className="item-avatar">
         <img
           alt=""
-          src={
-            props.data.groupAvatar
-              ? props.data.groupAvatar
-              : chatImages[props.index]
-          }
+          src={props.data.groupAvatar ? props.data.groupAvatar : props.image}
         />
       </div>
 

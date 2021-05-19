@@ -1,7 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./ChatPage.scss";
-import { CButton, CInput, CInputGroup, CInputGroupAppend } from "@coreui/react";
+import {
+  CButton,
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
+  CInput,
+  CInputGroup,
+  CInputGroupAppend,
+} from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import ChatList from "./Components/ChatList/ChatList";
 import MessageList from "./Components/MessageList/MessageList";
@@ -164,6 +173,29 @@ function ChatPage(props) {
     });
   };
 
+  const chatImages = [
+    "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7",
+    "https://i.ytimg.com/vi/u2ypkUBGEHI/maxresdefault.jpg",
+    "https://scontent-sin6-3.xx.fbcdn.net/v/t1.6435-9/70944423_1289407744573535_1300646982062178304_n.jpg?_nc_cat=104&ccb=1-3&_nc_sid=825194&_nc_ohc=30N8un2vPewAX8QcAkk&_nc_ht=scontent-sin6-3.xx&oh=5ece776d1f0b830ca2f8e106d6452719&oe=609EBA21",
+    "https://emilus.themenate.net/img/avatars/thumb-3.jpg",
+    "https://emilus.themenate.net/img/avatars/thumb-6.jpg",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+  ];
+
+  function getChatImage() {
+    for (let i = 0; i < grChats.length; i++) {
+      if (grChats[i].groupChatId === currentGroup) {
+        return chatImages[i];
+      }
+    }
+    return "";
+  }
+
   return (
     <div className="chat-page-container">
       {loadDone ? (
@@ -184,15 +216,54 @@ function ChatPage(props) {
                   </CInputGroupAppend>
                 </CInputGroup>
               </div>
-              <ChatList />
+              <ChatList chatImages={chatImages} />
+              <div className="btn-add-chat">
+                <CIcon name="cil-plus" />
+                Tạo nhóm Chat mới
+              </div>
             </div>
           )}
           <div className="chat-content">
             {!props.isInTeam && (
               <div className="chat-content-header">
-                <div className="chat-group-title">{group?.groupChatName}</div>
+                <div className="chat-group-title">
+                  <img alt="" src={getChatImage()} />
+                  {group?.groupChatName}
+                </div>
                 <div className="chat-group-actions">
-                  <CIcon name="cil-options" />
+                  <div className="btn-add-member">
+                    <CIcon name="cil-user-follow" />
+                    Thêm thành viên
+                  </div>
+                  <div className="chat-header-actions-dropdown">
+                    <CDropdown>
+                      <CDropdownToggle id="dropdownMenuButton" caret>
+                        <div className="options">
+                          <CIcon name="cil-options" />
+                        </div>
+                      </CDropdownToggle>
+                      <CDropdownMenu
+                        aria-labelledby="dropdownMenuButton"
+                        placement="bottom-end"
+                      >
+                        <CDropdownItem className="first">
+                          <div className="info-icon-group">
+                            <CIcon name="cil-info" />
+                            <div className="overlay-border"></div>
+                            <CIcon name="cil-circle" className="icon-circle" />
+                          </div>
+                          Thông tin nhóm chat
+                        </CDropdownItem>
+                        <CDropdownItem className="last">
+                          <CIcon
+                            name="cil-user-follow"
+                            className="icon-delete"
+                          />
+                          Thêm thành viên
+                        </CDropdownItem>
+                      </CDropdownMenu>
+                    </CDropdown>
+                  </div>
                 </div>
               </div>
             )}
