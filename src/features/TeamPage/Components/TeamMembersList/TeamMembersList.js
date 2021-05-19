@@ -16,11 +16,13 @@ import {
   CTooltip,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { useHistory } from "react-router";
 
 TeamMembersList.propTypes = {};
 
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
+  const history = useHistory();
   const [currentPage, setCurrentPage] = useState(2);
   function switchShowMode(index) {
     if (index === showMode) return;
@@ -91,6 +93,10 @@ function TeamMembersList(props) {
     },
   ];
 
+  const navigateToProfile = (user) => {
+    history.push(`/userprofile`);
+  };
+
   return (
     <div className="team-members-container">
       <div className="members-list-header">
@@ -160,7 +166,7 @@ function TeamMembersList(props) {
               scopedSlots={{
                 infor: (item) => {
                   return (
-                    <td>
+                    <td onClick={() => navigateToProfile(item)}>
                       <div className="member-infor-container">
                         <img
                           className="member-avatar"
@@ -235,7 +241,7 @@ function TeamMembersList(props) {
               scopedSlots={{
                 infor: (item) => {
                   return (
-                    <td>
+                    <td onClick={() => navigateToProfile(item)}>
                       <div className="member-infor-container">
                         <img
                           className="member-avatar"
@@ -253,7 +259,7 @@ function TeamMembersList(props) {
                 },
                 role: (item) => {
                   return (
-                    <td>
+                    <td onClick={() => navigateToProfile(item)}>
                       <div className="member-role">
                         <div
                           className={`role-color ${

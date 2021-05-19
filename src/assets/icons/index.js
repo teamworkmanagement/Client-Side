@@ -44,6 +44,7 @@ import {
   cilPen,
   cilFolderOpen,
   cilClipboard,
+  cilPin,
   cibMessenger, //myimport
   cibSkype,
   cibFacebook,
@@ -223,6 +224,7 @@ export const icons = Object.assign(
     cilPen,
     cilFolderOpen,
     cilClipboard,
+    cilPin,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

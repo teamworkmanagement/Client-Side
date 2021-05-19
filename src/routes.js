@@ -9,6 +9,7 @@ import ListTeamPage from "./features/ListTeamPage/ListTeamPage";
 import UserProfilePage from "./shared_components/MySharedComponents/UserProfilePage/UserProfilePage";
 import MyFilesPage from "./features/MyFilesPage/MyFilesPage";
 import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
+import ManageTeamTasksPage from "./features/ManageTeamTasksPage/ManageTeamTasksPage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -115,18 +116,30 @@ const User = React.lazy(() => import("./shared_components/views/users/User"));
 const routes = [
   // { path: '/', exact: true, name: 'Home' },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
+  { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
   {
-    path: "/teams/team/:teamId",
+    path: "/teams",
+    name: "Danh sách nhóm",
+    component: ListTeamPage,
+    exact: true,
+  },
+  {
+    path: "/team/:teamId",
     name: "Nhóm",
     component: TeamPage,
     exact: true,
   },
-  { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   {
     path: "/managetask/mytasks",
     name: "Công việc của tôi",
     component: ManageMyTasksPage,
+    exact: true,
+  },
+  {
+    path: "/managetask/teamtasks",
+    name: "Công việc trong nhóm được giao",
+    component: ManageTeamTasksPage,
     exact: true,
   },
   {
@@ -139,13 +152,6 @@ const routes = [
     path: "/userprofile",
     name: "Thông tin",
     component: UserProfilePage,
-    exact: true,
-  },
-  { path: "/toast", name: "Kanban", component: MyToaster, exact: true },
-  {
-    path: "/teams",
-    name: "Danh sách nhóm",
-    component: ListTeamPage,
     exact: true,
   },
   //{ path: "/team", name: "mychat", component: ChatPage, exact: true },

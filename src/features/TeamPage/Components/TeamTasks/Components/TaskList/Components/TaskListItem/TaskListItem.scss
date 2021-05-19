@@ -46,7 +46,7 @@
 
 .task-list-item-container {
     @include TaskListItemApear;
-
+    align-items: center;
     background-color: white;
     width: 100%;
     margin-bottom: 0.5rem;
@@ -178,6 +178,12 @@
                 background-color: transparent;
                 outline: none;
                 border-radius: 50px;
+                padding: 0.5rem;
+                width: 2rem;
+                height: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 .lane-actions {
                     color: #3c4b64;
                 }
@@ -195,8 +201,8 @@
             .dropdown-menu.show {
                 z-index: 1000;
                 //@include TaskListItemApear;
-                margin-top: -3.4rem !important;
-                margin-left: -10rem !important;
+                margin-left: -2.5rem !important;
+                margin-top: -3rem !important;
                 box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
                 border-radius: 0.625rem;
                 padding: 0;

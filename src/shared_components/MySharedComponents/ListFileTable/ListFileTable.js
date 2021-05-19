@@ -1,4 +1,5 @@
-import { CDataTable, CPagination } from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import { CDataTable, CPagination, CTooltip } from "@coreui/react";
 import { setTimeout } from "core-js";
 import moment from "moment";
 import "moment/locale/vi";
@@ -7,6 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useParams } from "react-router";
 import fileApi from "src/api/fileApi";
+import { icons } from "src/assets/icons";
 import { myBucket } from "src/utils/aws/config";
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
 import { v4 as uuidv4 } from "uuid";
@@ -348,7 +350,7 @@ function ListFileTable(props) {
     { key: "type", label: "Loại", _style: { width: "10%" } },
     {
       key: "downloadAction",
-      label: "Tải về",
+      label: "",
       _style: { width: "10%" },
       sorter: false,
       filter: false,
@@ -534,15 +536,33 @@ function ListFileTable(props) {
           downloadAction: (item, index) => {
             return (
               <td>
-                <div className="download-btn-container">
-                  <a href={item.fileUrl}>
-                    <img
+                <div className="actions-group">
+                  <CTooltip placement="top" content="Tải về">
+                    <div className="download-btn-container">
+                      <a href={item.fileUrl}>
+                        {/* <img
                       className="download-btn"
                       src={"../images/download.png"}
                       alt=""
                       onClick={handleDownload}
-                    ></img>
-                  </a>
+                    ></img> */}
+                        <div className="download-btn">
+                          <div className="overlay-div"></div>
+                          <CIcon
+                            name="cil-arrow-bottom"
+                            className="arrow-icon"
+                          />
+                          <CIcon name="cil-space-bar" />
+                        </div>
+                      </a>
+                    </div>
+                  </CTooltip>
+
+                  <CTooltip placement="top" content="Lưu vào tệp của tôi">
+                    <div className="share-btn-container">
+                      <CIcon name="cil-share-all" />
+                    </div>
+                  </CTooltip>
                 </div>
               </td>
             );
