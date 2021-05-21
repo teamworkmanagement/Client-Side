@@ -84,7 +84,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Tài khoản",
-    to: "",
+    to: "/myaccount",
     icon: {
       name: "cil-user",
     },

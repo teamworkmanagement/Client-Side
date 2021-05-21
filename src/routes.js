@@ -10,6 +10,7 @@ import UserProfilePage from "./shared_components/MySharedComponents/UserProfileP
 import MyFilesPage from "./features/MyFilesPage/MyFilesPage";
 import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
 import ManageTeamTasksPage from "./features/ManageTeamTasksPage/ManageTeamTasksPage";
+import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsPage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -152,6 +153,12 @@ const routes = [
     path: "/userprofile",
     name: "Thông tin",
     component: UserProfilePage,
+    exact: true,
+  },
+  {
+    path: "/myaccount",
+    name: "Tài khoản",
+    component: AccountSettingsPage,
     exact: true,
   },
   //{ path: "/team", name: "mychat", component: ChatPage, exact: true },

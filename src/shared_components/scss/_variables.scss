@@ -71,15 +71,18 @@
                     &:hover {
                         @include SideBarItemHover;
                     }
+                    &.c-active {
+                        @include SideBarItemSelected;
+                    }
                 }
                 .c-sidebar-nav-link {
                     @include SideBarItemNormal;
                     &:hover {
                         @include SideBarItemHover;
                     }
-                }
-                .c-sidebar-nav-link.c-active {
-                    @include SideBarItemSelected;
+                    &.c-active {
+                        @include SideBarItemSelected;
+                    }
                 }
             }
             .c-sidebar-nav-title {
