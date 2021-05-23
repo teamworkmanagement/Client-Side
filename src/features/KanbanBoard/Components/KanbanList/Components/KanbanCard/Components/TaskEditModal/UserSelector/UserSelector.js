@@ -4,7 +4,6 @@ import Select, { components } from 'react-select';
 import axiosClient from 'src/api/axiosClient';
 import taskApi from 'src/api/taskApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateEditTask } from 'src/features/KanbanBoard/kanbanSlice';
 
 UserSelector.propTypes = {
 
@@ -83,38 +82,6 @@ function UserSelector(props) {
         if (JSON.stringify(props.currentValue) === JSON.stringify({}))
             return;
         const task = props.currentValue;
-        const taskMapObj = {
-            kanbanListId: task.kanbanListId,
-            taskId: task.taskId,
-            image: task.taskImageUrl,
-            taskName: task.taskName,
-            taskStartDate: task.taskStartDate,
-            taskDeadline: task.taskDeadline,
-            taskDescription: task.taskDescription,
-            taskStatus: task.taskStatus,
-            commentsCount: task.commentsCount,
-            filesCount: task.filesCount,
-            userId: current ? current.value : null,
-            userAvatar: current ? current.img : null,
-            taskCompletedPercent: task.taskCompletedPercent,
-            taskThemeColor: task.taskThemeColor,
-            taskImageUrl: task.taskImageUrl,
-        };
-
-        console.log(taskMapObj);
-
-        //props.onSelectedUser(current);
-
-        console.log(props.currentValue);
-        console.log(current);
-
-        taskApi.reAssignTask({
-            "currentUserId": current?.value,
-            "taskId": props.currentValue.taskId,
-        }).then(res => {
-            dispatch(updateEditTask(taskMapObj));
-            props.onSelectedUser(current);
-        }).catch(err => { });
 
 
     }, [current])

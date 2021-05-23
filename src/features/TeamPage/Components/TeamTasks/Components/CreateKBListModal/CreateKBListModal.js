@@ -11,7 +11,6 @@ import {
 import kanbanApi from "src/api/kanbanApi";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { addList } from "src/features/KanbanBoard/kanbanSlice";
 
 
 CreateKBListModal.propTypes = {};
@@ -28,12 +27,18 @@ function CreateKBListModal(props) {
       return;
     }
 
+    let pos = 0;
+    if (listKBs.length === 0)
+      pos = pos + 65536;
+    else
+      pos = listKBs[listKBs.length - 1].kanbanListOrderInBoard + 65536;
+
     kanbanApi.addList({
       kanbanListTitle: listName,
       kanbanListBoardBelongedId: props.boardId,
-      kanbanListOrderInBoard: listKBs.length
+      kanbanListOrderInBoard: pos
     }).then(res => {
-      dispatch(addList(res.data));
+
     }).catch(err => {
 
     }).finally(() => {

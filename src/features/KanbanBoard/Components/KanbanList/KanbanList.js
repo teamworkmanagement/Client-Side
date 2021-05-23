@@ -18,43 +18,11 @@ import {
 import CIcon from "@coreui/icons-react";
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
-import CardLoading from "./Components/KanbanCard/Components/CardLoading/CardLoading";
-import { removeList } from "../../kanbanSlice";
 import kanbanApi from "src/api/kanbanApi";
 
 KanbanList.propTypes = {};
 
 function KanbanList(props) {
-  /*const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
-  const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
-  const kanbanTasks = useSelector((state) => state.app.tasks);
-  const kanbanCardsData = getKanbanCardsData();
-  const [showAddCard, setShowAddCard] = useState(false);
-
-  function getKanbanCardsData() {
-    const listId = props.data.kanbanListId;
-    const listCards = [];
-    for (var i = 0; i < kanbanTasks.length; i++) {
-      if (kanbanTasks[i].taskListBelongedId === listId) {
-        listCards.push({ ...kanbanTasks[i] });
-      }
-    }
-    if (listCards.length === 0) return listCards;
-    //sort
-    let clonedCards = [...listCards];
-
-    for (var i = 0; i < clonedCards.length; i++) {
-      for (var j = i + 1; j < clonedCards.length; j++) {
-        if (clonedCards[i].taskOrderInlist > clonedCards[j].taskOrderInlist) {
-          let temp = clonedCards[i];
-          clonedCards[i] = clonedCards[j];
-          clonedCards[j] = temp;
-        }
-      }
-    }
-
-    return [...clonedCards];
-  }*/
 
   const dispatch = useDispatch();
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
@@ -67,10 +35,13 @@ function KanbanList(props) {
   };
 
   const removeKbList = () => {
-    dispatch(removeList(props.data.kanbanListId));
-    kanbanApi.removeKanbanList(props.data.kanbanListId)
-      .then(res => { })
-      .catch(err => { });
+    const params = {
+      KanbanListId: props.data.kanbanListId,
+      KanbanListBoardBelongedId: props.data.kanbanListBoardBelongedId,
+    }
+    kanbanApi.removeKanbanList({
+      params
+    }).then(res => { }).catch(err => { })
   }
   return (
     <Draggable draggableId={props.data.kanbanListId} index={props.index}>

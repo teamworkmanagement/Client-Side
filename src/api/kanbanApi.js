@@ -21,9 +21,9 @@ const kanbanApi = {
         const url = `/kanbanlist`;
         return axiosClient.post(url, payload);
     },
-    removeKanbanList(kanbanListId) {
-        const url = `/kanbanlist/${kanbanListId}`;
-        return axiosClient.delete(url);
+    removeKanbanList(params) {
+        const url = `/kanbanlist`;
+        return axiosClient.delete(url, params);
     }
 };
 

@@ -22,7 +22,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  blacklist: ["app", "test", "chat", "kanban", "team", "signalr"],
+  blacklist: ["app", "test", "chat", "team", "signalr"],
 };
 
 const rootReducer = combineReducers({

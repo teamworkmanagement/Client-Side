@@ -36,7 +36,6 @@ import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/Co
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file/index";
 import CardLoading from "../CardLoading/CardLoading";
 import taskApi from "src/api/taskApi";
-import { removeTask, updateEditTask } from "../../../../../../kanbanSlice";
 import { myBucket } from "src/utils/aws/config";
 import { v4 as uuidv4 } from "uuid";
 import fileApi from "src/api/fileApi";
@@ -302,7 +301,7 @@ function TaskEditModal(props) {
           const findObj = ops.find((x) => x.value === props.data.userId);
           if (findObj) setCurrent(findObj);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [props.data]);
 
@@ -314,33 +313,7 @@ function TaskEditModal(props) {
     console.log(current);
     if (JSON.stringify(task) === JSON.stringify({})) return;
 
-    const taskMapObj = {
-      kanbanListId: task.kanbanListId,
-      taskId: task.taskId,
-      image: task.taskImageUrl,
-      taskName: task.taskName,
-      taskStartDate: task.taskStartDate,
-      taskDeadline: task.taskDeadline,
-      taskDescription: task.taskDescription,
-      taskStatus: task.taskStatus,
-      commentsCount: task.commentsCount,
-      filesCount: task.filesCount,
-      userId: current ? current.value : null,
-      userAvatar: current ? current.img : null,
-      taskCompletedPercent: task.taskCompletedPercent,
-      taskThemeColor: task.taskThemeColor,
-      taskImageUrl: task.taskImageUrl,
-    };
 
-    taskApi
-      .reAssignTask({
-        currentUserId: current?.value,
-        taskId: task.taskId,
-      })
-      .then((res) => {
-        dispatch(updateEditTask(taskMapObj));
-      })
-      .catch((err) => {});
   }, [current]);
 
   const dispatchUpdateTask = () => {
@@ -349,24 +322,7 @@ function TaskEditModal(props) {
 
   useEffect(() => {
     if (triggerUpdateTask < 0) return;
-    const taskMapObj = {
-      kanbanListId: task.kanbanListId,
-      taskId: task.taskId,
-      image: task.taskImageUrl,
-      taskName: task.taskName,
-      taskStartDate: task.taskStartDate,
-      taskDeadline: task.taskDeadline,
-      taskDescription: task.taskDescription,
-      taskStatus: task.taskStatus,
-      commentsCount: task.commentsCount,
-      filesCount: task.filesCount,
-      userId: task.userId,
-      userAvatar: task.userAvatar,
-      taskCompletedPercent: task.taskCompletedPercent,
-      taskThemeColor: task.taskThemeColor,
-      taskImageUrl: task.taskImageUrl,
-    };
-    dispatch(updateEditTask(taskMapObj));
+
     if (props.updateGanttTask) {
       props.updateGanttTask(task);
     }
@@ -434,8 +390,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     //dispatch(updateTask(task));
 
@@ -460,8 +416,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     //dispatch(updateTask(task));
 
@@ -487,8 +443,8 @@ function TaskEditModal(props) {
         taskCompletedPercent: task.taskCompletedPercent,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
 
@@ -512,8 +468,8 @@ function TaskEditModal(props) {
         taskCompletedPercent: task.taskCompletedPercent,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
 
@@ -565,8 +521,8 @@ function TaskEditModal(props) {
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
-          .then((res) => {})
-          .catch((err) => {});
+          .then((res) => { })
+          .catch((err) => { });
 
         setTask(newTask);
         dispatchUpdateTask();
@@ -589,8 +545,8 @@ function TaskEditModal(props) {
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
-          .then((res) => {})
-          .catch((err) => {});
+          .then((res) => { })
+          .catch((err) => { });
         setTask(newTask);
         dispatchUpdateTask();
         //dispatch(updateTask(newTask));
@@ -612,8 +568,8 @@ function TaskEditModal(props) {
             taskDeadline: task.taskDeadline,
             taskImageUrl: task.taskImageUrl,
           })
-          .then((res) => {})
-          .catch((err) => {});
+          .then((res) => { })
+          .catch((err) => { });
         setTask(newTask);
         dispatchUpdateTask();
         //dispatch(updateTask(newTask));
@@ -652,8 +608,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
     //dispatch(updateTask(newTask));
@@ -675,8 +631,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     changeColor("#FFF");
     setTask(newTask);
@@ -699,8 +655,8 @@ function TaskEditModal(props) {
         taskDeadline: task.taskDeadline,
         taskImageUrl: task.taskImageUrl,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     setTask(newTask);
     dispatchUpdateTask();
     //dispatch(updateTask(newTask));
@@ -729,8 +685,8 @@ function TaskEditModal(props) {
         taskCompletedPercent: task.taskCompletedPercent,
         taskImageUrl: null,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     setTask({
       ...task,
@@ -775,13 +731,13 @@ function TaskEditModal(props) {
                 taskCompletedPercent: task.taskCompletedPercent,
                 taskImageUrl: imageUrl,
               })
-              .then((res) => {})
-              .catch((err) => {});
+              .then((res) => { })
+              .catch((err) => { });
 
             dispatchUpdateTask();
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -818,7 +774,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -859,10 +815,10 @@ function TaskEditModal(props) {
                 setAttachments(attachmentsClone);
                 dispatchUpdateTask();
               })
-              .catch((err) => {});
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -886,18 +842,8 @@ function TaskEditModal(props) {
     if (confirmBox !== true) {
       return;
     }
-    taskApi
-      .removeTask(task.taskId)
-      .then((res) => {
-        dispatch(
-          removeTask({
-            taskId: task.taskId,
-            kanbanListId: task.kanbanListId,
-            orderInList: task.orderInList,
-          })
-        );
-      })
-      .catch((err) => {});
+
+    taskApi.removeTask(task.taskId).then(res => { }).catch(err => { })
 
     if (props.closePopup) {
       props.closePopup();

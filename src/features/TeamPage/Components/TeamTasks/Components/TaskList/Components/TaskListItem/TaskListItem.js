@@ -14,7 +14,6 @@ import { func } from "prop-types";
 import moment from "moment";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import taskApi from "src/api/taskApi";
-import { removeTask } from "src/features/KanbanBoard/kanbanSlice";
 TaskListItem.propTypes = {};
 
 function TaskListItem(props) {
@@ -31,31 +30,7 @@ function TaskListItem(props) {
   function onEditModalClose() {
     setIsShowEditPopup(false);
   }
-  /*function getAssignedUserImage() {
-    //find handleTask
-    let userHandleId = "";
-    for (let i = 0; i < handleTasks.length; i++) {
-      if (handleTasks[i].handleTaskTaskId === props.data.taskId) {
-        userHandleId = handleTasks[i].handleTaskUserId;
-        break;
-      }
-    }
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].userId === userHandleId) {
-        return users[i].userImageUrl;
-      }
-    }
-    return "";
-  }
-  function getAttachmentsCount() {
-    let count = 0;
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].fileBelongedId === props.data.taskId) {
-        count++;
-      }
-    }
-    return count;
-  }*/
+
 
   function getStatusColor(status) {
     switch (status) {
@@ -123,18 +98,7 @@ function TaskListItem(props) {
   };
 
   const onRemoveTask = () => {
-    taskApi
-      .removeTask(props.data.taskId)
-      .then((res) => {
-        dispatch(
-          removeTask({
-            taskId: props.data.taskId,
-            kanbanListId: props.data.kanbanListId,
-            orderInList: props.data.orderInList,
-          })
-        );
-      })
-      .catch((err) => {});
+    
 
     if (props.closePopup) {
       props.closePopup();

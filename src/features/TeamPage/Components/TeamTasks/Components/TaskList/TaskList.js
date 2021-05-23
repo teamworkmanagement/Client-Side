@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./TaskList.scss";
 import TaskListItem from "./Components/TaskListItem/TaskListItem";
 import { useDispatch, useSelector } from "react-redux";
-import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { getBoardDataForUI, setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
 
 TaskList.propTypes = {};
 
@@ -22,6 +22,7 @@ function TaskList(props) {
   useEffect(() => {
     if (!props.boardId)
       return;
+    dispatch(setCurrentBoard(props.boardId));
     dispatch(getBoardDataForUI(props.boardId));
   }, [props.boardId]);
   return (
