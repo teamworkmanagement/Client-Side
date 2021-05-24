@@ -28,5 +28,5 @@ export const getCookie = (name) => {
 }
 
 export const delete_cookie = (name) => {
-    document.cookie = name + "=; Domain='ezteam.engineer'; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 }

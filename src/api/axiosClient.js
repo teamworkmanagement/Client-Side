@@ -6,7 +6,7 @@ import store from "../app/store";
 axios.defaults.withCredentials = true;
 
 const axiosClient = axios.create({
-  baseURL: "https://api.ezteam.engineer/api/",
+  baseURL: "https://localhost:9001/api/",
   headers: {
     "Content-Type": "application/json",
   },

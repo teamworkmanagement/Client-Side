@@ -191,8 +191,12 @@ function MessageList(props) {
           skipItems++;
         }
       }
+
+      console.log("1st time: ", props.reachTop);
+      
       if (isSelected) {
         dispatch(setIsSelected(false));
+        setListMes([]);
         skipItems = 0;
       }
       const params = {
@@ -214,6 +218,7 @@ function MessageList(props) {
           time: mes.messageCreatedAt,
           isLabel: false,
           messageType: mes.messageType,
+          messengerUserAvatar: mes.messengerUserAvatar,
         };
       });
       //Thêm label cách cho list mess

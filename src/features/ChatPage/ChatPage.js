@@ -227,7 +227,7 @@ function ChatPage(props) {
             {!props.isInTeam && (
               <div className="chat-content-header">
                 <div className="chat-group-title">
-                  <img alt="" src={getChatImage()} />
+                  <img alt="" src={group.groupAvatar} />
                   {group?.groupChatName}
                 </div>
                 <div className="chat-group-actions">

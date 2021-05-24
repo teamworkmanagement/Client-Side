@@ -10,7 +10,6 @@ import {
   CProgress,
 } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { func } from "prop-types";
 import moment from "moment";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import taskApi from "src/api/taskApi";
