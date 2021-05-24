@@ -1,0 +1,27 @@
+.custom-dropdown-item {
+    display: flex;
+    align-items: center;
+    .overlay-icon {
+        width: 0.7rem;
+        height: 0.7rem;
+        background-color: white;
+        margin-bottom: -0.8rem;
+        margin-left: -0.3rem;
+    }
+    .c-icon {
+        &.icon-task {
+            margin-right: 0.5rem;
+            width: 0.7rem;
+            height: 0.7rem;
+            margin-bottom: -0.8rem;
+            margin-left: -0.7rem;
+        }
+        &.icon-task-group {
+            margin-right: 0.5rem;
+            width: 0.7rem;
+            height: 0.7rem;
+            margin-bottom: -0.8rem;
+            margin-left: -0.7rem;
+        }
+    }
+}

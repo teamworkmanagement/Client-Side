@@ -3,7 +3,13 @@ import PropTypes from "prop-types";
 import "./Post.scss";
 import CIcon from "@coreui/icons-react";
 import CommentItem from "./Components/CommentItem/CommentItem";
-import { CInput } from "@coreui/react";
+import {
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
+  CInput,
+} from "@coreui/react";
 import moment from "moment";
 import "moment/locale/vi";
 import commentApi from "src/api/commentApi";
@@ -24,9 +30,9 @@ function Post(props) {
   const [post, setPost] = useState({ ...props.post });
   const [commentContent, setCommentContent] = useState("");
   const user = useSelector((state) => state.auth.currentUser);
-  const newAddReact = useSelector(state => state.signalr.newAddReact);
-  const removeReact = useSelector(state => state.signalr.removeReact);
-  const newComment = useSelector(state => state.signalr.newComment);
+  const newAddReact = useSelector((state) => state.signalr.newAddReact);
+  const removeReact = useSelector((state) => state.signalr.removeReact);
+  const newComment = useSelector((state) => state.signalr.newComment);
   const [resetEditor, setResetEditor] = useState(0);
 
   useEffect(() => {
@@ -54,13 +60,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-        .deleteReactPost({ params })
-        .then((res) => { })
-        .catch((err) => { })
+          .deleteReactPost({ params })
+          .then((res) => {})
+          .catch((err) => {})
       : postApi
-        .reactPost(params)
-        .then((res) => { })
-        .catch((err) => { });
+          .reactPost(params)
+          .then((res) => {})
+          .catch((err) => {});
 
     setPost({
       ...post,
@@ -102,7 +108,7 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
@@ -115,8 +121,7 @@ function Post(props) {
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
-      if (blocks[0].text === "")
-        return;
+      if (blocks[0].text === "") return;
     }
     const cloneBlocks = [...blocks];
 
@@ -137,9 +142,16 @@ function Post(props) {
 
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
-        block.entityRanges.forEach(entity => {
-          var nameTag = block.text.substring(entity.offset, entity.offset + entity.length);
-          block.text = block.text.replaceBetween(entity.offset, entity.offset + entity.length, `<strong>@${nameTag}</strong>`)
+        block.entityRanges.forEach((entity) => {
+          var nameTag = block.text.substring(
+            entity.offset,
+            entity.offset + entity.length
+          );
+          block.text = block.text.replaceBetween(
+            entity.offset,
+            entity.offset + entity.length,
+            `<strong>@${nameTag}</strong>`
+          );
           console.log(block.text);
         });
       }
@@ -151,7 +163,7 @@ function Post(props) {
 
     let userIds = [];
     if (mentions.length > 0) {
-      userIds = mentions.map(m => m.id);
+      userIds = mentions.map((m) => m.id);
     }
 
     console.log(value);
@@ -187,34 +199,30 @@ function Post(props) {
 
         setComments(newArrr);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
-
   useEffect(() => {
-    if (!newAddReact)
-      return;
+    if (!newAddReact) return;
 
     if (newAddReact.postId === post.postId) {
       setPost({
         ...post,
-        postReactCount: post.postReactCount + 1
+        postReactCount: post.postReactCount + 1,
       });
     }
-  }, [newAddReact])
-
+  }, [newAddReact]);
 
   useEffect(() => {
-    if (!removeReact)
-      return;
+    if (!removeReact) return;
 
     if (removeReact.postId === post.postId) {
       setPost({
         ...post,
-        postReactCount: post.postReactCount - 1
-      })
+        postReactCount: post.postReactCount - 1,
+      });
     }
-  }, [removeReact])
+  }, [removeReact]);
   const listImages = [
     "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
 
@@ -228,8 +236,7 @@ function Post(props) {
   ];
 
   useEffect(() => {
-    if (!newComment)
-      return;
+    if (!newComment) return;
     if (newComment.commentPostId === post.postId) {
       setComments([newComment].concat([...cmtLists]));
       setPost({
@@ -238,7 +245,7 @@ function Post(props) {
       });
       console.log(newComment);
     }
-  }, [newComment])
+  }, [newComment]);
 
   return (
     <div className="post-container">
@@ -247,7 +254,9 @@ function Post(props) {
           <div className="poster-avatar">
             <img
               alt="avatar"
-              src={user.id === post.postUserId ? user.userAvatar : post.userAvatar}
+              src={
+                user.id === post.postUserId ? user.userAvatar : post.userAvatar
+              }
             />
           </div>
           <div className="poster-infor">
@@ -256,7 +265,9 @@ function Post(props) {
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
               {!props.isInTeam && `đã đăng trong nhóm `}
-              {!props.isInTeam && <strong dangerouslySetInnerHTML={{ __html: post.teamName }} />}
+              {!props.isInTeam && (
+                <strong dangerouslySetInnerHTML={{ __html: post.teamName }} />
+              )}
             </div>
             <div className="post-date">
               {moment(post.postCreatedAt).format("HH:MM, DD/MM/YYYY")}
@@ -265,7 +276,32 @@ function Post(props) {
           </div>
         </div>
         <div className="post-actions">
-          <CIcon className="rotate-90" name="cil-options" />
+          <div className="post-header-actions-dropdown">
+            <CDropdown>
+              <CDropdownToggle id="dropdownMenuButton" caret>
+                <div className="lane-actions">
+                  <CIcon name="cil-options" className="rotate-90" />
+                </div>
+              </CDropdownToggle>
+              <CDropdownMenu
+                aria-labelledby="dropdownMenuButton"
+                placement="bottom-end"
+              >
+                <CDropdownItem className="first">
+                  <CIcon name="cil-pencil" />
+                  Chỉnh sửa
+                </CDropdownItem>
+                <CDropdownItem className="first">
+                  <CIcon name="cil-pin" />
+                  Ghim bài viết
+                </CDropdownItem>
+                <CDropdownItem className="last">
+                  <CIcon name="cil-trash" className="icon-delete" />
+                  Xóa
+                </CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+          </div>
         </div>
       </div>
       <div

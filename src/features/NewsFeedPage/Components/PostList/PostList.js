@@ -121,7 +121,7 @@ function PostList(props) {
     //window.scrollTo(0, 0);
     setTimeout(() => {
       //window.scrollTo(0, 0);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }, 2);
   };
 
@@ -152,7 +152,11 @@ function PostList(props) {
       {isLoading ? <Loading className="loading-bar" /> : null}
 
       {showScroll ? (
-        <div className="go-top-btn" onClick={scrollTop}>
+        <div
+          className="go-top-btn"
+          style={{ right: props.isInTeam ? "6rem" : "2rem" }}
+          onClick={scrollTop}
+        >
           <CIcon name="cil-chevron-top" />
         </div>
       ) : null}

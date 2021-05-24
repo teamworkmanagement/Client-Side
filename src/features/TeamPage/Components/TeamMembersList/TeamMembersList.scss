@@ -278,6 +278,10 @@
                 tr {
                     //@include MemberAppear;
                     background-color: white;
+                    cursor: pointer;
+                    &:hover {
+                        background-color: #fafafb;
+                    }
                 }
                 td {
                     vertical-align: middle;

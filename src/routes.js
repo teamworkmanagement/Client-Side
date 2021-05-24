@@ -7,6 +7,10 @@ import KanbanBoard from "./features/KanbanBoard/KanbanBoard";
 import MyToaster from "./features/ToastTest/ToastTest";
 import ListTeamPage from "./features/ListTeamPage/ListTeamPage";
 import UserProfilePage from "./shared_components/MySharedComponents/UserProfilePage/UserProfilePage";
+import MyFilesPage from "./features/MyFilesPage/MyFilesPage";
+import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
+import ManageTeamTasksPage from "./features/ManageTeamTasksPage/ManageTeamTasksPage";
+import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsPage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -113,21 +117,48 @@ const User = React.lazy(() => import("./shared_components/views/users/User"));
 const routes = [
   // { path: '/', exact: true, name: 'Home' },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },
-  { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
-  { path: "/team/:teamId", name: "Nhóm", component: TeamPage, exact: true },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
-  { path: "/kanban", name: "Kanban", component: KanbanBoard, exact: true },
+  { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
+  {
+    path: "/teams",
+    name: "Danh sách nhóm",
+    component: ListTeamPage,
+    exact: true,
+  },
+  {
+    path: "/team/:teamId",
+    name: "Nhóm",
+    component: TeamPage,
+    exact: true,
+  },
+  {
+    path: "/managetask/mytasks",
+    name: "Công việc của tôi",
+    component: ManageMyTasksPage,
+    exact: true,
+  },
+  {
+    path: "/managetask/teamtasks",
+    name: "Công việc trong nhóm được giao",
+    component: ManageTeamTasksPage,
+    exact: true,
+  },
+  {
+    path: "/myfiles",
+    name: "Tệp của tôi",
+    component: MyFilesPage,
+    exact: true,
+  },
   {
     path: "/userprofile",
     name: "Thông tin",
     component: UserProfilePage,
     exact: true,
   },
-  { path: "/toast", name: "Kanban", component: MyToaster, exact: true },
   {
-    path: "/teams",
-    name: "Danh sách nhóm",
-    component: ListTeamPage,
+    path: "/myaccount",
+    name: "Tài khoản",
+    component: AccountSettingsPage,
     exact: true,
   },
   //{ path: "/team", name: "mychat", component: ChatPage, exact: true },
