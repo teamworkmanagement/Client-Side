@@ -4,7 +4,7 @@ import { setNewNoti } from "src/appSlice";
 
 
 
-const connection = setupSignalRConnection('https://api.ezteam.engineer/api/hubnoti');
+const connection = setupSignalRConnection('https://api.ezteam.engineer/hubnoti');
 export const startNotiService = () => {
 
     connection.on('SendNoti', payload => {

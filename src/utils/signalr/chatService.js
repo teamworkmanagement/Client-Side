@@ -3,7 +3,7 @@ import store from '../../app/store';
 import { setNewMessage } from "src/features/ChatPage/chatSlice";
 
 
-const connection = setupSignalRConnection('https://api.ezteam.engineer/api/hubchat');
+const connection = setupSignalRConnection('https://api.ezteam.engineer/hubchat');
 export const startChatService = () => {
 
     connection.on('NhanMessage', message => {
