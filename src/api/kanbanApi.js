@@ -24,6 +24,14 @@ const kanbanApi = {
     removeKanbanList(params) {
         const url = `/kanbanlist`;
         return axiosClient.delete(url, params);
+    },
+    getBoardsForUser(userId){
+        const url=`/kanbanboard/user-boards/${userId}`;
+        return axiosClient.get(url);
+    },
+    getBoardsForUserTeams(userId){
+        const url=`/kanbanboard/team-boards/${userId}`;
+        return axiosClient.get(url);
     }
 };
 

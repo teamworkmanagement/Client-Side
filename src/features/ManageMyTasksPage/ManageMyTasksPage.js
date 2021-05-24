@@ -8,7 +8,10 @@ ManageMyTasksPage.propTypes = {};
 
 function ManageMyTasksPage(props) {
   const [isInBoard, setIsInBoard] = useState(false);
+  const [boardId, setBoardId] = useState(null);
+
   function goToBoard(boardId) {
+    setBoardId(boardId);
     setIsInBoard(true);
   }
   function goBackBoards() {
@@ -17,7 +20,7 @@ function ManageMyTasksPage(props) {
   return (
     <div className="mytasks-page-container">
       {!isInBoard && <MyBoards goToBoard={goToBoard} />}
-      {isInBoard && <MyTasks goBackBoards={goBackBoards} />}
+      {isInBoard && <MyTasks boardId={boardId} goBackBoards={goBackBoards} />}
     </div>
   );
 }

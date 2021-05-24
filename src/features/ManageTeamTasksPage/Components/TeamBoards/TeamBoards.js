@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TeamBoards.scss";
 import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { useSelector } from "react-redux";
+import kanbanApi from "src/api/kanbanApi";
 
 TeamBoards.propTypes = {};
 
 function TeamBoards(props) {
+
+  const user=useSelector(state=>state.auth.currentUser);
+
   const listBoards = [
     {
       boardId: 1,
@@ -93,6 +98,18 @@ function TeamBoards(props) {
     }
   }
 
+
+  const [boards,setBoards]=useState([]);
+  useEffect(()=>{
+    kanbanApi.getBoardsForUserTeams(user.id)
+    .then(res=>{
+      console.log(res);
+      setBoards(res.data);
+    }).catch(err=>{
+
+    })
+  },[])
+
   return (
     <div className="list-boards-container">
       <div className="list-boards-header">
@@ -117,7 +134,7 @@ function TeamBoards(props) {
       </div>
       <div className="list-boards">
         <CRow xl={{ cols: 5, gutter: 3 }}>
-          {listBoards.map((item, index) => {
+          {boards.map((item, index) => {
             return (
               <CCol
                 xs="12"
@@ -130,17 +147,17 @@ function TeamBoards(props) {
               >
                 <div
                   className="board-item"
-                  onClick={() => goToBoard(item.boardId)}
+                  onClick={() => goToBoard(item.kanbanBoardId)}
                 >
-                  <div className="board-title">{item.name}</div>
+                  <div className="board-title">{item.kanbanBoardName}</div>
                   <div className="board-team-infor">
                     Nhóm:
-                    <img alt="" src={item.teamImage} />
-                    <div className="team-name">{item.teamName}</div>
+                    <img alt="" src={item.groupImageUrl} />
+                    <div className="team-name">{item.kanbanBoardGroupName}</div>
                   </div>
                   <div className="tasks-count">
                     <CIcon name="cil-storage" />
-                    {item.tasksCount}
+                    {item.taskCount}
                   </div>
                 </div>
               </CCol>
