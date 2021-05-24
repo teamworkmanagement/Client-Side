@@ -5,7 +5,7 @@ import { signalRAddNewList, signalRAddNewTask, signalRMoveList, signalRMoveTask,
 
 
 
-const connection = setupSignalRConnection('https://localhost:9001/hubkanban');
+const connection = setupSignalRConnection('https://api.ezteam.engineer/api/hubkanban');
 export const startKanbanService = () => {
 
     connection.on("AddNewTask", payload => {

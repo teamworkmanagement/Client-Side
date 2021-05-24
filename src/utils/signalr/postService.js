@@ -2,7 +2,7 @@ import { setupSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
 import { setNewAddReact, setNewComment, setRemoveReact } from "./signalrSlice";
 
-const connection = setupSignalRConnection('https://localhost:9001/hubpost');
+const connection = setupSignalRConnection('https://api.ezteam.engineer/api/hubpost');
 export const startPostService = () => {
 
     connection.on('NewAddReact', payload => {
