@@ -6,7 +6,7 @@ import store from "../app/store";
 axios.defaults.withCredentials = true;
 
 const axiosClient = axios.create({
-  baseURL: "https://localhost:9001/api/",
+  baseURL: "https://ezteam.engineer/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -43,6 +43,29 @@ axiosClient.interceptors.response.use(
 
       console.log("er1status", err.response);
       if (err.response.status === 401) store.dispatch(setValueAuth(false));
+
+      if (err.response.status === 500) {
+        return refreshTokenFunc()
+          .then((data) => {
+            return new Promise((resolve, reject) => {
+              axiosClient
+                .request(err.config)
+                .then((res) => {
+                  delete_cookie("TokenExpired");
+                  resolve(res);
+                })
+                .catch((err) => {
+                  delete_cookie("TokenExpired");
+                  reject(err);
+                });
+            });
+          })
+          .catch((error) => {
+            console.log("error next: ", error);
+            store.dispatch(setValueAuth(false));
+            return Promise.reject(error);
+          });
+      }
 
       return Promise.reject(err.response);
     } else if (err.request) {
