@@ -1,11 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import chatApi from "src/api/chatApi";
 
-export const getAllGroupChatForUser = createAsyncThunk(
+export const getGroupChatForUser = createAsyncThunk(
   "chat/getallgroup",
-  async (userId) => {
-    const data = await chatApi.getAllGroupChatForUser(userId);
+  async (params) => {
+    const data = await chatApi.getGroupChatForUser(params);
     console.log("all group chat data redux: ", data.data);
+    return data.data;
+  }
+);
+
+export const searchGroupChatForUser = createAsyncThunk(
+  "chat/searchchatgroup",
+  async (params) => {
+    const data = await chatApi.getGroupChatForUser(params);
+    console.log("all group chat search data redux: ", data.data);
     return data.data;
   }
 );
@@ -75,7 +84,7 @@ const chatSlice = createSlice({
     },
   },
   extraReducers: {
-    [getAllGroupChatForUser.fulfilled]: (state, action) => {
+    [getGroupChatForUser.fulfilled]: (state, action) => {
       state.groupChat = action.payload;
       state.currentGroup = action.payload[0]?.groupChatId;
       state.loadDone = true;
@@ -84,7 +93,11 @@ const chatSlice = createSlice({
           ? action.payload[1].groupChatId
           : state.currentGroup;*/
     },
-    [getAllGroupChatForUser.rejected]: (state, action) => { },
+    [getGroupChatForUser.rejected]: (state, action) => { },
+    [searchGroupChatForUser.rejected]: (state, action) => { },
+    [searchGroupChatForUser.fulfilled]: (state, action) => {
+      state.groupChat = action.payload;
+    }
   },
 });
 

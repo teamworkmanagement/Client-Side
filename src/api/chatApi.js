@@ -2,13 +2,13 @@ import axiosClient from "./axiosClient";
 
 
 const chatApi = {
-    getAllGroupChatForUser(userId) {
-        const url = `/GroupChat/byuserid/${userId}`;
-        return axiosClient.get(url);
+    getGroupChatForUser(params) {
+        const url = `/GroupChat/byuserid`;
+        return axiosClient.get(url, params);
     },
     sendMes(payload) {
         const url = `chat/messages`;
-        return axiosClient.post(url,payload);
+        return axiosClient.post(url, payload);
     },
 };
 

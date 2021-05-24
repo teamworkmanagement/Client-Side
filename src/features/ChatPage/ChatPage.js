@@ -15,10 +15,11 @@ import CIcon from "@coreui/icons-react";
 import ChatList from "./Components/ChatList/ChatList";
 import MessageList from "./Components/MessageList/MessageList";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllGroupChatForUser, setLoadDone } from "./chatSlice";
+import { getGroupChatForUser, searchGroupChatForUser, setLoadDone } from "./chatSlice";
 import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
+import CreateNewConversationModal from "./Components/CreateNewConversation/CreateNewConversation";
 
 ChatPage.propTypes = {};
 
@@ -29,18 +30,32 @@ function ChatPage(props) {
   const [reachTop, setReachTop] = useState(0);
   const grChats = useSelector((state) => state.chat.groupChat);
   const currentGroup = useSelector((state) => state.chat.currentGroup);
-  const group = grChats.find((x) => x.groupChatId === currentGroup);
+
   const user = useSelector((state) => state.auth.currentUser);
   const [msg, setMsg] = useState("");
   const [send, setSend] = useState(null);
   const [reachBot, setReachBot] = useState(true);
+
+  const [showAddConversation, setShowAddConversation] = useState(false);
+
   const scrollRef = useRef(null);
   const messagesEndRef = useRef(null);
   const imgPickerRef = useRef(null);
   const filePickerRef = useRef(null);
 
+  const [group, setGroup] = useState(null);
   useEffect(() => {
-    dispatch(getAllGroupChatForUser(userId));
+    if (!currentGroup)
+      return;
+    const gr = grChats.find((x) => x.groupChatId === currentGroup);
+    setGroup(gr);
+  }, [currentGroup])
+
+  useEffect(() => {
+    const params = {
+      userId: userId,
+    }
+    dispatch(getGroupChatForUser({ params }));
     return function release() {
       dispatch(setLoadDone(false));
     };
@@ -196,6 +211,15 @@ function ChatPage(props) {
     return "";
   }
 
+  const onSearchChange = (e) => {
+    console.log(e.target.value);
+    const params = {
+      userId: user.id,
+      isSearch: true,
+      keyWord: e.target.value
+    }
+    dispatch(searchGroupChatForUser({ params }));
+  }
   return (
     <div className="chat-page-container">
       {loadDone ? (
@@ -208,6 +232,7 @@ function ChatPage(props) {
                     placeholder="...tìm kiếm đoạn chat"
                     id="appendedInputButton"
                     type="text"
+                    onChange={onSearchChange}
                   />
                   <CInputGroupAppend>
                     <CButton color="secondary">
@@ -217,7 +242,7 @@ function ChatPage(props) {
                 </CInputGroup>
               </div>
               <ChatList chatImages={chatImages} />
-              <div className="btn-add-chat">
+              <div onClick={() => setShowAddConversation(true)} className="btn-add-chat">
                 <CIcon name="cil-plus" />
                 Tạo nhóm Chat mới
               </div>
@@ -227,7 +252,7 @@ function ChatPage(props) {
             {!props.isInTeam && (
               <div className="chat-content-header">
                 <div className="chat-group-title">
-                  <img alt="" src={group.groupAvatar} />
+                  <img alt="" src={group?.groupAvatar} />
                   {group?.groupChatName}
                 </div>
                 <div className="chat-group-actions">
@@ -326,6 +351,7 @@ function ChatPage(props) {
           </div>
         </div>
       ) : null}
+      <CreateNewConversationModal showAddConversation={showAddConversation} />
     </div>
   );
 }

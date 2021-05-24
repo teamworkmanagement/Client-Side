@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TeamMembersList.scss";
 import {
@@ -16,7 +16,8 @@ import {
   CTooltip,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
+import teamApi from "src/api/teamApi";
 
 TeamMembersList.propTypes = {};
 
@@ -97,6 +98,30 @@ function TeamMembersList(props) {
     history.push(`/userprofile`);
   };
 
+  const [admin, setAdmin] = useState({});
+  const [members, setMembers] = useState([]);
+  const { teamId } = useParams();
+
+  useEffect(() => {
+    if (!teamId)
+      return;
+    teamApi.getAdmin(teamId).then(res => {
+      console.log(res);
+      setAdmin(res.data);
+    }).catch(err => {
+
+    })
+
+    const params = {
+      teamId: teamId,
+    }
+
+    teamApi.getUsersPagingByTeam({ params }).then(res => {
+      console.log(res.data.items);
+      setMembers(res.data.items);
+    }).catch(err => { })
+  }, [teamId])
+  
   return (
     <div className="team-members-container">
       <div className="members-list-header">
@@ -147,10 +172,10 @@ function TeamMembersList(props) {
             <div className="label">Trưởng nhóm </div>
             <img
               alt=""
-              src="https://emilus.themenate.net/img/avatars/thumb-4.jpg"
+              src={admin.userImageUrl}
             />
-            <div className="leader-name">Huy Lê</div>
-            <div className="leader-email">huylengoc12@gmail.com</div>
+            <div className="leader-name">{admin.userFullname}</div>
+            <div className="leader-email">{admin.userEmail}</div>
           </div>
           <div className="leader-infor-container row-infor d-lg-none">
             <div className="label">Trưởng nhóm </div>
@@ -171,12 +196,12 @@ function TeamMembersList(props) {
                         <img
                           className="member-avatar"
                           alt=""
-                          src={item.avatar}
+                          src={admin.userImageUrl}
                         />
 
                         <div className="member-infor">
-                          <div className="member-name">{item.name}</div>
-                          <div className="member-email">{item.email}</div>
+                          <div className="member-name">{admin.userFullname}</div>
+                          <div className="member-email">{admin.userEmail}</div>
                         </div>
                       </div>
                     </td>
@@ -187,11 +212,9 @@ function TeamMembersList(props) {
                     <td>
                       <div className="member-role">
                         <div
-                          className={`role-color ${
-                            item.isLeader ? "leader" : ""
-                          }`}
+                          className={`role-color leader`}
                         ></div>
-                        {item.isLeader ? "Trưởng nhóm" : "Thành viên"}
+                        Trưởng nhóm
                       </div>
                     </td>
                   );
@@ -236,7 +259,7 @@ function TeamMembersList(props) {
           <div className="members-container">
             <div className="label">Thành viên</div>
             <CDataTable
-              items={usersData}
+              items={members}
               fields={fields}
               scopedSlots={{
                 infor: (item) => {
@@ -246,12 +269,12 @@ function TeamMembersList(props) {
                         <img
                           className="member-avatar"
                           alt=""
-                          src={item.avatar}
+                          src={item.userImageUrl}
                         />
 
                         <div className="member-infor">
-                          <div className="member-name">{item.name}</div>
-                          <div className="member-email">{item.email}</div>
+                          <div className="member-name">{item.userFullname}</div>
+                          <div className="member-email">{item.userEmail}</div>
                         </div>
                       </div>
                     </td>
@@ -262,11 +285,9 @@ function TeamMembersList(props) {
                     <td onClick={() => navigateToProfile(item)}>
                       <div className="member-role">
                         <div
-                          className={`role-color ${
-                            item.isLeader ? "leader" : ""
-                          }`}
+                          className={`role-color`}
                         ></div>
-                        {item.isLeader ? "Trưởng nhóm" : "Thành viên"}
+                        Thành viên
                       </div>
                     </td>
                   );
