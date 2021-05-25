@@ -10,7 +10,7 @@ import fileApi from "src/api/fileApi";
 import { myBucket } from "src/utils/aws/config";
 import useExitPrompt from "src/utils/customHook/useExitPrompt";
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
-import { v4 as uuidv4 } from "uuid";
+import uuid from "src/utils/file/uuid";
 import "./MyFilesTable.scss";
 import UploadItem from "./ProgressBottom/UploadItem";
 
@@ -18,296 +18,6 @@ moment.locale("vi");
 MyFilesTable.propTypes = {};
 
 function MyFilesTable(props) {
-  const usersData = [
-    {
-      id: 0,
-      name: "John Doe",
-      registered: "2018/01/01",
-      role: "Guest",
-      status: "Pending",
-    },
-    {
-      id: 1,
-      name: "Samppa Nori",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Estavan Lykos",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 3,
-      name: "Chetan Mohamed",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      name: "Derick Maximinus",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 5,
-      name: "Friderik Dávid",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 6,
-      name: "Yiorgos Avraamu",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 7,
-      name: "Avram Tarasios",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 8,
-      name: "Quintin Ed",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 9,
-      name: "Enéas Kwadwo",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 10,
-      name: "Agapetus Tadeáš",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 11,
-      name: "Carwyn Fachtna",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 12,
-      name: "Nehemiah Tatius",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 13,
-      name: "Ebbe Gemariah",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 14,
-      name: "Eustorgios Amulius",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 15,
-      name: "Leopold Gáspár",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 16,
-      name: "Pompeius René",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 17,
-      name: "Paĉjo Jadon",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 18,
-      name: "Micheal Mercurius",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 19,
-      name: "Ganesha Dubhghall",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 20,
-      name: "Hiroto Šimun",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 21,
-      name: "Vishnu Serghei",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 22,
-      name: "Zbyněk Phoibos",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 23,
-      name: "Aulus Agmundr",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 42,
-      name: "Ford Prefect",
-      registered: "2001/05/25",
-      role: "Alien",
-      status: "Don't panic!",
-    },
-  ];
-
-  const FilesData = [
-    {
-      id: 51,
-      name: "Notes.rar",
-      createdAt: "20/12/2020",
-      size: "1MB",
-      owner: "Nguyễn Thanh",
-      type: "png",
-      ownerImageURL: "avatars/6.jpg",
-      downloadIcon: "images/download.png",
-    },
-    {
-      id: 542,
-      name: "Báo cáo.docx",
-      createdAt: "18/12/2021",
-      size: "10MB",
-      owner: "Nguyễn Thanh",
-      type: "Word",
-      ownerImageURL: "avatars/5.jpg",
-    },
-    {
-      id: 83,
-      name: "Thuyết trình .ptpx",
-      createdAt: "21/01/2020",
-      size: "107KB",
-      owner: "Nguyễn Khoa",
-      type: "PowerPoint",
-      ownerImageURL: "avatars/4.jpg",
-    },
-    {
-      id: 44,
-      name: "Khóa luận.txt",
-      createdAt: "20/21/2021",
-      size: "2MB",
-      owner: "Nguyễn Dũng",
-      type: "Text",
-      ownerImageURL: "avatars/3.jpg",
-    },
-    {
-      id: 35,
-      name: "Hello.zip",
-      createdAt: "14/03/2021",
-      size: "15GB",
-      owner: "Khoa Ng",
-      type: "Zip",
-      ownerImageURL: "avatars/2.jpg",
-    },
-    {
-      id: 96,
-      name: "Musics.rar",
-      createdAt: "12/04/2020",
-      size: "1.1GB",
-      owner: "Khoa Ng",
-      type: "Exe",
-      ownerImageURL: "avatars/1.jpg",
-    },
-    {
-      id: 351,
-      name: "Notes.rar",
-      createdAt: "20/12/2020",
-      size: "1MB",
-      owner: "Nguyễn Thanh",
-      type: "png",
-      ownerImageURL: "avatars/6.jpg",
-      downloadIcon: "images/download.png",
-    },
-    {
-      id: 3542,
-      name: "Báo cáo.docx",
-      createdAt: "18/12/2021",
-      size: "10MB",
-      owner: "Nguyễn Thanh",
-      type: "Word",
-      ownerImageURL: "avatars/5.jpg",
-    },
-    {
-      id: 383,
-      name: "Thuyết trình .ptpx",
-      createdAt: "21/01/2020",
-      size: "107KB",
-      owner: "Nguyễn Khoa",
-      type: "PowerPoint",
-      ownerImageURL: "avatars/4.jpg",
-    },
-    {
-      id: 344,
-      name: "Khóa luận.txt",
-      createdAt: "20/21/2021",
-      size: "2MB",
-      owner: "Nguyễn Dũng",
-      type: "Text",
-      ownerImageURL: "avatars/3.jpg",
-    },
-    {
-      id: 335,
-      name: "Hello.zip",
-      createdAt: "14/03/2021",
-      size: "15GB",
-      owner: "Khoa Ng",
-      type: "Zip",
-      ownerImageURL: "avatars/2.jpg",
-    },
-    {
-      id: 396,
-      name: "Musics.rar",
-      createdAt: "12/04/2020",
-      size: "1.1GB",
-      owner: "Khoa Ng",
-      type: "Exe",
-      ownerImageURL: "avatars/1.jpg",
-    },
-  ];
   const tableContainerRef = useRef(null);
   // useEffect(() => {
   //   tableContainerRef.current.children[1].children[0].children[0].children[0].innerHTML =
@@ -370,7 +80,7 @@ function MyFilesTable(props) {
         return;
       }
 
-      const folder = uuidv4();
+      const folder = uuid();
       const params = {
         Body: file,
         Bucket: "teamappstorage",
@@ -391,8 +101,8 @@ function MyFilesTable(props) {
               fileName: file.name,
               fileUrl: `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
               fileType: GetTypeFromExt(file.name),
-              userId: user.id,
-              fileBelongedId: teamId,
+              fileUserUploadId: user.id,
+              fileUserOwnerId: user.id,
               fileSize: file.size,
             };
 
@@ -421,9 +131,10 @@ function MyFilesTable(props) {
     async function getDatas() {
       try {
         const params = {
-          BelongedId: teamId,
+          OwnerId: user.id,
           PageNumber: page,
           PageSize: pageSize,
+          OwnerType: "user"
         };
         const outPut = await fileApi.getFile({ params });
 
@@ -433,7 +144,7 @@ function MyFilesTable(props) {
             name: f.fileName,
             createdAt: f.fileUploadTime,
             size: f.fileSize,
-            owner: f.fileUserName,
+            owner: f.fileUserUploadName,
             type: f.fileType,
             ownerImageURL: f.userImage,
             downloadIcon: "../images/download.png",

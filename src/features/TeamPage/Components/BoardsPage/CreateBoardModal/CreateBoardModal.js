@@ -25,7 +25,7 @@ function CreateBoardModal(props) {
     }
 
     kanbanApi.addBoard({
-      kanbanBoardBelongedId: teamId,
+      kanbanBoardTeamId: teamId,
       kanbanBoardName: boardName
     }).then(res => {
       props.onClose(res);
@@ -45,6 +45,7 @@ function CreateBoardModal(props) {
 
   const handleOnClose = () => {
     setBoardName("");
+    props.onClose(null);
   }
 
   return (

@@ -107,7 +107,7 @@ function TeamTasks(props) {
       {showMode === 2 && <TaskList boardId={props.boardId} />}
       {showMode === 3 && <GanttChart boardId={props.boardId} />}
 
-      <CreateKBListModal boardId={props.boardId} showAddKBList={showAddKBList} onClose={onClose}/>
+      <CreateKBListModal boardId={props.boardId} showAddKBList={showAddKBList} onClose={onClose} />
     </div>
   );
 }

@@ -10,7 +10,7 @@ const kanbanApi = {
         return axiosClient.post(url, params);
     },
     getAllKanbanForTeam(teamId) {
-        const url = `/kanbanboard/team-boards/${teamId}`;
+        const url=`/kanbanboard/teamboards/${teamId}`;
         return axiosClient.get(url);
     },
     addBoard(payload) {

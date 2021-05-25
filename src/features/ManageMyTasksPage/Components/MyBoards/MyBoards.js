@@ -47,10 +47,10 @@ function MyBoards(props) {
   }, [])
 
   const onCloseModal = (boardRes) => {
+    setShowAddBoard(false);
     if (!boardRes)
       return;
     console.log(boardRes);
-    setShowAddBoard(false);
     setBoards([...boards, boardRes.data]);
   }
 

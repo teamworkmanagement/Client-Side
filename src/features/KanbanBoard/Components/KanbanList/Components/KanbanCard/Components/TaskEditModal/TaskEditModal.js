@@ -40,7 +40,6 @@ import { myBucket } from "src/utils/aws/config";
 import { v4 as uuidv4 } from "uuid";
 import fileApi from "src/api/fileApi";
 import commentApi from "src/api/commentApi";
-import UserSelector from "./UserSelector/UserSelector";
 import Select, { components } from "react-select";
 import axiosClient from "src/api/axiosClient";
 

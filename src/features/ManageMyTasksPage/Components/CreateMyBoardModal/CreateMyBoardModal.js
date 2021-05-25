@@ -11,6 +11,7 @@ import {
 import kanbanApi from "src/api/kanbanApi";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
+import MyToaster from "src/features/ToastTest/ToastTest";
 
 
 CreateMyBoardModal.propTypes = {};
@@ -18,7 +19,7 @@ CreateMyBoardModal.propTypes = {};
 function CreateMyBoardModal(props) {
 
   const [boardName, setBoardName] = useState("");
-  const user=useSelector(state=>state.auth.currentUser);
+  const user = useSelector(state => state.auth.currentUser);
 
   function onCreateBoard() {
     if (!boardName) {
@@ -27,7 +28,7 @@ function CreateMyBoardModal(props) {
     }
 
     kanbanApi.addBoard({
-      kanbanBoardBelongedId: user.id,
+      kanbanBoardUserId: user.id,
       kanbanBoardName: boardName
     }).then(res => {
       props.onClose(res);
@@ -50,14 +51,30 @@ function CreateMyBoardModal(props) {
       <CModalBody className="new-card-form">
         <div className="name-label">Nhập tên danh sách:</div>
         <CInput
+          className="is-invalid"
+          required
           type="text"
           value={boardName}
           onChange={(e) => setBoardName(e.target.value)}
           placeholder="Tên danh sách..."
         />
+
+
         <CButton onClick={onCreateBoard} className="add-card-btn">
           Tạo
         </CButton>
+        <form class="was-validated">
+          <div class="mb-3">
+            <label for="validationTextarea">Textarea</label>
+            <textarea class="form-control is-invalid" id="validationTextarea" placeholder="Required example textarea" required></textarea>
+            <div class="invalid-feedback">
+              Please enter a message in the textarea.
+            </div>
+          </div>
+        </form>
+
+        <MyToaster />
+
       </CModalBody>
     </CModal>
   );

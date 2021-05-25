@@ -22,7 +22,6 @@ function KanbanBoard(props) {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
-
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
