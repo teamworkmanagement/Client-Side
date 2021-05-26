@@ -47,6 +47,9 @@ const authSlice = createSlice({
     setValueAuth: (state, action) => {
       state.loginStatus = action.payload;
     },
+    setCurrentUser: (state, action) => {
+      state.currentUser = action.payload;
+    }
   },
   extraReducers: {
     [register.fulfilled]: (state, action) => {
@@ -55,15 +58,15 @@ const authSlice = createSlice({
     [register.rejected]: (state, action) => {
       console.log("register rejected: ", action.payload);
     },
-    [login.rejected]: (state, action) => {},
+    [login.rejected]: (state, action) => { },
     [login.fulfilled]: (state, action) => {
-      const { id, fullName, email, userAvatar } = action.payload;
-      state.currentUser = { id, fullName, email, userAvatar };
+      const { id, fullName, email, userAvatar, userDob, userPhoneNumber } = action.payload;
+      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber };
       state.loginStatus = true;
     },
     [socialLogin.fulfilled]: (state, action) => {
-      const { id, fullName, email, userAvatar } = action.payload;
-      state.currentUser = { id, fullName, email, userAvatar };
+      const { id, fullName, email, userAvatar, userDob, userPhoneNumber } = action.payload;
+      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber };
       state.loginStatus = true;
     },
     [socialLogin.rejected]: (state, action) => {
@@ -72,10 +75,10 @@ const authSlice = createSlice({
     [islogin.fulfilled]: (state, action) => {
       state.loginStatus = action.payload.data === "UnAuth" ? false : true;
     },
-    [islogin.rejected]: (state, action) => {},
+    [islogin.rejected]: (state, action) => { },
   },
 });
 
 const { actions, reducer } = authSlice;
-export const { setAuth, setAuthF, setValueAuth } = actions;
+export const { setAuth, setAuthF, setValueAuth, setCurrentUser } = actions;
 export default reducer; // default export
