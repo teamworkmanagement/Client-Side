@@ -150,7 +150,9 @@ function TeamMembersList(props) {
     })
   }, [teamId])
 
-  const currentPageChange=(index)=>{
+  const currentPageChange = (index) => {
+    if (index === 0)
+      return;
     console.log(index);
     setCurrentPage(index);
 

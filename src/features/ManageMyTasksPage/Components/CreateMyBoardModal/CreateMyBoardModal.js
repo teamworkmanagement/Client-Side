@@ -63,18 +63,6 @@ function CreateMyBoardModal(props) {
         <CButton onClick={onCreateBoard} className="add-card-btn">
           Tạo
         </CButton>
-        <form class="was-validated">
-          <div class="mb-3">
-            <label for="validationTextarea">Textarea</label>
-            <textarea class="form-control is-invalid" id="validationTextarea" placeholder="Required example textarea" required></textarea>
-            <div class="invalid-feedback">
-              Please enter a message in the textarea.
-            </div>
-          </div>
-        </form>
-
-        <MyToaster />
-
       </CModalBody>
     </CModal>
   );
