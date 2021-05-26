@@ -14,7 +14,6 @@ import { func } from "prop-types";
 import moment from "moment";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import taskApi from "src/api/taskApi";
-import { removeTask } from "src/features/KanbanBoard/kanbanSlice";
 TaskListItem.propTypes = {};
 
 function TaskListItem(props) {
@@ -123,7 +122,7 @@ function TaskListItem(props) {
   };
 
   const onRemoveTask = () => {
-    taskApi
+    /*taskApi
       .removeTask(props.data.taskId)
       .then((res) => {
         dispatch(
@@ -134,7 +133,7 @@ function TaskListItem(props) {
           })
         );
       })
-      .catch((err) => {});
+      .catch((err) => {});*/
 
     if (props.closePopup) {
       props.closePopup();

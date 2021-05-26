@@ -9,12 +9,13 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import taskApi from "src/api/taskApi";
-import { useDispatch } from "react-redux";
-import { addNewTask } from "src/features/KanbanBoard/kanbanSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 CreateCardModal.propTypes = {};
 
 function CreateCardModal(props) {
+
+  const kbLists = useSelector(state => state.kanban.kanbanBoard.kanbanLists);
   const dispatch = useDispatch();
   const [taskName, setTaskName] = useState("");
   function handleOnClose() {
@@ -37,37 +38,24 @@ function CreateCardModal(props) {
       if (!taskName) alert("Tên task rỗng");
 
       var date = new Date();
+      const obj = kbLists.find(x => x.kanbanListId === props.kblistId);
+      let pos = -9999;
+      if (obj.taskUIKanbans.length === 0)
+        pos = 65536;
+      else pos = obj.taskUIKanbans[obj.taskUIKanbans.length - 1].orderInList + 65536;
       taskApi
         .addNewTask({
           taskName: taskName,
           taskCreatedAt: new Date().toISOString(),
           taskCompletedPercent: 0,
           taskBelongedId: props.kblistId,
-          taskOrderInList: props.tasksCount,
+          taskOrderInList: pos,
           taskStartDate: date,
           taskStatus: 'todo',
           taskDeadline: date.addDays(1),
         })
         .then((res) => {
-          const newTask = {
-            orderInList: props.tasksCount,
-            kanbanListId: props.kblistId,
-            taskId: res.data,
-            taskImageUrl: null,
-            taskName: taskName,
-            taskStartDate: date,
-            taskDeadline: date.addDays(1),
-            taskDescription: null,
-            taskStatus: "todo",
-            commentsCount: 0,
-            filesCount: 0,
-            userId: null,
-            userAvatar: null,
-            taskCompletedPercent: 0,
-            taskThemeColor: null,
-          };
 
-          dispatch(addNewTask(newTask));
         })
         .catch((err) => { });
 

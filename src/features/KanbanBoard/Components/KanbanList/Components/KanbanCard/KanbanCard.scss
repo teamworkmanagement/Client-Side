@@ -24,7 +24,6 @@
 
 .card-container {
     .card-component {
-        @include KanbanCardAppear;
         background-color: white;
         border-radius: 5px;
         margin: 0.2rem 0.8rem 1rem 0.8em;
@@ -34,7 +33,6 @@
         cursor: pointer;
         border: 1px solid #e6ebf1;
         border-radius: 0.625rem;
-        transition: all 0.3s;
 
         &:hover {
             border-color: transparent;

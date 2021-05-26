@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TeamMembersList.scss";
 import {
@@ -14,16 +14,21 @@ import {
   CPagination,
   CRow,
   CTooltip,
+  CToast,
+  CToastBody,
+  CToaster
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
+import teamApi from "src/api/teamApi";
+import InviteMemberModal from "./InviteMemberModal/InviteMemberModal";
 
 TeamMembersList.propTypes = {};
 
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
   const history = useHistory();
-  const [currentPage, setCurrentPage] = useState(2);
+  const [currentPage, setCurrentPage] = useState(1);
   function switchShowMode(index) {
     if (index === showMode) return;
     setShowMode(index);
@@ -97,9 +102,97 @@ function TeamMembersList(props) {
     history.push(`/userprofile`);
   };
 
+  const [admin, setAdmin] = useState({});
+  const [members, setMembers] = useState([]);
+  const [team, setTeam] = useState({});
+  const [showInvite, setShowInvite] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [toastContent, setToastContent] = useState('');
+  const [pages, setPages] = useState(1);
+  const { teamId } = useParams();
+
+
+
+  const toasters = (() => {
+    return toasts.reduce((toasters, toast) => {
+      toasters[toast.position] = toasters[toast.position] || [];
+      toasters[toast.position].push(toast);
+      return toasters;
+    }, {});
+  })();
+
+  useEffect(() => {
+    if (!teamId)
+      return;
+    teamApi.getAdmin(teamId).then(res => {
+      console.log(res);
+      setAdmin(res.data);
+    }).catch(err => {
+
+    })
+
+    const params = {
+      teamId: teamId,
+      pageNumber: 1,
+      pageSize: 1,
+    }
+
+    teamApi.getUsersPagingByTeam({ params }).then(res => {
+      console.log(res.data.items);
+      setMembers(res.data.items);
+      setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+    }).catch(err => { })
+
+    teamApi.getTeam(teamId).then(res => {
+      setTeam(res.data);
+    }).catch(err => {
+
+    })
+  }, [teamId])
+
+  const currentPageChange = (index) => {
+    if (index === 0)
+      return;
+    console.log(index);
+    setCurrentPage(index);
+
+    const params = {
+      teamId: teamId,
+      pageSize: 1,
+      pageNumber: index,
+    }
+
+    teamApi.getUsersPagingByTeam({ params }).then(res => {
+      console.log(res.data.items);
+      setMembers(res.data.items);
+      setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+    }).catch(err => { })
+  }
+
+  const onClose = (e) => {
+    if (!e)
+      return;
+    setToastContent(e);
+    setToasts([
+      ...toasts,
+      {
+        position: "bottom-left",
+        autohide: 1000,
+        closeButton: false,
+        fade: true,
+        color: "info"
+      },
+    ]);
+    setShowInvite(false);
+  }
+
   return (
     <div className="team-members-container">
       <div className="members-list-header">
+        <div>
+          <label>Team Code</label>
+          <strong>{team.teamCode}</strong>
+        </div>
         <div className="search-bar-container">
           <div className="input-container">
             <CInput
@@ -113,7 +206,7 @@ function TeamMembersList(props) {
           </div>
         </div>
         <div className="other-actions">
-          <div className="add-btn add-list-btn">
+          <div onClick={() => setShowInvite(true)} className="add-btn add-list-btn">
             <CIcon name="cil-plus" />
             Mời thành viên
           </div>
@@ -147,10 +240,10 @@ function TeamMembersList(props) {
             <div className="label">Trưởng nhóm </div>
             <img
               alt=""
-              src="https://emilus.themenate.net/img/avatars/thumb-4.jpg"
+              src={admin.userImageUrl}
             />
-            <div className="leader-name">Huy Lê</div>
-            <div className="leader-email">huylengoc12@gmail.com</div>
+            <div className="leader-name">{admin.userFullname}</div>
+            <div className="leader-email">{admin.userEmail}</div>
           </div>
           <div className="leader-infor-container row-infor d-lg-none">
             <div className="label">Trưởng nhóm </div>
@@ -171,12 +264,12 @@ function TeamMembersList(props) {
                         <img
                           className="member-avatar"
                           alt=""
-                          src={item.avatar}
+                          src={admin.userImageUrl}
                         />
 
                         <div className="member-infor">
-                          <div className="member-name">{item.name}</div>
-                          <div className="member-email">{item.email}</div>
+                          <div className="member-name">{admin.userFullname}</div>
+                          <div className="member-email">{admin.userEmail}</div>
                         </div>
                       </div>
                     </td>
@@ -187,11 +280,9 @@ function TeamMembersList(props) {
                     <td>
                       <div className="member-role">
                         <div
-                          className={`role-color ${
-                            item.isLeader ? "leader" : ""
-                          }`}
+                          className={`role-color leader`}
                         ></div>
-                        {item.isLeader ? "Trưởng nhóm" : "Thành viên"}
+                        Trưởng nhóm
                       </div>
                     </td>
                   );
@@ -236,7 +327,7 @@ function TeamMembersList(props) {
           <div className="members-container">
             <div className="label">Thành viên</div>
             <CDataTable
-              items={usersData}
+              items={members}
               fields={fields}
               scopedSlots={{
                 infor: (item) => {
@@ -246,12 +337,12 @@ function TeamMembersList(props) {
                         <img
                           className="member-avatar"
                           alt=""
-                          src={item.avatar}
+                          src={item.userImageUrl}
                         />
 
                         <div className="member-infor">
-                          <div className="member-name">{item.name}</div>
-                          <div className="member-email">{item.email}</div>
+                          <div className="member-name">{item.userFullname}</div>
+                          <div className="member-email">{item.userEmail}</div>
                         </div>
                       </div>
                     </td>
@@ -262,11 +353,9 @@ function TeamMembersList(props) {
                     <td onClick={() => navigateToProfile(item)}>
                       <div className="member-role">
                         <div
-                          className={`role-color ${
-                            item.isLeader ? "leader" : ""
-                          }`}
+                          className={`role-color`}
                         ></div>
-                        {item.isLeader ? "Trưởng nhóm" : "Thành viên"}
+                        Thành viên
                       </div>
                     </td>
                   );
@@ -308,12 +397,28 @@ function TeamMembersList(props) {
             <CPagination
               className="pagination-team-members"
               activePage={currentPage}
-              pages={10}
-              onActivePageChange={setCurrentPage}
+              pages={pages}
+              onActivePageChange={currentPageChange}
+              doubleArrows={false}
+              dots
             />
           </div>
         </CCol>
       </CRow>
+      <div>
+        {Object.keys(toasters).map((toasterKey) => (
+          <CToaster color="bg-info" position={toasterKey} key={"toaster" + toasterKey}>
+            {toasters[toasterKey].map((toast, key) => {
+              return (
+                <CToast show={true} autohide={2000} fade={true}>
+                  <CToastBody>{toastContent}</CToastBody>
+                </CToast>
+              );
+            })}
+          </CToaster>
+        ))}
+      </div>
+      <InviteMemberModal showAddInvite={showInvite} onClose={onClose} />
     </div>
   );
 }

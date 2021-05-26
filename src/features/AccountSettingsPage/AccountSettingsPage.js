@@ -13,14 +13,17 @@ import {
 import { BiKey } from "react-icons/bi";
 import { BsInfoCircle } from "react-icons/bs";
 import { AiFillEdit } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import authApi from "src/api/authApi";
+import { setCurrentUser } from "src/shared_components/views/pages/login/authSlice";
 
 AccountSettingsPage.propTypes = {};
 
 function AccountSettingsPage(props) {
   const [selectedOptions, setSelectedOptions] = useState(0); //0:INFO, 1:PASSWORD
-  const [fullname, setFullname] = useState("Nguyễn Dũng");
-  const [email, setEmail] = useState("nguyendung@gmail.com");
-  const [phone, setPhone] = useState("0980863722");
+  const user = { ...useSelector(state => state.auth.currentUser) };
+  const [userInfo, setUserInfo] = useState(user);
+  const [changePWObject, setResetPasswordObject] = useState({ userId: user.id, currentPassword: null, newPassword: null, confirmPassword: null });
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,52 +35,64 @@ function AccountSettingsPage(props) {
   function ChooseSettingOption(index) {
     setSelectedOptions(index);
   }
-  function handleInputName(e) {
-    const { value } = e.target;
-    setFullname(value);
-  }
-  function handleInputEmail(e) {
-    const { value } = e.target;
-    setEmail(value);
-  }
-  function handleInputPhone(e) {
-    const { value } = e.target;
-    setPhone(value);
-  }
-  function handleInputCurrentPassword(e) {
-    const { value } = e.target;
-    setCurrentDirty(true);
-    setCurrentPassword(value);
-  }
-  function handleInputNewPassword(e) {
-    const { value } = e.target;
-    setNewDirty(true);
-    setNewPassword(value);
-  }
-  function handleInputConfirmPassword(e) {
-    const { value } = e.target;
-    setConfirmDirty(true);
-    setConfirmPassword(value);
+
+  const dispatch = useDispatch();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo({
+      ...userInfo,
+      [name]: value,
+    })
   }
 
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "newPassword")
+      setNewDirty(true);
+    if (name === "currentPassword")
+      setCurrentDirty(true);
+    else setConfirmDirty(true);
+
+    setResetPasswordObject({
+      ...changePWObject,
+      [name]: value,
+    })
+  }
+
+  const updateUserInfo = () => {
+    console.log(userInfo);
+    authApi.updateUserInfo(userInfo).then(res => {
+      dispatch(setCurrentUser(userInfo));
+    }).catch(err => {
+
+    })
+  }
+
+  const changePasswordClick = () => {
+    console.log(changePWObject);
+    authApi.changePassword(changePWObject).then(res => {
+
+    }).catch(err => {
+
+    })
+  }
   return (
     <div className="account-page-container">
       <div className="account-page-content">
         <CRow>
           <CCol className="setting-options" xm="4" sm="4" lg="3" xl="3">
             <div
-              className={`tab-setting tab-infor ${
-                selectedOptions === 0 ? "active" : ""
-              }`}
+              className={`tab-setting tab-infor ${selectedOptions === 0 ? "active" : ""
+                }`}
               onClick={() => ChooseSettingOption(0)}
             >
               <BsInfoCircle className="icon-info icon" />
               Thông tin của bạn
             </div>
             <div
-              className={`tab-setting tab-passowrd ${
-                selectedOptions === 1 ? "active" : ""
-              }`}
+              className={`tab-setting tab-passowrd ${selectedOptions === 1 ? "active" : ""
+                }`}
               onClick={() => ChooseSettingOption(1)}
             >
               <BiKey className="icon-password icon" />
@@ -110,9 +125,10 @@ function AccountSettingsPage(props) {
                           id="fullname-input"
                           placeholder="Nhập họ tên..."
                           autoComplete
-                          value={fullname}
-                          onChange={handleInputName}
-                          invalid={fullname === "" || fullname === null}
+                          name="fullName"
+                          value={userInfo.fullName}
+                          onChange={handleInputChange}
+                          invalid={userInfo.fullName === "" || userInfo.fullName === null}
                         />
                         <CInvalidFeedback>Tên không hợp lệ</CInvalidFeedback>
                       </CFormGroup>
@@ -123,12 +139,12 @@ function AccountSettingsPage(props) {
                         <CInput
                           type="email"
                           id="email-input"
-                          name="email-input"
                           placeholder="Nhập email..."
                           autoComplete="email"
-                          value={email}
-                          onChange={handleInputEmail}
-                          invalid={email === "" || email === null}
+                          name="email"
+                          value={userInfo.email}
+                          onChange={handleInputChange}
+                          invalid={userInfo.email === "" || userInfo.email === null}
                         />
                         <CInvalidFeedback>Email không hợp lệ</CInvalidFeedback>
                       </CFormGroup>
@@ -139,13 +155,10 @@ function AccountSettingsPage(props) {
                         <CInput
                           id="phone-input"
                           placeholder="Nhập số điện thoại..."
-                          value={phone}
-                          onChange={handleInputPhone}
-                          invalid={phone === "" || phone === null}
+                          name="userPhoneNumber"
+                          value={userInfo.userPhoneNumber}
+                          onChange={handleInputChange}
                         />
-                        <CInvalidFeedback>
-                          Số điện thoại không hợp lệ
-                        </CInvalidFeedback>
                       </CFormGroup>
                       <CFormGroup>
                         <CLabel
@@ -155,16 +168,18 @@ function AccountSettingsPage(props) {
                           Ngày sinh
                         </CLabel>
                         <CInput
+                          name="userDob"
                           id="birthDate-input"
-                          value={"2021-02-01"}
+                          value={userInfo.userDob}
                           type="date"
+                          onChange={handleInputChange}
                         />
                         <CInvalidFeedback>
                           Ngày sinh không hợp lệ
                         </CInvalidFeedback>
                       </CFormGroup>
                     </div>
-                    <div className="save-btn">Lưu lại</div>
+                    <div onClick={updateUserInfo} className="save-btn">Lưu lại</div>
                   </CCol>
                 </CRow>
               </div>
@@ -178,11 +193,11 @@ function AccountSettingsPage(props) {
                   <CInput
                     id="current-password"
                     placeholder="Nhập mật khẩu hiện tại..."
-                    value={currentPassword}
-                    onChange={handleInputCurrentPassword}
-                    invalid={currentDirty && currentPassword !== userPassword}
-                    valid={currentDirty && currentPassword === userPassword}
+                    value={changePWObject.currentPassword}
+                    onChange={handlePasswordChange}
+                    invalid={currentDirty && !changePWObject.currentPassword}
                     type="password"
+                    name="currentPassword"
                   />
                   <CInvalidFeedback>
                     Mật khẩu hiện tại không hợp lệ
@@ -196,12 +211,13 @@ function AccountSettingsPage(props) {
                     type="password"
                     id="new-password"
                     placeholder="Nhập mật khẩu mới..."
-                    value={newPassword}
-                    onChange={handleInputNewPassword}
+                    value={changePWObject.newPassword}
+                    onChange={handlePasswordChange}
                     invalid={
-                      newDirty && (newPassword === "" || newPassword === null)
+                      newDirty && (changePWObject.newPassword === "" || changePWObject.newPassword === null)
                     }
-                    valid={newDirty && newPassword !== ""}
+                    valid={newDirty && changePWObject.newPassword !== ""}
+                    name="newPassword"
                   />
                   <CInvalidFeedback>Mật khẩu mới không hợp lệ</CInvalidFeedback>
                 </CFormGroup>
@@ -216,21 +232,22 @@ function AccountSettingsPage(props) {
                     type="password"
                     id="new-password-confirm"
                     placeholder="Nhập lại mật khẩu mới..."
-                    value={confirmPassword}
-                    onChange={handleInputConfirmPassword}
+                    value={changePWObject.confirmPassword}
+                    onChange={handlePasswordChange}
                     invalid={
                       confirmDirty &&
-                      (confirmPassword === "" ||
-                        confirmPassword === null ||
-                        confirmPassword !== newPassword)
+                      (changePWObject.confirmPassword === "" ||
+                        changePWObject.confirmPassword === null ||
+                        changePWObject.confirmPassword !== changePWObject.newPassword)
                     }
-                    valid={confirmDirty && confirmPassword === newPassword}
+                    valid={confirmDirty && changePWObject.confirmPassword === changePWObject.newPassword}
+                    name="confirmPassword"
                   />
                   <CInvalidFeedback>
                     xác nhận mật khẩu mới không trùng khớp
                   </CInvalidFeedback>
                 </CFormGroup>
-                <div className="save-btn">Lưu lại</div>
+                <div onClick={changePasswordClick} className="save-btn">Cập nhật</div>
               </div>
             )}
           </CCol>

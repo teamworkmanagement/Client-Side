@@ -1,28 +1,22 @@
-import React, { useState } from "react";
 import {
-  CCard,
-  CCardHeader,
-  CCardBody,
-  CToast,
+  CButton, CToast,
   CToastBody,
-  CToastHeader,
-  CToaster,
-  CForm,
-  CInput,
-  CInputCheckbox,
-  CButton,
-  CContainer,
-  CRow,
-  CCol,
-  CFormGroup,
-  CLabel,
+  CToaster
 } from "@coreui/react";
-import { DocsLink } from "src/reusable";
+import React, { useState } from "react";
 
 const MyToaster = () => {
   const [toasts, setToasts] = useState([]);
+  const [content, setContent] = useState('');
 
   const addToast = () => {
+    fetch('https://api.quotable.io/random')
+      .then(res => res.json())
+      .then(res => {
+        setContent(res.content);
+      }).catch(err => {
+
+      })
     setToasts([
       ...toasts,
       {
@@ -42,19 +36,22 @@ const MyToaster = () => {
     }, {});
   })();
 
+  console.log(toasters);
+
+
   return (
     <div>
-      <CButton className="mr-1 w-25" color="success" onClick={addToast}>
+      <CButton className="mr-1 w-25" color="info" onClick={addToast}>
         Add toast
       </CButton>
 
       <div>
         {Object.keys(toasters).map((toasterKey) => (
-          <CToaster position={toasterKey} key={"toaster" + toasterKey}>
+          <CToaster color="success" position={toasterKey} key={"toaster" + toasterKey}>
             {toasters[toasterKey].map((toast, key) => {
               return (
                 <CToast show={true} autohide={2000} fade={true}>
-                  <CToastBody>Tên Công việc không được rỗng</CToastBody>
+                  <CToastBody>{content}</CToastBody>
                 </CToast>
               );
             })}

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./KanbanList.scss";
 import KanbanCard from "./Components/KanbanCard/KanbanCard";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CButton,
   CDropdown,
@@ -18,42 +18,13 @@ import {
 import CIcon from "@coreui/icons-react";
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
-import CardLoading from "./Components/KanbanCard/Components/CardLoading/CardLoading";
+import kanbanApi from "src/api/kanbanApi";
 
 KanbanList.propTypes = {};
 
 function KanbanList(props) {
-  /*const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
-  const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
-  const kanbanTasks = useSelector((state) => state.app.tasks);
-  const kanbanCardsData = getKanbanCardsData();
-  const [showAddCard, setShowAddCard] = useState(false);
 
-  function getKanbanCardsData() {
-    const listId = props.data.kanbanListId;
-    const listCards = [];
-    for (var i = 0; i < kanbanTasks.length; i++) {
-      if (kanbanTasks[i].taskListBelongedId === listId) {
-        listCards.push({ ...kanbanTasks[i] });
-      }
-    }
-    if (listCards.length === 0) return listCards;
-    //sort
-    let clonedCards = [...listCards];
-
-    for (var i = 0; i < clonedCards.length; i++) {
-      for (var j = i + 1; j < clonedCards.length; j++) {
-        if (clonedCards[i].taskOrderInlist > clonedCards[j].taskOrderInlist) {
-          let temp = clonedCards[i];
-          clonedCards[i] = clonedCards[j];
-          clonedCards[j] = temp;
-        }
-      }
-    }
-
-    return [...clonedCards];
-  }*/
-
+  const dispatch = useDispatch();
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const [showAddCard, setShowAddCard] = useState(false);
 
@@ -62,8 +33,18 @@ function KanbanList(props) {
   const handleShowCreateCard = () => {
     setShowAddCard(true);
   };
+
+  const removeKbList = () => {
+    const params = {
+      KanbanListId: props.data.kanbanListId,
+      KanbanListBoardBelongedId: props.data.kanbanListBoardBelongedId,
+    }
+    kanbanApi.removeKanbanList({
+      params
+    }).then(res => { }).catch(err => { })
+  }
   return (
-    <Draggable draggableId={props.data.kanbanListId} index={props.index}>
+    <Draggable draggableId={props.data.kanbanListId} isDragDisabled={props.data.kanbanListOrderInBoard === -999999} index={props.index}>
       {(provided) => (
         <div
           className="kanbanlist-container"
@@ -71,6 +52,7 @@ function KanbanList(props) {
           {...provided.draggableProps}
         >
           <KanbanListHeader
+            removeList={removeKbList}
             handleShowCreateCard={handleShowCreateCard}
             cardCount={props.data.taskUIKanbans.length}
             title={headerTitle}

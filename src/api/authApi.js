@@ -18,6 +18,14 @@ const authApi = {
     isLogin() {
         const url = '/account/is-login';
         return axiosClient.get(url);
+    },
+    changePassword(payload) {
+        const url = '/account/change-password';
+        return axiosClient.post(url, payload);
+    },
+    updateUserInfo(payload) {
+        const url = '/account/update-info';
+        return axiosClient.patch(url, payload);
     }
 };
 

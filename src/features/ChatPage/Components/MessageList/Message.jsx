@@ -34,7 +34,7 @@ function Message({ item, index }) {
                         <img
                             className="avatar"
                             alt=""
-                            src="http://emilus.themenate.net/img/avatars/thumb-2.jpg"
+                            src={item.messengerUserAvatar}
                         />
 
                         <div className="message-content">

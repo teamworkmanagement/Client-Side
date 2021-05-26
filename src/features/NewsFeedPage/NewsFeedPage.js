@@ -80,7 +80,7 @@ function NewsFeedPage(props) {
     {
       groupId: "3",
       groupAvatar:
-        "https://scontent.fsgn5-7.fna.fbcdn.net/v/t31.18172-8/15975043_801295790009762_5833023295370153210_o.jpg?_nc_cat=103&ccb=1-3&_nc_sid=825194&_nc_ohc=dgeZuFN3avMAX956AeV&_nc_ht=scontent.fsgn5-7.fna&oh=aee48f31173dee1270bc615946e65024&oe=609D8354",
+        "https://4.bp.blogspot.com/-ouhln8C_7Zo/V_g34H9nxpI/AAAAAAAADPU/fLYFgaxQEbsHueVCu9hREr8wLhAK2Q6SwCLcB/w0/j2team-security-chrome-extension-by-juno-okyo.png",
       groupName: "J2Team Community",
       groupMemberCount: 206700,
       groupNewPostCount: 11,
@@ -88,31 +88,15 @@ function NewsFeedPage(props) {
     {
       groupId: "4",
       groupAvatar:
-        "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7",
-      groupName: "Hóng hớt Showbiz",
-      groupMemberCount: 1406700,
-      groupNewPostCount: 18,
-    },
-    {
-      groupId: "5",
-      groupAvatar:
-        "https://scontent-sin6-1.xx.fbcdn.net/v/t1.6435-9/118766018_141657554279630_4181404269355144692_n.jpg?_nc_cat=111&ccb=1-3&_nc_sid=825194&_nc_ohc=xhRXBuV001AAX8INvov&_nc_ht=scontent-sin6-1.xx&oh=cf023db4c19215dd31fcdd6358698267&oe=60A114DE",
-      groupName: "Động sinh viên",
-      groupMemberCount: 2002700,
-      groupNewPostCount: 5,
-    },
-    {
-      groupId: "6",
-      groupAvatar:
-        "https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.6435-9/60060631_1892088447564263_9024906648988155904_n.jpg?_nc_cat=108&ccb=1-3&_nc_sid=825194&_nc_ohc=kRlwDzBsRMgAX_7H1qt&_nc_ht=scontent.fsgn5-5.fna&oh=a39b407b6df36c29a03d6a054a0b7688&oe=609D9EF4",
+        "https://yt3.ggpht.com/ytc/AAUvwniuYOp7nc1JMuIIxreA55A0vm8mDYi2TyBgWI2JLw=s900-c-k-c0x00ffffff-no-rj",
       groupName: "Kteam - Lập trình C/C++, C#, SQL",
       groupMemberCount: 530972,
       groupNewPostCount: 2,
     },
     {
-      groupId: "7",
+      groupId: "5",
       groupAvatar:
-        "https://scontent-sin6-3.xx.fbcdn.net/v/t1.6435-9/70944423_1289407744573535_1300646982062178304_n.jpg?_nc_cat=104&ccb=1-3&_nc_sid=825194&_nc_ohc=30N8un2vPewAX8QcAkk&_nc_ht=scontent-sin6-3.xx&oh=5ece776d1f0b830ca2f8e106d6452719&oe=609EBA21",
+        "https://www.engo.edu.vn/wp-content/uploads/2020/07/TOEIC-min.png",
       groupName: "18/09 lớp Toeic Speaking Writing cô Ngọc",
       groupMemberCount: 1289,
       groupNewPostCount: 2,

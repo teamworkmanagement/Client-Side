@@ -6,11 +6,13 @@ import { CButton, CButtonGroup, CInput, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import TaskList from "./Components/TaskList/TaskList";
 import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
+import CreateKBListModal from "src/features/TeamPage/Components/TeamTasks/Components/CreateKBListModal/CreateKBListModal";
 
 MyTasks.propTypes = {};
 
 function MyTasks(props) {
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
+  const [showAddKBList, setShowAddKBList] = useState(false);
   function switchShowMode(index) {
     //debugger;
     console.log(index);
@@ -21,6 +23,14 @@ function MyTasks(props) {
     if (props.goBackBoards) {
       props.goBackBoards();
     }
+  }
+
+  const onClose = () => {
+    setShowAddKBList(false);
+  }
+
+  const onCreateKBList = ()=>{
+    setShowAddKBList(true);
   }
   return (
     <div className="my-tasks-container">
@@ -44,7 +54,7 @@ function MyTasks(props) {
             </div>
           </div>
           {showMode === 1 && (
-            <div className="add-btn add-list-btn">
+            <div onClick={onCreateKBList} className="add-btn add-list-btn">
               <CIcon name="cil-plus" />
               Tạo danh sách
             </div>
@@ -90,9 +100,11 @@ function MyTasks(props) {
         </div>
       </div>
 
-      {showMode === 1 && <KanbanBoard />}
-      {showMode === 2 && <TaskList />}
-      {showMode === 3 && <GanttChart />}
+      <CreateKBListModal boardId={props.boardId} showAddKBList={showAddKBList} onClose={onClose} />
+
+      {showMode === 1 && <KanbanBoard boardId={props.boardId}/>}
+      {showMode === 2 && <TaskList boardId={props.boardId}/>}
+      {showMode === 3 && <GanttChart boardId={props.boardId}/>}
     </div>
   );
 }

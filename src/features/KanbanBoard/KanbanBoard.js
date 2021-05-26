@@ -22,96 +22,128 @@ function KanbanBoard(props) {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
-  /*const kanbanBoardData = useSelector((state) => state.app.kanbanBoardData);
-  const kanbanLists = useSelector((state) => state.app.kanbanLists);
-  const tasks = useSelector((state) => state.app.tasks);
-  const boardId = "board_1";
-
-  function onDragEnd(result) {
-    dispatch(handleDragEnd(result));
-    return;
-  }
-
-  /*function getKanbanListsData() {
-    const boardId = "board_1";
-    const lists = [];
-    for (var i = 0; i < kanbanLists.length; i++) {
-      if (kanbanLists[i].kanbanListBoardBelongedId === boardId) {
-        lists.push({ ...kanbanLists[i] });
-      }
-    }
-    if (lists.length === 0) return lists;
-    //sort
-    let clonedLists = [...lists];
-    for (var i = 0; i < clonedLists.length; i++) {
-      for (var j = i + 1; j < clonedLists.length; j++) {
-        if (
-          clonedLists[i].kanbanListOrderInBoard >
-          clonedLists[j].kanbanListOrderInBoard
-        ) {
-          //debugger;
-          let temp = clonedLists[i];
-          clonedLists[i] = clonedLists[j];
-          clonedLists[j] = temp;
-        }
-      }
-    }
-    return [...clonedLists];
-  }
-
-  let kanbanListsData = getKanbanListsData();*/
-
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
 
-  const boardId = "board1";
+  const fixedList = useSelector(
+    (state) => state.kanban.kanbanBoard.kanbanLists.find(x => x.kanbanListOrderInBoard === -999999)
+  );
+
+  console.log(fixedList);
+  //const fixedList = kanbanLists.find(x => x.kanbanListOrderInBoard === -999999);
+  //kanbanLists = kanbanLists.filter(x => x.kanbanListOrderInBoard !== -999999)
+
+  const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
 
   function onDragEnd(result) {
     //call api update pos (task/list) here
 
-    // console.log(result);
-    dispatch(handleDragEnd(result));
+    const { destination, source, type, draggableId } = result;
 
-    const { destination, source, type } = result;
+    console.log(result);
+    return;
     if (!destination) return;
+
+    if (
+      destination.index === source.index &&
+      destination.droppableId === source.droppableId
+    )
+      return;
+
+    let pos = -9999;
+    const cloneKbLists = [...kanbanLists];
     if (type === "task") {
-      if (
-        destination.index === source.index &&
-        destination.droppableId === source.droppableId
-      )
-        return;
+      const listTasksSource = cloneKbLists.find(x => x.kanbanListId === source.droppableId).taskUIKanbans;
+      const listTaskDestination = cloneKbLists.find(x => x.kanbanListId === destination.droppableId).taskUIKanbans;
+      //cungf list
+      if (destination.droppableId === source.droppableId) {
+        if (destination.index === 0) {
+          pos = listTasksSource[0].orderInList / 2;
+        }
+        else {
+          if (destination.index === listTasksSource.length - 1) {
+            pos = listTasksSource[listTasksSource.length - 1].orderInList + 65536;
+          }
+          else {
+            if (source.index < destination.index)
+              pos = (listTasksSource[destination.index].orderInList + listTasksSource[destination.index + 1].orderInList) / 2;
+
+            else pos = (listTasksSource[destination.index].orderInList + listTasksSource[destination.index - 1].orderInList) / 2;
+          }
+        }
+      } else
+      //khacs list
+      {
+        if (destination.index === 0) {
+          if (listTasksSource[source.index].orderInList < listTaskDestination[0]?.orderInList || listTaskDestination.length === 0) {
+            pos = listTasksSource[source.index].orderInList;
+          } else {
+            pos = listTaskDestination[destination.index].orderInList / 2;
+          }
+        }
+        else {
+          if (destination.index === listTaskDestination.length) {
+            pos = listTaskDestination[listTaskDestination.length - 1].orderInList + 65536;
+          }
+          else {
+            pos = (listTaskDestination[destination.index].orderInList + listTaskDestination[destination.index + 1].orderInList) / 2;
+          }
+        }
+      }
+
       taskApi.dragTask({
-        sourceDroppableId: source.droppableId,
-        sourceIndex: source.index,
-        destinationDroppableId: destination.droppableId,
-        destinationIndex: destination.index,
+        taskId: listTasksSource[source.index].taskId,
+        position: pos,
+        oldList: source.droppableId,
+        newList: destination.droppableId,
+      }).then(res => {
+
+      }).catch(err => {
+
       });
+
     } else {
-      if (
-        destination.index === source.index &&
-        destination.droppableId === source.droppableId
-      )
-        return;
+      if (destination.index === 0) {
+        pos = cloneKbLists[0].kanbanListOrderInBoard / 2;
+      }
+      else {
+        if (destination.index === cloneKbLists.length - 1) {
+          pos = cloneKbLists[cloneKbLists.length - 1].kanbanListOrderInBoard + 65536;
+        }
+        else {
+          if (source.index < destination.index)
+            pos = (cloneKbLists[destination.index].kanbanListOrderInBoard + cloneKbLists[destination.index + 1].kanbanListOrderInBoard) / 2;
+
+          else pos = (cloneKbLists[destination.index].kanbanListOrderInBoard + cloneKbLists[destination.index - 1].kanbanListOrderInBoard) / 2;
+        }
+      }
+
       kanbanApi.swapList({
-        kanbanBoardId: boardId,
-        sourceIndex: source.index,
-        destinationIndex: destination.index,
-      });
+        kanbanBoardId: currentBoard,
+        position: pos,
+        kanbanListId: draggableId
+      }).then(res => {
+
+      }).catch(err => {
+
+      })
     }
   }
 
   useEffect(() => {
+    if (!props.boardId)
+      return;
     try {
       dispatch(setTeamLoading(true));
       setIsLoading(true);
-      dispatch(getBoardDataForUI("board1"));
+      dispatch(getBoardDataForUI(props.boardId));
     } catch (err) {
     } finally {
       setIsLoading(false);
       dispatch(setTeamLoading(false));
     }
-  }, []);
+  }, [props.boardId]);
 
   return (
     <div className="kanban-board-container">
@@ -120,7 +152,7 @@ function KanbanBoard(props) {
         style={{ display: isLoading ? "none" : "flex" }}
         onDragEnd={onDragEnd}
       >
-        <Droppable droppableId={boardId} direction="horizontal" type="list">
+        <Droppable droppableId={currentBoard} direction="horizontal" type="list">
           {(provided) => (
             <div
               className="board"
@@ -142,6 +174,9 @@ function KanbanBoard(props) {
           )}
         </Droppable>
       </DragDropContext>
+      <div>
+        <CardLoading isLoading={isLoading} />
+      </div>
     </div>
   );
 }

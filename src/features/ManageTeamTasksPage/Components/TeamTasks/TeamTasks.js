@@ -90,9 +90,9 @@ function TeamTasks(props) {
         </div>
       </div>
 
-      {showMode === 1 && <KanbanBoard />}
-      {showMode === 2 && <TaskList />}
-      {showMode === 3 && <GanttChart />}
+      {showMode === 1 && <KanbanBoard boardId={props.boardId}/>}
+      {showMode === 2 && <TaskList boardId={props.boardId}/>}
+      {showMode === 3 && <GanttChart boardId={props.boardId}/>}
     </div>
   );
 }

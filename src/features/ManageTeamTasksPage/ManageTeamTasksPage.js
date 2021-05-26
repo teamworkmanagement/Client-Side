@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./ManageTeamTasksPage.scss";
-import MyBoards from "./Components/TeamBoards/TeamBoards";
-import MyTasks from "./Components/TeamTasks/TeamTasks";
+import TeamBoards from "./Components/TeamBoards/TeamBoards";
+import TeamTasks from "./Components/TeamTasks/TeamTasks";
 
 ManageTeamTasksPage.propTypes = {};
 
 function ManageTeamTasksPage(props) {
   const [isInBoard, setIsInBoard] = useState(false);
+  const [boardId, setBoardId] = useState(null);
   function goToBoard(boardId) {
+    setBoardId(boardId);
     setIsInBoard(true);
   }
   function goBackBoards() {
@@ -16,8 +18,8 @@ function ManageTeamTasksPage(props) {
   }
   return (
     <div className="teamtasks-page-container">
-      {!isInBoard && <MyBoards goToBoard={goToBoard} />}
-      {isInBoard && <MyTasks goBackBoards={goBackBoards} />}
+      {!isInBoard && <TeamBoards goToBoard={goToBoard} />}
+      {isInBoard && <TeamTasks boardId={boardId} goBackBoards={goBackBoards} />}
     </div>
   );
 }

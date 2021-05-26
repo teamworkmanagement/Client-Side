@@ -270,7 +270,7 @@ function Post(props) {
               )}
             </div>
             <div className="post-date">
-              {moment(post.postCreatedAt).format("hh:mm, DD/MM/YYYY")}
+              {moment(post.postCreatedAt).format("HH:MM, DD/MM/YYYY")}
               <CIcon name="cil-clock" />
             </div>
           </div>

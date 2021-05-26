@@ -25,12 +25,13 @@ import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
-  const lorem = "ccc";
   const [active, setActive] = useState(1);
   const [isOpeningBoard, setIsOpeningBoard] = useState(false);
   const teamLoading = useSelector((state) => state.app.teamLoading);
+  const [boardId, setBoardId] = useState(null);
 
   function openBoard(boardId) {
+    setBoardId(boardId);
     setIsOpeningBoard(true);
   }
   function goBackListBoards() {
@@ -96,7 +97,7 @@ function TeamPage(props) {
           </CTabPane>
           <CTabPane>
             {isOpeningBoard ? (
-              <TeamTasks goBackListBoards={goBackListBoards} />
+              <TeamTasks boardId={boardId} goBackListBoards={goBackListBoards} />
             ) : (
               <BoardsPage openBoard={openBoard} />
             )}

@@ -230,7 +230,7 @@ function ListTeamPage(props) {
   };
 
   const teamImages = [
-    "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7",
+    "https://www.innovationnewsnetwork.com/wp-content/uploads/2019/12/ST27-McGillU1-image-%C2%A9-iStock-Garsya.jpg",
     "https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png",
     "https://i.ytimg.com/vi/u2ypkUBGEHI/maxresdefault.jpg",
     "https://vietnamleather.com/wp-content/uploads/2019/02/Untitled-1.png",

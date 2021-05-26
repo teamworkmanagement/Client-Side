@@ -70,6 +70,14 @@ function KanbanListHeader(props) {
                   <CIcon name="cil-plus" />
                   Thêm thẻ
                 </CDropdownItem>
+
+                <CDropdownItem
+                  className="last"
+                  onClick={() => props.removeList()}
+                >
+                  <CIcon name="cil-x" />
+                  Xóa list
+                </CDropdownItem>
               </CDropdownMenu>
             </CDropdown>
           </div>

@@ -7,6 +7,7 @@ import PrivateRoute from "./shared_components/team_route/PrivateRoute";
 import PublicRoute from "./shared_components/team_route/PublicRoute";
 import { islogin } from "./shared_components/views/pages/login/authSlice";
 import { startChatService } from "./utils/signalr/chatService";
+import { startKanbanService } from "./utils/signalr/kanbanService";
 import { startNotiService } from "./utils/signalr/notiService";
 import { startPostService } from "./utils/signalr/postService";
 
@@ -48,6 +49,7 @@ function App() {
     startChatService();
     startNotiService();
     startPostService();
+    startKanbanService();
   }, []);
 
   return (

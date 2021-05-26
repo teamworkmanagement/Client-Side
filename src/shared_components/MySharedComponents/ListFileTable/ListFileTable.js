@@ -8,10 +8,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useParams } from "react-router";
 import fileApi from "src/api/fileApi";
-import { icons } from "src/assets/icons";
 import { myBucket } from "src/utils/aws/config";
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
-import { v4 as uuidv4 } from "uuid";
+import uuid from "src/utils/file/uuid";
 import useExitPrompt from "../../../utils/customHook/useExitPrompt";
 import "./ListFileTable.scss";
 import UploadItem from "./ProgressBottom/UploadItem";
@@ -372,7 +371,7 @@ function ListFileTable(props) {
         return;
       }
 
-      const folder = uuidv4();
+      const folder = uuid();
       const params = {
         Body: file,
         Bucket: "teamappstorage",
@@ -393,8 +392,8 @@ function ListFileTable(props) {
               fileName: file.name,
               fileUrl: `https://teamappstorage.s3-ap-southeast-1.amazonaws.com/${folder}/${file.name}`,
               fileType: GetTypeFromExt(file.name),
-              userId: user.id,
-              fileBelongedId: teamId,
+              fileUserUploadId: user.id,
+              fileTeamOwnerId: teamId,
               fileSize: file.size,
             };
 
@@ -423,7 +422,8 @@ function ListFileTable(props) {
     async function getDatas() {
       try {
         const params = {
-          BelongedId: teamId,
+          OwnerId: teamId,
+          OwnerType: "team",
           PageNumber: page,
           PageSize: pageSize,
         };
@@ -435,7 +435,7 @@ function ListFileTable(props) {
             name: f.fileName,
             createdAt: f.fileUploadTime,
             size: f.fileSize,
-            owner: f.fileUserName,
+            owner: f.fileUserUploadName,
             type: f.fileType,
             ownerImageURL: f.userImage,
             downloadIcon: "../images/download.png",
@@ -446,7 +446,7 @@ function ListFileTable(props) {
         setDatas(dts);
         setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         console.log(outPut.data.items);
-      } catch (err) {}
+      } catch (err) { }
     }
     getDatas();
   }, [page, triggerLoad]);

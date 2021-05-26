@@ -1,11 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import chatApi from "src/api/chatApi";
 
-export const getAllGroupChatForUser = createAsyncThunk(
+export const getGroupChatForUser = createAsyncThunk(
   "chat/getallgroup",
-  async (userId) => {
-    const data = await chatApi.getAllGroupChatForUser(userId);
+  async (params) => {
+    const data = await chatApi.getGroupChatForUser(params);
     console.log("all group chat data redux: ", data.data);
+    return data.data;
+  }
+);
+
+export const searchGroupChatForUser = createAsyncThunk(
+  "chat/searchchatgroup",
+  async (params) => {
+    const data = await chatApi.getGroupChatForUser(params);
+    console.log("all group chat search data redux: ", data.data);
     return data.data;
   }
 );
@@ -27,7 +36,7 @@ const chatSlice = createSlice({
     setLoadDone: (state, action) => {
       state.loadDone = action.payload;
     },
-    editChatGroup: (state, action) => {},
+    editChatGroup: (state, action) => { },
     setCurrentGroup: (state, action) => {
       state.currentGroup = action.payload;
       const gr = state.groupChat.find((x) => x.groupChatId === action.payload);
@@ -48,10 +57,34 @@ const chatSlice = createSlice({
     },
     setNewMessage(state, action) {
       state.newMessage = action.payload;
+
+      let grChat = state.groupChat.findIndex(x => x.groupChatId === action.payload.groupId);
+      if (grChat === null) {
+        state.groupChat = [{
+          groupChatId: action.payload.groupId,
+          groupChatName: 'No name',
+          groupChatUpdatedAt: Date.now(),
+          newMessage: true,
+          groupAvatar: "",
+          lastestMes: action.payload.message
+        }].concat(state.groupChat);
+      }
+      else {
+        const backupdata = state.groupChat[grChat];
+        state.groupChat.splice(grChat, 1);
+        state.groupChat = [backupdata].concat(state.groupChat);
+      }
+    },
+
+    changeGroupPosition(state, action) {
+      let grChat = state.groupChat.findIndex(x => x.groupChatId === action.payload);
+      const backupdata = state.groupChat[grChat];
+      state.groupChat.splice(grChat, 1);
+      state.groupChat = [backupdata].concat(state.groupChat);
     },
   },
   extraReducers: {
-    [getAllGroupChatForUser.fulfilled]: (state, action) => {
+    [getGroupChatForUser.fulfilled]: (state, action) => {
       state.groupChat = action.payload;
       state.currentGroup = action.payload[0]?.groupChatId;
       state.loadDone = true;
@@ -60,7 +93,11 @@ const chatSlice = createSlice({
           ? action.payload[1].groupChatId
           : state.currentGroup;*/
     },
-    [getAllGroupChatForUser.rejected]: (state, action) => {},
+    [getGroupChatForUser.rejected]: (state, action) => { },
+    [searchGroupChatForUser.rejected]: (state, action) => { },
+    [searchGroupChatForUser.fulfilled]: (state, action) => {
+      state.groupChat = action.payload;
+    }
   },
 });
 
@@ -72,5 +109,6 @@ export const {
   setIsSelected,
   setReceiveMes,
   setNewMessage,
+  changeGroupPosition
 } = actions;
 export default reducer; // default export
