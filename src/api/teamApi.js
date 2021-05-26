@@ -6,6 +6,10 @@ const teamApi = {
         const url = `/team/get-admin/${teamId}`;
         return axiosClient.get(url);
     },
+    getTeam(teamId) {
+        const url = `/team/${teamId}`;
+        return axiosClient.get(url);
+    },
     getUsersPagingByTeam(params) {
         const url = `/team/getusers-paging`;
         return axiosClient.get(url, params);
@@ -20,6 +24,10 @@ const teamApi = {
     },
     joinTeam(params) {
         const url = '/team/join-team';
+        return axiosClient.post(url, params);
+    },
+    inviteUser(params) {
+        const url = '/participation';
         return axiosClient.post(url, params);
     }
 };
