@@ -44,7 +44,7 @@ function KanbanList(props) {
     }).then(res => { }).catch(err => { })
   }
   return (
-    <Draggable draggableId={props.data.kanbanListId} index={props.index}>
+    <Draggable draggableId={props.data.kanbanListId} isDragDisabled={props.data.kanbanListOrderInBoard === -999999} index={props.index}>
       {(provided) => (
         <div
           className="kanbanlist-container"

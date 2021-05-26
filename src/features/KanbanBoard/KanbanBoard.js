@@ -26,6 +26,13 @@ function KanbanBoard(props) {
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
 
+  const fixedList = useSelector(
+    (state) => state.kanban.kanbanBoard.kanbanLists.find(x => x.kanbanListOrderInBoard === -999999)
+  );
+
+  console.log(fixedList);
+  //const fixedList = kanbanLists.find(x => x.kanbanListOrderInBoard === -999999);
+  //kanbanLists = kanbanLists.filter(x => x.kanbanListOrderInBoard !== -999999)
 
   const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
 
@@ -35,6 +42,7 @@ function KanbanBoard(props) {
     const { destination, source, type, draggableId } = result;
 
     console.log(result);
+    return;
     if (!destination) return;
 
     if (
