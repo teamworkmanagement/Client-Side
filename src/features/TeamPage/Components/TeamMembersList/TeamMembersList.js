@@ -22,6 +22,9 @@ import CIcon from "@coreui/icons-react";
 import { useHistory, useParams } from "react-router";
 import teamApi from "src/api/teamApi";
 import InviteMemberModal from "./InviteMemberModal/InviteMemberModal";
+import chatApi from "src/api/chatApi";
+import { useSelector } from "react-redux";
+import uuid from "src/utils/file/uuid";
 
 TeamMembersList.propTypes = {};
 
@@ -109,8 +112,8 @@ function TeamMembersList(props) {
   const [toasts, setToasts] = useState([]);
   const [toastContent, setToastContent] = useState('');
   const [pages, setPages] = useState(1);
+  const user = useSelector(state => state.auth.currentUser);
   const { teamId } = useParams();
-
 
 
   const toasters = (() => {
@@ -186,6 +189,42 @@ function TeamMembersList(props) {
     setShowInvite(false);
   }
 
+  const nhanTin = (item) => {
+    console.log("abc");
+    console.log(item);
+    chatApi.checkDoubleExists({
+      userOneId: user.id,
+      userTwoId: item.userId,
+    }).then(res => {
+      console.log(res.data);
+      if (res.data.exists) {
+        history.push({
+          pathname: '/chat',
+          search: `g=${res.data.groupChatId}`,
+        });
+      }
+      else {
+        chatApi.addChatWithMembers({
+          "members": [
+            user.id, item.userId
+          ],
+          "groupChatId": uuid(),
+          "groupChatType": "double",
+        }).then(res => {
+          history.push({
+            pathname: '/chat',
+            search: `g=${res.data}`,
+          });
+        }).catch(err => {
+
+        })
+      }
+
+
+    }).catch(err => {
+
+    });
+  }
   return (
     <div className="team-members-container">
       <div className="members-list-header">
@@ -301,7 +340,7 @@ function TeamMembersList(props) {
                             aria-labelledby="dropdownMenuButton"
                             placement="bottom-end"
                           >
-                            <CDropdownItem className="first">
+                            <CDropdownItem className="first" onClick={() => nhanTin(admin)}>
                               <CIcon name="cil-send" />
                               Nhắn tin
                             </CDropdownItem>
@@ -374,7 +413,7 @@ function TeamMembersList(props) {
                             aria-labelledby="dropdownMenuButton"
                             placement="bottom-end"
                           >
-                            <CDropdownItem className="first">
+                            <CDropdownItem className="first" onClick={() => nhanTin(item)}>
                               <CIcon name="cil-send" />
                               Nhắn tin
                             </CDropdownItem>
