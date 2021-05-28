@@ -29,6 +29,10 @@ const teamApi = {
     inviteUser(params) {
         const url = '/participation';
         return axiosClient.post(url, params);
+    },
+    getUsersForTag(teamId) {
+        const url = `/team/users-for-tag/${teamId}`;
+        return axiosClient.get(url);
     }
 };
 

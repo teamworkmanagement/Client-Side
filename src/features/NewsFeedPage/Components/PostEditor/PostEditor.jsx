@@ -54,8 +54,8 @@ function PostEditor(props) {
 
 
     useEffect(() => {
-        console.log(props.postTeamId);
-        /*teamApi.getAllUserByTeam(props.postTeamId)
+        console.log("change team : ", props.postTeamId);
+        teamApi.getUsersForTag(props.postTeamId)
             .then(res => {
                 const myDatas = res.data.map(x => {
                     return {
@@ -68,7 +68,7 @@ function PostEditor(props) {
                 setMentions(myDatas);
             }).catch(err => {
 
-            })*/
+            })
     }, [props.postTeamId])
 
     return (

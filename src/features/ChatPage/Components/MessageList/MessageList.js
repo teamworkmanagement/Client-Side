@@ -226,7 +226,7 @@ function MessageList(props) {
 
 
         //Thêm label cách cho list mess
-        
+
         for (let i = 0; i < newArray.length - 1; i++) {
           if (i === 0) {
             arrayWithLabels.push({
@@ -362,7 +362,7 @@ function MessageList(props) {
     }
 
     getMessage();
-  }, [props.reachTop, currentGroup]);
+  }, [currentGroup]);
 
   useEffect(() => {
     console.log(teamId);
@@ -403,7 +403,7 @@ function MessageList(props) {
     const newMes = {
       message: newMessage.message,
       class: "normal",
-      isMine: false,
+      isMine: newMessage.userId === userId ? true : false,
       time: newMessage.timeSend,
       isLabel: false,
       messageType: newMessage.messageType,
@@ -417,6 +417,7 @@ function MessageList(props) {
     }
 
     const cloneList = [...latestChat.current];
+    setListMes(cloneList.concat(newMes));
     if (cloneList.length > 0 && !cloneList[cloneList.length - 1].isMine) {
       const date1 = cloneList[cloneList.length - 1].time;
       const date2 = newMes.time;
@@ -461,46 +462,6 @@ function MessageList(props) {
     chatApi
       .sendMes(props.sendMes.mesObj)
       .then((res) => {
-        const newMes = {
-          message: props.sendMes.mesObj.message,
-          class: "normal",
-          isMine: true,
-          time: props.sendMes.mesObj.timeSend,
-          isLabel: false,
-          messageType: props.sendMes.mesObj.messageType,
-        };
-
-        dispatch(setReceiveMes(props.sendMes.mesObj));
-        dispatch(changeGroupPosition(props.sendMes.mesObj.groupId))
-
-        const cloneList = [...latestChat.current];
-        if (cloneList.length > 0 && cloneList[cloneList.length - 1].isMine) {
-          const date1 = cloneList[cloneList.length - 1].time;
-          const date2 = newMes.time;
-          if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
-            cloneList.push({
-              id: 1 + Math.random() * (10000 - 1),
-              message: moment(date2).format("LLL"),
-              class: "",
-              isLabel: true,
-            });
-            newMes.class = "normal";
-          } else {
-            if (cloneList[cloneList.length - 1].class === "end") {
-              cloneList[cloneList.length - 1].class = "middle";
-            } else {
-              cloneList[cloneList.length - 1].class = "start";
-            }
-
-            newMes.class = "end";
-          }
-        }
-        cloneList.push(newMes);
-        //debugger;
-        setListMes(cloneList);
-        setTimeout(function () {
-          scrollToBottom();
-        }, 1);
       })
       .catch((err) => { });
   }, [props.sendMes]);

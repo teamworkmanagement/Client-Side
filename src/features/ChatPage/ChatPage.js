@@ -54,10 +54,12 @@ function ChatPage(props) {
   }, [queryParams])
 
   useEffect(() => {
-    if (queryParams) {
-      if (queryParams.g) {
-        if (queryParams.g !== currentGroup)
-          dispatch(setCurrentGroup(queryParams.g));
+    if (loadDone) {
+      if (queryParams) {
+        if (queryParams.g) {
+          if (queryParams.g !== currentGroup)
+            dispatch(setCurrentGroup(queryParams.g));
+        }
       }
     }
   }, [loadDone])
@@ -73,6 +75,7 @@ function ChatPage(props) {
   useEffect(() => {
     const params = {
       userId: userId,
+      currentGroup: queryParams?.g ? queryParams.g : null
     }
     dispatch(getGroupChatForUser({ params }));
     return function release() {
