@@ -15,16 +15,20 @@ import CIcon from "@coreui/icons-react";
 import ChatList from "./Components/ChatList/ChatList";
 import MessageList from "./Components/MessageList/MessageList";
 import { useDispatch, useSelector } from "react-redux";
-import { getGroupChatForUser, searchGroupChatForUser, setLoadDone } from "./chatSlice";
+import { getGroupChatForUser, searchGroupChatForUser, setCurrentGroup, setLoadDone } from "./chatSlice";
 import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import CreateNewConversationModal from "./Components/CreateNewConversation/CreateNewConversation";
+import { useLocation } from "react-router";
+import queryString from 'query-string';
 
 ChatPage.propTypes = {};
 
 function ChatPage(props) {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const queryParams = queryString.parse(location.search);
   const userId = useSelector((state) => state.auth.currentUser.id);
   const loadDone = useSelector((state) => state.chat.loadDone);
   const [reachTop, setReachTop] = useState(0);
@@ -44,6 +48,21 @@ function ChatPage(props) {
   const filePickerRef = useRef(null);
 
   const [group, setGroup] = useState(null);
+
+  useEffect(() => {
+
+  }, [queryParams])
+
+  useEffect(() => {
+    if (queryParams) {
+      if (queryParams.g) {
+        if (queryParams.g !== currentGroup)
+          dispatch(setCurrentGroup(queryParams.g));
+      }
+    }
+  }, [loadDone])
+
+
   useEffect(() => {
     if (!currentGroup)
       return;
@@ -59,6 +78,7 @@ function ChatPage(props) {
     return function release() {
       dispatch(setLoadDone(false));
     };
+
   }, []);
 
   const onScroll = (e) => {

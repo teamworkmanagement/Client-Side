@@ -37,11 +37,11 @@ const chatSlice = createSlice({
       state.loadDone = action.payload;
     },
     editChatGroup: (state, action) => { },
-    setCurrentGroup: (state, action) => {
-      state.currentGroup = action.payload;
+    setCurrentGroup: (state, action) => {      
       const gr = state.groupChat.find((x) => x.groupChatId === action.payload);
       if (gr) {
         gr.newMessage = false;
+        state.currentGroup = action.payload;
       }
     },
     setIsSelected: (state, action) => {

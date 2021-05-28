@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./MyTasks.scss";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
@@ -7,12 +7,15 @@ import CIcon from "@coreui/icons-react";
 import TaskList from "./Components/TaskList/TaskList";
 import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
 import CreateKBListModal from "src/features/TeamPage/Components/TeamTasks/Components/CreateKBListModal/CreateKBListModal";
+import { useHistory } from "react-router";
 
 MyTasks.propTypes = {};
 
 function MyTasks(props) {
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
   const [showAddKBList, setShowAddKBList] = useState(false);
+  const history = useHistory();
+
   function switchShowMode(index) {
     //debugger;
     console.log(index);
@@ -29,9 +32,10 @@ function MyTasks(props) {
     setShowAddKBList(false);
   }
 
-  const onCreateKBList = ()=>{
+  const onCreateKBList = () => {
     setShowAddKBList(true);
   }
+
   return (
     <div className="my-tasks-container">
       <div className="tasks-header">
@@ -102,9 +106,9 @@ function MyTasks(props) {
 
       <CreateKBListModal boardId={props.boardId} showAddKBList={showAddKBList} onClose={onClose} />
 
-      {showMode === 1 && <KanbanBoard boardId={props.boardId}/>}
-      {showMode === 2 && <TaskList boardId={props.boardId}/>}
-      {showMode === 3 && <GanttChart boardId={props.boardId}/>}
+      {showMode === 1 && <KanbanBoard boardId={props.boardId} />}
+      {showMode === 2 && <TaskList boardId={props.boardId} />}
+      {showMode === 3 && <GanttChart boardId={props.boardId} />}
     </div>
   );
 }
