@@ -362,7 +362,9 @@ function MessageList(props) {
     }
 
     getMessage();
-  }, [currentGroup]);
+
+    console.log("currentgr");
+  }, [props.reachTop, currentGroup]);
 
   useEffect(() => {
     console.log(teamId);
