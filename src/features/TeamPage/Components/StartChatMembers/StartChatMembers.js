@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import "./CreateConversation.scss";
+import "./StartChatMembers.scss";
 import {
   CButton,
   CInput,
@@ -14,9 +14,9 @@ import AsyncSelect from 'react-select/async';
 import { useDispatch, useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
-import { setCurrentGroup, setIsSelected } from "../../chatSlice";
 
-CreateNewConversationModal.propTypes = {};
+
+StartChatMembers.propTypes = {};
 
 
 const ValueOption = (props) => (
@@ -48,23 +48,19 @@ export const CustomOption = (props) => {
   );
 };
 
-function CreateNewConversationModal(props) {
+function StartChatMembers(props) {
 
   const dispatch = useDispatch();
 
   const [grChatName, setGrChatName] = useState("");
-
+  const [options, setOptions] = useState([]);
   const user = useSelector(state => state.auth.currentUser);
-  const [options, setOptions] = useState([{
-    value: user.id,
-    label: user.fullName,
-    img: user.userAvatar,
-    isFixed: true,
-  }]);
 
   function handleOnClose() {
-    setGrChatName("");
-    props.onCLoseModal();
+    if (props.onModalClose) {
+      setGrChatName("");
+      props.onModalClose();
+    }
   }
 
   useEffect(() => {
@@ -80,19 +76,6 @@ function CreateNewConversationModal(props) {
   }
 
 
-  const styles = {
-    multiValue: (base, state) => {
-      return state.data.isFixed ? { ...base, backgroundColor: 'gray' } : base;
-    },
-    multiValueLabel: (base, state) => {
-      return state.data.isFixed
-        ? { ...base, fontWeight: 'bold', color: 'white', paddingRight: 6 }
-        : base;
-    },
-    multiValueRemove: (base, state) => {
-      return state.data.isFixed ? { ...base, display: 'none' } : base;
-    },
-  };
 
   const filterColors = async (inputValue) => {
     try {
@@ -128,40 +111,10 @@ function CreateNewConversationModal(props) {
       return option.value;
     })
 
-    if (!grChatName && members.length > 2) {
-      alert('name empty');
-      return;
-    }
-
-    if (members.length < 2) {
-      alert('more users');
-      return;
-    }
-
-
-    try {
-      const res = await chatApi.addChatWithMembers({
-        "members": members,
-        "groupChatName": grChatName,
-      });
-
-      dispatch(setIsSelected(true));
-      dispatch(setCurrentGroup(res.data));
-    }
-    catch (err) {
-
-    }
-
-    console.log(options);
 
     setGrChatName("");
-    setOptions([{
-      value: user.id,
-      label: user.fullName,
-      img: user.userAvatar,
-      isFixed: true,
-    }]);
-    props.onCLoseModal();
+    setOptions([]);
+    //props.onCLoseModal();
   }
 
   const onChange = (e) => {
@@ -170,8 +123,31 @@ function CreateNewConversationModal(props) {
   const onInputGrChatName = (e) => {
     setGrChatName(e.target.value);
   }
+
+  useEffect(() => {
+    if (props.fixedMembers) {
+      console.log(props.fixedMembers);
+      setOptions(props.fixedMembers);
+    }
+
+  }, [props.fixedMembers]);
+
+  const styles = {
+    multiValue: (base, state) => {
+      return state.data.isFixed ? { ...base, backgroundColor: 'gray' } : base;
+    },
+    multiValueLabel: (base, state) => {
+      return state.data.isFixed
+        ? { ...base, fontWeight: 'bold', color: 'white', paddingRight: 6 }
+        : base;
+    },
+    multiValueRemove: (base, state) => {
+      return state.data.isFixed ? { ...base, display: 'none' } : base;
+    },
+  };
+  
   return (
-    <CModal show={props.showAddConversation} onClose={handleOnClose} size="sm">
+    <CModal show={props.showStartChat} onClose={handleOnClose} size="sm">
       <CModalHeader closeButton>Tạo nhóm chat mới</CModalHeader>
       <CModalBody className="new-card-form">
         <div style={{ width: "21rem" }}>
@@ -186,6 +162,7 @@ function CreateNewConversationModal(props) {
             onChange={onChange}
             onInputChange={handleInputChange}
             isMulti
+            isClearable={false}
             components={{
               Option: CustomOption,
               MultiValue: ValueOption,
@@ -202,4 +179,4 @@ function CreateNewConversationModal(props) {
   );
 }
 
-export default CreateNewConversationModal;
+export default StartChatMembers;

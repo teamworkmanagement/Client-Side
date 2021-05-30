@@ -17,6 +17,10 @@ const chatApi = {
     addChatWithMembers(payload) {
         const url = 'groupchat/add-with-members';
         return axiosClient.post(url, payload);
+    },
+    addMembers(payload) {
+        const url = 'groupchat/add-members';
+        return axiosClient.post(url, payload);
     }
 };
 

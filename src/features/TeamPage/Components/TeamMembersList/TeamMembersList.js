@@ -19,12 +19,13 @@ import {
   CToaster
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { useHistory, useParams } from "react-router";
+import { Redirect, useHistory, useParams } from "react-router";
 import teamApi from "src/api/teamApi";
 import InviteMemberModal from "./InviteMemberModal/InviteMemberModal";
 import chatApi from "src/api/chatApi";
 import { useSelector } from "react-redux";
 import uuid from "src/utils/file/uuid";
+import StartChatMembers from "../StartChatMembers/StartChatMembers";
 
 TeamMembersList.propTypes = {};
 
@@ -109,11 +110,15 @@ function TeamMembersList(props) {
   const [members, setMembers] = useState([]);
   const [team, setTeam] = useState({});
   const [showInvite, setShowInvite] = useState(false);
+  const [showStartChat, setShowStartChat] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [toastContent, setToastContent] = useState('');
   const [pages, setPages] = useState(1);
+  const [fixedMembers, setFixedMembers] = useState([]);
   const user = useSelector(state => state.auth.currentUser);
   const { teamId } = useParams();
+
+  const [redirect, setRedirect] = useState(null);
 
 
   const toasters = (() => {
@@ -190,34 +195,36 @@ function TeamMembersList(props) {
   }
 
   const nhanTin = (item) => {
-    console.log("abc");
     console.log(item);
     chatApi.checkDoubleExists({
       userOneId: user.id,
       userTwoId: item.userId,
     }).then(res => {
-      console.log(res.data);
       if (res.data.exists) {
-        history.push({
+        console.log(res.data);
+        /*history.push({
           pathname: '/chat',
-          search: `g=${res.data.groupChatId}`,
-        });
+          search: `g=${res.data.groupChatId}`
+        });*/
+        //history.push(`http://localhost:4155/chat?g=${res.data.groupChatId}`);
+        //history.replace(`/chat?g=${res.data.groupChatId}`);
+        setRedirect(`/chat?g=${res.data.groupChatId}`);
       }
       else {
-        chatApi.addChatWithMembers({
-          "members": [
-            user.id, item.userId
-          ],
-          "groupChatId": uuid(),
-          "groupChatType": "double",
-        }).then(res => {
-          history.push({
-            pathname: '/chat',
-            search: `g=${res.data}`,
-          });
-        }).catch(err => {
+        console.log(res.data);
+        setShowStartChat(true);
 
-        })
+        setFixedMembers([{
+          value: user.id,
+          label: user.fullName,
+          img: user.userAvatar,
+          isFixed: true,
+        }, {
+          value: item.userId,
+          label: item.userFullname,
+          img: item.userImageUrl,
+          isFixed: true,
+        }]);
       }
 
 
@@ -225,8 +232,15 @@ function TeamMembersList(props) {
 
     });
   }
+
+
+  const onStartChatClose = () => {
+    setShowStartChat(false);
+    console.log("zzzzzzzz");
+  }
   return (
     <div className="team-members-container">
+      {redirect ? <Redirect from='/team' to={redirect} /> : null}
       <div className="members-list-header">
         <div>
           <label>Team Code</label>
@@ -458,6 +472,7 @@ function TeamMembersList(props) {
         ))}
       </div>
       <InviteMemberModal showAddInvite={showInvite} onClose={onClose} />
+      <StartChatMembers showStartChat={showStartChat} fixedMembers={fixedMembers} onModalClose={onStartChatClose} />
     </div>
   );
 }

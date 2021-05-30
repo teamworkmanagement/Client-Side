@@ -20,8 +20,9 @@ import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import CreateNewConversationModal from "./Components/CreateNewConversation/CreateNewConversation";
-import { useLocation } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import queryString from 'query-string';
+import AddMembers from "./Components/AddMembers/CreateNewConversation/AddMembers";
 
 ChatPage.propTypes = {};
 
@@ -39,6 +40,7 @@ function ChatPage(props) {
   const [msg, setMsg] = useState("");
   const [send, setSend] = useState(null);
   const [reachBot, setReachBot] = useState(true);
+  const [showAddMembers, setShowAddMembers] = useState(false);
 
   const [showAddConversation, setShowAddConversation] = useState(false);
 
@@ -49,9 +51,6 @@ function ChatPage(props) {
 
   const [group, setGroup] = useState(null);
 
-  useEffect(() => {
-
-  }, [queryParams])
 
   useEffect(() => {
     if (loadDone) {
@@ -243,6 +242,10 @@ function ChatPage(props) {
     }
     dispatch(searchGroupChatForUser({ params }));
   }
+
+  const onClose = () => {
+    setShowAddConversation(false);
+  }
   return (
     <div className="chat-page-container">
       {loadDone ? (
@@ -279,7 +282,7 @@ function ChatPage(props) {
                   {group?.groupChatName}
                 </div>
                 <div className="chat-group-actions">
-                  <div className="btn-add-member">
+                  <div onClick={() => setShowAddMembers(true)} className="btn-add-member">
                     <CIcon name="cil-user-follow" />
                     Thêm thành viên
                   </div>
@@ -374,7 +377,8 @@ function ChatPage(props) {
           </div>
         </div>
       ) : null}
-      <CreateNewConversationModal showAddConversation={showAddConversation} />
+      <CreateNewConversationModal onCLoseModal={onClose} showAddConversation={showAddConversation} />
+      <AddMembers onCLoseModal={() => setShowAddMembers(false)} showAddMembers={showAddMembers} />
     </div>
   );
 }
