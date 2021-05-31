@@ -1,0 +1,117 @@
+.register-container {
+    background: rgb(1, 168, 244);
+    background: linear-gradient(180deg, rgba(1, 168, 244, 1) 0%, rgba(90, 197, 246, 1) 0%, rgba(249, 249, 250, 1) 100%);
+    .card {
+        border-radius: 0.625rem;
+        border-color: transparent;
+        box-shadow: 0px 3px 50px 0px rgba(0, 0, 0, 0.16);
+        margin-top: 1.5rem;
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .title {
+            font-size: 200%;
+        }
+        .login-label-group {
+            display: flex;
+            margin: 1rem 0rem;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            color: rgba(0, 0, 0, 0.5);
+            padding-left: 0.3rem;
+            flex-wrap: wrap;
+
+            .text {
+                margin-right: 0.5rem;
+            }
+            .label-login {
+                color: #01a8f4;
+
+                font-weight: bold;
+                cursor: pointer;
+                &:hover {
+                    color: #01a8f4;
+                    text-decoration: underline;
+                }
+            }
+        }
+        .image-register {
+            width: 65%;
+            align-self: center;
+            margin-bottom: 1rem;
+            color: #00b0ff;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem !important;
+            .input-top-label {
+                padding-left: 0.3rem;
+                margin-bottom: 0.3rem;
+                display: flex;
+                align-items: center;
+                opacity: 0.8;
+                font-weight: bold;
+                .top-label-icon {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    margin-right: 0.3rem;
+                    margin-top: -0.2rem;
+                }
+            }
+            .input-row {
+                display: flex;
+                align-items: center;
+                input {
+                    width: 100%;
+                    height: 3rem;
+                    //font-size: 1rem;
+                    border-radius: 0.625rem !important;
+                    //box-shadow: 0px 3px 50px 0px rgba(0, 0, 0, 0.16);
+                    padding-right: 2.5rem;
+                }
+                .icon-right-input {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    margin-left: -2.2rem;
+                }
+            }
+        }
+
+        .register-btn {
+            background-color: #00b0ff;
+            border-radius: 0.625rem;
+            font-weight: bold;
+            border: none;
+            margin-top: 0.8rem !important;
+            &:hover {
+                background-color: #01a8f4;
+            }
+            font-size: 1rem;
+            height: 3rem;
+        }
+        .forgot-password-label-group {
+            display: flex;
+            margin: 1rem 0rem;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            color: rgba(0, 0, 0, 0.5);
+            padding-left: 0.3rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            .label-forgot-password {
+                margin-left: 0.5rem;
+                color: #01a8f4;
+
+                font-weight: bold;
+                cursor: pointer;
+                &:hover {
+                    color: #01a8f4;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

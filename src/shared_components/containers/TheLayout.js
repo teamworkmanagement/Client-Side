@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
+import ForgotPassword from "../views/pages/forgotpassword/ForgotPassword";
 import MyLogin from "../views/pages/login/MyLogin/MyLogin";
 import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
 
@@ -13,7 +14,7 @@ const TheLayout = () => {
           <TheContent />
         </div>
       </div>
-      {/* <MyLogin /> */}
+      {/* <ForgotPassword /> */}
     </div>
   );
 };

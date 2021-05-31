@@ -11,6 +11,7 @@ import MyFilesPage from "./features/MyFilesPage/MyFilesPage";
 import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
 import ManageTeamTasksPage from "./features/ManageTeamTasksPage/ManageTeamTasksPage";
 import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsPage";
+import ForgotPassword from "./shared_components/views/pages/forgotpassword/ForgotPassword";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -116,7 +117,7 @@ const User = React.lazy(() => import("./shared_components/views/users/User"));
 
 const routes = [
   // { path: '/', exact: true, name: 'Home' },
-  { path: "/dashboard", name: "Dashboard", component: Dashboard },
+  { path: "/dashboard", name: "Dashboard", component: DashBoardPage },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
   {
@@ -159,6 +160,12 @@ const routes = [
     path: "/myaccount",
     name: "Tài khoản",
     component: AccountSettingsPage,
+    exact: true,
+  },
+  {
+    path: "/forgotpassword",
+    name: "Tài khoản",
+    component: ForgotPassword,
     exact: true,
   },
   //{ path: "/team", name: "mychat", component: ChatPage, exact: true },
