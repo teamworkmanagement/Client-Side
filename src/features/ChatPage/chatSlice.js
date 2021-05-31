@@ -100,7 +100,7 @@ const chatSlice = createSlice({
     [getGroupChatForUser.rejected]: (state, action) => { },
     [searchGroupChatForUser.rejected]: (state, action) => { },
     [searchGroupChatForUser.fulfilled]: (state, action) => {
-      state.groupChat = action.payload;
+      state.groupChat = action.payload.groupChats;
     }
   },
 });

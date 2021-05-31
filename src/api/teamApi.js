@@ -33,6 +33,10 @@ const teamApi = {
     getUsersForTag(teamId) {
         const url = `/team/users-for-tag/${teamId}`;
         return axiosClient.get(url);
+    },
+    getBoardsByTeam(teamId) {
+        const url = `/team/boards-by-team/${teamId}`;
+        return axiosClient.get(url);
     }
 };
 
