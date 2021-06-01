@@ -30,19 +30,69 @@ const ForgotPassword = () => {
   const [currentForm, setCurrentForm] = useState(1); //1:page send code, 2:page confirm code, 3: page reset password, 4: page success
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [resetObj, setResetObj] = useState({});
 
   function SendCode() {
-    setCurrentForm(2);
+    authApi.forgotPassword({
+      email
+    }).then(res => {
+      console.log(res.data);
+      setCurrentForm(2);
+    }).catch(err => {
+      console.log(err);
+      if (err.data) {
+        if (err.data.ErrorCode === "404")
+          alert("Tài khoản không tồn tại");
+      }
+    })
   }
   function GoBackSendCode() {
     setCurrentForm(1);
   }
   function GoToReSetPassword() {
-    setCurrentForm(3);
+    console.log(resetObj);
+    console.log(email);
+    const payload = {
+      ...resetObj,
+      email
+    };
+    authApi.resetPassword(payload)
+      .then(res => {
+        console.log(res);
+        setCurrentForm(4);
+      })
+      .catch(err => {
+        if (err.data) {
+          console.log(err.data);
+          if (err.data.title) {
+            if (err.data.title.includes("validation")) {
+              alert("Xem lại mật khẩu đã nhập");
+            }
+          }
+
+          else {
+            alert("OTP không hợp lệ");
+          };
+        }
+      })
   }
   function GotoResetSuccess() {
     setCurrentForm(4);
   }
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setResetObj({
+      ...resetObj,
+      [name]: value,
+    });
+  }
+
+  const goToLogin = () => {
+    history.push('/login');
+  }
+
   return (
     <div className="forgot-password-container c-app c-default-layout flex-row align-items-center">
       <CContainer>
@@ -65,10 +115,12 @@ const ForgotPassword = () => {
                   <CInputGroup className="mb-3">
                     <div className="input-row">
                       <CInput
-                        type="text"
+                        type="email"
                         name="fullName"
                         placeholder="Email của tài khoản..."
                         autoComplete="username"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                       <HiOutlineMail className="icon-right-input" />
                     </div>
@@ -85,9 +137,9 @@ const ForgotPassword = () => {
                   <div className="go-back-label-group">
                     Trở về trang
                     <div className="actions-group">
-                      <div className="go-login-label">Đăng nhập</div>
+                      <div className="go-login-label" onClick={() => history.push("/login")}>Đăng nhập</div>
                       <div className="divider"></div>
-                      <div className="go-register-label">Tạo tài khoản</div>
+                      <div className="go-register-label" onClick={() => history.push("/register")}>Tạo tài khoản</div>
                     </div>
                   </div>
                 </CForm>
@@ -117,11 +169,59 @@ const ForgotPassword = () => {
                     <div className="input-row">
                       <CInput
                         type="text"
-                        name="code"
+                        name="token"
                         placeholder="Nhập mã xác nhận..."
-                        //autoComplete="username"
+                        onChange={onChange}
+                      //autoComplete="username"
                       />
                       <BiKey className="icon-right-input" />
+                    </div>
+                  </CInputGroup>
+
+                  <CInputGroup className="mb-3">
+                    <div className="input-top-label">Mật khẩu mới</div>
+                    <div className="input-row">
+                      <CInput
+                        type={showNewPassword ? "text" : "password"}
+                        name="password"
+                        placeholder="Nhập mật khẩu mới..."
+                        onChange={onChange}
+                      />
+                      {showNewPassword && (
+                        <BsEye
+                          className="icon-viewpassword"
+                          onClick={() => setShowNewPassword(false)}
+                        />
+                      )}
+                      {!showNewPassword && (
+                        <BsEyeSlash
+                          className="icon-viewpassword"
+                          onClick={() => setShowNewPassword(true)}
+                        />
+                      )}
+                    </div>
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <div className="input-top-label">Xác nhận mật khẩu mới</div>
+                    <div className="input-row">
+                      <CInput
+                        type={showConfirmPassword ? "text" : "password"}
+                        name="confirmPassword"
+                        placeholder="Nhập lại mật khẩu..."
+                        onChange={onChange}
+                      />
+                      {showConfirmPassword && (
+                        <BsEye
+                          className="icon-viewpassword"
+                          onClick={() => setShowConfirmPassword(false)}
+                        />
+                      )}
+                      {!showConfirmPassword && (
+                        <BsEyeSlash
+                          className="icon-viewpassword"
+                          onClick={() => setShowConfirmPassword(true)}
+                        />
+                      )}
                     </div>
                   </CInputGroup>
 
@@ -235,6 +335,7 @@ const ForgotPassword = () => {
                     className="forgot-password-btn"
                     color="success"
                     block
+                    onClick={goToLogin}
                   >
                     Trở lại màn hình đăng nhập
                   </CButton>

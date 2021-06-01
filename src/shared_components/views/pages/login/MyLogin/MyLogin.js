@@ -5,12 +5,45 @@ import { CCol, CInput, CRow } from "@coreui/react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
+import { Link, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../authSlice";
 
 MyLogin.propTypes = {};
 
 function MyLogin(props) {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const authStatus = useSelector((state) => state.auth.loginStatus);
 
+  const [loginObject, setLoginObject] = useState({
+    email: "",
+    password: "",
+  });
+
+  const history = useHistory();
+  const onCreateAccount = () => {
+    history.push('/register');
+  }
+
+  const onForgotPassword = () => {
+    history.push('/forgotpassword');
+  }
+
+  const onLoginClick = () => {
+    dispatch(login(loginObject));
+    if (authStatus) {
+      history.push("/dashboard");
+    }
+  }
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setLoginObject({
+      ...loginObject,
+      [name]: value,
+    });
+  }
   return (
     <div className="login-page-container">
       <CRow className="row-header">
@@ -37,11 +70,13 @@ function MyLogin(props) {
           <img alt="" src="../images/login/teamwork.svg" />
         </CCol>
         <CCol className="col2" xs="12" sm="10" lg="5" xl="4">
-          <CInput className="input-email" placeholder="Email tài khoản" />
+          <CInput className="input-email" name="email" onChange={onChange} placeholder="Email tài khoản" />
           <div className="password-group">
             <CInput
               className="input-password"
               placeholder="Mật khẩu"
+              name="password"
+              onChange={onChange}
               type={showPassword ? "text" : "password"}
             />
             {showPassword && (
@@ -58,10 +93,10 @@ function MyLogin(props) {
             )}
           </div>
 
-          <div className="label-forgot">
+          <div onClick={onForgotPassword} className="label-forgot">
             <label>Quên mật khẩu?</label>
           </div>
-          <div className="login-btn">Đăng nhập</div>
+          <div className="login-btn" onClick={onLoginClick}>Đăng nhập</div>
           <div className="label-social">
             <div className="line1 line"></div>
             <div className="label"> Đăng nhập nhanh với</div>
@@ -72,7 +107,9 @@ function MyLogin(props) {
             <SiFacebook className="fb-icon social-icon" />
           </div>
           <div className="register-group">
-            Bạn chưa có tài khoản? Hãy <strong>Tạo mới</strong> tại đây!
+            Bạn chưa có tài khoản? Hãy <strong onClick={onCreateAccount}>
+              Tạo mới
+            </strong> tại đây!
           </div>
         </CCol>
       </CRow>
