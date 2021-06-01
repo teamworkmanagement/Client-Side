@@ -15,7 +15,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import { AiFillEdit } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import authApi from "src/api/authApi";
-import { setCurrentUser } from "src/shared_components/views/pages/login/authSlice";
+import { changePassword, setCurrentUser } from "src/shared_components/views/pages/login/authSlice";
 
 AccountSettingsPage.propTypes = {};
 
@@ -71,11 +71,7 @@ function AccountSettingsPage(props) {
 
   const changePasswordClick = () => {
     console.log(changePWObject);
-    authApi.changePassword(changePWObject).then(res => {
-
-    }).catch(err => {
-
-    })
+    dispatch(changePassword(changePWObject));
   }
   return (
     <div className="account-page-container">
@@ -186,7 +182,7 @@ function AccountSettingsPage(props) {
             )}
             {selectedOptions === 1 && (
               <div className="setting-content setting-password-content">
-                <CFormGroup>
+                {!user.firstTimeSocial ? <CFormGroup>
                   <CLabel className="input-label" htmlFor="current-password">
                     Mật khẩu hiện tại
                   </CLabel>
@@ -202,7 +198,7 @@ function AccountSettingsPage(props) {
                   <CInvalidFeedback>
                     Mật khẩu hiện tại không hợp lệ
                   </CInvalidFeedback>
-                </CFormGroup>
+                </CFormGroup> : null}
                 <CFormGroup>
                   <CLabel className="input-label" htmlFor="new-password">
                     Mật khẩu mới
