@@ -1,0 +1,17 @@
+@import "../../../shared_components/scss/style.scss";
+
+.join-team-modal {
+    .modal-body {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        .team-code-input {
+            border-radius: $borderRadius;
+        }
+        .join-team-btn {
+            margin-top: 1rem;
+            @include NormalButtonStyle;
+            width: 100%;
+        }
+    }
+}

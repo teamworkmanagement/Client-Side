@@ -1,3 +1,4 @@
+@import "../../../../shared_components/scss/style.scss";
 .tasks-team-container {
     height: 100%;
     width: 100%;
@@ -6,189 +7,78 @@
     overflow-x: hidden;
     position: absolute;
     .tasks-header {
-        margin-top: -0.5rem;
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 0.5rem;
         .goback-label {
             display: flex;
             align-items: center;
             cursor: pointer;
-            .c-icon {
-                width: 0.8rem;
-                height: 0.8rem;
-                color: rgba(114, 132, 154, 0.7);
-            }
-            .one {
-                transform: rotate(90deg);
-            }
-            .two {
-                //transform: rotate(0deg);
-                transform: scale(-1, 1) rotate(-90deg);
-                margin-left: -0.8rem;
-                margin-top: -0.4rem;
+            margin-bottom: 0.5rem;
+            .icon-goback {
+                width: 1rem;
+                height: 1rem;
+                margin-top: -0.1rem;
+                color: $subTextColor;
             }
             .label-text {
                 font-weight: bold;
                 margin-left: 0.2rem;
-                color: rgba(114, 132, 154, 0.8);
+                color: $subTextColor;
             }
             &:hover {
                 .label-text {
-                    color: #3c4b64;
+                    color: $textColor;
                 }
-                .c-icon {
-                    color: #3c4b64;
+                .icon-goback {
+                    color: $textColor;
                 }
             }
         }
         .other-actions {
             display: flex;
-            justify-content: flex-end;
+            flex-wrap: wrap;
             align-items: center;
-            .search-bar-container {
-                height: 100%;
-
+            justify-content: flex-end;
+            flex-grow: 1;
+            padding: 1px;
+            padding-right: 2px;
+            .lookup-input {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end;
-                padding: 0rem 1rem;
-                padding-left: 0.1rem;
-                padding-right: 0.5rem;
-                .input-container {
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    width: 15rem;
-                    padding: 0.4rem 0.5rem;
-                    border: 1px solid #e6ebf1;
-                    border-radius: 10px;
-                    &:focus,
-                    &:focused {
-                        border-color: #699dff;
-                        border-right-width: 1px !important;
-                        outline: 0;
-                        box-shadow: 0 0 0 2px rgb(62 121 247 / 20%);
-                    }
-                    .input-field {
-                        flex-grow: 1;
-                        border-radius: 10px;
-                        position: absolute;
-                        width: 100%;
-                        margin: 0;
-                        padding: 0;
-                        left: 0px;
-                        right: 0px;
-                        height: 100%;
-                        padding-left: 0.5rem;
-                        padding-right: 2.5rem;
-                        border-color: #d8dbe0;
-                        border: none;
-                        &:focus {
-                            border-radius: 10px;
-                            border-color: #699dff;
-                            border-right-width: 1px !important;
-                            outline: 0;
-                            box-shadow: 0 0 0 2px rgb(62 121 247 / 20%);
-                        }
-                        &:hover {
-                            border-radius: 10px;
-                            border-color: #699dff;
-                            border-right-width: 1px !important;
-                            outline: 0;
-                            box-shadow: 0 0 0 2px rgb(62 121 247 / 20%);
-                        }
-                    }
-                    .input-actions-group {
-                        display: flex;
-                        align-items: center;
-                        z-index: 100;
-                        .c-icon {
-                            width: 1.3rem;
-                            height: 1.3rem;
-                            margin-left: 0.5rem;
-                            cursor: pointer;
-                            color: #667285;
-                            &:hover {
-                                color: #3c4b64;
-                            }
-                        }
-                        .send-button {
-                            width: 2.1rem;
-                            height: 2.1rem;
-                            padding: 0.5rem;
-                            padding-left: 0.38rem;
-                            border-radius: 50px;
-                            background-color: #3e79f7;
-                            color: white;
-                            display: flex;
-                            align-items: center;
-                            cursor: pointer;
-                            margin-left: 0.8rem;
-                            transition: all 0.2s;
-                            &:hover {
-                                transform: scale(1.2);
-                            }
-                            .c-icon {
-                                color: white;
-                                margin: 0px;
-                                transform: rotate(47deg);
-                            }
-                        }
+                margin-bottom: 0.5rem;
+
+                input {
+                    border-radius: $borderRadius;
+                }
+                .icon-search {
+                    margin-left: -1.5rem;
+                    cursor: pointer;
+                    color: $subTextColor;
+                    transition: $baseTransition;
+
+                    &:hover {
+                        transform: scale(1.2);
+                        color: $textColor;
                     }
                 }
             }
             .add-btn {
-                background-color: #3e79f7;
-                color: white;
-                padding: 0.5rem 1rem;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border-radius: 0.625rem;
-                height: fit-content;
-                margin: 0rem 0.5rem;
-                cursor: pointer;
+                @include NormalButtonStyle;
+
+                margin-bottom: 0.5rem;
+                margin-left: 1rem;
                 .c-icon {
                     margin-right: 0.2rem;
                 }
-                &:hover {
-                    background-color: #3464ca;
-                }
             }
             .show-mode {
-                padding: 0.5rem;
-                width: fit-content;
-                justify-content: flex-end;
-                height: 3.5rem;
-                display: flex;
-                .mode-btn {
-                    width: 3rem;
-                    max-width: 3rem;
-                    border: 2px solid #e6ebf1;
-
-                    background-color: transparent;
-                    margin-right: 0.6px;
-                    &.active {
-                        border-color: #3e79f7;
-                    }
-                    &.first {
-                        margin-right: 1px;
-                        border-top-left-radius: 0.625rem;
-                        border-bottom-left-radius: 0.625rem;
-                    }
-                    &.last {
-                        border-top-right-radius: 0.625rem;
-                        border-bottom-right-radius: 0.625rem;
-
-                        .c-icon {
-                            transform: rotate(90deg);
-                        }
-                    }
-                }
+                @include ShowMode;
+                margin-left: 1rem;
+                margin-top: 1px;
             }
         }
     }

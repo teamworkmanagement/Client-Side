@@ -532,6 +532,7 @@ const appSlice = createSlice({
   name: "app",
   initialState: {
     sidebarShow: "responsive",
+    mySidebarShow: "false",
     currentPostPage: 1,
     darkMode: true,
     kanbanBoardData: initKanbanBoardData,
@@ -550,6 +551,11 @@ const appSlice = createSlice({
     changeState(state, payload) {
       if (payload.payload.type === "set") {
         state.sidebarShow = payload.payload.sidebarShow;
+      }
+    },
+    changeStateSideBar(state, payload) {
+      if (payload.payload.type === "sidebar") {
+        state.mySidebarShow = payload.payload.mySidebarShow;
       }
     },
     setNewNoti(state, action) {
@@ -763,6 +769,7 @@ export const {
   handleDragEnd,
   updateTask,
   setTeamLoading,
-  setNewNoti
+  setNewNoti,
+  changeStateSideBar,
 } = actions; // named export
 export default reducer; // default export

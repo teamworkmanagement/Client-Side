@@ -7,6 +7,8 @@ import CIcon from "@coreui/icons-react";
 import TaskList from "./Components/TaskList/TaskList";
 import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
 import CreateKBListModal from "./Components/CreateKBListModal/CreateKBListModal";
+import { AiOutlineLeft } from "react-icons/ai";
+import { BsSearch } from "react-icons/bs";
 
 TeamTasks.propTypes = {};
 
@@ -29,32 +31,27 @@ function TeamTasks(props) {
   const addKBList = () => {
     console.log("clicked");
     setShowAddKBList(true);
-  }
+  };
 
   const onClose = () => {
     setShowAddKBList(false);
-  }
+  };
 
   return (
     <div className="tasks-team-container">
       <div className="tasks-header">
         <div className="goback-label" onClick={goBackListBoards}>
-          <CIcon className="one" name="cil-check-alt" />
-          <CIcon className="two" name="cil-check-alt" />
-          <div className="label-text">Trở lại màn hình danh sách công việc</div>
+          <AiOutlineLeft className="icon-goback" />
+          <div className="label-text">Trở lại danh sách công việc</div>
         </div>
         <div className="other-actions">
-          <div className="search-bar-container">
-            <div className="input-container">
-              <CInput
-                class="input-field"
-                placeholder="...tìm công việc"
-                type="text"
-              />
-              <div className="input-actions-group">
-                <CIcon name="cil-search" />
-              </div>
-            </div>
+          <div className="lookup-input">
+            <CInput
+              type="text"
+              name="teamName"
+              placeholder="Tìm công việc..."
+            />
+            <BsSearch className="icon-search" />
           </div>
           {showMode === 1 && (
             <div className="add-btn add-list-btn" onClick={addKBList}>
@@ -107,7 +104,11 @@ function TeamTasks(props) {
       {showMode === 2 && <TaskList boardId={props.boardId} />}
       {showMode === 3 && <GanttChart boardId={props.boardId} />}
 
-      <CreateKBListModal boardId={props.boardId} showAddKBList={showAddKBList} onClose={onClose} />
+      <CreateKBListModal
+        boardId={props.boardId}
+        showAddKBList={showAddKBList}
+        onClose={onClose}
+      />
     </div>
   );
 }

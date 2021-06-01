@@ -193,12 +193,10 @@ function NewsFeedPage(props) {
   };
 
   const onAddPost = async (editorState) => {
-
     if (!grAddPost) {
       alert("Xem lại");
       return;
     }
-
 
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
@@ -223,9 +221,16 @@ function NewsFeedPage(props) {
 
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
-        block.entityRanges.forEach(entity => {
-          var nameTag = block.text.substring(entity.offset, entity.offset + entity.length);
-          block.text = block.text.replaceBetween(entity.offset, entity.offset + entity.length, `<strong>@${nameTag}</strong>`)
+        block.entityRanges.forEach((entity) => {
+          var nameTag = block.text.substring(
+            entity.offset,
+            entity.offset + entity.length
+          );
+          block.text = block.text.replaceBetween(
+            entity.offset,
+            entity.offset + entity.length,
+            `<strong>@${nameTag}</strong>`
+          );
           console.log(block.text);
         });
       }
@@ -237,7 +242,7 @@ function NewsFeedPage(props) {
 
     let userIds = [];
     if (mentions.length > 0) {
-      userIds = mentions.map(m => m.id);
+      userIds = mentions.map((m) => m.id);
     }
 
     console.log(value);
@@ -251,21 +256,21 @@ function NewsFeedPage(props) {
         postTeamId: teamId ? teamId : grAddPost,
         postContent: value,
         userIds: userIds,
-        postImages: links
+        postImages: links,
       })
       .then((res) => {
-        res.data.postImages = links?.map(x => x.link);
+        res.data.postImages = links?.map((x) => x.link);
         console.log(addPostDone);
         console.log(res.data);
         setAddPostDone(res.data);
       })
-      .catch((err) => { console.log(err) });
-
-
+      .catch((err) => {
+        console.log(err);
+      });
 
     setShowCreatePost(false);
     setListPictures([]);
-  }
+  };
 
   const listImages = [
     {
@@ -344,15 +349,15 @@ function NewsFeedPage(props) {
               style={
                 showFilter
                   ? {
-                    borderBottomLeftRadius: "0",
-                    borderBottomRightRadius: "0",
-                    borderBottom: "none",
-                  }
+                      borderBottomLeftRadius: "0",
+                      borderBottomRightRadius: "0",
+                      borderBottom: "none",
+                    }
                   : {
-                    borderBottomLeftRadius: "10px",
-                    borderBottomRightRadius: "10px",
-                    borderBottom: "1px solid #e6ebf1",
-                  }
+                      borderBottomLeftRadius: "10px",
+                      borderBottomRightRadius: "10px",
+                      borderBottom: "1px solid #e6ebf1",
+                    }
               }
             >
               <div className="title">
@@ -461,11 +466,7 @@ function NewsFeedPage(props) {
           </div>
         </CModalBody>
         <CModalFooter>
-          <CButton
-            color="primary"
-            className="submit-btn"
-            onClick={addPostClick}
-          >
+          <CButton className="submit-btn" onClick={addPostClick}>
             Đăng bài
           </CButton>
         </CModalFooter>

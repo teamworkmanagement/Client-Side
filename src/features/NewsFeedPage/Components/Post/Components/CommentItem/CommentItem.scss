@@ -1,3 +1,4 @@
+@import "../../../../../../shared_components/scss/style.scss";
 .comment-item-container {
     display: flex;
     margin-bottom: 1rem;
@@ -19,12 +20,11 @@
             display: flex;
             justify-content: space-between;
             .commenter-name {
-                font-weight: 550;
+                font-weight: bold;
                 cursor: pointer;
             }
             .comment-date {
-                font-size: 85%;
-                color: rgba(0, 0, 0, 0.5);
+                @include SubTextStyle;
             }
         }
         .comment-content {

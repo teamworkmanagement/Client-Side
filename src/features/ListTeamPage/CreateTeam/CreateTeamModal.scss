@@ -1,0 +1,14 @@
+@import "../../../shared_components/scss/style.scss";
+.create-team-modal {
+    .label-description {
+        margin-top: 1rem;
+    }
+    input {
+        border-radius: $borderRadius;
+    }
+    .create-team-btn {
+        @include NormalButtonStyle;
+        margin-top: 1.5rem;
+        width: 100%;
+    }
+}

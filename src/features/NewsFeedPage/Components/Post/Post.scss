@@ -1,3 +1,4 @@
+@import "../../../../shared_components/scss/style.scss";
 @keyframes showInPostItem {
     from {
         opacity: 0;
@@ -24,12 +25,10 @@
 
 .post-container {
     @include ListPostItemApear;
-    background-color: white;
+    @include CardStyle;
     margin-bottom: 1rem;
-    border-radius: 10px;
     padding: 1.5rem 0rem;
     padding-bottom: 1rem;
-    border: 1px solid #e6ebf1;
     transition: all 0.3s;
     width: fit-content;
     width: 100%;
@@ -67,15 +66,12 @@
                     }
                 }
                 .post-date {
-                    font-size: 85%;
-                    color: rgba(0, 0, 0, 0.5);
+                    @include SubTextStyle;
                     display: flex;
                     align-items: center;
                     .c-icon {
-                        width: 0.6rem;
-                        height: 0.6rem;
-                        font-weight: bold;
-                        color: rgba(0, 0, 0, 0.5);
+                        width: 0.8rem;
+                        height: 0.8rem;
                         margin-left: 0.2rem;
                     }
                 }
@@ -86,63 +82,11 @@
                 transform: rotate(90deg);
             }
             .post-header-actions-dropdown {
-                border-radius: 50px;
-
                 .dropdown-toggle.btn {
-                    background-color: transparent;
-                    outline: none;
-                    border-radius: 50px;
-                    padding: 0.5rem;
-                    width: 2rem;
-                    height: 2rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    .lane-actions {
-                        color: #3c4b64;
-                    }
-                    &::after {
-                        display: none;
-                    }
-                    &:focus {
-                        outline: 0;
-                        box-shadow: none;
-                    }
-                    &:hover {
-                        background-color: #e4e6e9;
-                    }
+                    @include DropdownToggleButtonStyle;
                 }
                 .dropdown-menu.show {
-                    z-index: 1000;
-                    //@include TaskListItemApear;
-                    margin-top: -0.3rem !important;
-                    margin-left: -1.5rem !important;
-                    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
-                    border-radius: 0.625rem;
-                    padding: 0;
-                    .dropdown-item {
-                        display: flex;
-                        align-items: center;
-                        .c-icon {
-                            margin-right: 0.5rem;
-                            width: 0.8rem;
-                            height: 0.8rem;
-                            &.icon-delete {
-                                width: 1rem;
-                                height: 1rem;
-                            }
-                        }
-                        &:first-child:hover {
-                            background-color: #f5f5f5;
-                            border-top-left-radius: 0.625rem;
-                            border-top-right-radius: 0.625rem;
-                        }
-                        &:last-child:hover {
-                            background-color: #f5f5f5;
-                            border-bottom-left-radius: 0.625rem;
-                            border-bottom-right-radius: 0.625rem;
-                        }
-                    }
+                    @include DropdownMenuStyle;
                 }
             }
         }
@@ -152,10 +96,8 @@
         padding-left: 1.5rem;
         padding-right: 1.5rem;
         strong {
-            color: #03c2fc83;
-            &:hover {
-                cursor: pointer;
-            }
+            color: $baseColor;
+            cursor: pointer;
         }
     }
     .post-images-list-container {
@@ -173,7 +115,7 @@
             height: 1.4rem;
             margin-right: 0.3rem;
             cursor: pointer;
-            color: rgba(#3c4b64, 0.6);
+            color: $subTextColor;
             &:hover {
                 transform: scale(1.2);
             }
@@ -189,10 +131,7 @@
             height: 1.25rem;
             margin-right: 0.3rem;
             cursor: pointer;
-            color: rgba(#3c4b64, 0.6);
-            &:hover {
-                transform: scale(1.2);
-            }
+            color: $subTextColor;
         }
         .comment-count {
             margin-right: 0.5rem;
@@ -218,8 +157,9 @@
             flex-grow: 1;
             width: 2rem;
             input {
-                color: #3c4b64;
-                border-radius: 0.625rem;
+                color: $textColor;
+                border-radius: $borderRadius;
+                border: $borderStyle;
             }
         }
     }
@@ -228,7 +168,6 @@
         padding-right: 1.5rem;
     }
     .load-more-comment {
-        //margin: 0rem 1.25rem 0rem 1.25rem;
         display: flex;
         text-align: end;
         cursor: pointer;
