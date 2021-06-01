@@ -22,8 +22,9 @@ const MyToaster = () => {
       {
         position: "top-right",
         autohide: 1000,
-        closeButton: false,
+        closeButton: true,
         fade: true,
+        color: "info"
       },
     ]);
   };
@@ -47,10 +48,10 @@ const MyToaster = () => {
 
       <div>
         {Object.keys(toasters).map((toasterKey) => (
-          <CToaster color="success" position={toasterKey} key={"toaster" + toasterKey}>
+          <CToaster position={toasterKey} key={"toaster" + toasterKey}>
             {toasters[toasterKey].map((toast, key) => {
               return (
-                <CToast show={true} autohide={2000} fade={true}>
+                <CToast color={["info"]} show={true} autohide={2000} fade={true}>
                   <CToastBody>{content}</CToastBody>
                 </CToast>
               );

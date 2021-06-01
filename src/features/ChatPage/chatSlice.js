@@ -38,10 +38,10 @@ const chatSlice = createSlice({
     },
     editChatGroup: (state, action) => { },
     setCurrentGroup: (state, action) => {
-      state.currentGroup = action.payload;
       const gr = state.groupChat.find((x) => x.groupChatId === action.payload);
       if (gr) {
         gr.newMessage = false;
+        state.currentGroup = action.payload;
       }
     },
     setIsSelected: (state, action) => {
@@ -82,11 +82,15 @@ const chatSlice = createSlice({
       state.groupChat.splice(grChat, 1);
       state.groupChat = [backupdata].concat(state.groupChat);
     },
+
+    addNewGroupChat(state, action) {
+      state.groupChat.splice(0, 0, action.payload);
+    }
   },
   extraReducers: {
     [getGroupChatForUser.fulfilled]: (state, action) => {
-      state.groupChat = action.payload;
-      state.currentGroup = action.payload[0]?.groupChatId;
+      state.groupChat = action.payload.groupChats;
+      state.currentGroup = action.payload.currentGroup;
       state.loadDone = true;
       /*state.currentGroup =
         action.payload.length > 0
@@ -96,7 +100,7 @@ const chatSlice = createSlice({
     [getGroupChatForUser.rejected]: (state, action) => { },
     [searchGroupChatForUser.rejected]: (state, action) => { },
     [searchGroupChatForUser.fulfilled]: (state, action) => {
-      state.groupChat = action.payload;
+      state.groupChat = action.payload.groupChats;
     }
   },
 });
@@ -109,6 +113,7 @@ export const {
   setIsSelected,
   setReceiveMes,
   setNewMessage,
-  changeGroupPosition
+  changeGroupPosition,
+  addNewGroupChat
 } = actions;
 export default reducer; // default export

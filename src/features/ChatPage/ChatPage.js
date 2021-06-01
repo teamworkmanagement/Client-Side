@@ -15,16 +15,21 @@ import CIcon from "@coreui/icons-react";
 import ChatList from "./Components/ChatList/ChatList";
 import MessageList from "./Components/MessageList/MessageList";
 import { useDispatch, useSelector } from "react-redux";
-import { getGroupChatForUser, searchGroupChatForUser, setLoadDone } from "./chatSlice";
+import { getGroupChatForUser, searchGroupChatForUser, setCurrentGroup, setLoadDone } from "./chatSlice";
 import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import CreateNewConversationModal from "./Components/CreateNewConversation/CreateNewConversation";
+import { useHistory, useLocation } from "react-router";
+import queryString from 'query-string';
+import AddMembers from "./Components/AddMembers/CreateNewConversation/AddMembers";
 
 ChatPage.propTypes = {};
 
 function ChatPage(props) {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const queryParams = queryString.parse(location.search);
   const userId = useSelector((state) => state.auth.currentUser.id);
   const loadDone = useSelector((state) => state.chat.loadDone);
   const [reachTop, setReachTop] = useState(0);
@@ -35,6 +40,7 @@ function ChatPage(props) {
   const [msg, setMsg] = useState("");
   const [send, setSend] = useState(null);
   const [reachBot, setReachBot] = useState(true);
+  const [showAddMembers, setShowAddMembers] = useState(false);
 
   const [showAddConversation, setShowAddConversation] = useState(false);
 
@@ -44,6 +50,20 @@ function ChatPage(props) {
   const filePickerRef = useRef(null);
 
   const [group, setGroup] = useState(null);
+
+
+  useEffect(() => {
+    if (loadDone) {
+      if (queryParams) {
+        if (queryParams.g) {
+          if (queryParams.g !== currentGroup)
+            dispatch(setCurrentGroup(queryParams.g));
+        }
+      }
+    }
+  }, [loadDone])
+
+
   useEffect(() => {
     if (!currentGroup)
       return;
@@ -54,11 +74,13 @@ function ChatPage(props) {
   useEffect(() => {
     const params = {
       userId: userId,
+      currentGroup: queryParams?.g ? queryParams.g : null
     }
     dispatch(getGroupChatForUser({ params }));
     return function release() {
       dispatch(setLoadDone(false));
     };
+
   }, []);
 
   const onScroll = (e) => {
@@ -220,6 +242,10 @@ function ChatPage(props) {
     }
     dispatch(searchGroupChatForUser({ params }));
   }
+
+  const onClose = () => {
+    setShowAddConversation(false);
+  }
   return (
     <div className="chat-page-container">
       {loadDone ? (
@@ -256,7 +282,7 @@ function ChatPage(props) {
                   {group?.groupChatName}
                 </div>
                 <div className="chat-group-actions">
-                  <div className="btn-add-member">
+                  <div onClick={() => setShowAddMembers(true)} className="btn-add-member">
                     <CIcon name="cil-user-follow" />
                     Thêm thành viên
                   </div>
@@ -351,7 +377,8 @@ function ChatPage(props) {
           </div>
         </div>
       ) : null}
-      <CreateNewConversationModal showAddConversation={showAddConversation} />
+      <CreateNewConversationModal onCLoseModal={onClose} showAddConversation={showAddConversation} />
+      <AddMembers onCLoseModal={() => setShowAddMembers(false)} showAddMembers={showAddMembers} />
     </div>
   );
 }

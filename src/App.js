@@ -5,7 +5,9 @@ import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import "./shared_components/scss/style.scss";
 import PrivateRoute from "./shared_components/team_route/PrivateRoute";
 import PublicRoute from "./shared_components/team_route/PublicRoute";
+import ForgotPassword from "./shared_components/views/pages/forgotpassword/ForgotPassword";
 import { islogin } from "./shared_components/views/pages/login/authSlice";
+import MyLogin from "./shared_components/views/pages/login/MyLogin/MyLogin";
 import { startChatService } from "./utils/signalr/chatService";
 import { startKanbanService } from "./utils/signalr/kanbanService";
 import { startNotiService } from "./utils/signalr/notiService";
@@ -71,8 +73,15 @@ function App() {
 
           <PublicRoute
             restricted={true}
-            component={Login}
+            component={MyLogin}
             path="/login"
+            exact
+          />
+
+          <PublicRoute
+            restricted={true}
+            component={ForgotPassword}
+            path="/forgotpassword"
             exact
           />
 

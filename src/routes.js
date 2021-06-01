@@ -162,12 +162,6 @@ const routes = [
     component: AccountSettingsPage,
     exact: true,
   },
-  {
-    path: "/forgotpassword",
-    name: "Tài khoản",
-    component: ForgotPassword,
-    exact: true,
-  },
   //{ path: "/team", name: "mychat", component: ChatPage, exact: true },
   // { path: '/base', name: 'Base', component: Cards, exact: true },
   // { path: '/base/breadcrumbs', name: 'Breadcrumbs', component: Breadcrumbs },

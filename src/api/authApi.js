@@ -26,6 +26,14 @@ const authApi = {
     updateUserInfo(payload) {
         const url = '/account/update-info';
         return axiosClient.patch(url, payload);
+    },
+    forgotPassword(payload) {
+        const url = '/account/forgot-password';
+        return axiosClient.post(url, payload);
+    },
+    resetPassword(payload) {
+        const url = '/account/reset-password';
+        return axiosClient.post(url, payload);
     }
 };
 

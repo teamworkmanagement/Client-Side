@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes, { element } from "prop-types";
 import "./TeamStatistics.scss";
 import Select, { components } from "react-select";
@@ -7,6 +7,8 @@ import MainChartExample from "src/shared_components/views/charts/MainChartExampl
 import { CChartBar, CChartLine } from "@coreui/react-chartjs";
 import { getStyle, hexToRgba } from "@coreui/utils";
 import CIcon from "@coreui/icons-react";
+import teamApi from "src/api/teamApi";
+import { useParams } from "react-router";
 
 TeamStatistics.propTypes = {};
 
@@ -35,7 +37,8 @@ function TeamStatistics(props) {
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [progressTimeMode, setProgressTimeMode] = useState(1); //1:week, 2:month, 3:year
   const [contributeMode, setContributeMode] = useState(1); //1:number, 2:score
-  const listBoards = [
+  const [listBoards, setListBoards] = useState([]);
+  const listBoardszzz = [
     {
       value: 1,
       label: "Tasks Khóa luận",
@@ -229,6 +232,24 @@ function TeamStatistics(props) {
     return color;
   };
 
+  const { teamId } = useParams();
+  useEffect(() => {
+    teamApi.getBoardsByTeam(teamId).then(res => {
+      console.log(res.data);
+      const boards = res.data.map(x => {
+        return {
+          value: x.kanbanBoardId,
+          label: x.kanbanBoardName,
+          tasksCount: x.tasksCount,
+        };
+      })
+
+      setListBoards(boards);
+    }).catch(err => {
+
+    })
+  }, []);
+
   return (
     <div className=" team-statistics-container">
       <div className="header-label">Thống kê công việc nhóm Khóa luận Team</div>
@@ -241,7 +262,7 @@ function TeamStatistics(props) {
             components={{ Option: Option }}
             placeholder="Chọn bảng công việc..."
             options={listBoards}
-            onInputChange={() => {}}
+            onInputChange={() => { }}
             onChange={onChangeSelectedBoard}
           />
         </CCol>

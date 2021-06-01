@@ -66,7 +66,7 @@ const Register = () => {
                   <h1 className="title">Tạo tài khoản mới</h1>
                   <div className="login-label-group">
                     <div className="text">Bạn đã có tài khoản rồi?</div>
-                    <div className="label-login">Đăng nhập</div>
+                    <div className="label-login" onClick={() => history.push("/login")}>Đăng nhập</div>
                   </div>
                   <img
                     alt=""
@@ -136,7 +136,7 @@ const Register = () => {
                   </CButton>
                   <div className="forgot-password-label-group">
                     Bạn đang quên mật khẩu?
-                    <div className="label-forgot-password">
+                    <div className="label-forgot-password" onClick={() => history.push("/forgotpassword")}>
                       Lấy lại mật khẩu
                     </div>
                   </div>

@@ -11,6 +11,7 @@ import {
 import TimeAgo from "timeago-react";
 import * as timeago from "timeago.js";
 import vi from "timeago.js/lib/lang/vi";
+import { useHistory } from "react-router";
 
 // register it.
 timeago.register("vi", vi);
@@ -30,9 +31,8 @@ function ChatListItem(props) {
   return (
     <div
       onClick={() => handelSelect()}
-      className={`chat-item-container ${
-        props.data.newMessage ? "message" : ""
-      } ${props.data.groupChatId === currentGroup ? "selected" : ""}`}
+      className={`chat-item-container ${props.data.newMessage ? "message" : ""
+        } ${props.data.groupChatId === currentGroup ? "selected" : ""}`}
       style={{ animationDelay: `${props.animationDelay / 10}s` }}
     >
       <div className="item-avatar">

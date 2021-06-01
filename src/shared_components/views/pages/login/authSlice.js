@@ -10,18 +10,17 @@ export const socialLogin = createAsyncThunk(
   "auth/social-login",
   async (payload) => {
     const data = await authApi.socialLogin(payload);
-
-    localStorage.setItem("access_token", data.data.jwToken);
-    localStorage.setItem("refresh_token", data.data.refreshToken);
     return data.data;
   }
 );
 
+export const changePassword = createAsyncThunk("auth/changepassword", async (payload) => {
+  const data = await authApi.changePassword(payload);
+  return data.data;
+});
+
 export const login = createAsyncThunk("auth/login", async (payload) => {
   const data = await authApi.login(payload);
-  localStorage.setItem("access_token", data.data.jwToken);
-  localStorage.setItem("refresh_token", data.data.refreshToken);
-
   return data.data;
 });
 
@@ -60,13 +59,13 @@ const authSlice = createSlice({
     },
     [login.rejected]: (state, action) => { },
     [login.fulfilled]: (state, action) => {
-      const { id, fullName, email, userAvatar, userDob, userPhoneNumber } = action.payload;
-      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber };
+      const { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial } = action.payload;
+      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial };
       state.loginStatus = true;
     },
     [socialLogin.fulfilled]: (state, action) => {
-      const { id, fullName, email, userAvatar, userDob, userPhoneNumber } = action.payload;
-      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber };
+      const { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial } = action.payload;
+      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial };
       state.loginStatus = true;
     },
     [socialLogin.rejected]: (state, action) => {
@@ -76,6 +75,12 @@ const authSlice = createSlice({
       state.loginStatus = action.payload.data === "UnAuth" ? false : true;
     },
     [islogin.rejected]: (state, action) => { },
+    [changePassword.fulfilled]: (state, action) => {
+      state.currentUser.firstTimeSocial = false;
+    },
+    [changePassword.rejected]: (state, action) => {
+
+    }
   },
 });
 

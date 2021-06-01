@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import "./CreateConversation.scss";
+import "./AddMembers.scss";
 import {
   CButton,
   CInput,
@@ -14,9 +14,9 @@ import AsyncSelect from 'react-select/async';
 import { useDispatch, useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
-import { setCurrentGroup, setIsSelected } from "../../chatSlice";
+import { setCurrentGroup, setIsSelected } from "src/features/ChatPage/chatSlice";
 
-CreateNewConversationModal.propTypes = {};
+AddMembers.propTypes = {};
 
 
 const ValueOption = (props) => (
@@ -48,29 +48,19 @@ export const CustomOption = (props) => {
   );
 };
 
-function CreateNewConversationModal(props) {
+function AddMembers(props) {
 
   const dispatch = useDispatch();
+  const currentGroup = useSelector(state => state.chat.currentGroup);
 
-  const [grChatName, setGrChatName] = useState("");
 
   const user = useSelector(state => state.auth.currentUser);
-  const [options, setOptions] = useState([{
-    value: user.id,
-    label: user.fullName,
-    img: user.userAvatar,
-    isFixed: true,
-  }]);
+  const [options, setOptions] = useState([]);
 
   function handleOnClose() {
-    setGrChatName("");
+    setOptions([]);
     props.onCLoseModal();
   }
-
-  useEffect(() => {
-
-  }, []);
-
 
   const [inputValue, setInputValue] = useState("");
 
@@ -79,28 +69,14 @@ function CreateNewConversationModal(props) {
     setInputValue(e);
   }
 
-
-  const styles = {
-    multiValue: (base, state) => {
-      return state.data.isFixed ? { ...base, backgroundColor: 'gray' } : base;
-    },
-    multiValueLabel: (base, state) => {
-      return state.data.isFixed
-        ? { ...base, fontWeight: 'bold', color: 'white', paddingRight: 6 }
-        : base;
-    },
-    multiValueRemove: (base, state) => {
-      return state.data.isFixed ? { ...base, display: 'none' } : base;
-    },
-  };
-
   const filterColors = async (inputValue) => {
     try {
       const params = {
         userId: user.id,
         keyword: inputValue,
+        groupChatId: currentGroup
       };
-      const res = await userApi.searchUser({ params });
+      const res = await userApi.searchAddUserChatExists({ params });
 
       console.log(res.data);
 
@@ -121,66 +97,39 @@ function CreateNewConversationModal(props) {
   };
 
 
-  const onCreateGroupChat = async () => {
+  const onAddMembers = async () => {
     console.log(options);
-    console.log(grChatName);
-    const members = options.map(option => {
-      return option.value;
-    })
-
-    if (!grChatName && members.length > 2) {
-      alert('name empty');
+    if (options.length === 0)
       return;
-    }
 
-    if (members.length < 2) {
-      alert('more users');
-      return;
-    }
-
-
-    try {
-      const res = await chatApi.addChatWithMembers({
-        "members": members,
-        "groupChatName": grChatName,
-      });
-
+    chatApi.addMembers({
+      groupChatId: currentGroup,
+      userIds: options.map(x => x.value),
+    }).then(res => {
       dispatch(setIsSelected(true));
       dispatch(setCurrentGroup(res.data));
-    }
-    catch (err) {
+      setOptions([]);
+      props.onCLoseModal();
+    }).catch(err => {
 
-    }
-
-    console.log(options);
-
-    setGrChatName("");
-    setOptions([{
-      value: user.id,
-      label: user.fullName,
-      img: user.userAvatar,
-      isFixed: true,
-    }]);
-    props.onCLoseModal();
+    })
+    //props.onCLoseModal();
   }
 
   const onChange = (e) => {
     setOptions(e);
   }
   const onInputGrChatName = (e) => {
-    setGrChatName(e.target.value);
+
   }
   return (
-    <CModal show={props.showAddConversation} onClose={handleOnClose} size="sm">
+    <CModal show={props.showAddMembers} onClose={handleOnClose} size="sm">
       <CModalHeader closeButton>Tạo nhóm chat mới</CModalHeader>
       <CModalBody className="new-card-form">
         <div style={{ width: "21rem" }}>
-          <CInput type="text" placeholder="Tên nhóm chat" value={grChatName} onChange={onInputGrChatName} style={{ width: "21rem" }} />
-          <br></br>
           <AsyncSelect
             value={options}
             className="select-css"
-            cacheOptions
             loadOptions={loadOptions}
             defaultOptions
             onChange={onChange}
@@ -190,11 +139,10 @@ function CreateNewConversationModal(props) {
               Option: CustomOption,
               MultiValue: ValueOption,
             }}
-            styles={styles}
           />
           <br></br>
-          <div onClick={onCreateGroupChat} className="d-flex justify-content-end">
-            <CButton className="btn-info">Tạo nhóm</CButton>
+          <div onClick={onAddMembers} className="d-flex justify-content-end">
+            <CButton className="btn-info">Thêm thành viên</CButton>
           </div>
         </div>
       </CModalBody>
@@ -202,4 +150,4 @@ function CreateNewConversationModal(props) {
   );
 }
 
-export default CreateNewConversationModal;
+export default AddMembers;
