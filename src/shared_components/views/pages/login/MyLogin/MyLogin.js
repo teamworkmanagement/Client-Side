@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./MyLogin.scss";
-import { CCol, CInput, CRow } from "@coreui/react";
+import { CButton, CCol, CInput, CRow } from "@coreui/react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../authSlice";
+import { login, socialLogin } from "../authSlice";
+import socialMediaAuth from "src/utils/firebase/authSocial";
+import {
+  facebookProvider,
+  googleProvider,
+} from "src/utils/firebase/authMethods";
+
 
 MyLogin.propTypes = {};
 
@@ -44,6 +50,75 @@ function MyLogin(props) {
       [name]: value,
     });
   }
+
+
+  const loginFacebook = async () => {
+    const res = await socialMediaAuth(facebookProvider);
+    console.log("res là: ", res);
+    if (!res.additionalUserInfo) {
+      console.log("email fb : ", res.email);
+      if (res.email === undefined)
+        //tắt popup
+        return null;
+      return {
+        email: res.email,
+        pic: null,
+        id: null,
+        name: null,
+      };
+    }
+
+    const { email, id, name } = res.additionalUserInfo.profile;
+    const picture = res.additionalUserInfo.profile.picture.data.url;
+    return { email, id, name, picture };
+  };
+
+  const loginGoogle = async () => {
+    const res = await socialMediaAuth(googleProvider);
+    if (!res.additionalUserInfo) return null; //tắt popup
+
+    const { email, id, name, picture } = res.additionalUserInfo.profile;
+
+    return { email, id, name, picture };
+    //console.log('google : ', { email, id, name, picture });
+  };
+
+  const loginSocial = async (type) => {
+    let outPut = {};
+    switch (type) {
+      case "gg":
+        outPut = await loginGoogle();
+        break;
+      case "fb":
+        outPut = await loginFacebook();
+      default:
+        break;
+    }
+
+    if (outPut === null) return;
+
+    const data = {
+      id: outPut.id,
+      fullName: outPut.name,
+      imageUrl: outPut.picture,
+      email: outPut.email,
+    };
+
+    /*try {
+      const token = await authApi.socialLogin(data);
+      console.log('token là: ', token);
+    }
+    catch (error) {
+      console.log(error);
+    }*/
+    await dispatch(socialLogin(data));
+
+    if (authStatus) {
+      history.push("/dashboard");
+    }
+  };
+
+
   return (
     <div className="login-page-container">
       <CRow className="row-header">
@@ -103,8 +178,10 @@ function MyLogin(props) {
             <div className="line2 line"></div>
           </div>
           <div className="social-group">
-            <FcGoogle className="google-icon social-icon" />
-            <SiFacebook className="fb-icon social-icon" />
+            {/*<FcGoogle className="google-icon social-icon" />
+            <SiFacebook className="fb-icon social-icon" />*/}
+            <CButton onClick={() => loginSocial("fb")}>Facebook</CButton>
+            <CButton onClick={() => loginSocial("gg")}>Google</CButton>
           </div>
           <div className="register-group">
             Bạn chưa có tài khoản? Hãy <strong onClick={onCreateAccount}>
