@@ -8,4 +8,194 @@
 @import "fixes";
 
 // If you want to add something do it here
-@import "custom";
+@import "_mixins";
+
+.c-app {
+    font-family: Arial, Helvetica, sans-serif !important;
+    .c-sidebar {
+        //z-index: 999;
+        box-shadow: 1px 0px 4px -1px rgb(0 0 0 / 15%);
+        .c-sidebar-brand {
+            //background-color: #283142;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.2rem 0rem;
+            .logo-team-container {
+                //background-color: #283142;
+                background-color: white;
+                background-image: url("../../common/images/logoteam.png");
+                height: 100%;
+                width: 100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+            }
+        }
+        .c-sidebar-nav {
+            //background-color: #283142;
+            background-color: white;
+            .c-sidebar-nav-item {
+                .c-sidebar-nav-label {
+                    @include SideBarItemNormal;
+                    &:hover {
+                        @include SideBarItemHover;
+                    }
+                    &.c-active {
+                        @include SideBarItemSelected;
+                    }
+                }
+                .c-sidebar-nav-link {
+                    @include SideBarItemNormal;
+                    &:hover {
+                        @include SideBarItemHover;
+                    }
+                    &.c-active {
+                        @include SideBarItemSelected;
+                    }
+                }
+            }
+            .c-sidebar-nav-title {
+                @include SideBarItemNormal;
+                font-weight: bold;
+            }
+            .c-sidebar-nav-dropdown {
+                .c-sidebar-nav-dropdown-toggle {
+                    @include SideBarItemNormal;
+                    &:hover {
+                        @include SideBarItemHover;
+                    }
+
+                    &::after {
+                        color: #3c4b64 !important;
+                        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='rgba(60, 75, 100, 1)' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
+                        :hover {
+                            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='rgba(62, 121, 247, 1)' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
+                        }
+                    }
+                }
+                .c-sidebar-nav-dropdown-items {
+                    .c-sidebar-nav-item {
+                        @include SideBarItemNormal;
+                        .c-sidebar-nav-link {
+                            overflow-x: hidden;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            @include SideBarItemNormal;
+                            .c-avatar-img {
+                                width: 1.5rem !important;
+                                height: 1.5rem !important;
+                                margin-right: 1rem;
+                            }
+                            .team-name-dropdown-item {
+                                width: 0.5rem;
+                                flex-grow: 1;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: pre;
+                            }
+                            .badge {
+                                margin-left: auto !important;
+                            }
+                            &:hover {
+                                @include SideBarItemHover;
+                            }
+                        }
+                    }
+                }
+            }
+            .c-sidebar-nav-dropdown.c-show {
+                background-color: white;
+            }
+            .c-sidebar-nav-title {
+            }
+        }
+
+        .c-sidebar-minimizer {
+            background-color: white;
+            //background-color: #283142;
+            box-shadow: 0px -1px 4px -1px rgb(0 0 0 / 15%);
+            z-index: 1000;
+            &:hover {
+                background-color: #ebf1fe;
+            }
+            &::before {
+                background-color: transparent;
+                background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%238a93a2' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 12.5px;
+                transition: 0.3s;
+            }
+        }
+
+        @media (min-width: 992px) {
+            //width:20rem !important;
+        }
+    }
+    .c-wrapper {
+        @media (min-width: 992px) {
+            //margin-left:20rem !important;
+        }
+        .c-header {
+            box-shadow: 0px 0px 4px -1px rgb(0 0 0 / 15%);
+            //background-color: #283142;
+            background-color: white;
+            z-index: 998;
+            justify-content: space-between;
+            .c-subheader {
+                //background-color: #283142;
+                background-color: white;
+                display: flex;
+                align-items: center;
+                justify-content: space-between !important;
+                //display: none;
+                .dark-theme-container {
+                    display: flex;
+                    align-items: center;
+                    // border: 1px solid #3c4b64;
+                    // border-radius: 5px;
+                    // padding: 0.2rem 0.5rem;
+                }
+                .c-subheader-nav.nodisplay {
+                    display: none;
+                }
+            }
+        }
+        .c-body {
+            background-color: #fafafb;
+            .c-main {
+                position: relative;
+                padding: 0px !important;
+                .container-fluid {
+                    height: inherit;
+                    padding: 0px !important;
+                }
+            }
+        }
+    }
+}
+
+body::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+    border-radius: 10px;
+    border: 0.1rem solid #ebedef !important;
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

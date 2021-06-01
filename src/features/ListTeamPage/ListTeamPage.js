@@ -24,6 +24,8 @@ import { getTeamByUserId } from "./teamSlice";
 import CreateTeamModal from "./CreateTeam/CreateTeamModal";
 import TeamLoading from "../TeamPage/TeamLoading/TeamLoading";
 import JoinTeamModal from "./JoinTeam/JoinTeamModal";
+import { CgLogIn } from "react-icons/cg";
+import { AiOutlineTeam } from "react-icons/ai";
 
 ListTeamPage.propTypes = {};
 
@@ -251,11 +253,12 @@ function ListTeamPage(props) {
   return (
     <div className="list-team-container">
       <div className="header-tool-bar">
-        <div onClick={onShowJoinTeam} className="join-team-btn">
-          <CIcon name="cil-plus" />
+        <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
+          <CgLogIn className="icon-goin" />
+          <AiOutlineTeam className="icon-group" />
           Tham gia nhóm
         </div>
-        <div onClick={onShowAddTeam} className="create-team-btn">
+        <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
           <CIcon name="cil-plus" />
           Tạo nhóm mới
         </div>

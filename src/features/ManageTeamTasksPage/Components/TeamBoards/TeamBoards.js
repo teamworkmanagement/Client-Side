@@ -5,12 +5,12 @@ import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useSelector } from "react-redux";
 import kanbanApi from "src/api/kanbanApi";
+import { BsSearch } from "react-icons/bs";
 
 TeamBoards.propTypes = {};
 
 function TeamBoards(props) {
-
-  const user=useSelector(state=>state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   const listBoards = [
     {
@@ -98,37 +98,32 @@ function TeamBoards(props) {
     }
   }
 
-
-  const [boards,setBoards]=useState([]);
-  useEffect(()=>{
-    kanbanApi.getBoardsForUserTeams(user.id)
-    .then(res=>{
-      console.log(res);
-      setBoards(res.data);
-    }).catch(err=>{
-
-    })
-  },[])
+  const [boards, setBoards] = useState([]);
+  useEffect(() => {
+    kanbanApi
+      .getBoardsForUserTeams(user.id)
+      .then((res) => {
+        console.log(res);
+        setBoards(res.data);
+      })
+      .catch((err) => {});
+  }, []);
 
   return (
     <div className="list-boards-container">
       <div className="list-boards-header">
-        <div className="search-bar-container">
-          <div className="input-container">
-            <CInput
-              class="input-field"
-              placeholder="...tìm danh sách"
-              type="text"
-            />
-            <div className="input-actions-group">
-              <CIcon name="cil-search" />
-            </div>
-          </div>
+        <div className="lookup-input">
+          <CInput
+            class="input-field"
+            placeholder="...tìm danh sách"
+            type="text"
+          />
+          <BsSearch className="icon-search" />
         </div>
         <div className="other-actions">
           <div className="add-btn add-task-btn">
             <CIcon name="cil-plus" />
-            Tạo danh sách mới
+            Tạo bảng công việc mới
           </div>
         </div>
       </div>

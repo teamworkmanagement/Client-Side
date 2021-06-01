@@ -1,3 +1,4 @@
+@import "../../shared_components/scss/style.scss";
 @keyframes showInGroupItem {
     from {
         opacity: 0;
@@ -50,16 +51,15 @@
     .side-panel-col {
         padding: 0;
         .side-panel-container {
-            //width: 20rem;
             .create-post-btn {
+                border: $borderStyle;
+                border-radius: $borderRadius;
+                transition: $baseTransition;
                 cursor: pointer;
                 padding: 1rem;
                 background-color: white;
-                border-radius: 10px;
-                border: 1px solid #e6ebf1;
                 display: flex;
                 align-items: center;
-                transition: all 0.3s;
                 z-index: 1000 !important;
                 justify-content: space-between;
                 margin-bottom: 1rem;
@@ -71,28 +71,29 @@
                     }
                 }
                 .expand-icon {
-                    transition: all 0.8s;
+                    transition: $baseTransition;
                     width: 1.2rem;
                     height: 1.2rem;
                 }
                 &:hover {
-                    background-color: #e6ebf1;
+                    background-color: $lighterBaseColor;
+                    color: $baseColor;
                 }
             }
 
             .toggle-filter-btn {
+                border: $borderStyle;
+                border-radius: $borderRadius;
+
+                transition: $baseTransition;
                 cursor: pointer;
                 padding: 1rem;
                 background-color: white;
-                border-radius: 10px;
                 border-bottom-left-radius: 0px;
                 border-bottom-right-radius: 0px;
-
-                border: 1px solid #e6ebf1;
                 border-bottom: none;
                 display: flex;
                 align-items: center;
-                transition: all 0.3s;
                 z-index: 1000 !important;
                 justify-content: space-between;
                 .title {
@@ -103,20 +104,20 @@
                     }
                 }
                 .expand-icon {
-                    transition: all 0.8s;
+                    transition: $baseTransition;
                     width: 1.2rem;
                     height: 1.2rem;
                 }
                 &:hover {
-                    background-color: #e6ebf1;
+                    background-color: $lighterBaseColor;
+                    color: $baseColor;
                 }
             }
             .post-group-list-container {
                 padding: 1rem;
-
                 background-color: white;
-                border-radius: 10px;
-                border: 1px solid #e6ebf1;
+                border-radius: $borderRadius;
+                border: $borderStyle;
                 margin-top: 1rem;
                 .group-list-title {
                     font-weight: 550;
@@ -129,9 +130,9 @@
                     cursor: pointer;
                     border-radius: 10px;
                     padding: 0.5rem;
-                    transition: all 0.3s;
+                    transition: $baseTransition;
                     &:hover {
-                        background-color: #e6ebf1;
+                        background-color: $lighterBaseColor;
                     }
                     .group-avatar {
                         width: 2rem;
@@ -258,9 +259,7 @@
             }
             .submit-btn {
                 width: 100%;
-                border-radius: 0.625rem;
-                background-color: #3e79f7;
-                border: none;
+                @include NormalButtonStyle;
             }
         }
     }

@@ -6,6 +6,7 @@ import CIcon from "@coreui/icons-react";
 import { useParams } from "react-router";
 import kanbanApi from "src/api/kanbanApi";
 import CreateBoardModal from "./CreateBoardModal/CreateBoardModal";
+import { BsSearch } from "react-icons/bs";
 
 BoardsPage.propTypes = {};
 
@@ -38,16 +39,17 @@ function BoardsPage(props) {
   const { teamId } = useParams();
 
   useEffect(() => {
-    kanbanApi.getAllKanbanForTeam(teamId).then(res => {
-      setBoardLists(res.data);
-    }).catch(err => {
-
-    })
-  }, [])
+    kanbanApi
+      .getAllKanbanForTeam(teamId)
+      .then((res) => {
+        setBoardLists(res.data);
+      })
+      .catch((err) => {});
+  }, []);
 
   const showModalAddBoard = () => {
     setShowAddBoard(true);
-  }
+  };
 
   const onCloseBoard = (e) => {
     setShowAddBoard(false);
@@ -55,31 +57,27 @@ function BoardsPage(props) {
       return;
     }
     setBoardLists([...boardLists, e.data]);
-  }
+  };
   return (
-    <div className="list-boards-container">
+    <div className="list-boards-in-teampage-container">
       <div className="list-boards-header">
-        <div className="search-bar-container">
-          <div className="input-container">
-            <CInput
-              class="input-field"
-              placeholder="...tìm danh sách"
-              type="text"
-            />
-            <div className="input-actions-group">
-              <CIcon name="cil-search" />
-            </div>
-          </div>
+        <div className="lookup-input">
+          <CInput
+            type="text"
+            name="teamName"
+            placeholder="Tìm bảng công việc..."
+          />
+          <BsSearch className="icon-search" />
         </div>
         <div className="other-actions">
           <div className="add-btn add-task-btn" onClick={showModalAddBoard}>
             <CIcon name="cil-plus" />
-            Tạo danh sách mới
+            Tạo bảng công việc mới
           </div>
         </div>
       </div>
       <div className="list-boards">
-        <CRow xl={{ cols: 5, gutter: 3 }}>
+        <CRow>
           {boardLists.map((item, index) => {
             return (
               <CCol
