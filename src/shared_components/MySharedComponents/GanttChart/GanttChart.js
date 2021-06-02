@@ -10,6 +10,8 @@ import { CModal, CModalBody, CModalHeader } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import Modals from "src/shared_components/views/notifications/modals/Modals";
 import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { BiTaskX } from "react-icons/bi";
+import { VscSearchStop } from "react-icons/vsc";
 
 function GanttChart(props) {
   const input = useRef(null);
@@ -30,8 +32,7 @@ function GanttChart(props) {
   });
 
   useEffect(() => {
-    if (!props.boardId)
-      return;
+    if (!props.boardId) return;
     dispatch(getBoardDataForUI(props.boardId));
   }, [props.boardId]);
 
@@ -190,8 +191,8 @@ function GanttChart(props) {
           taskDeadline: newTaskData.end_date,
           taskImageUrl: newTaskData.taskImageUrl,
         })
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
     });
   }, [data]);
 
@@ -237,7 +238,21 @@ function GanttChart(props) {
 
   return (
     <div className="gantt-container">
-      <div ref={input} style={{ width: "100%", height: "100%" }}></div>
+      {tasks.length > 0 && (
+        <div ref={input} style={{ width: "100%", height: "100%" }}></div>
+      )}
+
+      {tasks.length === 0 && (
+        <div className="nodata-image">
+          <div className="icon-group">
+            <BiTaskX className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">Chưa có công việc nào trong bảng này</div>
+          <div className="create-btn">Tạo công việc mới</div>
+        </div>
+      )}
       <TaskEditModal
         closePopup={closeForm}
         isShowEditPopup={isShowEditPopup}

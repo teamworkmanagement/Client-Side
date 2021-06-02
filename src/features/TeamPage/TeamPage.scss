@@ -20,32 +20,17 @@
         height: fit-content;
         align-items: center;
         border: none;
-        margin-left: 1rem;
+        margin-left: 0;
         padding: 1.5rem 0.5rem 0rem 0.5rem !important;
         width: 4rem;
         border: 1px solid #e6ebf1;
-        //box-shadow: -1px 1px 4px -1px rgb(0 0 0 / 15%);
         border-radius: 0.625rem;
-        //border-top-right-radius: 0;
-        //border-bottom-right-radius: 0;
         background-color: white;
         margin-right: 1.5rem;
         border-radius: 0.625rem;
         box-shadow: none;
-        // & .nav-item:not(:first-child):not(:last-child) {
-        //     margin: 0rem 1rem;
-        // }
-        // & .nav-item:first-child {
-        //     margin: 0rem 1rem 0rem 0rem;
-        // }
-        // & .nav-item:last-child {
-        //     margin: 0rem 0rem 0rem 1rem;
-        // }
 
         .nav-item {
-            // flex-grow: 1;
-            // flex: 1 1 0;
-            //margin: 0rem 1rem;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -68,13 +53,11 @@
                 margin-bottom: 1rem;
 
                 .c-icon {
-                    //margin-right: 0.2rem;
                     width: 1.55rem;
                     height: 1.55rem;
                 }
                 &.active {
                     .c-icon {
-                        //margin-right: 0.2rem;
                         width: 1.55rem;
                         height: 1.55rem;
                     }
@@ -85,61 +68,59 @@
                 }
                 &:hover {
                     color: #3e79f7;
-                    //border-color: #3e79f7;
-                    //background-color: #E4E6E9;
                     border-color: transparent;
-                    // .c-icon {
-                    //     box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%),
-                    //         0 5px 12px 4px rgb(0 0 0 / 9%);
-                    // }
                 }
             }
             .nav-link.active {
-                //color: rgba(0, 0, 21, 0.9);
-                // background-color: white;
-                // border-bottom-color: white;
-                //margin-bottom: 1rem;
-
-                /* border-color: #c4c9d0 #c4c9d0 #ebedef #ebedef; */
                 border: 1px solid #ebedef;
                 border-radius: 0.625rem;
                 background-color: rgba(#3e79f7, 0.9);
                 color: white;
-                //color: white
                 width: 2.5rem !important;
                 height: 2.5rem;
             }
         }
     }
-    .tab-content {
-        border: none;
+    .tab-content-container {
         flex-grow: 1;
-        width: 5rem;
-        padding-top: 1.5rem;
-        //overflow-y: scroll;
         display: flex;
-        border-radius: 0.625rem;
-        //background-color: white;
-        padding: 0rem;
-        //margin-right: 7rem;
-        .tab-pane {
-            position: relative;
+        flex-direction: column;
+        width: 5rem;
+        margin-right: 1.5rem;
+        .toggle-team-tabs-sidebar-btn {
+            .toggle-icon {
+                width: 1.5rem;
+                height: 1.5rem;
+                cursor: pointer;
+                margin-bottom: 1rem;
+            }
+        }
+        .tab-content {
+            border: none;
             flex-grow: 1;
             width: 100%;
-            .kanban-board-container {
-                padding: 0;
-                background-color: #fafafb;
-            }
-            .chat-page-container {
-                padding: 0;
+            padding-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.625rem;
+            padding: 0rem;
+            .tab-pane {
                 position: relative;
-                height: 30rem;
-            }
-            .newsfeed-page-container {
-                padding: 0;
-                // .side-panel-container {
-                //     width: 20rem;
-                // }
+                flex-grow: 1;
+                //width: 100%;
+
+                .kanban-board-container {
+                    padding: 0;
+                    background-color: #fafafb;
+                }
+                .chat-page-container {
+                    padding: 0;
+                    position: relative;
+                    height: 30rem;
+                }
+                .newsfeed-page-container {
+                    padding: 0;
+                }
             }
         }
     }

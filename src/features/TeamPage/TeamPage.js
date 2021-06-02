@@ -9,6 +9,7 @@ import {
   CTabContent,
   CTabPane,
   CTabs,
+  CToggler,
   CTooltip,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
@@ -16,25 +17,26 @@ import ListFileTable from "../../shared_components/MySharedComponents/ListFileTa
 import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
 import KanbanBoard from "../KanbanBoard/KanbanBoard";
 import TeamTasks from "./Components/TeamTasks/TeamTasks";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TeamLoading from "./TeamLoading/TeamLoading";
 import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
 import BoardsPage from "./Components/BoardsPage/BoardsPage";
 import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
 import { useHistory, useLocation } from "react-router";
-import queryString from 'query-string';
-
+import queryString from "query-string";
+import { changeStateSideBar } from "src/appSlice";
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
+  const dispatch = useDispatch();
   const [isOpeningBoard, setIsOpeningBoard] = useState(false);
   const teamLoading = useSelector((state) => state.app.teamLoading);
   const [boardId, setBoardId] = useState(null);
   const history = useHistory();
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
-
-  const [active, setActive] = useState(()=>{
+  const mySidebarShow = useSelector((state) => state.app.mySidebarShow);
+  const [active, setActive] = useState(() => {
     if (queryParams != null) {
       switch (queryParams.tab) {
         case "feed":
@@ -52,12 +54,11 @@ function TeamPage(props) {
         default:
           return 0;
       }
-    }
-    else {
+    } else {
       return 0;
     }
   });
-  
+
   console.log(queryParams);
 
   function openBoard(boardId) {
@@ -70,8 +71,7 @@ function TeamPage(props) {
 
   const onActiveTabChange = (index) => {
     setActive(index);
-
-  }
+  };
 
   useEffect(() => {
     let tab = "feed";
@@ -92,7 +92,7 @@ function TeamPage(props) {
         tab = "members";
         break;
       case 5:
-        tab = "statistics"
+        tab = "statistics";
         break;
       default:
         break;
@@ -100,23 +100,40 @@ function TeamPage(props) {
 
     history.push({
       pathname: history.location.pathname,
-      search: `tab=${tab}`
-    })
-  }, [active])
+      search: `tab=${tab}`,
+    });
+  }, [active]);
   const boardRender = () => {
-    return <div>
-      {isOpeningBoard ? (
-        <TeamTasks boardId={boardId} goBackListBoards={goBackListBoards} />
-      ) : (
-        <BoardsPage openBoard={openBoard} />
-      )}
-      {false && <BoardsPage openBoard={openBoard} />}
-    </div>
-  }
+    return (
+      <div>
+        {isOpeningBoard ? (
+          <TeamTasks boardId={boardId} goBackListBoards={goBackListBoards} />
+        ) : (
+          <BoardsPage openBoard={openBoard} />
+        )}
+        {false && <BoardsPage openBoard={openBoard} />}
+      </div>
+    );
+  };
+  const toggleMySidebar = () => {
+    const val = [true, "responsive"].includes(mySidebarShow)
+      ? false
+      : "responsive";
+    console.log("val toggleSidebar: ", val);
+    dispatch(changeStateSideBar({ type: "sidebar", mySidebarShow: val }));
+  };
+  const toggleMySidebarMobile = () => {
+    const val = [false, "responsive"].includes(mySidebarShow)
+      ? true
+      : "responsive";
+    console.log("val toggleSidebar: ", val);
+    dispatch(changeStateSideBar({ type: "sidebar", mySidebarShow: val }));
+  };
+
   return (
     <div className="team-container">
       <CTabs activeTab={active} onActiveTabChange={onActiveTabChange}>
-        <CNav variant="tabs">
+        <CNav className="d-sm-down-none" variant="tabs">
           <CNavItem>
             <CTooltip content="Bản tin nhóm" placement="right">
               <CNavLink>
@@ -166,26 +183,29 @@ function TeamPage(props) {
             </CTooltip>
           </CNavItem>
         </CNav>
-        <CTabContent>
-          <CTabPane>
-            {active === 0 ? <NewsFeedPage isInTeam={true} /> : null}
-          </CTabPane>
-          <CTabPane>
-            {active === 1 ? boardRender() : null}
-          </CTabPane>
-          <CTabPane>
-            {active === 2 ? <ChatPage isInTeam={true} tabActiveTeam={active} /> : null}
-          </CTabPane>
-          <CTabPane>
-            {active === 3 ? <ListFileTable /> : null}
-          </CTabPane>
-          <CTabPane>
-            {active === 4 ? <TeamMembersList /> : null}
-          </CTabPane>
-          <CTabPane>
-            {active === 5 ? <TeamStatistics /> : null}
-          </CTabPane>
-        </CTabContent>
+        <div className="tab-content-container">
+          <div className="toggle-team-tabs-sidebar-btn">
+            <CIcon
+              className="ml-md-3 d-md-none toggle-icon"
+              onClick={toggleMySidebarMobile}
+              name="cil-menu"
+            />
+          </div>
+          <CTabContent>
+            <CTabPane>
+              {active === 0 ? <NewsFeedPage isInTeam={true} /> : null}
+            </CTabPane>
+            <CTabPane>{active === 1 ? boardRender() : null}</CTabPane>
+            <CTabPane>
+              {active === 2 ? (
+                <ChatPage isInTeam={true} tabActiveTeam={active} />
+              ) : null}
+            </CTabPane>
+            <CTabPane>{active === 3 ? <ListFileTable /> : null}</CTabPane>
+            <CTabPane>{active === 4 ? <TeamMembersList /> : null}</CTabPane>
+            <CTabPane>{active === 5 ? <TeamStatistics /> : null}</CTabPane>
+          </CTabContent>
+        </div>
       </CTabs>
       <TeamLoading isLoading={teamLoading} />
     </div>

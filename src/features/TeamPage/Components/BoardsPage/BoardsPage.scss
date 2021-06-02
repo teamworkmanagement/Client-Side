@@ -38,6 +38,7 @@
 
             input {
                 border-radius: $borderRadius;
+                padding-right: 1.8rem;
             }
             .icon-search {
                 margin-left: -1.5rem;
@@ -102,4 +103,42 @@
             }
         }
     }
+    // .nodata-image {
+    //     margin-top: 3rem;
+    //     display: flex;
+    //     flex-direction: column;
+    //     justify-content: center;
+    //     align-items: center;
+    //     height: 100%;
+    //     .icon-group {
+    //         display: flex;
+    //         flex-direction: column;
+    //         align-items: flex-end;
+    //         .icon-task {
+    //             width: 5rem;
+    //             height: 5rem;
+    //             color: $subTextColor;
+    //         }
+    //         .icon-search {
+    //             width: 2.5rem;
+    //             height: 2.5rem;
+    //             color: $subTextColor;
+    //             margin-top: -1.5rem;
+    //             margin-right: -1.5rem;
+    //         }
+    //     }
+    //     .noti-infor {
+    //         font-size: 130%;
+    //         text-align: center;
+    //         font-weight: bold;
+    //         color: $subTextColor;
+    //     }
+    //     .create-btn {
+    //         @include NormalButtonStyle;
+    //         font-size: 120%;
+    //         padding: 0.5rem 1.2rem;
+    //         margin-top: 0.5rem;
+    //         font-weight: bold;
+    //     }
+    // }
 }

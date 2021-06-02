@@ -332,7 +332,13 @@ function NewsFeedPage(props) {
             </CCol>
           </CRow>
         </CCol>
-        <CCol xl="3" lg="3" md="3" sm="0" className="side-panel-col">
+        <CCol
+          xl="3"
+          lg="3"
+          md="3"
+          sm="0"
+          className="d-sm-down-none side-panel-col"
+        >
           <div className="side-panel-container">
             <div
               className="create-post-btn"

@@ -16,7 +16,7 @@ import {
   CTooltip,
   CToast,
   CToastBody,
-  CToaster
+  CToaster,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { Redirect, useHistory, useParams } from "react-router";
@@ -26,6 +26,9 @@ import chatApi from "src/api/chatApi";
 import { useSelector } from "react-redux";
 import uuid from "src/utils/file/uuid";
 import StartChatMembers from "../StartChatMembers/StartChatMembers";
+import { BsSearch } from "react-icons/bs";
+import { AiOutlineTeam } from "react-icons/ai";
+import { VscSearchStop } from "react-icons/vsc";
 
 TeamMembersList.propTypes = {};
 
@@ -112,14 +115,13 @@ function TeamMembersList(props) {
   const [showInvite, setShowInvite] = useState(false);
   const [showStartChat, setShowStartChat] = useState(false);
   const [toasts, setToasts] = useState([]);
-  const [toastContent, setToastContent] = useState('');
+  const [toastContent, setToastContent] = useState("");
   const [pages, setPages] = useState(1);
   const [fixedMembers, setFixedMembers] = useState([]);
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
   const { teamId } = useParams();
 
   const [redirect, setRedirect] = useState(null);
-
 
   const toasters = (() => {
     return toasts.reduce((toasters, toast) => {
@@ -130,37 +132,40 @@ function TeamMembersList(props) {
   })();
 
   useEffect(() => {
-    if (!teamId)
-      return;
-    teamApi.getAdmin(teamId).then(res => {
-      console.log(res);
-      setAdmin(res.data);
-    }).catch(err => {
-
-    })
+    if (!teamId) return;
+    teamApi
+      .getAdmin(teamId)
+      .then((res) => {
+        console.log(res);
+        setAdmin(res.data);
+      })
+      .catch((err) => {});
 
     const params = {
       teamId: teamId,
       pageNumber: 1,
       pageSize: 1,
-    }
+    };
 
-    teamApi.getUsersPagingByTeam({ params }).then(res => {
-      console.log(res.data.items);
-      setMembers(res.data.items);
-      setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
-    }).catch(err => { })
+    teamApi
+      .getUsersPagingByTeam({ params })
+      .then((res) => {
+        console.log(res.data.items);
+        setMembers(res.data.items);
+        setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+      })
+      .catch((err) => {});
 
-    teamApi.getTeam(teamId).then(res => {
-      setTeam(res.data);
-    }).catch(err => {
-
-    })
-  }, [teamId])
+    teamApi
+      .getTeam(teamId)
+      .then((res) => {
+        setTeam(res.data);
+      })
+      .catch((err) => {});
+  }, [teamId]);
 
   const currentPageChange = (index) => {
-    if (index === 0)
-      return;
+    if (index === 0) return;
     console.log(index);
     setCurrentPage(index);
 
@@ -168,18 +173,21 @@ function TeamMembersList(props) {
       teamId: teamId,
       pageSize: 1,
       pageNumber: index,
-    }
+    };
 
-    teamApi.getUsersPagingByTeam({ params }).then(res => {
-      console.log(res.data.items);
-      setMembers(res.data.items);
-      setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
-    }).catch(err => { })
-  }
+    teamApi
+      .getUsersPagingByTeam({ params })
+      .then((res) => {
+        console.log(res.data.items);
+        setMembers(res.data.items);
+        setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+      })
+      .catch((err) => {});
+  };
 
   const onClose = (e) => {
-    if (!e)
-      return;
+    setShowInvite(false);
+    if (!e) return;
     setToastContent(e);
     setToasts([
       ...toasts,
@@ -188,78 +196,92 @@ function TeamMembersList(props) {
         autohide: 1000,
         closeButton: false,
         fade: true,
-        color: "info"
+        color: "info",
       },
     ]);
-    setShowInvite(false);
-  }
+    //setShowInvite(false); //ở đây chương trình ko chạy tới dc
+  };
 
   const nhanTin = (item) => {
     console.log(item);
-    chatApi.checkDoubleExists({
-      userOneId: user.id,
-      userTwoId: item.userId,
-    }).then(res => {
-      if (res.data.exists) {
-        console.log(res.data);
-        /*history.push({
+    chatApi
+      .checkDoubleExists({
+        userOneId: user.id,
+        userTwoId: item.userId,
+      })
+      .then((res) => {
+        if (res.data.exists) {
+          console.log(res.data);
+          /*history.push({
           pathname: '/chat',
           search: `g=${res.data.groupChatId}`
         });*/
-        //history.push(`http://localhost:4155/chat?g=${res.data.groupChatId}`);
-        //history.replace(`/chat?g=${res.data.groupChatId}`);
-        setRedirect(`/chat?g=${res.data.groupChatId}`);
-      }
-      else {
-        console.log(res.data);
-        setShowStartChat(true);
+          //history.push(`http://localhost:4155/chat?g=${res.data.groupChatId}`);
+          //history.replace(`/chat?g=${res.data.groupChatId}`);
+          setRedirect(`/chat?g=${res.data.groupChatId}`);
+        } else {
+          console.log(res.data);
+          setShowStartChat(true);
 
-        setFixedMembers([{
-          value: user.id,
-          label: user.fullName,
-          img: user.userAvatar,
-          isFixed: true,
-        }, {
-          value: item.userId,
-          label: item.userFullname,
-          img: item.userImageUrl,
-          isFixed: true,
-        }]);
-      }
-
-
-    }).catch(err => {
-
-    });
-  }
-
+          setFixedMembers([
+            {
+              value: user.id,
+              label: user.fullName,
+              img: user.userAvatar,
+              isFixed: true,
+            },
+            {
+              value: item.userId,
+              label: item.userFullname,
+              img: item.userImageUrl,
+              isFixed: true,
+            },
+          ]);
+        }
+      })
+      .catch((err) => {});
+  };
 
   const onStartChatClose = () => {
     setShowStartChat(false);
     console.log("zzzzzzzz");
+  };
+
+  function NoItemView() {
+    return (
+      <div className="no-item-view-table">
+        <div className="nodata-image">
+          <div className="icon-group">
+            <AiOutlineTeam className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">Chưa có thành viên nào trong nhóm</div>
+          <div className="create-btn">Mời thành viên</div>
+        </div>
+      </div>
+    );
   }
   return (
     <div className="team-members-container">
-      {redirect ? <Redirect from='/team' to={redirect} /> : null}
+      {redirect ? <Redirect from="/team" to={redirect} /> : null}
+
       <div className="members-list-header">
-        <div>
-          <label>Team Code</label>
-          <strong>{team.teamCode}</strong>
-        </div>
-        <div className="search-bar-container">
-          <div className="input-container">
-            <CInput
-              class="input-field"
-              placeholder="...tìm thành viên"
-              type="text"
-            />
-            <div className="input-actions-group">
-              <CIcon name="cil-search" />
-            </div>
-          </div>
-        </div>
         <div className="other-actions">
-          <div onClick={() => setShowInvite(true)} className="add-btn add-list-btn">
+          <div className="lookup-input">
+            <CInput
+              type="text"
+              name="teamName"
+              placeholder="Tìm công việc..."
+            />
+            <BsSearch className="icon-search" />
+          </div>
+          <div
+            className="add-btn add-list-btn"
+            onClick={() => {
+              setShowInvite(true);
+            }}
+          >
             <CIcon name="cil-plus" />
             Mời thành viên
           </div>
@@ -275,6 +297,7 @@ function TeamMembersList(props) {
                 <CIcon name="cil-list" />
               </CButton>
             </CTooltip>
+
             <CTooltip placement="top" content="Lưới">
               <CButton
                 className={`last mode-btn ${showMode === 2 && "active"}`}
@@ -291,10 +314,7 @@ function TeamMembersList(props) {
         <CCol lg="3" md="12" className="col-leader">
           <div className="leader-infor-container d-md-down-none">
             <div className="label">Trưởng nhóm </div>
-            <img
-              alt=""
-              src={admin.userImageUrl}
-            />
+            <img alt="" src={admin.userImageUrl} />
             <div className="leader-name">{admin.userFullname}</div>
             <div className="leader-email">{admin.userEmail}</div>
           </div>
@@ -321,7 +341,9 @@ function TeamMembersList(props) {
                         />
 
                         <div className="member-infor">
-                          <div className="member-name">{admin.userFullname}</div>
+                          <div className="member-name">
+                            {admin.userFullname}
+                          </div>
                           <div className="member-email">{admin.userEmail}</div>
                         </div>
                       </div>
@@ -332,9 +354,7 @@ function TeamMembersList(props) {
                   return (
                     <td>
                       <div className="member-role">
-                        <div
-                          className={`role-color leader`}
-                        ></div>
+                        <div className={`role-color leader`}></div>
                         Trưởng nhóm
                       </div>
                     </td>
@@ -354,7 +374,10 @@ function TeamMembersList(props) {
                             aria-labelledby="dropdownMenuButton"
                             placement="bottom-end"
                           >
-                            <CDropdownItem className="first" onClick={() => nhanTin(admin)}>
+                            <CDropdownItem
+                              className="first"
+                              onClick={() => nhanTin(admin)}
+                            >
                               <CIcon name="cil-send" />
                               Nhắn tin
                             </CDropdownItem>
@@ -382,6 +405,7 @@ function TeamMembersList(props) {
             <CDataTable
               items={members}
               fields={fields}
+              noItemsViewSlot={NoItemView()}
               scopedSlots={{
                 infor: (item) => {
                   return (
@@ -405,9 +429,7 @@ function TeamMembersList(props) {
                   return (
                     <td onClick={() => navigateToProfile(item)}>
                       <div className="member-role">
-                        <div
-                          className={`role-color`}
-                        ></div>
+                        <div className={`role-color`}></div>
                         Thành viên
                       </div>
                     </td>
@@ -427,7 +449,10 @@ function TeamMembersList(props) {
                             aria-labelledby="dropdownMenuButton"
                             placement="bottom-end"
                           >
-                            <CDropdownItem className="first" onClick={() => nhanTin(item)}>
+                            <CDropdownItem
+                              className="first"
+                              onClick={() => nhanTin(item)}
+                            >
                               <CIcon name="cil-send" />
                               Nhắn tin
                             </CDropdownItem>
@@ -447,20 +472,26 @@ function TeamMembersList(props) {
                 },
               }}
             />
-            <CPagination
-              className="pagination-team-members"
-              activePage={currentPage}
-              pages={pages}
-              onActivePageChange={currentPageChange}
-              doubleArrows={false}
-              dots
-            />
+            {members.length > 0 && (
+              <CPagination
+                className="pagination-team-members"
+                activePage={currentPage}
+                pages={pages}
+                onActivePageChange={currentPageChange}
+                doubleArrows={false}
+                dots
+              />
+            )}
           </div>
         </CCol>
       </CRow>
       <div>
         {Object.keys(toasters).map((toasterKey) => (
-          <CToaster color="bg-info" position={toasterKey} key={"toaster" + toasterKey}>
+          <CToaster
+            color="bg-info"
+            position={toasterKey}
+            key={"toaster" + toasterKey}
+          >
             {toasters[toasterKey].map((toast, key) => {
               return (
                 <CToast show={true} autohide={2000} fade={true}>
@@ -472,7 +503,11 @@ function TeamMembersList(props) {
         ))}
       </div>
       <InviteMemberModal showAddInvite={showInvite} onClose={onClose} />
-      <StartChatMembers showStartChat={showStartChat} fixedMembers={fixedMembers} onModalClose={onStartChatClose} />
+      <StartChatMembers
+        showStartChat={showStartChat}
+        fixedMembers={fixedMembers}
+        onModalClose={onStartChatClose}
+      />
     </div>
   );
 }

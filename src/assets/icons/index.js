@@ -167,6 +167,7 @@ import {
   cilExitToApp,
   cilHealing,
   cilInfo,
+  cilMenu,
   cilGroup, //myimport
   cilNewspaper,
   cilChatBubble,
@@ -227,6 +228,7 @@ export const icons = Object.assign(
     cilClipboard,
     cilPin,
     cilInfo,
+    cilMenu,
     cilNewspaper, //myexport
     cilAlignCenter,
     cilAlignLeft,

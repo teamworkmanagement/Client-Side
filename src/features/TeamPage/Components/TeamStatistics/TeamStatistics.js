@@ -234,20 +234,21 @@ function TeamStatistics(props) {
 
   const { teamId } = useParams();
   useEffect(() => {
-    teamApi.getBoardsByTeam(teamId).then(res => {
-      console.log(res.data);
-      const boards = res.data.map(x => {
-        return {
-          value: x.kanbanBoardId,
-          label: x.kanbanBoardName,
-          tasksCount: x.tasksCount,
-        };
+    teamApi
+      .getBoardsByTeam(teamId)
+      .then((res) => {
+        console.log(res.data);
+        const boards = res.data.map((x) => {
+          return {
+            value: x.kanbanBoardId,
+            label: x.kanbanBoardName,
+            tasksCount: x.tasksCount,
+          };
+        });
+
+        setListBoards(boards);
       })
-
-      setListBoards(boards);
-    }).catch(err => {
-
-    })
+      .catch((err) => {});
   }, []);
 
   return (
@@ -262,7 +263,7 @@ function TeamStatistics(props) {
             components={{ Option: Option }}
             placeholder="Chọn bảng công việc..."
             options={listBoards}
-            onInputChange={() => { }}
+            onInputChange={() => {}}
             onChange={onChangeSelectedBoard}
           />
         </CCol>

@@ -32,6 +32,9 @@
         .lookup-input {
             display: flex;
             align-items: center;
+            input {
+                padding-right: 1.8rem;
+            }
             .icon-search {
                 margin-left: -2rem;
             }

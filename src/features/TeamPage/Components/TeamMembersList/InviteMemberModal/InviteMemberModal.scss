@@ -1,10 +1,11 @@
-.modal {
+@import "../../../../../shared_components/scss/style.scss";
+.modal.modal-invite-member {
     .modal-dialog.modal-sm {
         display: flex;
         justify-content: center;
         .modal-content {
             width: max-content;
-            border-radius: 0.625rem;
+            border-radius: $borderRadius;
             margin-top: 10rem;
             .modal-header {
                 font-weight: 500;
@@ -19,15 +20,12 @@
                     font-weight: 500;
                 }
                 input {
-                    border-radius: 0.625rem;
+                    border-radius: $borderRadius;
                     width: 15rem;
+                    margin: 0;
                 }
                 .add-card-btn {
-                    background-color: #3e79f7;
-                    color: white;
-                    border-radius: 0.625rem;
-                    margin-left: 1rem;
-                    padding: 0.5rem 1rem !important;
+                    @include NormalButtonStyle;
                 }
             }
         }

@@ -93,7 +93,7 @@ function TeamTasks(props) {
                 color="secondary"
                 onClick={() => switchShowMode(3)}
               >
-                <CIcon name="cil-chart" />
+                <CIcon name="cil-chart" className="rotate-90" />
               </CButton>
             </CTooltip>
           </CButtonGroup>

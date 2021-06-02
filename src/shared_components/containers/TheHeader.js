@@ -38,12 +38,6 @@ const TheHeader = () => {
       ? false
       : "responsive";
     dispatch(changeState({ type: "set", sidebarShow: val }));
-  };
-  const toggleMySidebar = () => {
-    const val = [true, "responsive"].includes(mySidebarShow)
-      ? false
-      : "responsive";
-    console.log("val toggleSidebar: ", val);
     dispatch(changeStateSideBar({ type: "sidebar", mySidebarShow: val }));
   };
 
@@ -53,13 +47,6 @@ const TheHeader = () => {
       : "responsive";
 
     dispatch(changeState({ type: "set", sidebarShow: val }));
-  };
-  const toggleMySidebarMobile = () => {
-    const val = [false, "responsive"].includes(mySidebarShow)
-      ? true
-      : "responsive";
-
-    dispatch(changeStateSideBar({ type: "sidebar", mySidebarShow: val }));
   };
 
   const changeDarkMode = () => {
@@ -75,18 +62,8 @@ const TheHeader = () => {
       />
       <CToggler
         inHeader
-        className="ml-md-3 d-lg-none"
-        onClick={toggleMySidebarMobile}
-      />
-      <CToggler
-        inHeader
         className="ml-3 d-md-down-none"
         onClick={toggleSidebar}
-      />
-      <CToggler
-        inHeader
-        className="ml-3 d-md-down-none"
-        onClick={toggleMySidebar}
       />
       {/*<CHeaderBrand className="mx-auto d-lg-none" to="/">
         <CIcon name="logo" height="48" alt="Logo" />

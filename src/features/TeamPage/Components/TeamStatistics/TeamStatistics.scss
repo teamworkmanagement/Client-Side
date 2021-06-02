@@ -1,3 +1,4 @@
+@import "../../../../shared_components/scss/style.scss";
 .team-statistics-container {
     .header-label {
         //font-weight: bold;
@@ -17,9 +18,8 @@
         }
     }
     .chart-progress-container {
-        background-color: white;
-        border-radius: 0.625rem;
-        border: 1px solid #e6ebf1;
+        @include CardStyle;
+        padding: 0;
         margin-bottom: 1rem;
         .chart-header {
             padding: 1rem;
@@ -31,47 +31,12 @@
                 font-weight: bold;
             }
             .timeline-mode {
+                @include TimelineModeGroupButton;
                 width: 8rem;
                 flex-grow: 1;
-                .btn-group {
-                    .btn {
-                        padding: 0.3rem 0.6rem;
-                        border-color: #5186f8;
-                        color: #5186f8;
-                        &:hover {
-                            background-color: #ebf1fe;
-                        }
-                        &.active {
-                            background-color: #5186f8;
-                            color: white;
-                        }
-                        &:focus {
-                            box-shadow: 0 0 0 0.2rem #ebf1fe;
-                        }
-                        &:first-child {
-                            border-top-left-radius: 0.625rem;
-                            border-bottom-left-radius: 0.625rem;
-                        }
-                        &:last-child {
-                            border-top-right-radius: 0.625rem;
-                            border-bottom-right-radius: 0.625rem;
-                        }
-                    }
-                }
             }
             .export-btn {
-                border-radius: 0.625rem;
-                border: 1px solid #5186f8;
-                background-color: white;
-                padding: 0.3rem 1rem;
-                color: #5186f8;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                &:hover {
-                    background-color: #5186f8;
-                    color: white;
-                }
+                @include NormalButtonStyle;
                 .c-icon {
                     margin-left: 0.5rem;
                 }
@@ -83,9 +48,8 @@
         }
     }
     .chart-contribute-container {
-        background-color: white;
-        border-radius: 0.625rem;
-        border: 1px solid #e6ebf1;
+        @include CardStyle;
+        padding: 0;
         margin-bottom: 2rem;
         .chart-header {
             padding: 1rem;
@@ -97,47 +61,12 @@
                 font-weight: bold;
             }
             .timeline-mode {
+                @include TimelineModeGroupButton;
                 width: 8rem;
                 flex-grow: 1;
-                .btn-group {
-                    .btn {
-                        padding: 0.3rem 0.6rem;
-                        border-color: #5186f8;
-                        color: #5186f8;
-                        &:hover {
-                            background-color: #ebf1fe;
-                        }
-                        &.active {
-                            background-color: #5186f8;
-                            color: white;
-                        }
-                        &:focus {
-                            box-shadow: 0 0 0 0.2rem #ebf1fe;
-                        }
-                        &:first-child {
-                            border-top-left-radius: 0.625rem;
-                            border-bottom-left-radius: 0.625rem;
-                        }
-                        &:last-child {
-                            border-top-right-radius: 0.625rem;
-                            border-bottom-right-radius: 0.625rem;
-                        }
-                    }
-                }
             }
             .export-btn {
-                border-radius: 0.625rem;
-                border: 1px solid #5186f8;
-                background-color: white;
-                padding: 0.3rem 1rem;
-                color: #5186f8;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                &:hover {
-                    background-color: #5186f8;
-                    color: white;
-                }
+                @include NormalButtonStyle;
                 .c-icon {
                     margin-left: 0.5rem;
                 }

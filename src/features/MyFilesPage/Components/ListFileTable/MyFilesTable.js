@@ -4,6 +4,7 @@ import moment from "moment";
 import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
 import React, { useEffect, useRef, useState } from "react";
+import { VscSearchStop, VscSymbolFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useParams } from "react-router";
 import fileApi from "src/api/fileApi";
@@ -134,7 +135,7 @@ function MyFilesTable(props) {
           OwnerId: user.id,
           PageNumber: page,
           PageSize: pageSize,
-          OwnerType: "user"
+          OwnerType: "user",
         };
         const outPut = await fileApi.getFile({ params });
 
@@ -168,6 +169,22 @@ function MyFilesTable(props) {
     if (i !== 0) setPage(i);
   };
 
+  function NoItemView() {
+    return (
+      <div className="no-item-view-table">
+        <div className="nodata-image">
+          <div className="icon-group">
+            <VscSymbolFile className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">Chưa có tệp nào trong nhóm</div>
+          <div className="create-btn">Tải tệp mới lên</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
       <div onClick={onClick} className="upload-container">
@@ -189,6 +206,7 @@ function MyFilesTable(props) {
         columnFilter
         //tableFilter
         //itemsPerPageSelect
+        noItemsViewSlot={NoItemView()}
         itemsPerPage={5}
         hover
         sorter

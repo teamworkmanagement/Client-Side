@@ -1,10 +1,11 @@
+@import "../../../../shared_components/scss/style.scss";
 .modal {
     .modal-dialog.modal-sm {
         display: flex;
         justify-content: center;
         .modal-content {
             width: max-content;
-            border-radius: 0.625rem;
+            border-radius: $borderRadius;
             margin-top: 10rem;
             .modal-header {
                 font-weight: 500;
@@ -19,15 +20,35 @@
                     font-weight: 500;
                 }
                 input {
-                    border-radius: 0.625rem;
+                    border-radius: $borderRadius;
                     width: 15rem;
+                    margin-bottom: 1rem;
                 }
-                .add-card-btn {
-                    background-color: #3e79f7;
-                    color: white;
-                    border-radius: 0.625rem;
-                    margin-left: 1rem;
-                    padding: 0.5rem 1rem !important;
+                //react-select
+                .select-css {
+                    .css-1rhbuit-multiValue {
+                        border-radius: $borderRadius;
+
+                        //select-item-content
+                        .css-12jo7m5 {
+                            padding: 0.2rem;
+                            img {
+                                width: 2rem;
+                                height: 2rem;
+                                border-radius: 100px;
+                                margin-right: 0.3rem;
+                            }
+                        }
+                        //select-item button remove
+                        .css-xb97g8 {
+                            border-top-right-radius: $borderRadius;
+                            border-bottom-right-radius: $borderRadius;
+                        }
+                    }
+                }
+                .create-chat-btn {
+                    @include NormalButtonStyle;
+                    margin-top: 1rem;
                 }
             }
         }

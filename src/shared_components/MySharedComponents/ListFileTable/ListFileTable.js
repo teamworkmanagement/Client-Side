@@ -5,6 +5,7 @@ import moment from "moment";
 import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
 import React, { useEffect, useRef, useState } from "react";
+import { VscSearchStop, VscSymbolFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useParams } from "react-router";
 import fileApi from "src/api/fileApi";
@@ -446,7 +447,7 @@ function ListFileTable(props) {
         setDatas(dts);
         setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         console.log(outPut.data.items);
-      } catch (err) { }
+      } catch (err) {}
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -458,6 +459,22 @@ function ListFileTable(props) {
   const setActivePage = (i) => {
     if (i !== 0) setPage(i);
   };
+
+  function NoItemView() {
+    return (
+      <div className="no-item-view-table">
+        <div className="nodata-image">
+          <div className="icon-group">
+            <VscSymbolFile className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">Chưa có tệp nào trong nhóm</div>
+          <div className="create-btn">Tải tệp mới lên</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
@@ -480,6 +497,7 @@ function ListFileTable(props) {
         columnFilter
         //tableFilter
         //itemsPerPageSelect
+        noItemsViewSlot={NoItemView()}
         itemsPerPage={5}
         hover
         sorter

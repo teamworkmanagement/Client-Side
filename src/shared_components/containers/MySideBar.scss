@@ -1,0 +1,36 @@
+@import "../../shared_components/scss/style.scss";
+.sidebar-team-tabs {
+    .nav-tab-item {
+        padding: 1rem;
+        cursor: pointer;
+        .tab-item-link {
+            display: flex;
+            align-items: center;
+            padding: 0;
+            .nav-link-icon {
+                margin-top: -0.1rem;
+                margin-right: 1rem;
+                color: $textColor;
+            }
+            .tab-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: $textColor;
+            }
+        }
+        &:hover {
+            background-color: $lighterBaseColor;
+            border-right: 3px solid $baseColor;
+
+            .tab-item-link {
+                .nav-link-icon {
+                    color: $baseColor;
+                }
+                .tab-name {
+                    color: $baseColor;
+                }
+            }
+        }
+    }
+}
