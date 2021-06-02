@@ -16,13 +16,13 @@ import ChatList from "./Components/ChatList/ChatList";
 import MessageList from "./Components/MessageList/MessageList";
 import { useDispatch, useSelector } from "react-redux";
 import { getGroupChatForUser, searchGroupChatForUser, setCurrentGroup, setLoadDone } from "./chatSlice";
-import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import CreateNewConversationModal from "./Components/CreateNewConversation/CreateNewConversation";
 import { useHistory, useLocation } from "react-router";
 import queryString from 'query-string';
-import AddMembers from "./Components/AddMembers/CreateNewConversation/AddMembers";
+import AddMembers from "./Components/AddMembers/AddMembers";
+import uuid from "src/utils/file/uuid";
 
 ChatPage.propTypes = {};
 
@@ -152,7 +152,7 @@ function ChatPage(props) {
         return;
       }
 
-      const folder = uuidv4();
+      const folder = uuid();
       const params = {
         Body: file,
         Bucket: "teamappstorage",
@@ -189,7 +189,7 @@ function ChatPage(props) {
   const onPickImage = (e) => {
     const file = e.target.files[0];
     const storageRef = firebaseConfig.storage().ref();
-    const fileRef = storageRef.child(`${uuidv4()}/${file.name}`);
+    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
     fileRef.put(file).then((data) => {
       console.log("Uploaded a file");
       data.ref.getDownloadURL().then((url) => {
