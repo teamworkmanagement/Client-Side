@@ -1,33 +1,26 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  CCreateElement,
   CSidebar,
-  CSidebarBrand,
   CSidebarNav,
-  CSidebarNavDivider,
-  CSidebarNavTitle,
-  CSidebarMinimizer,
-  CSidebarNavDropdown,
   CSidebarNavItem,
   CNavItem,
   CNavLink,
 } from "@coreui/react";
-import "./MySideBar.scss";
+import "./TeamTabsSideBar.scss";
 
 import CIcon from "@coreui/icons-react";
 
 // sidebar nav config
-import navigation from "./_nav";
-import { changeStateSideBar } from "src/appSlice";
+import { changeStateTeamTabsSidebar } from "src/appSlice";
 
-const MySideBar = (props) => {
+const TeamTabsSideBar = (props) => {
   const dispatch = useDispatch();
-  const show = useSelector((state) => state.app.mySidebarShow);
+  const show = useSelector((state) => state.app.teamTabsSidebarShow);
 
   const onChange = (val) => {
-    const param = { type: "sidebar", mySidebarShow: val };
-    const action = changeStateSideBar(param);
+    const param = { type: "teamtabssidebar", teamTabsSidebarShow: val };
+    const action = changeStateTeamTabsSidebar(param);
     dispatch(action);
   };
   return (
@@ -78,4 +71,4 @@ const MySideBar = (props) => {
   );
 };
 
-export default React.memo(MySideBar);
+export default React.memo(TeamTabsSideBar);

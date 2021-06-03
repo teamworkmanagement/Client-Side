@@ -42,7 +42,7 @@ function TeamTasks(props) {
       <div className="tasks-header">
         <div className="goback-label" onClick={goBackListBoards}>
           <AiOutlineLeft className="icon-goback" />
-          <div className="label-text">Trở lại danh sách công việc</div>
+          <div className="label-text">Trở lại danh sách bảng công việc</div>
         </div>
         <div className="other-actions">
           <div className="lookup-input">

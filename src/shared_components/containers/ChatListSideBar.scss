@@ -1,0 +1,49 @@
+@import "../../shared_components/scss/style.scss";
+.sidebar-chat-list {
+    background-color: white !important;
+    .chat-list {
+        width: 100%;
+        border-right: $borderStyle;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .chat-list-header {
+            height: 3rem;
+            .input-group.chat-list-search {
+                height: 100%;
+                display: flex;
+                align-items: stretch;
+                border-bottom: $borderStyle;
+                input.form-control {
+                    height: 100%;
+                    border-bottom-left-radius: 0;
+                    border: none;
+                }
+                .input-group-append {
+                    button {
+                        background-color: white;
+                        border-radius: 0;
+                        border: none;
+                        .icon-search {
+                            color: $subTextColor;
+                        }
+                        &:hover {
+                            .icon-search {
+                                color: $textColor;
+                                transform: scale(1.1);
+                                transition: $baseTransition;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .btn-add-chat {
+            @include NormalButtonStyle;
+            margin: 1rem;
+            .c-icon {
+                margin-right: 0.3rem;
+            }
+        }
+    }
+}

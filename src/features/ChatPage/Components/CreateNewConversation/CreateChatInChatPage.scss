@@ -1,10 +1,9 @@
 @import "../../../../shared_components/scss/style.scss";
-.modal.create-chat-with-member-modal {
+.modal.create-chat-in-chat-page {
     .modal-dialog.modal-sm {
         display: flex;
         justify-content: center;
         .modal-content {
-            //width: max-content;
             border-radius: $borderRadius;
             margin-top: 10rem;
             .modal-header {
@@ -14,6 +13,7 @@
                 display: flex;
                 align-items: center;
                 padding: 1.5rem;
+                width: max-content;
                 .name-label {
                     margin-right: 1rem;
                     font-weight: 500;
@@ -21,6 +21,7 @@
                 input {
                     border-radius: $borderRadius;
                     width: 100%;
+                    //width: 15rem;
                     margin-bottom: 1rem;
                 }
                 //react-select

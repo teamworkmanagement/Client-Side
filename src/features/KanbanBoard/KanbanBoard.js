@@ -171,7 +171,7 @@ function KanbanBoard(props) {
 
   return (
     <div>
-      {kanbanLists.length === 0 && (
+      {kanbanLists.length > 0 && (
         <div className="kanban-board-container">
           {/* <CardLoading isLoading={isLoading} /> */}
 
@@ -212,7 +212,7 @@ function KanbanBoard(props) {
         </div>
       )}
 
-      {kanbanLists.length > 0 && (
+      {kanbanLists.length === 0 && (
         <div className="nodata-image">
           <div className="icon-group">
             <RiTableLine className="icon-task" />

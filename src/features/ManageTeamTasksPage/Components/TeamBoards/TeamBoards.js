@@ -110,13 +110,13 @@ function TeamBoards(props) {
   }, []);
 
   return (
-    <div className="list-boards-container">
+    <div className="list-team-boards-container">
       <div className="list-boards-header">
         <div className="lookup-input">
           <CInput
-            class="input-field"
-            placeholder="...tìm danh sách"
             type="text"
+            name="teamName"
+            placeholder="Tìm bảng công việc..."
           />
           <BsSearch className="icon-search" />
         </div>

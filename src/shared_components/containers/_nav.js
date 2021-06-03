@@ -42,7 +42,6 @@ const _nav = [
         name: (
           <div className="manage-mytasks-dropdown-item custom-dropdown-item">
             <CIcon name="cil-user" />
-            <div className="overlay-icon"></div>
             <CIcon name="cil-clipboard" className="icon-task" />
             Công việc của tôi
           </div>
@@ -55,7 +54,6 @@ const _nav = [
         name: (
           <div className="manage-mytasks-dropdown-item custom-dropdown-item">
             <CIcon name="cil-group" />
-            <div className="overlay-icon"></div>
             <CIcon name="cil-clipboard" className="icon-task-group" />
             Công việc trong nhóm
           </div>

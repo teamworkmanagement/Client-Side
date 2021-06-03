@@ -532,7 +532,8 @@ const appSlice = createSlice({
   name: "app",
   initialState: {
     sidebarShow: "responsive",
-    mySidebarShow: "false",
+    teamTabsSidebarShow: "false",
+    chatListSidebarShow: "false",
     currentPostPage: 1,
     darkMode: true,
     kanbanBoardData: initKanbanBoardData,
@@ -553,9 +554,14 @@ const appSlice = createSlice({
         state.sidebarShow = payload.payload.sidebarShow;
       }
     },
-    changeStateSideBar(state, payload) {
-      if (payload.payload.type === "sidebar") {
-        state.mySidebarShow = payload.payload.mySidebarShow;
+    changeStateTeamTabsSidebar(state, payload) {
+      if (payload.payload.type === "teamtabssidebar") {
+        state.teamTabsSidebarShow = payload.payload.teamTabsSidebarShow;
+      }
+    },
+    changeStateChatListSidebar(state, payload) {
+      if (payload.payload.type === "chatlistsidebar") {
+        state.chatListSidebarShow = payload.payload.chatListSidebarShow;
       }
     },
     setNewNoti(state, action) {
@@ -770,6 +776,7 @@ export const {
   updateTask,
   setTeamLoading,
   setNewNoti,
-  changeStateSideBar,
+  changeStateTeamTabsSidebar,
+  changeStateChatListSidebar,
 } = actions; // named export
 export default reducer; // default export

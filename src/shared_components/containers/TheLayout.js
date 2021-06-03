@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
 import ForgotPassword from "../views/pages/forgotpassword/ForgotPassword";
 import MyLogin from "../views/pages/login/MyLogin/MyLogin";
+import ChatListSideBar from "./ChatListSideBar";
 import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
-import MySideBar from "./MySideBar";
+import TeamTabsSideBar from "./TeamTabsSideBar";
 
 const TheLayout = () => {
   return (
     <div className="c-app c-default-layout">
       <TheSidebar />
-      <MySideBar />
+      <TeamTabsSideBar />
+      <ChatListSideBar />
       <div className="c-wrapper">
         <TheHeader />
         <div className="c-body">

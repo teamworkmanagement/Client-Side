@@ -102,6 +102,9 @@
                             &:hover {
                                 @include SideBarItemHover;
                             }
+                            &.c-active {
+                                @include SideBarItemSelected;
+                            }
                         }
                     }
                 }

@@ -30,9 +30,10 @@ $animation-offset: 0s;
         @include NormalButtonStyle;
         justify-content: flex-start;
         width: fit-content;
-        .upload-image {
-            width: 1rem;
-            height: 1rem;
+        .icon-upload {
+            width: 1.1rem;
+            height: 1.1rem;
+            margin-right: 0.1rem;
         }
     }
     .row.my-2.mx-0 {

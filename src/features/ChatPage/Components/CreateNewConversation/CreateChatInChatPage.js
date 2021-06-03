@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import "./CreateConversation.scss";
 import {
   CButton,
   CInput,
@@ -9,15 +8,15 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import Select, { components } from "react-select";
-import AsyncSelect from 'react-select/async';
+import AsyncSelect from "react-select/async";
 
 import { useDispatch, useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
 import { setCurrentGroup, setIsSelected } from "../../chatSlice";
+import "./CreateChatInChatPage.scss";
 
-CreateNewConversationModal.propTypes = {};
-
+CreateChatInChatPage.propTypes = {};
 
 const ValueOption = (props) => (
   <components.MultiValue {...props}>
@@ -48,49 +47,44 @@ export const CustomOption = (props) => {
   );
 };
 
-function CreateNewConversationModal(props) {
-
+function CreateChatInChatPage(props) {
   const dispatch = useDispatch();
 
   const [grChatName, setGrChatName] = useState("");
 
-  const user = useSelector(state => state.auth.currentUser);
-  const [options, setOptions] = useState([{
-    value: user.id,
-    label: user.fullName,
-    img: user.userAvatar,
-    isFixed: true,
-  }]);
+  const user = useSelector((state) => state.auth.currentUser);
+  const [options, setOptions] = useState([
+    {
+      value: user.id,
+      label: user.fullName,
+      img: user.userAvatar,
+      isFixed: true,
+    },
+  ]);
 
   function handleOnClose() {
     setGrChatName("");
     props.onCLoseModal();
   }
 
-  useEffect(() => {
-
-  }, []);
-
+  useEffect(() => {}, []);
 
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
     console.log(e);
     setInputValue(e);
-  }
-
+  };
 
   const styles = {
     multiValue: (base, state) => {
-      return state.data.isFixed ? { ...base, backgroundColor: 'gray' } : base;
+      return state.data.isFixed ? { ...base } : base;
     },
     multiValueLabel: (base, state) => {
-      return state.data.isFixed
-        ? { ...base, fontWeight: 'bold', color: 'white', paddingRight: 6 }
-        : base;
+      return state.data.isFixed ? { ...base } : base;
     },
     multiValueRemove: (base, state) => {
-      return state.data.isFixed ? { ...base, display: 'none' } : base;
+      return state.data.isFixed ? { ...base } : base;
     },
   };
 
@@ -104,79 +98,84 @@ function CreateNewConversationModal(props) {
 
       console.log(res.data);
 
-      return res.data.map(x => {
+      return res.data.map((x) => {
         return {
           value: x.userId,
           label: x.userFullname,
           img: x.userImageUrl,
-        }
-      })
-    } catch (err) {
-
-    }
-  }
+        };
+      });
+    } catch (err) {}
+  };
 
   const loadOptions = async (inputValue, callback) => {
     callback(await filterColors(inputValue));
   };
 
-
   const onCreateGroupChat = async () => {
     console.log(options);
     console.log(grChatName);
-    const members = options.map(option => {
+    const members = options.map((option) => {
       return option.value;
-    })
+    });
 
     if (!grChatName && members.length > 2) {
-      alert('name empty');
+      alert("name empty");
       return;
     }
 
     if (members.length < 2) {
-      alert('more users');
+      alert("more users");
       return;
     }
 
-
     try {
       const res = await chatApi.addChatWithMembers({
-        "members": members,
-        "groupChatName": grChatName,
+        members: members,
+        groupChatName: grChatName,
       });
 
       dispatch(setIsSelected(true));
       dispatch(setCurrentGroup(res.data));
-    }
-    catch (err) {
-
-    }
+    } catch (err) {}
 
     console.log(options);
 
     setGrChatName("");
-    setOptions([{
-      value: user.id,
-      label: user.fullName,
-      img: user.userAvatar,
-      isFixed: true,
-    }]);
+    setOptions([
+      {
+        value: user.id,
+        label: user.fullName,
+        img: user.userAvatar,
+        isFixed: true,
+      },
+    ]);
     props.onCLoseModal();
-  }
+  };
 
   const onChange = (e) => {
     setOptions(e);
-  }
+  };
   const onInputGrChatName = (e) => {
     setGrChatName(e.target.value);
-  }
+  };
   return (
-    <CModal show={props.showAddConversation} onClose={handleOnClose} size="sm">
+    <CModal
+      className="create-chat-in-chat-page"
+      show={props.showAddConversation}
+      onClose={handleOnClose}
+      size="sm"
+    >
       <CModalHeader closeButton>Tạo nhóm chat mới</CModalHeader>
       <CModalBody className="new-card-form">
         <div style={{ width: "21rem" }}>
-          <CInput type="text" placeholder="Tên nhóm chat" value={grChatName} onChange={onInputGrChatName} style={{ width: "21rem" }} />
-          <br></br>
+          <CInput
+            type="text"
+            placeholder="Tên nhóm chat"
+            value={grChatName}
+            onChange={onInputGrChatName}
+          />
+
           <AsyncSelect
             value={options}
             className="select-css"
@@ -190,11 +189,9 @@ function CreateNewConversationModal(props) {
               Option: CustomOption,
               MultiValue: ValueOption,
             }}
-            styles={styles}
           />
-          <br></br>
-          <div onClick={onCreateGroupChat} className="d-flex justify-content-end">
-            <CButton className="btn-info">Tạo nhóm</CButton>
+          <div onClick={onCreateGroupChat} className="create-chat-btn">
+            Tạo nhóm Chat
           </div>
         </div>
       </CModalBody>
@@ -202,4 +199,4 @@ function CreateNewConversationModal(props) {
   );
 }
 
-export default CreateNewConversationModal;
+export default CreateChatInChatPage;

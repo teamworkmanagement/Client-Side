@@ -24,21 +24,37 @@ import {
   TheHeaderDropdownNotif,
   TheHeaderDropdownTasks,
 } from "./index";
-import { changeState, setDarkMode, changeStateSideBar } from "src/appSlice";
+import {
+  changeState,
+  setDarkMode,
+  changeStateTeamTabsSidebar,
+  changeStateChatListSidebar,
+} from "src/appSlice";
 import "./TheHeader.scss";
+import { BsSearch } from "react-icons/bs";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.app.darkMode);
   const sidebarShow = useSelector((state) => state.app.sidebarShow);
-  const mySidebarShow = useSelector((state) => state.app.mySidebarShow);
 
   const toggleSidebar = () => {
     const val = [true, "responsive"].includes(sidebarShow)
       ? false
       : "responsive";
     dispatch(changeState({ type: "set", sidebarShow: val }));
-    dispatch(changeStateSideBar({ type: "sidebar", mySidebarShow: val }));
+    dispatch(
+      changeStateTeamTabsSidebar({
+        type: "teamtabssidebar",
+        teamTabsSidebarShow: val,
+      })
+    );
+    dispatch(
+      changeStateChatListSidebar({
+        type: "chatlistsidebar",
+        chatListSidebarShow: val,
+      })
+    );
   };
 
   const toggleSidebarMobile = () => {
@@ -65,35 +81,17 @@ const TheHeader = () => {
         className="ml-3 d-md-down-none"
         onClick={toggleSidebar}
       />
-      {/*<CHeaderBrand className="mx-auto d-lg-none" to="/">
-        <CIcon name="logo" height="48" alt="Logo" />
-  </CHeaderBrand>*/}
-
-      {/* <CHeaderNav className="d-md-down-none mr-auto">
-        <CHeaderNavItem className="px-3">
-          <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
-        </CHeaderNavItem>
-        <CHeaderNavItem className="px-3">
-          <CHeaderNavLink to="/users">Users</CHeaderNavLink>
-        </CHeaderNavItem>
-        <CHeaderNavItem className="px-3">
-          <CHeaderNavLink>Settings</CHeaderNavLink>
-        </CHeaderNavItem>
-      </CHeaderNav> */}
 
       <CHeaderNav className="px-3">
-        <div className="header-input-container mr-auto">
+        <div className="lookup-input-header">
           <CInput
-            class="input-field"
+            className="input-field"
+            placeholder="Tìm kiếm..."
             type="text"
-            placeholder="Bạn tìm gì?..."
           />
-          <div className="input-actions-group">
-            <CIcon name="cil-search" />
-          </div>
+          <BsSearch className="icon-search" />
         </div>
-        {/*<TheHeaderDropdownNotif />
-        <TheHeaderDropdownTasks />*/}
+
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />
       </CHeaderNav>
@@ -115,24 +113,6 @@ const TheHeader = () => {
             onClick={changeDarkMode}
             defaultChecked={darkMode}
           />
-        </div> */}
-
-        {/* <div className="d-md-down-none mfe-2 c-subheader-nav ">
-          <CLink className="c-subheader-nav-link" href="#">
-            <CIcon name="cil-speech" alt="Settings" />
-          </CLink>
-          <CLink
-            className="c-subheader-nav-link"
-            aria-current="page"
-            to="/dashboard"
-          >
-            <CIcon name="cil-graph" alt="Dashboard" />
-            &nbsp;Dashboard
-          </CLink>
-          <CLink className="c-subheader-nav-link" href="#">
-            <CIcon name="cil-settings" alt="Settings" />
-            &nbsp;Settings
-          </CLink>
         </div> */}
       </CSubheader>
     </CHeader>

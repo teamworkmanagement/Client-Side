@@ -5,6 +5,8 @@ import moment from "moment";
 import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
 import React, { useEffect, useRef, useState } from "react";
+import { BsUpload } from "react-icons/bs";
+import { CgSoftwareUpload } from "react-icons/cg";
 import { VscSearchStop, VscSymbolFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useParams } from "react-router";
@@ -479,7 +481,7 @@ function ListFileTable(props) {
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
       <div onClick={onClick} className="upload-container">
-        <img className="upload-image" src={"../images/upload.png"} alt="" />
+        <CgSoftwareUpload className="icon-upload" />
         <div>Tải tệp lên nhóm</div>
         <input
           onChange={onPick}

@@ -5,162 +5,21 @@ import { CTooltip } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import messageApi from "src/api/messageApi";
-import { changeGroupPosition, setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
+import {
+  changeGroupPosition,
+  setCurrentGroup,
+  setIsSelected,
+  setReceiveMes,
+} from "../../chatSlice";
 import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
-import Message from "./Message";
-import "./Message.scss";
+import "./MessageList.scss";
 import CIcon from "@coreui/icons-react";
+import Message from "./Message.js";
 
 MessageList.propTypes = {};
 
 function MessageList(props) {
-  const messageList = [
-    {
-      id: "",
-      message:
-        "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters",
-      class: "normal",
-      isMine: false,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "02/03/2021 3:45pm",
-      class: "",
-      isMine: false,
-      time: "",
-      isLabel: true,
-    },
-    {
-      id: "",
-      message:
-        "Various versions have evolved over the years, sometimes by accident",
-      class: "start",
-      isMine: false,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "OK?",
-      class: "middle",
-      isMine: false,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message:
-        "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.",
-      class: "end",
-      isMine: false,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-
-    {
-      id: "",
-      message:
-        " This book is a treatise on the theory of ethics, very popular during the Renaissance.",
-      class: "normal",
-      isMine: true,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "02/03/2021 3:45pm",
-      class: "",
-      isMine: false,
-      time: "",
-      isLabel: true,
-    },
-    {
-      id: "",
-      message: "words, consectetur, from a Lorem",
-      class: "start",
-      isMine: true,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "you need to be sure there isn't anything embarrassing",
-      class: "middle",
-      isMine: true,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-
-    {
-      id: "",
-      message:
-        "All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words",
-      class: "end",
-      isMine: true,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "02/03/2021 3:45pm",
-      class: "",
-      isMine: false,
-      time: "",
-      isLabel: true,
-    },
-    {
-      id: "",
-      message: "OK?",
-      class: "normal",
-      isMine: false,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "start",
-      class: "start",
-      isMine: true,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "end",
-      class: "end",
-      isMine: true,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "OK?",
-      class: "normal",
-      isMine: false,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-    {
-      id: "",
-      message: "02/03/2021 3:45pm",
-      class: "",
-      isMine: false,
-      time: "",
-      isLabel: true,
-    },
-    {
-      id: "",
-      message: "My Normal",
-      class: "normal",
-      isMine: true,
-      time: "02/03/2021 3:45pm",
-      isLabel: false,
-    },
-  ];
-
   const dispatch = useDispatch();
   const currentGroup = useSelector((state) => state.chat.currentGroup);
   const userId = useSelector((state) => state.auth.currentUser.id);
@@ -223,8 +82,6 @@ function MessageList(props) {
       });
       const arrayWithLabels = [];
       if (newArray) {
-
-
         //Thêm label cách cho list mess
 
         for (let i = 0; i < newArray.length - 1; i++) {
@@ -326,7 +183,10 @@ function MessageList(props) {
             }
 
             //trường hợp bình thường
-            if (arrayWithLabels[i - 1].isLabel || arrayWithLabels[i - 1].isMine) {
+            if (
+              arrayWithLabels[i - 1].isLabel ||
+              arrayWithLabels[i - 1].isMine
+            ) {
               if (
                 arrayWithLabels[i + 1].isLabel ||
                 arrayWithLabels[i + 1].isMine
@@ -463,29 +323,33 @@ function MessageList(props) {
 
     chatApi
       .sendMes(props.sendMes.mesObj)
-      .then((res) => {
-      })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   }, [props.sendMes]);
 
   const render = () => {
-    return <div>
-      {listMes.map((item, index) => {
-        return <Message item={item} key={item.messageId} index={index} />;
-      })}
-      <div ref={messagesEndRef} />
-    </div>
-  }
+    return (
+      <div>
+        {listMes.map((item, index) => {
+          return <Message item={item} key={item.messageId} index={index} />;
+        })}
+        <div ref={messagesEndRef} />
+      </div>
+    );
+  };
   return (
     <div>
-      {listMes.length == 0 ? <div className="nodata-image">
-        <CIcon className="icon-glass" name="cil-envelope-closed" />
+      {listMes.length == 0 ? (
+        <div className="nodata-image">
+          <CIcon className="icon-glass" name="cil-envelope-closed" />
 
-        <div className="noti-infor">
-          Chưa có tin nhắn nào trong nhóm của bạn
-    </div>
-      </div> : render()}
-
+          <div className="noti-infor">
+            Chưa có tin nhắn nào trong nhóm của bạn
+          </div>
+        </div>
+      ) : (
+        render()
+      )}
     </div>
   );
 }

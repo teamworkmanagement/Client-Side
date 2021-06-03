@@ -4,6 +4,8 @@ import moment from "moment";
 import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
 import React, { useEffect, useRef, useState } from "react";
+import { BsUpload } from "react-icons/bs";
+import { CgSoftwareUpload } from "react-icons/cg";
 import { VscSearchStop, VscSymbolFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useParams } from "react-router";
@@ -20,12 +22,6 @@ MyFilesTable.propTypes = {};
 
 function MyFilesTable(props) {
   const tableContainerRef = useRef(null);
-  // useEffect(() => {
-  //   tableContainerRef.current.children[1].children[0].children[0].children[0].innerHTML =
-  //     "Lọc:";
-  //   tableContainerRef.current.children[1].children[0].children[1].children[0].children[0].innerHTML =
-  //     "Số dòng:";
-  // });
 
   const [details, setDetails] = useState([]);
   const [fail, setFail] = useState(false);
@@ -188,7 +184,7 @@ function MyFilesTable(props) {
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
       <div onClick={onClick} className="upload-container">
-        <img className="upload-image" src={"../images/upload.png"} alt="" />
+        <CgSoftwareUpload className="icon-upload" />
         <div>Tải tệp lên</div>
         <input
           onChange={onPick}
@@ -280,7 +276,7 @@ function MyFilesTable(props) {
       />
       {totals !== 0 ? (
         <CPagination
-          className="pagination-team-files"
+          className="pagination-my-files"
           activePage={page}
           pages={totals}
           dots

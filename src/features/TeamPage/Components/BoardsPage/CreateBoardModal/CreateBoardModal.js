@@ -48,7 +48,12 @@ function CreateBoardModal(props) {
   };
 
   return (
-    <CModal show={props.showAddBoard} onClose={handleOnClose} size="sm">
+    <CModal
+      className="create-board-modal"
+      show={props.showAddBoard}
+      onClose={handleOnClose}
+      size="sm"
+    >
       <CModalHeader closeButton>Tạo bảng công việc mới</CModalHeader>
       <CModalBody className="new-card-form">
         <CInput

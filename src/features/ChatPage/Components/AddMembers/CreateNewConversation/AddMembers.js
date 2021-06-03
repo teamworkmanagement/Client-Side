@@ -9,15 +9,17 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import Select, { components } from "react-select";
-import AsyncSelect from 'react-select/async';
+import AsyncSelect from "react-select/async";
 
 import { useDispatch, useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
-import { setCurrentGroup, setIsSelected } from "src/features/ChatPage/chatSlice";
+import {
+  setCurrentGroup,
+  setIsSelected,
+} from "src/features/ChatPage/chatSlice";
 
 AddMembers.propTypes = {};
-
 
 const ValueOption = (props) => (
   <components.MultiValue {...props}>
@@ -49,12 +51,10 @@ export const CustomOption = (props) => {
 };
 
 function AddMembers(props) {
-
   const dispatch = useDispatch();
-  const currentGroup = useSelector(state => state.chat.currentGroup);
+  const currentGroup = useSelector((state) => state.chat.currentGroup);
 
-
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
   const [options, setOptions] = useState([]);
 
   function handleOnClose() {
@@ -67,64 +67,64 @@ function AddMembers(props) {
   const handleInputChange = (e) => {
     console.log(e);
     setInputValue(e);
-  }
+  };
 
   const filterColors = async (inputValue) => {
     try {
       const params = {
         userId: user.id,
         keyword: inputValue,
-        groupChatId: currentGroup
+        groupChatId: currentGroup,
       };
       const res = await userApi.searchAddUserChatExists({ params });
 
       console.log(res.data);
 
-      return res.data.map(x => {
+      return res.data.map((x) => {
         return {
           value: x.userId,
           label: x.userFullname,
           img: x.userImageUrl,
-        }
-      })
-    } catch (err) {
-
-    }
-  }
+        };
+      });
+    } catch (err) {}
+  };
 
   const loadOptions = async (inputValue, callback) => {
     callback(await filterColors(inputValue));
   };
 
-
   const onAddMembers = async () => {
     console.log(options);
-    if (options.length === 0)
-      return;
+    if (options.length === 0) return;
 
-    chatApi.addMembers({
-      groupChatId: currentGroup,
-      userIds: options.map(x => x.value),
-    }).then(res => {
-      dispatch(setIsSelected(true));
-      dispatch(setCurrentGroup(res.data));
-      setOptions([]);
-      props.onCLoseModal();
-    }).catch(err => {
-
-    })
+    chatApi
+      .addMembers({
+        groupChatId: currentGroup,
+        userIds: options.map((x) => x.value),
+      })
+      .then((res) => {
+        dispatch(setIsSelected(true));
+        dispatch(setCurrentGroup(res.data));
+        setOptions([]);
+        props.onCLoseModal();
+      })
+      .catch((err) => {});
     //props.onCLoseModal();
-  }
+  };
 
   const onChange = (e) => {
     setOptions(e);
-  }
-  const onInputGrChatName = (e) => {
-
-  }
+  };
+  const onInputGrChatName = (e) => {};
   return (
-    <CModal show={props.showAddMembers} onClose={handleOnClose} size="sm">
-      <CModalHeader closeButton>Tạo nhóm chat mới</CModalHeader>
+    <CModal
+      className="add-member-modal"
+      show={props.showAddMembers}
+      onClose={handleOnClose}
+      size="sm"
+    >
+      <CModalHeader closeButton>Thêm thành viên vào nhóm chat</CModalHeader>
       <CModalBody className="new-card-form">
         <div style={{ width: "21rem" }}>
           <AsyncSelect
@@ -140,9 +140,8 @@ function AddMembers(props) {
               MultiValue: ValueOption,
             }}
           />
-          <br></br>
-          <div onClick={onAddMembers} className="d-flex justify-content-end">
-            <CButton className="btn-info">Thêm thành viên</CButton>
+          <div onClick={onAddMembers} className="create-chat-btn">
+            Thêm thành viên
           </div>
         </div>
       </CModalBody>

@@ -24,7 +24,7 @@ import BoardsPage from "./Components/BoardsPage/BoardsPage";
 import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
 import { useHistory, useLocation } from "react-router";
 import queryString from "query-string";
-import { changeStateSideBar } from "src/appSlice";
+import { changeStateTeamTabsSidebar } from "src/appSlice";
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
@@ -35,7 +35,9 @@ function TeamPage(props) {
   const history = useHistory();
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
-  const mySidebarShow = useSelector((state) => state.app.mySidebarShow);
+  const teamTabsSidebarShow = useSelector(
+    (state) => state.app.teamTabsSidebarShow
+  );
   const [active, setActive] = useState(() => {
     if (queryParams != null) {
       switch (queryParams.tab) {
@@ -115,19 +117,13 @@ function TeamPage(props) {
       </div>
     );
   };
-  const toggleMySidebar = () => {
-    const val = [true, "responsive"].includes(mySidebarShow)
-      ? false
-      : "responsive";
-    console.log("val toggleSidebar: ", val);
-    dispatch(changeStateSideBar({ type: "sidebar", mySidebarShow: val }));
-  };
-  const toggleMySidebarMobile = () => {
-    const val = [false, "responsive"].includes(mySidebarShow)
-      ? true
-      : "responsive";
-    console.log("val toggleSidebar: ", val);
-    dispatch(changeStateSideBar({ type: "sidebar", mySidebarShow: val }));
+  const toggleTeamTabsSidebar = () => {
+    dispatch(
+      changeStateTeamTabsSidebar({
+        type: "teamtabssidebar",
+        teamTabsSidebarShow: true,
+      })
+    );
   };
 
   return (
@@ -187,7 +183,7 @@ function TeamPage(props) {
           <div className="toggle-team-tabs-sidebar-btn">
             <CIcon
               className="ml-md-3 d-md-none toggle-icon"
-              onClick={toggleMySidebarMobile}
+              onClick={toggleTeamTabsSidebar}
               name="cil-menu"
             />
           </div>

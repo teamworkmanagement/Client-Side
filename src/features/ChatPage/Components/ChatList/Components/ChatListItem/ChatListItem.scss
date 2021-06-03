@@ -1,3 +1,4 @@
+@import "../../../../../../shared_components/scss/style.scss";
 @keyframes showInChatItem {
     from {
         opacity: 0;
@@ -26,23 +27,23 @@
     @include ListChatItemApear;
     height: 4rem;
     display: flex;
-    border-bottom: 1px solid rgb(230, 235, 241);
+    border-bottom: $borderStyle;
     padding: 0.5rem 1rem;
     justify-content: flex-start;
     align-items: center;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: $baseTransition;
 
     .item-avatar {
         margin-right: 0.5rem;
         img {
             height: 2.5rem;
             width: 2.5rem;
-            border-radius: 50px;
+            border-radius: 100px;
         }
     }
     .item-content {
-        width: 10px;
+        width: 2rem;
         display: flex;
         flex-grow: 1;
         flex-direction: column;
@@ -52,10 +53,16 @@
             align-items: center;
             .chat-name {
                 font-weight: 550;
+                color: $textColor;
+                width: 1rem;
+                flex-grow: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .chat-last-time {
-                //font-size: 0.8rem;
-                color: rgba(114, 132, 154, 0.7);
+                margin-left: 0.5rem;
+                color: $subTextColor;
                 font-weight: 500;
             }
         }
@@ -67,8 +74,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: pre;
-                color: rgba(114, 132, 154, 0.7);
-                //font-size: 0.8rem;
+                color: $subTextColor;
             }
             .chat-noti {
                 display: none;
@@ -80,10 +86,26 @@
     }
 
     &:hover {
-        background-color: #f5f5f5;
+        background-color: $lighterBaseColor;
     }
     &.selected {
-        background-color: #f5f5f5;
+        background-color: $lighterBaseColor;
+        border-right: 3px solid $baseColor;
+        .item-content {
+            .item-content-header {
+                .chat-name {
+                    color: $baseColor;
+                }
+                .chat-last-time {
+                    color: $baseColor;
+                }
+            }
+            .item-content-body {
+                .chat-messagge {
+                    color: $baseColor !important;
+                }
+            }
+        }
     }
     &.message {
         .item-content {

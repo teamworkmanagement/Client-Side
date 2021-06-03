@@ -132,7 +132,12 @@ function StartChatMembers(props) {
   };
 
   return (
-    <CModal show={props.showStartChat} onClose={handleOnClose} size="sm">
+    <CModal
+      className="create-chat-with-member-modal"
+      show={props.showStartChat}
+      onClose={handleOnClose}
+      size="sm"
+    >
       <CModalHeader closeButton>Tạo nhóm chat mới</CModalHeader>
       <CModalBody className="new-card-form">
         <div style={{ width: "21rem" }}>
@@ -141,7 +146,6 @@ function StartChatMembers(props) {
             placeholder="Tên nhóm chat"
             value={grChatName}
             onChange={onInputGrChatName}
-            style={{ width: "21rem" }}
           />
           <AsyncSelect
             value={options}
@@ -157,7 +161,6 @@ function StartChatMembers(props) {
               Option: CustomOption,
               MultiValue: ValueOption,
             }}
-            styles={styles}
           />
           <div onClick={onCreateGroupChat} className="create-chat-btn">
             Tạo nhóm Chat

@@ -1,6 +1,6 @@
 @import "../../../../shared_components/scss/style.scss";
-$normal-border-radius: 0.625rem;
-$not-normal-border-radius: 0.2rem;
+
+$not-borderRadius: 0.2rem;
 $message-font-weight: normal;
 
 @keyframes showIn {
@@ -45,127 +45,6 @@ $message-font-weight: normal;
     animation-delay: 0.3s;
 }
 
-.message-item-container {
-    padding: 0.5rem;
-    display: flex;
-    align-items: flex-end;
-
-    .avatar {
-        margin: 0rem 0.2rem;
-        padding: 0px;
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50px;
-    }
-    .message-content {
-        //@include Appear1;
-        margin: 0rem 0.2rem;
-        margin-right: 3rem;
-        display: flex;
-        flex-direction: column;
-        //transition: all 2s;
-        .message-text {
-            font-weight: $message-font-weight;
-            background-color: #ededed;
-            padding: 0.5rem 0.7rem;
-            width: fit-content;
-            border-radius: $normal-border-radius;
-            &:hover {
-                background-color: #c4c6ca;
-                transition-delay: 1s;
-            }
-        }
-        .message-time {
-            padding: 0rem 0.1rem;
-            display: none;
-            font-size: 0.7rem;
-            transition: all 0.5s;
-            font-weight: 500;
-        }
-
-        &:active {
-            .message-time {
-                display: block;
-            }
-        }
-    }
-}
-
-.message-item-container.start {
-    padding-bottom: 0.1rem;
-    .avatar {
-        visibility: hidden;
-    }
-    .message-text {
-        border-bottom-left-radius: $not-normal-border-radius;
-    }
-}
-.message-item-container.middle {
-    padding-bottom: 0.1rem;
-    padding-top: 0.1rem;
-    .avatar {
-        visibility: hidden;
-    }
-    .message-text {
-        border-bottom-left-radius: $not-normal-border-radius;
-        border-top-left-radius: $not-normal-border-radius;
-    }
-}
-
-.message-item-container.end {
-    padding-top: 0.1rem;
-    .message-text {
-        border-top-left-radius: $not-normal-border-radius;
-    }
-}
-
-.message-item-container.mine {
-    flex-direction: row-reverse;
-
-    .avatar {
-        display: none;
-    }
-    .message-content {
-        //@include Appear();
-        //transform-origin: right;
-        margin: 0rem 0.2rem;
-        flex-direction: column;
-        align-items: flex-end;
-        margin-left: 3rem;
-        .message-text {
-            @include background-color-theme;
-            font-weight: $message-font-weight;
-            padding: 0.5rem 0.7rem;
-            width: fit-content;
-            border-radius: $normal-border-radius;
-            color: #fafafa;
-        }
-        .message-time {
-            padding: 0rem 0.1rem;
-        }
-    }
-}
-
-.message-item-container.start.mine {
-    .message-text {
-        border-radius: $normal-border-radius;
-        border-bottom-right-radius: $not-normal-border-radius;
-    }
-}
-.message-item-container.middle.mine {
-    .message-text {
-        border-radius: $normal-border-radius;
-        border-bottom-right-radius: $not-normal-border-radius;
-        border-top-right-radius: $not-normal-border-radius;
-    }
-}
-.message-item-container.end.mine {
-    .message-text {
-        border-radius: $normal-border-radius;
-        border-top-right-radius: $not-normal-border-radius;
-    }
-}
-
 .message-list::-webkit-scrollbar {
     width: 0.5rem;
 }
@@ -186,39 +65,3 @@ $message-font-weight: normal;
 .message-list::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
-
-.message-label {
-    font-weight: 500;
-    font-size: 0.75rem;
-    color: #8c929e;
-    text-align: center;
-    margin: 0.1rem 0rem;
-}
-
-// .nodata-image {
-//     margin-top: 2rem;
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
-
-//     .noti-infor {
-//         font-size: 130%;
-//         text-align: center;
-//         font-weight: bold;
-//         color: rgba(#3c4b64, 0.7);
-//     }
-//     .create-post-btn {
-//         font-size: 120%;
-//         background-color: #3e79f7;
-//         color: white;
-//         padding: 0.5rem 1.2rem;
-//         border-radius: 0.625rem;
-//         margin-top: 0.5rem;
-//         cursor: pointer;
-//         font-weight: bold;
-//         &:hover {
-//             background-color: #3363ca;
-//         }
-//     }
-// }

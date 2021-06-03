@@ -4,10 +4,13 @@ import "./MyTasks.scss";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
 import { CButton, CButtonGroup, CInput, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import TaskList from "./Components/TaskList/TaskList";
+//import TaskList from "./Components/TaskList/TaskList";
 import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
 import CreateKBListModal from "src/features/TeamPage/Components/TeamTasks/Components/CreateKBListModal/CreateKBListModal";
 import { useHistory } from "react-router";
+import TaskList from "src/features/TeamPage/Components/TeamTasks/Components/TaskList/TaskList";
+import { AiOutlineLeft } from "react-icons/ai";
+import { BsSearch } from "react-icons/bs";
 
 MyTasks.propTypes = {};
 
@@ -30,32 +33,27 @@ function MyTasks(props) {
 
   const onClose = () => {
     setShowAddKBList(false);
-  }
+  };
 
   const onCreateKBList = () => {
     setShowAddKBList(true);
-  }
+  };
 
   return (
     <div className="my-tasks-container">
       <div className="tasks-header">
         <div className="goback-label" onClick={goBackBoards}>
-          <CIcon className="one" name="cil-check-alt" />
-          <CIcon className="two" name="cil-check-alt" />
-          <div className="label-text">Trở lại màn hình bảng công việc</div>
+          <AiOutlineLeft className="icon-goback" />
+          <div className="label-text">Trở lại danh sách bảng công việc</div>
         </div>
         <div className="other-actions">
-          <div className="search-bar-container">
-            <div className="input-container">
-              <CInput
-                class="input-field"
-                placeholder="...tìm công việc"
-                type="text"
-              />
-              <div className="input-actions-group">
-                <CIcon name="cil-search" />
-              </div>
-            </div>
+          <div className="lookup-input">
+            <CInput
+              type="text"
+              name="teamName"
+              placeholder="Tìm công việc..."
+            />
+            <BsSearch className="icon-search" />
           </div>
           {showMode === 1 && (
             <div onClick={onCreateKBList} className="add-btn add-list-btn">
@@ -104,7 +102,11 @@ function MyTasks(props) {
         </div>
       </div>
 
-      <CreateKBListModal boardId={props.boardId} showAddKBList={showAddKBList} onClose={onClose} />
+      <CreateKBListModal
+        boardId={props.boardId}
+        showAddKBList={showAddKBList}
+        onClose={onClose}
+      />
 
       {showMode === 1 && <KanbanBoard boardId={props.boardId} />}
       {showMode === 2 && <TaskList boardId={props.boardId} />}

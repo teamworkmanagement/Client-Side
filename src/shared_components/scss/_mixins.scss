@@ -24,7 +24,7 @@
     }
 }
 @mixin SideBarItemSelected {
-    color: #3e79f7;
+    color: #3e79f7 !important;
     background-color: #ebf1fe;
     border-right: 3px solid #3e79f7 !important;
     .c-sidebar-nav-icon {

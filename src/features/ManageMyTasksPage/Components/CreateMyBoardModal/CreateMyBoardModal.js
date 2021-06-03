@@ -13,13 +13,11 @@ import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import MyToaster from "src/features/ToastTest/ToastTest";
 
-
 CreateMyBoardModal.propTypes = {};
 
 function CreateMyBoardModal(props) {
-
   const [boardName, setBoardName] = useState("");
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   function onCreateBoard() {
     if (!boardName) {
@@ -27,38 +25,40 @@ function CreateMyBoardModal(props) {
       return;
     }
 
-    kanbanApi.addBoard({
-      kanbanBoardUserId: user.id,
-      kanbanBoardName: boardName
-    }).then(res => {
-      props.onClose(res);
-    }).catch(err => {
-      props.onClose(null);
-    }).finally(() => {
-      setBoardName("");
-    })
-
+    kanbanApi
+      .addBoard({
+        kanbanBoardUserId: user.id,
+        kanbanBoardName: boardName,
+      })
+      .then((res) => {
+        props.onClose(res);
+      })
+      .catch((err) => {
+        props.onClose(null);
+      })
+      .finally(() => {
+        setBoardName("");
+      });
   }
 
   const handleOnClose = () => {
     setBoardName("");
     props.onClose(null);
-  }
+  };
 
   return (
     <CModal show={props.showAddBoard} onClose={handleOnClose} size="sm">
-      <CModalHeader closeButton>Danh sách mới</CModalHeader>
+      <CModalHeader closeButton>Bảng công việc mới</CModalHeader>
       <CModalBody className="new-card-form">
-        <div className="name-label">Nhập tên danh sách:</div>
+        <div className="name-label">Nhập tên bảng:</div>
         <CInput
-          className="is-invalid"
+          className=""
           required
           type="text"
           value={boardName}
           onChange={(e) => setBoardName(e.target.value)}
-          placeholder="Tên danh sách..."
+          placeholder="Tên bảng..."
         />
-
 
         <CButton onClick={onCreateBoard} className="add-card-btn">
           Tạo

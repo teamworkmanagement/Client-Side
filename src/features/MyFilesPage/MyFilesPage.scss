@@ -1,11 +1,9 @@
+@import "../../shared_components/scss/style.scss";
 .my-files-page-container {
     height: 100%;
     padding: 1.5rem;
     .my-files-page-content {
-        background-color: white;
-        border-radius: 0.625rem;
-        border: 1px solid #e6ebf1;
-        padding: 1rem;
+        @include CardStyle;
         height: 100%;
     }
 }

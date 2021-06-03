@@ -1,18 +1,33 @@
+@import "../../shared_components/scss/style.scss";
 .chat-page-container {
     position: absolute;
     width: 100%;
     height: 100%;
     padding: 1.5rem;
-    .chat-main-content {
+    .chat-page-content {
+        display: flex;
+        flex-direction: column;
         height: 100%;
-        background-color: white;
-        border-radius: 0.625rem;
-        border: 1px solid rgb(230, 235, 241);
+        .toggle-chat-list-sidebar-btn {
+            height: fit-content;
+            .toggle-chat-list-sidebar-icon {
+                width: 1.5rem;
+                height: 1.5rem;
+                cursor: pointer;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+    .chat-main-content {
+        @include CardStyle;
+        flex-grow: 1;
+        height: 10rem;
         display: flex;
         justify-content: flex-start;
+        padding: 0;
         .chat-list {
             width: 18rem;
-            border-right: 1px solid rgb(230, 235, 241);
+            border-right: $borderStyle;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -22,38 +37,35 @@
                     height: 100%;
                     display: flex;
                     align-items: stretch;
-                    border-bottom: 1px solid #d8dbe0;
+                    border-bottom: $borderStyle;
                     input.form-control {
                         height: 100%;
                         border-bottom-left-radius: 0;
                         border: none;
-                        border-top-left-radius: 10px;
+                        border-top-left-radius: $borderRadius;
                     }
                     .input-group-append {
                         button {
                             background-color: white;
                             border-radius: 0;
                             border: none;
-                            .c-icon {
-                                color: #3c4b64;
+                            .icon-search {
+                                color: $subTextColor;
+                            }
+                            &:hover {
+                                .icon-search {
+                                    color: $textColor;
+                                    transform: scale(1.1);
+                                    transition: $baseTransition;
+                                }
                             }
                         }
                     }
                 }
             }
             .btn-add-chat {
-                background-color: #3f7af7;
-                color: white;
-                padding: 0.5rem;
-                align-items: center;
-                display: flex;
-                justify-content: center;
+                @include NormalButtonStyle;
                 margin: 1rem;
-                border-radius: 0.625rem;
-                cursor: pointer;
-                &:hover {
-                    background-color: #3363ca;
-                }
                 .c-icon {
                     margin-right: 0.3rem;
                 }
@@ -62,12 +74,12 @@
         .chat-content {
             width: 1rem;
             flex-grow: 1;
-            border-left: 1px solid rgb(230, 235, 241);
+            border-left: $borderStyle;
             display: flex;
             flex-direction: column;
             .chat-content-header {
                 height: 3rem;
-                border-bottom: 1px solid #d8dbe0;
+                border-bottom: $borderStyle;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -88,103 +100,26 @@
                     display: flex;
                     align-items: center;
                     .btn-add-member {
+                        @include NormalButtonStyle;
                         margin-right: 1rem;
-                        display: flex;
-                        align-items: center;
-                        border: 1px solid #e6ebf1;
-                        border-radius: 0.625rem;
                         padding: 0.3rem 1rem;
-                        cursor: pointer;
                         .c-icon {
                             margin-right: 0.3rem;
                         }
-                        &:hover {
-                            background-color: #ebf1fe;
-                            border-color: #ebf1fe;
-                        }
                     }
-                    // .options {
-                    //     padding: 0.5rem 0.5rem;
-                    //     cursor: pointer;
-                    //     border-radius: 50px;
-                    //     display: flex;
-                    //     align-items: center;
-                    //     &:hover {
-                    //         background-color: #f2f2f2;
-                    //     }
-                    // }
                     .chat-header-actions-dropdown {
                         border-radius: 50px;
 
                         .dropdown-toggle.btn {
-                            background-color: transparent;
-                            outline: none;
-                            border-radius: 50px;
-                            padding: 0.5rem;
-                            width: 2rem;
-                            height: 2rem;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            .lane-actions {
-                                color: #3c4b64;
-                            }
-                            &::after {
-                                display: none;
-                            }
-                            &:focus {
-                                outline: 0;
-                                box-shadow: none;
-                            }
-                            &:hover {
-                                background-color: #e4e6e9;
-                            }
+                            @include DropdownToggleButtonStyle;
                         }
                         .dropdown-menu.show {
-                            z-index: 1000;
-                            //@include TaskListItemApear;
-                            margin-top: -0rem !important;
-                            margin-left: 0rem !important;
-                            box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
-                            border-radius: 0.625rem;
-                            padding: 0;
-                            .dropdown-item {
-                                display: flex;
-                                align-items: center;
-                                .c-icon {
-                                    margin-right: 0.5rem;
-                                    width: 0.8rem;
-                                    height: 0.8rem;
-                                    &.icon-delete {
-                                        width: 1rem;
-                                        height: 1rem;
-                                    }
-                                }
-                                .info-icon-group {
-                                    margin-right: 0rem;
-                                    display: flex;
-                                    align-items: center;
-                                    .c-icon:first-child {
-                                        .ci-primary:nth-child(2) {
-                                            display: none;
-                                        }
-                                    }
-                                    .icon-circle {
-                                        margin-left: -1.35rem;
-                                        width: 1rem;
-                                        height: 1rem;
-                                    }
-                                }
-                                &:first-child:hover {
-                                    background-color: #f5f5f5;
-                                    border-top-left-radius: 0.625rem;
-                                    border-top-right-radius: 0.625rem;
-                                }
-                                &:last-child:hover {
-                                    background-color: #f5f5f5;
-                                    border-bottom-left-radius: 0.625rem;
-                                    border-bottom-right-radius: 0.625rem;
-                                }
+                            @include DropdownMenuStyle;
+                            .icon-info-chat {
+                                margin-left: -0.2;
+                                margin-right: 0.5rem;
+                                width: 1rem;
+                                height: 1rem;
                             }
                         }
                     }
@@ -194,97 +129,61 @@
                 height: 1rem;
                 flex-grow: 1;
                 overflow-y: scroll;
-                margin-bottom: 1.5rem;
+                margin-bottom: 1rem;
                 margin-top: 0.5rem;
             }
             .chat-content-footer {
                 height: 3rem;
-
                 display: flex;
                 align-items: center;
-                justify-content: flex-end;
-                padding: 0rem 1rem;
-                .input-container {
-                    position: relative;
+                padding: 0.2rem 1rem;
+                .message-input-field {
+                    border-radius: $borderRadius;
+                    border: $borderStyle;
+                    width: 100%;
+                    margin: 0;
+                    padding: 0 8rem 0 1rem;
+                    height: 100%;
+                    margin-top: -1rem;
+                }
+                .input-actions-group {
                     display: flex;
                     align-items: center;
-                    justify-content: flex-end;
-                    width: 100%;
-                    height: 100%;
-                    padding: 0.5rem;
-                    border: 1px solid #afb2b6;
-                    border-radius: 10px;
-                    margin-top: -2rem;
-                    &:focus,
-                    &:focused {
-                        border-color: #699dff;
-                        border-right-width: 1px !important;
-                        outline: 0;
-                        box-shadow: 0 0 0 2px rgb(62 121 247 / 20%);
-                    }
-                    .input-field {
-                        flex-grow: 1;
-                        border-radius: 10px;
-                        position: absolute;
-                        width: 100%;
-                        margin: 0;
-                        padding: 0;
-                        left: 0px;
-                        right: 0px;
-                        height: 100%;
-                        padding-left: 1rem;
-                        padding-right: 7rem;
-                        border-color: #d8dbe0;
-                        border: none;
-                        &:focus {
-                            border-radius: 10px;
-                            border-color: #699dff;
-                            border-right-width: 1px !important;
-                            outline: 0;
-                            box-shadow: 0 0 0 2px rgb(62 121 247 / 20%);
-                        }
+                    margin-left: -7.5rem;
+                    margin-top: -1rem;
+                    .c-icon {
+                        width: 1.3rem;
+                        height: 1.3rem;
+                        margin-left: 0.5rem;
+                        cursor: pointer;
+                        color: $subTextColor;
                         &:hover {
-                            border-radius: 10px;
-                            border-color: #699dff;
-                            border-right-width: 1px !important;
-                            outline: 0;
-                            box-shadow: 0 0 0 2px rgb(62 121 247 / 20%);
+                            color: $textColor;
+                            transform: scale(1.1);
+                            transition: $baseTransition;
                         }
                     }
-                    .input-actions-group {
+                    .send-button {
+                        width: 2.1rem;
+                        height: 2.1rem;
+                        padding: 0.5rem;
+                        padding-left: 0.38rem;
+                        border-radius: 50px;
+                        background-color: $baseColor;
+                        color: white;
                         display: flex;
                         align-items: center;
-                        z-index: 100;
+                        cursor: pointer;
+                        margin-left: 0.8rem;
+                        transition: $baseTransition;
+
                         .c-icon {
-                            width: 1.4rem;
-                            height: 1.4rem;
-                            margin-left: 0.5rem;
-                            cursor: pointer;
-                            color: #667285;
-                            &:hover {
-                                color: #3c4b64;
-                            }
-                        }
-                        .send-button {
-                            width: 2.1rem;
-                            height: 2.1rem;
-                            padding: 0.5rem;
-                            padding-left: 0.38rem;
-                            border-radius: 50px;
-                            background-color: #3e79f7;
                             color: white;
-                            display: flex;
-                            align-items: center;
-                            cursor: pointer;
-                            margin-left: 0.8rem;
-                            transition: all 0.2s;
-                            &:hover {
-                                transform: scale(1.2);
-                            }
+                            margin: 0px;
+                        }
+                        &:hover {
                             .c-icon {
-                                color: white;
-                                margin: 0px;
-                                transform: rotate(47deg);
+                                transform: scale(1.1);
                             }
                         }
                     }
