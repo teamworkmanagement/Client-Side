@@ -6,6 +6,7 @@ import CIcon from "@coreui/icons-react";
 import kanbanApi from "src/api/kanbanApi";
 import { useSelector } from "react-redux";
 import CreateMyBoardModal from "../CreateMyBoardModal/CreateMyBoardModal";
+import { useHistory } from "react-router";
 
 MyBoards.propTypes = {};
 
@@ -33,6 +34,7 @@ function MyBoards(props) {
     }
   }
 
+  const history = useHistory();
   const user = useSelector(state => state.auth.currentUser);
   const [boards, setBoards] = useState([]);
   const [showAddBoard, setShowAddBoard] = useState(false);
@@ -43,9 +45,15 @@ function MyBoards(props) {
         setBoards(res.data);
       }).catch(err => {
 
-      })
+      });
+
+
   }, [])
 
+
+  useEffect(() => {
+    console.log("myboards");
+  }, [history.location.search])
   const onCloseModal = (boardRes) => {
     setShowAddBoard(false);
     if (!boardRes)

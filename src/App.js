@@ -48,10 +48,10 @@ function App() {
       console.log("check login");
       dispatch(islogin());
     }
-    startChatService();
-    startNotiService();
-    startPostService();
-    startKanbanService();
+    //startChatService();
+    //startNotiService();
+    //startPostService();
+    //startKanbanService();
   }, []);
 
   return (

@@ -309,9 +309,7 @@ function TaskEditModal(props) {
   };
 
   useEffect(() => {
-    console.log(current);
     if (JSON.stringify(task) === JSON.stringify({})) return;
-
 
   }, [current]);
 

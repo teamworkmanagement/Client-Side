@@ -10,6 +10,7 @@ import { CModal, CModalBody, CModalHeader } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import Modals from "src/shared_components/views/notifications/modals/Modals";
 import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { useHistory } from "react-router";
 
 function GanttChart(props) {
   const input = useRef(null);
@@ -22,6 +23,8 @@ function GanttChart(props) {
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
+
+  const history = useHistory();
   const tasks = [];
   kanbanLists.map((kl) => {
     kl.taskUIKanbans.map((task) => {
@@ -198,6 +201,12 @@ function GanttChart(props) {
   const openEditPoup = async (taskId, task) => {
     setModalTask(null);
     setIsShowEditPopup(true);
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search + `&t=${taskId}`,
+    });
+
     const taskModal = await taskApi.getTaskById(taskId);
     setModalTask({
       ...taskModal.data,
@@ -208,6 +217,12 @@ function GanttChart(props) {
 
   function closeForm() {
     gantt.hideLightbox();
+    console.log("close gantt");
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+    });
   }
 
   function updateGanttTask(task) {

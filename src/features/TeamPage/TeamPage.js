@@ -27,14 +27,16 @@ import queryString from 'query-string';
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
-  const [isOpeningBoard, setIsOpeningBoard] = useState(false);
+
   const teamLoading = useSelector((state) => state.app.teamLoading);
   const [boardId, setBoardId] = useState(null);
   const history = useHistory();
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
 
-  const [active, setActive] = useState(()=>{
+  const [isOpeningBoard, setIsOpeningBoard] = useState(false);
+
+  const [active, setActive] = useState(() => {
     if (queryParams != null) {
       switch (queryParams.tab) {
         case "feed":
@@ -57,7 +59,7 @@ function TeamPage(props) {
       return 0;
     }
   });
-  
+
   console.log(queryParams);
 
   function openBoard(boardId) {
@@ -66,15 +68,60 @@ function TeamPage(props) {
   }
   function goBackListBoards() {
     setIsOpeningBoard(false);
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.split('&')[0],
+    })
   }
 
   const onActiveTabChange = (index) => {
     setActive(index);
 
+    let tab = "feed";
+    switch (index) {
+      case 0:
+        tab = "feed";
+        break;
+      case 1:
+        tab = "task";
+        break;
+      case 2:
+        tab = "message";
+        break;
+      case 3:
+        tab = "files";
+        break;
+      case 4:
+        tab = "members";
+        break;
+      case 5:
+        tab = "statistics"
+        break;
+      default:
+        break;
+    }
+
+    console.log("zzzzzzz: ", history.location.search);
+    history.push({
+      pathname: history.location.pathname,
+      search: `tab=${tab}`
+    })
   }
 
   useEffect(() => {
-    let tab = "feed";
+    const queryObj = queryString.parse(history.location.search);
+    if (queryObj.tab && !queryObj.b && !queryObj.t)
+      setIsOpeningBoard(false);
+    else {
+      //setIsOpeningBoard(true);
+      console.log(history.location.search)
+      openBoard(queryObj.b);
+    }
+  }, [history.location.search])
+
+  useEffect(() => {
+    /*let tab = "feed";
     switch (active) {
       case 0:
         tab = "feed";
@@ -98,10 +145,11 @@ function TeamPage(props) {
         break;
     }
 
+    console.log("zzzzzzz: ", history.location.search);
     history.push({
       pathname: history.location.pathname,
       search: `tab=${tab}`
-    })
+    })*/
   }, [active])
   const boardRender = () => {
     return <div>

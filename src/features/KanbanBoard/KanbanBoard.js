@@ -11,10 +11,12 @@ import {
 } from "src/appSlice";
 import { CButton, CButtonGroup } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { getBoardDataForUI, handleDragEnd } from "./kanbanSlice";
+import { getBoardDataForUI, handleDragEnd, setTaskSelected } from "./kanbanSlice";
 import taskApi from "src/api/taskApi";
 import kanbanApi from "src/api/kanbanApi";
 import CardLoading from "./Components/KanbanList/Components/KanbanCard/Components/CardLoading/CardLoading";
+import { useHistory, useLocation } from "react-router";
+import queryString from 'query-string';
 
 KanbanBoard.propTypes = {};
 
@@ -29,6 +31,13 @@ function KanbanBoard(props) {
   const fixedList = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists.find(x => x.kanbanListOrderInBoard === -999999)
   );
+
+  const tasks = [];
+  kanbanLists.map(kl => {
+    kl.taskUIKanbans.map(task => {
+      tasks.push(task);
+    })
+  });
 
   console.log(fixedList);
   //const fixedList = kanbanLists.find(x => x.kanbanListOrderInBoard === -999999);
@@ -131,19 +140,44 @@ function KanbanBoard(props) {
     }
   }
 
+  const history = useHistory();
+  const [notask, setNoTask] = useState(false);
+
+  const [boardId, setBoardId] = useState(null);
+
   useEffect(() => {
-    if (!props.boardId)
+    console.log(history.location.search);
+    const queryParams = queryString.parse(history.location.search);
+    if (queryParams.b) {
+      setBoardId(queryParams.b)
+    }
+    else {
+      setBoardId(null);
+    }
+
+    if (queryParams.t) {
+      taskApi.getTaskById(queryParams.t).then(res => {
+        dispatch(setTaskSelected(queryParams.t));
+      }).catch(err => {
+        setNoTask(true);
+      })
+    }
+
+  }, [history.location.search])
+
+  useEffect(() => {
+    if (!boardId)
       return;
     try {
       dispatch(setTeamLoading(true));
       setIsLoading(true);
-      dispatch(getBoardDataForUI(props.boardId));
+      dispatch(getBoardDataForUI(boardId));
     } catch (err) {
     } finally {
       setIsLoading(false);
       dispatch(setTeamLoading(false));
     }
-  }, [props.boardId]);
+  }, [boardId]);
 
   return (
     <div className="kanban-board-container">

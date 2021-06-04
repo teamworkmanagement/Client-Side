@@ -8,7 +8,8 @@ import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import Empty from "../Post/Components/Empty/Empty";
 import Loading from "../Post/Components/Loading/Loading";
 import CIcon from "@coreui/icons-react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
+import queryString from 'query-string';
 
 PostList.propTypes = {};
 
@@ -16,6 +17,10 @@ function PostList(props) {
   const [listPosts, setListPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showScroll, setShowScroll] = useState(false);
+
+  const location = useLocation();
+  const queryParams = queryString.parse(location.search).p;
+
 
   const dispatch = useDispatch();
   const latestPosts = useRef(null);
@@ -34,6 +39,7 @@ function PostList(props) {
         const params = {
           ...props.filter,
           SkipItems: filterChanged ? 0 : listPosts.length,
+          postId: queryParams,
         };
 
         let outPut = {};

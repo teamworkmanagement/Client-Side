@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import "./BoardsPage.scss";
 import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import kanbanApi from "src/api/kanbanApi";
 import CreateBoardModal from "./CreateBoardModal/CreateBoardModal";
 import { BsSearch } from "react-icons/bs";
+import queryString from 'query-string';
 
 BoardsPage.propTypes = {};
 
@@ -28,11 +29,17 @@ function BoardsPage(props) {
     { boardId: 10, name: "Tasks Khóa luận", tasksCount: 21 },
   ];
 
+  const history = useHistory();
   function openBoard(boardId) {
     if (props.openBoard) {
       props.openBoard(boardId);
+      history.push({
+        pathname: history.location.pathname,
+        search: history.location.search + `&b=${boardId}`
+      });
     }
   }
+
 
   const [boardLists, setBoardLists] = useState([]);
   const [showAddBoard, setShowAddBoard] = useState(false);
@@ -44,8 +51,9 @@ function BoardsPage(props) {
       .then((res) => {
         setBoardLists(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, []);
+
 
   const showModalAddBoard = () => {
     setShowAddBoard(true);

@@ -6,11 +6,13 @@ import { CButton, CButtonGroup, CInput, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import TaskList from "./Components/TaskList/TaskList";
 import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
+import { useHistory } from "react-router";
 
 TeamTasks.propTypes = {};
 
 function TeamTasks(props) {
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
+  const history = useHistory();
   function switchShowMode(index) {
     //debugger;
     console.log(index);
@@ -19,7 +21,7 @@ function TeamTasks(props) {
   }
   function goBackBoards() {
     if (props.goBackBoards) {
-      props.goBackBoards();
+      props.goBackBoards();      
     }
   }
   return (
@@ -90,9 +92,9 @@ function TeamTasks(props) {
         </div>
       </div>
 
-      {showMode === 1 && <KanbanBoard boardId={props.boardId}/>}
-      {showMode === 2 && <TaskList boardId={props.boardId}/>}
-      {showMode === 3 && <GanttChart boardId={props.boardId}/>}
+      {showMode === 1 && <KanbanBoard boardId={props.boardId} />}
+      {showMode === 2 && <TaskList boardId={props.boardId} />}
+      {showMode === 3 && <GanttChart boardId={props.boardId} />}
     </div>
   );
 }
