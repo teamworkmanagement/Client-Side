@@ -12,6 +12,8 @@ import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
 import ManageTeamTasksPage from "./features/ManageTeamTasksPage/ManageTeamTasksPage";
 import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsPage";
 import ForgotPassword from "./shared_components/views/pages/forgotpassword/ForgotPassword";
+import NotFoundPage from "./shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
+import NoInternetPage from "./shared_components/MySharedComponents/NoInternetPage/NoInternetPage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -117,6 +119,12 @@ const User = React.lazy(() => import("./shared_components/views/users/User"));
 
 const routes = [
   // { path: '/', exact: true, name: 'Home' },
+  { path: "/notfound", name: "Không tồn tại", component: NotFoundPage },
+  {
+    path: "/connectionerror",
+    name: "Không có kết nối mạng",
+    component: NoInternetPage,
+  },
   { path: "/dashboard", name: "Dashboard", component: DashBoardPage },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },

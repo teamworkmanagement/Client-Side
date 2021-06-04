@@ -1,0 +1,38 @@
+@import "../../scss/style.scss";
+.no-internet-page-container {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    img {
+    }
+    .normal {
+        width: 20rem;
+        @media (max-width: 350px) {
+            display: none;
+        }
+    }
+    .full-width {
+        width: 100%;
+        padding: 0 1rem;
+        display: none;
+        @media (max-width: 350px) {
+            display: block;
+        }
+    }
+    .content {
+        @include TitleStyle;
+        font-size: 150%;
+        padding: 0 1rem;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    .back-home-btn {
+        margin-top: 1rem;
+        @include NormalButtonStyle;
+        font-size: 130%;
+        margin-bottom: 2rem;
+    }
+}
