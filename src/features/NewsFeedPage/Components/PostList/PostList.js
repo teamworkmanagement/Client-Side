@@ -38,7 +38,7 @@ function PostList(props) {
         setIsLoading(true);
         const params = {
           ...props.filter,
-          SkipItems: filterChanged ? 0 : listPosts.length,
+          SkipItems: filterChanged ? 0 : queryParams ? 0 : listPosts.length,
           postId: queryParams,
         };
 
@@ -50,7 +50,7 @@ function PostList(props) {
           outPut = await postApi.getPaginationUser({ params });
         }
 
-        if (filterChanged) {
+        if (filterChanged || queryParams) {
           dispatch(setFilterChange(false));
           setListPosts(outPut.data.items);
         } else {
@@ -66,7 +66,7 @@ function PostList(props) {
     }
 
     getPosts();
-  }, [pageNumber, props.filter, teamId]);
+  }, [pageNumber, props.filter, teamId, queryParams]);
 
   //o trong team
   /* useEffect(() => {

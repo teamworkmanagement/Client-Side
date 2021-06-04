@@ -79,6 +79,8 @@ function StartChatMembers(props) {
 
   const filterColors = async (inputValue) => {
     try {
+      if (!inputValue)
+        return;
       const params = {
         userId: user.id,
         keyword: inputValue,
@@ -145,7 +147,7 @@ function StartChatMembers(props) {
       return state.data.isFixed ? { ...base, display: 'none' } : base;
     },
   };
-  
+
   return (
     <CModal show={props.showStartChat} onClose={handleOnClose} size="sm">
       <CModalHeader closeButton>Tạo nhóm chat mới</CModalHeader>

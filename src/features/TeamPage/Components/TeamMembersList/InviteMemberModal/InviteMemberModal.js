@@ -37,7 +37,7 @@ function InviteMemberModal(props) {
     const obj =
     {
       "isByEmail": true,
-      "email": "email",
+      "email": email,
       "participationTeamId": teamId
     };
 
@@ -45,13 +45,13 @@ function InviteMemberModal(props) {
       const response = await teamApi.inviteUser(obj);
 
     } catch (err) {
-      
+
       console.log(err);
       props.onClose(err.data.Message);
-      
+
     }
     finally {
-      
+
     }
 
   }
@@ -73,7 +73,7 @@ function InviteMemberModal(props) {
         />
         <CButton onClick={onCreateCard} className="add-card-btn">
           Thêm
-        </CButton>       
+        </CButton>
       </CModalBody>
     </CModal>
   );
