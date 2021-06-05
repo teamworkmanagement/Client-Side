@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import uuid from 'src/utils/file/uuid';
 import './notification.scss';
 import { useHistory } from 'react-router';
+import axiosClient from 'src/api/axiosClient';
 
 // register it.
 timeago.register('vi', vi);
@@ -78,15 +79,25 @@ const TheHeaderDropdownMssg = () => {
     //notiApi.readNoti(payload).then(res => { }).catch(err => { });
     let cloneNotis = [...notis];
     let obj = cloneNotis.find(n => n.notificationId === noti.notificationId);
-    obj.notificationStatus = true;
 
-    setNotis(cloneNotis);
-    setItemsCount(itemsCount - 1);
+    if (obj.notificationStatus === false) {
+      obj.notificationStatus = true;
+      setNotis(cloneNotis);
+      setItemsCount(itemsCount - 1);
+    }
+
+
     if (obj.notificationLink)
       history.push({
         pathname: obj.notificationLink.split('?')[0],
-        search: obj.notificationLink.split('?')[1]
+        search: obj.notificationLink.split('?')[1] ? obj.notificationLink.split('?')[1] : null,
       });
+    console.log(obj.notificationLink.split('?')[0]);
+    console.log(obj.notificationLink.split('?')[1]);
+
+    axiosClient.get('https://www.google.com')
+      .then(res => { })
+      .catch(err => { console.log("lỗi err: ", err.message) });
   }
   return (
     <CDropdown

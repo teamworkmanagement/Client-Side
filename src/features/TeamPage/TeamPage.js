@@ -55,9 +55,7 @@ function TeamPage(props) {
           return 0;
       }
     }
-    else {
-      return 0;
-    }
+    return 0;
   });
 
   console.log(queryParams);
@@ -78,7 +76,7 @@ function TeamPage(props) {
   const onActiveTabChange = (index) => {
     setActive(index);
 
-    let tab = "feed";
+    /*let tab = "feed";
     switch (index) {
       case 0:
         tab = "feed";
@@ -106,9 +104,40 @@ function TeamPage(props) {
     history.push({
       pathname: history.location.pathname,
       search: `tab=${tab}`
-    })
+    });*/
   }
 
+  useEffect(()=>{
+    let tab = "feed";
+    switch (active) {
+      case 0:
+        tab = "feed";
+        break;
+      case 1:
+        tab = "task";
+        break;
+      case 2:
+        tab = "message";
+        break;
+      case 3:
+        tab = "files";
+        break;
+      case 4:
+        tab = "members";
+        break;
+      case 5:
+        tab = "statistics"
+        break;
+      default:
+        break;
+    }
+
+    console.log("zzzzzzz: ", history.location.search);
+    history.push({
+      pathname: history.location.pathname,
+      search: `tab=${tab}`
+    });
+  },[active])
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
     if (queryObj.tab && !queryObj.b && !queryObj.t)
