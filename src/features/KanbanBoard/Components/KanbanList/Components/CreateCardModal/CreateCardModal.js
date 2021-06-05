@@ -64,6 +64,9 @@ function CreateCardModal(props) {
     }
   }
 
+  useEffect(() => {
+    console.log(props.kblistId);
+  }, []);
 
   return (
     <CModal show={props.showAddCard} onClose={handleOnClose} size="sm">

@@ -9,7 +9,7 @@ import {
   CModalHeader,
   CToast,
   CToastBody,
-  CToaster
+  CToaster,
 } from "@coreui/react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,6 @@ import MyToaster from "src/features/ToastTest/ToastTest";
 InviteMemberModal.propTypes = {};
 
 function InviteMemberModal(props) {
-
   const { teamId } = useParams();
   const [email, setEmail] = useState("");
 
@@ -32,47 +31,42 @@ function InviteMemberModal(props) {
   }
 
   async function onCreateCard() {
-
     console.log(email);
-    const obj =
-    {
-      "isByEmail": true,
-      "email": email,
-      "participationTeamId": teamId
+    const obj = {
+      isByEmail: true,
+      email: "email",
+      participationTeamId: teamId,
     };
 
     try {
       const response = await teamApi.inviteUser(obj);
-
     } catch (err) {
-
       console.log(err);
       props.onClose(err.data.Message);
-
+    } finally {
     }
-    finally {
-
-    }
-
   }
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   return (
-    <CModal show={props.showAddInvite} onClose={handleOnClose} size="sm">
-      <CModalHeader closeButton>Thêm thành viên</CModalHeader>
+    <CModal
+      className="modal-invite-member"
+      show={props.showAddInvite}
+      onClose={handleOnClose}
+      size="sm"
+    >
+      <CModalHeader closeButton>Mời thành viên</CModalHeader>
       <CModalBody className="new-card-form">
         <div className="name-label">Nhập email:</div>
         <CInput
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          placeholder="Email người được mời..."
         />
         <CButton onClick={onCreateCard} className="add-card-btn">
-          Thêm
+          Mời
         </CButton>
       </CModalBody>
     </CModal>

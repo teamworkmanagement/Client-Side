@@ -10,7 +10,8 @@ import { CModal, CModalBody, CModalHeader } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import Modals from "src/shared_components/views/notifications/modals/Modals";
 import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
-import { useHistory } from "react-router";
+import { BiTaskX } from "react-icons/bi";
+import { VscSearchStop } from "react-icons/vsc";
 
 function GanttChart(props) {
   const input = useRef(null);
@@ -23,8 +24,6 @@ function GanttChart(props) {
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
-
-  const history = useHistory();
   const tasks = [];
   kanbanLists.map((kl) => {
     kl.taskUIKanbans.map((task) => {
@@ -33,8 +32,7 @@ function GanttChart(props) {
   });
 
   useEffect(() => {
-    if (!props.boardId)
-      return;
+    if (!props.boardId) return;
     dispatch(getBoardDataForUI(props.boardId));
   }, [props.boardId]);
 
@@ -193,20 +191,14 @@ function GanttChart(props) {
           taskDeadline: newTaskData.end_date,
           taskImageUrl: newTaskData.taskImageUrl,
         })
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
     });
   }, [data]);
 
   const openEditPoup = async (taskId, task) => {
     setModalTask(null);
     setIsShowEditPopup(true);
-
-    history.push({
-      pathname: history.location.pathname,
-      search: history.location.search + `&t=${taskId}`,
-    });
-
     const taskModal = await taskApi.getTaskById(taskId);
     setModalTask({
       ...taskModal.data,
@@ -217,12 +209,6 @@ function GanttChart(props) {
 
   function closeForm() {
     gantt.hideLightbox();
-    console.log("close gantt");
-
-    history.push({
-      pathname: history.location.pathname,
-      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
-    });
   }
 
   function updateGanttTask(task) {
@@ -252,7 +238,21 @@ function GanttChart(props) {
 
   return (
     <div className="gantt-container">
-      <div ref={input} style={{ width: "100%", height: "100%" }}></div>
+      {tasks.length > 0 && (
+        <div ref={input} style={{ width: "100%", height: "100%" }}></div>
+      )}
+
+      {tasks.length === 0 && (
+        <div className="nodata-image">
+          <div className="icon-group">
+            <BiTaskX className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">Chưa có công việc nào trong bảng này</div>
+          <div className="create-btn">Tạo công việc mới</div>
+        </div>
+      )}
       <TaskEditModal
         closePopup={closeForm}
         isShowEditPopup={isShowEditPopup}

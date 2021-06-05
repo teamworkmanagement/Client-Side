@@ -8,8 +8,7 @@ import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import Empty from "../Post/Components/Empty/Empty";
 import Loading from "../Post/Components/Loading/Loading";
 import CIcon from "@coreui/icons-react";
-import { useLocation, useParams } from "react-router";
-import queryString from 'query-string';
+import { useParams } from "react-router";
 
 PostList.propTypes = {};
 
@@ -17,10 +16,6 @@ function PostList(props) {
   const [listPosts, setListPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showScroll, setShowScroll] = useState(false);
-
-  const location = useLocation();
-  const queryParams = queryString.parse(location.search).p;
-
 
   const dispatch = useDispatch();
   const latestPosts = useRef(null);
@@ -38,8 +33,7 @@ function PostList(props) {
         setIsLoading(true);
         const params = {
           ...props.filter,
-          SkipItems: filterChanged ? 0 : queryParams ? 0 : listPosts.length,
-          postId: queryParams,
+          SkipItems: filterChanged ? 0 : listPosts.length,
         };
 
         let outPut = {};
@@ -50,7 +44,7 @@ function PostList(props) {
           outPut = await postApi.getPaginationUser({ params });
         }
 
-        if (filterChanged || queryParams) {
+        if (filterChanged) {
           dispatch(setFilterChange(false));
           setListPosts(outPut.data.items);
         } else {
@@ -66,7 +60,7 @@ function PostList(props) {
     }
 
     getPosts();
-  }, [pageNumber, props.filter, teamId, queryParams]);
+  }, [pageNumber, props.filter, teamId]);
 
   //o trong team
   /* useEffect(() => {

@@ -37,11 +37,11 @@ import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file/index";
 import CardLoading from "../CardLoading/CardLoading";
 import taskApi from "src/api/taskApi";
 import { myBucket } from "src/utils/aws/config";
+import { v4 as uuidv4 } from "uuid";
 import fileApi from "src/api/fileApi";
 import commentApi from "src/api/commentApi";
 import Select, { components } from "react-select";
 import axiosClient from "src/api/axiosClient";
-import uuid from "src/utils/file/uuid";
 
 TaskEditModal.propTypes = {};
 
@@ -309,7 +309,9 @@ function TaskEditModal(props) {
   };
 
   useEffect(() => {
+    console.log(current);
     if (JSON.stringify(task) === JSON.stringify({})) return;
+
 
   }, [current]);
 
@@ -700,7 +702,7 @@ function TaskEditModal(props) {
   const onImagePickChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const folder = uuid();
+      const folder = uuidv4();
       const params = {
         Body: file,
         Bucket: "teamappstorage",
@@ -780,7 +782,7 @@ function TaskEditModal(props) {
   const onFilePickChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const folder = uuid();
+      const folder = uuidv4();
       const params = {
         Body: file,
         Bucket: "teamappstorage",

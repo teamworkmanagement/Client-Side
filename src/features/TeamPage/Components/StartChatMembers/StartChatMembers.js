@@ -71,8 +71,6 @@ function StartChatMembers(props) {
 
   const filterColors = async (inputValue) => {
     try {
-      if (!inputValue)
-        return;
       const params = {
         userId: user.id,
         keyword: inputValue,

@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import "./BoardsPage.scss";
 import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 import kanbanApi from "src/api/kanbanApi";
 import CreateBoardModal from "./CreateBoardModal/CreateBoardModal";
-import { BsSearch } from "react-icons/bs";
-import queryString from 'query-string';
+import { BsClipboardData, BsSearch } from "react-icons/bs";
+import { VscSearchStop } from "react-icons/vsc";
 
 BoardsPage.propTypes = {};
 
@@ -29,17 +29,11 @@ function BoardsPage(props) {
     { boardId: 10, name: "Tasks Khóa luận", tasksCount: 21 },
   ];
 
-  const history = useHistory();
   function openBoard(boardId) {
     if (props.openBoard) {
       props.openBoard(boardId);
-      history.push({
-        pathname: history.location.pathname,
-        search: history.location.search + `&b=${boardId}`
-      });
     }
   }
-
 
   const [boardLists, setBoardLists] = useState([]);
   const [showAddBoard, setShowAddBoard] = useState(false);
@@ -51,9 +45,8 @@ function BoardsPage(props) {
       .then((res) => {
         setBoardLists(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, []);
-
 
   const showModalAddBoard = () => {
     setShowAddBoard(true);
@@ -84,36 +77,55 @@ function BoardsPage(props) {
           </div>
         </div>
       </div>
-      <div className="list-boards">
-        <CRow>
-          {boardLists.map((item, index) => {
-            return (
-              <CCol
-                xs="12"
-                sm="6"
-                md="4"
-                xl="3"
-                key={index}
-                style={{ animationDelay: `${index / 20}s` }}
-                className="board-item-container"
-              >
-                <div
-                  className="board-item"
-                  onClick={() => openBoard(item.kanbanBoardId)}
+      {boardLists.length > 0 && (
+        <div className="list-boards">
+          <CRow>
+            {boardLists.map((item, index) => {
+              return (
+                <CCol
+                  xs="12"
+                  sm="6"
+                  md="4"
+                  xl="3"
+                  key={index}
+                  style={{ animationDelay: `${index / 20}s` }}
+                  className="board-item-container"
                 >
-                  <div className="board-title">{item.kanbanBoardName}</div>
-                  <div className="tasks-count">
-                    <CIcon name="cil-storage" />
-                    {item.taskCount}
+                  <div
+                    className="board-item"
+                    onClick={() => openBoard(item.kanbanBoardId)}
+                  >
+                    <div className="board-title">{item.kanbanBoardName}</div>
+                    <div className="tasks-count">
+                      <CIcon name="cil-storage" />
+                      {item.taskCount}
+                    </div>
                   </div>
-                </div>
-              </CCol>
-            );
-          })}
-        </CRow>
+                </CCol>
+              );
+            })}
+          </CRow>
 
-        <CreateBoardModal showAddBoard={showAddBoard} onClose={onCloseBoard} />
-      </div>
+          <CreateBoardModal
+            showAddBoard={showAddBoard}
+            onClose={onCloseBoard}
+          />
+        </div>
+      )}
+
+      {boardLists.length === 0 && (
+        <div className="nodata-image">
+          <div className="icon-group">
+            <BsClipboardData className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">
+            Chưa có bảng công việc nào trong nhóm này
+          </div>
+          <div className="create-btn">Tạo bảng công việc mới</div>
+        </div>
+      )}
     </div>
   );
 }
