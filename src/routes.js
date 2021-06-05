@@ -120,6 +120,7 @@ const User = React.lazy(() => import("./shared_components/views/users/User"));
 const routes = [
   // { path: '/', exact: true, name: 'Home' },
   { path: "/notfound", name: "Không tồn tại", component: NotFoundPage },
+  { path: "/testtoaster", name: "Test Toaster", component: MyToaster },
   {
     path: "/connectionerror",
     name: "Không có kết nối mạng",

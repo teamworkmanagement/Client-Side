@@ -33,11 +33,11 @@
     }
 }
 @mixin SideBarItemHover {
-    color: #3e79f7;
-    background-color: #ebf1fe;
+    color: #3e79f7 !important;
+    background-color: #ebf1fe !important;
 
     .c-sidebar-nav-icon {
-        color: #3e79f7;
+        color: #3e79f7 !important;
     }
 }
 

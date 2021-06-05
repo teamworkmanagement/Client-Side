@@ -1,4 +1,263 @@
-@import "../../../../shared_components/scss/style.scss";
+//@import "../../../../shared_components/scss/style.scss";
+//========================================
+//border
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+
+// Here you can add other styles
+@mixin background-color-theme {
+    background: #3e79f7;
+}
+@mixin PaddingForLeftPanel {
+    padding: 2rem 1rem 2rem 2rem;
+    @media (max-width: 992px) {
+        padding: 1rem 0.5rem 1rem 1rem;
+    }
+}
+@mixin PaddingForRightPanel {
+    padding: 2rem 2rem 2rem 1rem;
+    @media (max-width: 992px) {
+        padding: 1rem 1rem 1rem 0.5rem;
+    }
+}
+
+@mixin SideBarItemNormal {
+    background-color: white;
+    color: #3c4b64;
+    font-weight: 500;
+    border: none;
+    .c-sidebar-nav-icon {
+        color: #3c4b64;
+    }
+}
+@mixin SideBarItemSelected {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe;
+    border-right: 3px solid #3e79f7 !important;
+    .c-sidebar-nav-icon {
+        color: #3e79f7;
+    }
+}
+@mixin SideBarItemHover {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe !important;
+
+    .c-sidebar-nav-icon {
+        color: #3e79f7 !important;
+    }
+}
+
+@mixin CardStyle {
+    background-color: white;
+    padding: 1rem;
+    border-radius: $borderRadius;
+    border: $borderStyle;
+}
+
+//text
+
+@mixin TitleStyle {
+    font-weight: bold;
+    font-size: 110%;
+}
+@mixin SubTextStyle {
+    font-size: 90%;
+    color: $subTextColor;
+}
+
+//buttons
+@mixin TimelineModeGroupButton {
+    .btn-group {
+        transition: $baseTransition;
+        .btn {
+            padding: 0.3rem 0.6rem;
+            border-color: #5186f8;
+            color: #5186f8;
+            transition: $baseTransition;
+            &:hover {
+                background-color: #ebf1fe;
+            }
+            &.active {
+                background-color: #5186f8;
+                color: white;
+            }
+            &:focus {
+                box-shadow: 0 0 0 0.2rem #ebf1fe;
+            }
+            &:first-child {
+                border-top-left-radius: $borderRadius;
+                border-bottom-left-radius: $borderRadius;
+            }
+            &:last-child {
+                border-top-right-radius: $borderRadius;
+                border-bottom-right-radius: $borderRadius;
+            }
+        }
+    }
+}
+
+@mixin NormalButtonStyle {
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+
+@mixin DropdownToggleButtonStyle {
+    background-color: transparent;
+    outline: none;
+    border-radius: 50px;
+    padding: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .c-icon {
+        color: $textColor;
+    }
+    &::after {
+        display: none;
+    }
+    &:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+    &:hover {
+        background-color: #e4e6e9;
+    }
+}
+
+//menus
+@mixin DropdownMenuStyle {
+    z-index: 1000;
+    margin-top: -0.3rem !important;
+    margin-left: -1.5rem !important;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+    border-radius: $borderRadius;
+    padding: 0;
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        .c-icon {
+            margin-right: 0.5rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            &.icon-delete {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+        &:first-child:hover {
+            background-color: #f5f5f5;
+            border-top-left-radius: $borderRadius;
+            border-top-right-radius: $borderRadius;
+        }
+        &:last-child:hover {
+            background-color: #f5f5f5;
+            border-bottom-left-radius: $borderRadius;
+            border-bottom-right-radius: $borderRadius;
+        }
+    }
+}
+
+//header
+@mixin HeaderToolBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-right: 1.5rem;
+    margin-left: 1.5rem;
+    .normal-btn {
+        @include NormalButtonStyle;
+    }
+    .show-mode {
+        width: fit-content;
+        justify-content: flex-end;
+        margin-bottom: 0.5rem;
+        display: flex;
+        padding-right: 0;
+        margin-left: 0.5rem;
+        .mode-btn {
+            width: 3rem;
+            max-width: 3rem;
+            border: $borderStyle;
+            background-color: transparent;
+            margin-right: 0.6px;
+            transition: $baseTransition;
+            &.active {
+                border-color: $baseColor;
+            }
+            &.first {
+                margin-right: 1px;
+                border-top-left-radius: $borderRadius;
+                border-bottom-left-radius: $borderRadius;
+            }
+            &.last {
+                border-top-right-radius: $borderRadius;
+                border-bottom-right-radius: $borderRadius;
+            }
+        }
+    }
+}
+
+@mixin ShowMode {
+    width: fit-content;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+    display: flex;
+    padding-right: 0;
+    margin-left: 0.5rem;
+    .mode-btn {
+        width: 3rem;
+        max-width: 3rem;
+        border: $borderStyle;
+        background-color: transparent;
+        margin-right: 0.6px;
+        transition: $baseTransition;
+        &.active {
+            border-color: $baseColor;
+        }
+        &.first {
+            margin-right: 1px;
+            border-top-left-radius: $borderRadius;
+            border-bottom-left-radius: $borderRadius;
+        }
+        &.last {
+            margin-left: 0.5px;
+            border-top-right-radius: $borderRadius;
+            border-bottom-right-radius: $borderRadius;
+        }
+    }
+}
+
+//========================================
 .my-tasks-container {
     height: 100%;
     width: 100%;

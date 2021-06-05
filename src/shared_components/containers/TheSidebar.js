@@ -32,7 +32,12 @@ const TheSidebar = (props) => {
   return (
     <CSidebar show={show} onShowChange={onChange}>
       <CSidebarBrand className="d-md-down-none" to="/">
-        {darkMode && <div className="logo-team-container"></div>}
+        {darkMode && (
+          <div className="logo-team-container">
+            <div className="img"></div>
+            {/* <img alt="logoapp" src="../images/app/logoteam.png" /> */}
+          </div>
+        )}
       </CSidebarBrand>
       <CSidebarNav>
         <CCreateElement

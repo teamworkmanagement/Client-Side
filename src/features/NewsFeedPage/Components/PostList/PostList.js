@@ -136,8 +136,8 @@ function PostList(props) {
   return (
     <div className="post-list" onscroll={onScroll}>
       {listPosts.length === 0 && !isLoading ? (
-        <div className="nodata-image">
-          <CIcon name="cil-newspaper" />
+        <div className="nodata-image-post-list">
+          <CIcon name="cil-newspaper" className="icon-post" />
           <CIcon className="icon-x" name="cil-x" />
           <CIcon className="icon-glass" name="cil-magnifying-glass" />
 

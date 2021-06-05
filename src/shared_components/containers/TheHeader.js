@@ -81,7 +81,10 @@ const TheHeader = () => {
         className="ml-3 d-md-down-none"
         onClick={toggleSidebar}
       />
-
+      <CHeaderBrand className="mx-auto d-lg-none" to="/">
+        {/* <CIcon name="logo" height="48" alt="Logo" /> */}
+        <img alt="logo" src="../images/app/logoteam.png" />
+      </CHeaderBrand>
       <CHeaderNav className="px-3">
         <div className="lookup-input-header">
           <CInput

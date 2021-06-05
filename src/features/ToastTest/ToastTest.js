@@ -1,30 +1,26 @@
-import {
-  CButton, CToast,
-  CToastBody,
-  CToaster
-} from "@coreui/react";
+import { CButton, CToast, CToastBody, CToaster } from "@coreui/react";
 import React, { useState } from "react";
 
 const MyToaster = () => {
   const [toasts, setToasts] = useState([]);
-  const [content, setContent] = useState('');
+  //const [content, setContent] = useState("");
+  const content = "lorem";
 
   const addToast = () => {
-    fetch('https://api.quotable.io/random')
-      .then(res => res.json())
-      .then(res => {
-        setContent(res.content);
-      }).catch(err => {
-
-      })
+    // fetch("https://api.quotable.io/random")
+    //   .then((res) => res.json())
+    //   .then((res) => {
+    //     setContent(res.content);
+    //   })
+    //   .catch((err) => {});
     setToasts([
       ...toasts,
       {
         position: "top-right",
-        autohide: 1000,
+        autohide: 6000,
         closeButton: true,
         fade: true,
-        color: "info"
+        color: "info",
       },
     ]);
   };
@@ -37,9 +33,6 @@ const MyToaster = () => {
     }, {});
   })();
 
-  console.log(toasters);
-
-
   return (
     <div>
       <CButton className="mr-1 w-25" color="info" onClick={addToast}>
@@ -51,7 +44,7 @@ const MyToaster = () => {
           <CToaster position={toasterKey} key={"toaster" + toasterKey}>
             {toasters[toasterKey].map((toast, key) => {
               return (
-                <CToast color={["info"]} show={true} autohide={2000} fade={true}>
+                <CToast color="info" show={true} autohide={500} fade={true}>
                   <CToastBody>{content}</CToastBody>
                 </CToast>
               );

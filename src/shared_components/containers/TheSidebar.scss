@@ -1,3 +1,406 @@
+//@import "../scss/style.scss";
+//========================================
+//border
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+
+// Here you can add other styles
+@mixin background-color-theme {
+    background: #3e79f7;
+}
+@mixin PaddingForLeftPanel {
+    padding: 2rem 1rem 2rem 2rem;
+    @media (max-width: 992px) {
+        padding: 1rem 0.5rem 1rem 1rem;
+    }
+}
+@mixin PaddingForRightPanel {
+    padding: 2rem 2rem 2rem 1rem;
+    @media (max-width: 992px) {
+        padding: 1rem 1rem 1rem 0.5rem;
+    }
+}
+
+@mixin SideBarItemNormal {
+    background-color: white;
+    color: #3c4b64;
+    font-weight: 500;
+    border: none;
+    .c-sidebar-nav-icon {
+        color: #3c4b64;
+    }
+}
+@mixin SideBarItemSelected {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe;
+    border-right: 3px solid #3e79f7 !important;
+    .c-sidebar-nav-icon {
+        color: #3e79f7;
+    }
+}
+@mixin SideBarItemHover {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe !important;
+
+    .c-sidebar-nav-icon {
+        color: #3e79f7 !important;
+    }
+}
+
+@mixin CardStyle {
+    background-color: white;
+    padding: 1rem;
+    border-radius: $borderRadius;
+    border: $borderStyle;
+}
+
+//text
+
+@mixin TitleStyle {
+    font-weight: bold;
+    font-size: 110%;
+}
+@mixin SubTextStyle {
+    font-size: 90%;
+    color: $subTextColor;
+}
+
+//buttons
+@mixin TimelineModeGroupButton {
+    .btn-group {
+        transition: $baseTransition;
+        .btn {
+            padding: 0.3rem 0.6rem;
+            border-color: #5186f8;
+            color: #5186f8;
+            transition: $baseTransition;
+            &:hover {
+                background-color: #ebf1fe;
+            }
+            &.active {
+                background-color: #5186f8;
+                color: white;
+            }
+            &:focus {
+                box-shadow: 0 0 0 0.2rem #ebf1fe;
+            }
+            &:first-child {
+                border-top-left-radius: $borderRadius;
+                border-bottom-left-radius: $borderRadius;
+            }
+            &:last-child {
+                border-top-right-radius: $borderRadius;
+                border-bottom-right-radius: $borderRadius;
+            }
+        }
+    }
+}
+
+@mixin NormalButtonStyle {
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+
+@mixin DropdownToggleButtonStyle {
+    background-color: transparent;
+    outline: none;
+    border-radius: 50px;
+    padding: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .c-icon {
+        color: $textColor;
+    }
+    &::after {
+        display: none;
+    }
+    &:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+    &:hover {
+        background-color: #e4e6e9;
+    }
+}
+
+//menus
+@mixin DropdownMenuStyle {
+    z-index: 1000;
+    margin-top: -0.3rem !important;
+    margin-left: -1.5rem !important;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+    border-radius: $borderRadius;
+    padding: 0;
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        .c-icon {
+            margin-right: 0.5rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            &.icon-delete {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+        &:first-child:hover {
+            background-color: #f5f5f5;
+            border-top-left-radius: $borderRadius;
+            border-top-right-radius: $borderRadius;
+        }
+        &:last-child:hover {
+            background-color: #f5f5f5;
+            border-bottom-left-radius: $borderRadius;
+            border-bottom-right-radius: $borderRadius;
+        }
+    }
+}
+
+//header
+@mixin HeaderToolBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-right: 1.5rem;
+    margin-left: 1.5rem;
+    .normal-btn {
+        @include NormalButtonStyle;
+    }
+    .show-mode {
+        width: fit-content;
+        justify-content: flex-end;
+        margin-bottom: 0.5rem;
+        display: flex;
+        padding-right: 0;
+        margin-left: 0.5rem;
+        .mode-btn {
+            width: 3rem;
+            max-width: 3rem;
+            border: $borderStyle;
+            background-color: transparent;
+            margin-right: 0.6px;
+            transition: $baseTransition;
+            &.active {
+                border-color: $baseColor;
+            }
+            &.first {
+                margin-right: 1px;
+                border-top-left-radius: $borderRadius;
+                border-bottom-left-radius: $borderRadius;
+            }
+            &.last {
+                border-top-right-radius: $borderRadius;
+                border-bottom-right-radius: $borderRadius;
+            }
+        }
+    }
+}
+
+@mixin ShowMode {
+    width: fit-content;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+    display: flex;
+    padding-right: 0;
+    margin-left: 0.5rem;
+    .mode-btn {
+        width: 3rem;
+        max-width: 3rem;
+        border: $borderStyle;
+        background-color: transparent;
+        margin-right: 0.6px;
+        transition: $baseTransition;
+        &.active {
+            border-color: $baseColor;
+        }
+        &.first {
+            margin-right: 1px;
+            border-top-left-radius: $borderRadius;
+            border-bottom-left-radius: $borderRadius;
+        }
+        &.last {
+            margin-left: 0.5px;
+            border-top-right-radius: $borderRadius;
+            border-bottom-right-radius: $borderRadius;
+        }
+    }
+}
+
+//========================================
+.c-sidebar {
+    //z-index: 999;
+    box-shadow: 1px 0px 4px -1px rgb(0 0 0 / 15%) !important;
+    .c-sidebar-brand {
+        //background-color: #283142;
+        background-color: white !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.2rem 0rem;
+        .logo-team-container {
+            background-color: white !important;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem;
+            .img {
+                background-image: url("../../common/images/logoteam.png");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+                height: 100%;
+                width: 100%;
+                transition: $baseTransition;
+            }
+        }
+    }
+    .c-sidebar-nav {
+        background-color: white;
+        .c-sidebar-nav-item {
+            .c-sidebar-nav-label {
+                @include SideBarItemNormal;
+                &:hover {
+                    @include SideBarItemHover;
+                }
+                &.c-active {
+                    @include SideBarItemSelected;
+                }
+            }
+            .c-sidebar-nav-link {
+                @include SideBarItemNormal;
+                &:hover {
+                    @include SideBarItemHover;
+                }
+                &.c-active {
+                    @include SideBarItemSelected;
+                }
+            }
+        }
+        .c-sidebar-nav-title {
+            @include SideBarItemNormal;
+            font-weight: bold;
+        }
+        .c-sidebar-nav-dropdown {
+            .c-sidebar-nav-dropdown-toggle {
+                @include SideBarItemNormal;
+                &:hover {
+                    @include SideBarItemHover;
+                }
+
+                &::after {
+                    color: #3c4b64 !important;
+                    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='rgba(60, 75, 100, 1)' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
+                    :hover {
+                        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='rgba(62, 121, 247, 1)' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
+                    }
+                }
+            }
+            .c-sidebar-nav-dropdown-items {
+                .c-sidebar-nav-item {
+                    @include SideBarItemNormal;
+                    .c-sidebar-nav-link {
+                        overflow-x: hidden;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        @include SideBarItemNormal;
+                        .c-avatar-img {
+                            width: 1.5rem !important;
+                            height: 1.5rem !important;
+                            margin-right: 1rem;
+                        }
+                        .team-name-dropdown-item {
+                            width: 0.5rem;
+                            flex-grow: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: pre;
+                        }
+                        .badge {
+                            margin-left: auto !important;
+                        }
+                        &:hover {
+                            @include SideBarItemHover;
+                        }
+                        &.c-active {
+                            @include SideBarItemSelected;
+                        }
+                    }
+                }
+            }
+        }
+        .c-sidebar-nav-dropdown.c-show {
+            background-color: white;
+        }
+        .c-sidebar-nav-title {
+        }
+    }
+
+    .c-sidebar-minimizer {
+        background-color: white !important;
+        //background-color: #283142;
+        box-shadow: 0px -1px 4px -1px rgb(0 0 0 / 15%);
+        z-index: 1000;
+        &:hover {
+            background-color: #ebf1fe !important;
+        }
+        &::before {
+            background-color: transparent;
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%238a93a2' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 12.5px;
+            transition: 0.3s;
+        }
+    }
+
+    &.c-sidebar-minimized {
+        .c-sidebar-brand {
+            .logo-team-container {
+                .img {
+                    background-image: url("../../common/images/logoapp.png");
+                }
+            }
+        }
+    }
+
+    @media (min-width: 992px) {
+        //width:20rem !important;
+    }
+}
 .custom-dropdown-item {
     display: flex;
     align-items: center;
