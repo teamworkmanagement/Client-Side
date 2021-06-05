@@ -19,7 +19,7 @@ import CIcon from "@coreui/icons-react";
 import { changeStateChatListSidebar } from "src/appSlice";
 import { BsSearch } from "react-icons/bs";
 import ChatList from "src/features/ChatPage/Components/ChatList/ChatList";
-import { searchGroupChatForUser } from "src/features/ChatPage/chatSlice";
+import { searchGroupChatForUser, setTriggerAddConversation } from "src/features/ChatPage/chatSlice";
 
 const ChatListSideBar = (props) => {
   const dispatch = useDispatch();
@@ -53,6 +53,17 @@ const ChatListSideBar = (props) => {
     };
     dispatch(searchGroupChatForUser({ params }));
   };
+
+  const onAddConversation = () => {
+    dispatch(setTriggerAddConversation());
+    dispatch(
+      changeStateChatListSidebar({
+        type: "chatlistsidebar",
+        chatListSidebarShow: false,
+      })
+    );
+  }
+
   return (
     <CSidebar
       className="d-sm-down-block d-md-none sidebar-chat-list"
@@ -77,7 +88,7 @@ const ChatListSideBar = (props) => {
         </div>
         <ChatList chatImages={chatImages} />
         <div
-          //onClick={() => setShowAddConversation(true)}
+          onClick={() => onAddConversation()}
           className="btn-add-chat"
         >
           <CIcon name="cil-plus" />

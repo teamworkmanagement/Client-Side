@@ -67,7 +67,7 @@ function CreateChatInChatPage(props) {
     props.onCLoseModal();
   }
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   const [inputValue, setInputValue] = useState("");
 
@@ -78,13 +78,15 @@ function CreateChatInChatPage(props) {
 
   const styles = {
     multiValue: (base, state) => {
-      return state.data.isFixed ? { ...base } : base;
+      return state.data.isFixed ? { ...base} : base;
     },
     multiValueLabel: (base, state) => {
-      return state.data.isFixed ? { ...base } : base;
+      return state.data.isFixed
+        ? { ...base }
+        : base;
     },
     multiValueRemove: (base, state) => {
-      return state.data.isFixed ? { ...base } : base;
+      return state.data.isFixed ? { ...base, display: 'none' } : base;
     },
   };
 
@@ -105,7 +107,7 @@ function CreateChatInChatPage(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -137,7 +139,7 @@ function CreateChatInChatPage(props) {
 
       dispatch(setIsSelected(true));
       dispatch(setCurrentGroup(res.data));
-    } catch (err) {}
+    } catch (err) { }
 
     console.log(options);
 
@@ -153,7 +155,17 @@ function CreateChatInChatPage(props) {
     props.onCLoseModal();
   };
 
-  const onChange = (e) => {
+  const onChange = (e,{ action, removedValue }) => {
+
+    switch (action) {
+      case 'remove-value':
+      case 'pop-value':
+        if (removedValue.isFixed) {
+          return;
+        }
+        break;
+    }
+
     setOptions(e);
   };
   const onInputGrChatName = (e) => {
@@ -185,10 +197,12 @@ function CreateChatInChatPage(props) {
             onChange={onChange}
             onInputChange={handleInputChange}
             isMulti
+            isClearable={false}
             components={{
               Option: CustomOption,
               MultiValue: ValueOption,
             }}
+            styles={styles}
           />
           <div onClick={onCreateGroupChat} className="create-chat-btn">
             Tạo nhóm Chat

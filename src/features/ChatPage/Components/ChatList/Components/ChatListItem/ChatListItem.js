@@ -12,6 +12,7 @@ import TimeAgo from "timeago-react";
 import * as timeago from "timeago.js";
 import vi from "timeago.js/lib/lang/vi";
 import { useHistory } from "react-router";
+import { changeStateChatListSidebar } from "src/appSlice";
 
 // register it.
 timeago.register("vi", vi);
@@ -25,6 +26,13 @@ function ChatListItem(props) {
     if (props.data.groupChatId !== currentGroup) {
       dispatch(setCurrentGroup(props.data.groupChatId));
       dispatch(setIsSelected(true));
+
+      dispatch(
+        changeStateChatListSidebar({
+          type: "chatlistsidebar",
+          chatListSidebarShow: false,
+        })
+      );
     }
   };
 

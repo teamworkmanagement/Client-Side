@@ -31,8 +31,12 @@ const chatSlice = createSlice({
     loadDone: false,
     isSelected: false,
     newMessage: null,
+    triggerAddConversation: 0,
   },
   reducers: {
+    setTriggerAddConversation: (state) => {
+      state.triggerAddConversation++;
+    },
     setLoadDone: (state, action) => {
       state.loadDone = action.payload;
     },
@@ -114,6 +118,7 @@ export const {
   setReceiveMes,
   setNewMessage,
   changeGroupPosition,
-  addNewGroupChat
+  addNewGroupChat,
+  setTriggerAddConversation
 } = actions;
 export default reducer; // default export
