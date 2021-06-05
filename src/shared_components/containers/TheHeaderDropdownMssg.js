@@ -18,6 +18,7 @@ import classNames from "classnames";
 import { useSelector } from 'react-redux';
 import uuid from 'src/utils/file/uuid';
 import './notification.scss';
+import { useHistory } from 'react-router';
 
 // register it.
 timeago.register('vi', vi);
@@ -58,6 +59,7 @@ const TheHeaderDropdownMssg = () => {
       notificationImage: 'https://firebasestorage.googleapis.com/v0/b/fir-fcm-5eb6f.appspot.com/o/notification_500px.png?alt=media&token=e68bc511-fdd4-4f76-90d9-11e86a143f21',
       notificationStatus: false,
       notificationContent: newNoti.notificationContent,
+      notificationLink: newNoti.notificationLink,
     })
 
     setNotis(clone);
@@ -66,6 +68,7 @@ const TheHeaderDropdownMssg = () => {
   }, [newNoti])
 
 
+  const history = useHistory();
   const onClick = (noti) => {
     console.log('onclick: ', noti);
     const payload = {
@@ -75,17 +78,29 @@ const TheHeaderDropdownMssg = () => {
     //notiApi.readNoti(payload).then(res => { }).catch(err => { });
     let cloneNotis = [...notis];
     let obj = cloneNotis.find(n => n.notificationId === noti.notificationId);
-    obj.notificationStatus = true;
 
-    setNotis(cloneNotis);
-    setItemsCount(itemsCount - 1);
+    if (obj.notificationStatus === false) {
+      obj.notificationStatus = true;
+      setNotis(cloneNotis);
+      setItemsCount(itemsCount - 1);
+    }
+
+
+    if (obj.notificationLink)
+      history.push({
+        pathname: obj.notificationLink.split('?')[0],
+        search: obj.notificationLink.split('?')[1] ? obj.notificationLink.split('?')[1] : null,
+      });
+    console.log(obj.notificationLink.split('?')[0]);
+    console.log(obj.notificationLink.split('?')[1]);
   }
+
   return (
     <CDropdown
       inNav
       className="c-header-nav-item mx-2"
       direction="down"
-      
+
     >
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <CIcon name="cil-bell" /><CBadge shape="pill" color="info">{itemsCount}</CBadge>

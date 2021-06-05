@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import taskApi from "src/api/taskApi";
+import { useHistory } from "react-router";
+
 TaskListItem.propTypes = {};
 
 function TaskListItem(props) {
@@ -20,6 +22,7 @@ function TaskListItem(props) {
   //const handleTasks = useSelector((state) => state.app.handleTasks);
   //const users = useSelector((state) => state.app.users);
   const dispatch = useDispatch();
+  const history = useHistory();
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
   const [modalTask, setModaTask] = useState(null);
   //const attachmentsCount = getAttachmentsCount();
@@ -28,6 +31,11 @@ function TaskListItem(props) {
 
   function onEditModalClose() {
     setIsShowEditPopup(false);
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+    });
   }
 
 
@@ -88,6 +96,12 @@ function TaskListItem(props) {
   const openEditPoup = async () => {
     setModaTask(null);
     setIsShowEditPopup(true);
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search + `&t=${props.data.taskId}`,
+    });
+    
     const taskModal = await taskApi.getTaskById(props.data.taskId);
     setModaTask({
       ...taskModal.data,

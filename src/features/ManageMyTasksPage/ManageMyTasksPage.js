@@ -38,9 +38,19 @@ function ManageMyTasksPage(props) {
   }
 
   useEffect(() => {
-    if (boardId)
+    if (!history.location.search)
+      setIsInBoard(false);
+
+    const queryObjs = queryString.parse(history.location.search);
+    if (queryObjs.b) {
       setIsInBoard(true);
+    }
+  }, [history.location.search])
+
+  useEffect(() => {
+
   }, [boardId])
+
   return (
     <div className="mytasks-page-container">
       {!isInBoard && <MyBoards goToBoard={goToBoard} />}

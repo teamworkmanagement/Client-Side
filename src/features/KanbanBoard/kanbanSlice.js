@@ -19,7 +19,8 @@ const kanbanSlice = createSlice({
     initialState: {
         kanbanBoard: {
             kanbanLists: [],
-            currentBoard: null
+            currentBoard: null,
+            taskSelected: null,
         },
         signalrData: {
             addNewTask: null,
@@ -36,7 +37,9 @@ const kanbanSlice = createSlice({
         setCurrentBoard(state, action) {
             state.kanbanBoard.currentBoard = action.payload;
         },
-
+        setTaskSelected(state, action) {
+            state.taskSelected = action.payload;
+        },
         signalRAddNewTask(state, action) {
             state.addNewTask = action.payload;
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
@@ -125,6 +128,7 @@ export const {
     signalRMoveList,
     signalRUpdateTask,
     signalRUpdateList,
-    setCurrentBoard
+    setCurrentBoard,
+    setTaskSelected
 } = actions;
 export default reducer;

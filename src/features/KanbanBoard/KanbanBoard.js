@@ -11,12 +11,14 @@ import {
 } from "src/appSlice";
 import { CButton, CButtonGroup } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { getBoardDataForUI, handleDragEnd } from "./kanbanSlice";
+import { getBoardDataForUI, handleDragEnd, setTaskSelected } from "./kanbanSlice";
 import taskApi from "src/api/taskApi";
 import kanbanApi from "src/api/kanbanApi";
 import CardLoading from "./Components/KanbanList/Components/KanbanCard/Components/CardLoading/CardLoading";
 import { RiTableLine } from "react-icons/ri";
 import { VscSearchStop } from "react-icons/vsc";
+import { useHistory } from "react-router";
+import queryString from 'query-string';
 
 KanbanBoard.propTypes = {};
 
@@ -93,7 +95,7 @@ function KanbanBoard(props) {
         if (destination.index === 0) {
           if (
             listTasksSource[source.index].orderInList <
-              listTaskDestination[0]?.orderInList ||
+            listTaskDestination[0]?.orderInList ||
             listTaskDestination.length === 0
           ) {
             pos = listTasksSource[source.index].orderInList;
@@ -121,8 +123,8 @@ function KanbanBoard(props) {
           oldList: source.droppableId,
           newList: destination.droppableId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     } else {
       if (destination.index === 0) {
         pos = cloneKbLists[0].kanbanListOrderInBoard / 2;
@@ -151,23 +153,49 @@ function KanbanBoard(props) {
           position: pos,
           kanbanListId: draggableId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     }
   }
 
+  const history = useHistory();
+  const [notask, setNoTask] = useState(false);
+
+  const [boardId, setBoardId] = useState(null);
+
   useEffect(() => {
-    if (!props.boardId) return;
+    console.log(history.location.search);
+    const queryParams = queryString.parse(history.location.search);
+    if (queryParams.b) {
+      setBoardId(queryParams.b)
+    }
+    else {
+      setBoardId(null);
+    }
+
+    if (queryParams.t) {
+      taskApi.getTaskById(queryParams.t).then(res => {
+        dispatch(setTaskSelected(queryParams.t));
+      }).catch(err => {
+        setNoTask(true);
+      })
+    }
+
+  }, [history.location.search])
+
+  useEffect(() => {
+    if (!boardId)
+      return;
     try {
       dispatch(setTeamLoading(true));
       setIsLoading(true);
-      dispatch(getBoardDataForUI(props.boardId));
+      dispatch(getBoardDataForUI(boardId));
     } catch (err) {
     } finally {
       setIsLoading(false);
       dispatch(setTeamLoading(false));
     }
-  }, [props.boardId]);
+  }, [boardId]);
 
   return (
     <div>

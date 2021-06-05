@@ -31,6 +31,7 @@ function TeamPage(props) {
   const dispatch = useDispatch();
   const [isOpeningBoard, setIsOpeningBoard] = useState(false);
   const teamLoading = useSelector((state) => state.app.teamLoading);
+  const activeTab = useSelector(state => state.team.activeTab);
   const [boardId, setBoardId] = useState(null);
   const history = useHistory();
   const location = useLocation();
@@ -56,9 +57,8 @@ function TeamPage(props) {
         default:
           return 0;
       }
-    } else {
-      return 0;
     }
+    return 0;
   });
 
   console.log(queryParams);
@@ -69,11 +69,21 @@ function TeamPage(props) {
   }
   function goBackListBoards() {
     setIsOpeningBoard(false);
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.split('&')[0],
+    })
   }
 
   const onActiveTabChange = (index) => {
     setActive(index);
   };
+
+  useEffect(() => {
+    if (activeTab)
+      setActive(activeTab);
+  }, [activeTab])
 
   useEffect(() => {
     let tab = "feed";
@@ -97,14 +107,35 @@ function TeamPage(props) {
         tab = "statistics";
         break;
       default:
+        tab = "feed";
         break;
     }
 
-    history.push({
-      pathname: history.location.pathname,
-      search: `tab=${tab}`,
-    });
+    const queryParams = queryString.parse(history.location.search);
+    if (queryParams.b) {
+
+    }
+    else {
+      history.push({
+        pathname: history.location.pathname,
+        search: `tab=${tab}`,
+      });
+    }
+
   }, [active]);
+
+  useEffect(() => {
+    const queryObj = queryString.parse(history.location.search);
+    if (queryObj.tab && !queryObj.b && !queryObj.t)
+      setIsOpeningBoard(false);
+    else {
+      //setIsOpeningBoard(true);
+      console.log(history.location.search)
+      openBoard(queryObj.b);
+    }
+  }, [history.location.search])
+
+
   const boardRender = () => {
     return (
       <div>

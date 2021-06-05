@@ -260,6 +260,14 @@ function ChatPage(props) {
       })
     );
   };
+
+
+  const triggerAddConversation = useSelector(state => state.chat.triggerAddConversation);
+  useEffect(() => {
+    if (triggerAddConversation !== 0)
+      setShowAddConversation(true)
+  }, [triggerAddConversation])
+
   return (
     <div className="chat-page-container">
       {loadDone ? (
