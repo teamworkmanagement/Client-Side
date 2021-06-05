@@ -22,12 +22,13 @@ import { setFilterChange } from "src/appSlice";
 import Loading from "./Components/Post/Components/Loading/Loading";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 import postApi from "src/api/postApi";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import PostEditor from "./Components/PostEditor/PostEditor";
 import { convertToRaw } from "draft-js";
 import uuid from "src/utils/file/uuid";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import firebase from "firebase/app";
+import queryString from 'query-string';
 
 NewsFeedPage.propTypes = {};
 
@@ -51,6 +52,9 @@ function NewsFeedPage(props) {
   const [tags, setTags] = useState([]);
   const [listPictures, setListPictures] = useState([]);
   const [resetEditorText, setResetEditorText] = useState(-1);
+
+  const location = useLocation();
+  const queryParams = queryString.parse(location.search).p;
 
   const { teamId } = useParams();
 
@@ -332,7 +336,7 @@ function NewsFeedPage(props) {
             </CCol>
           </CRow>
         </CCol>
-        <CCol
+        {!queryParams ? <CCol
           xl="3"
           lg="3"
           md="3"
@@ -355,15 +359,15 @@ function NewsFeedPage(props) {
               style={
                 showFilter
                   ? {
-                      borderBottomLeftRadius: "0",
-                      borderBottomRightRadius: "0",
-                      borderBottom: "none",
-                    }
+                    borderBottomLeftRadius: "0",
+                    borderBottomRightRadius: "0",
+                    borderBottom: "none",
+                  }
                   : {
-                      borderBottomLeftRadius: "10px",
-                      borderBottomRightRadius: "10px",
-                      borderBottom: "1px solid #e6ebf1",
-                    }
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    borderBottom: "1px solid #e6ebf1",
+                  }
               }
             >
               <div className="title">
@@ -417,66 +421,68 @@ function NewsFeedPage(props) {
               </div>
             )}
           </div>
-        </CCol>
+        </CCol> : null}
       </CRow>
 
-      <CModal show={showCreatePost} onClosed={onModalClose}>
-        <CModalHeader closeButton></CModalHeader>
-        <CModalBody>
-          {!teamId ? (
-            <GroupFilter
-              className="mb-3"
-              clearSelect={clearSelect}
-              getGroupPost={getGroupPost}
-            />
-          ) : null}
+      {
+        !queryParams ? <CModal show={showCreatePost} onClosed={onModalClose}>
+          <CModalHeader closeButton></CModalHeader>
+          <CModalBody>
+            {!teamId ? (
+              <GroupFilter
+                className="mb-3"
+                clearSelect={clearSelect}
+                getGroupPost={getGroupPost}
+              />
+            ) : null}
 
-          <PostEditor
-            postTeamId={grAddPost}
-            reset={resetEditorText}
-            onAddPost={onAddPost}
-          />
-          {listPictures.length > 0 && (
-            <div className="list-images-container">
-              {listPictures.map((image, index) => {
-                return (
-                  <div className="img-container">
-                    <img className="upload-img" alt="" src={image.url} />
-                    <div
-                      className="delete-img-btn"
-                      onClick={() => removePicture(index)}
-                    >
-                      <CIcon name="cil-x" />
+            <PostEditor
+              postTeamId={grAddPost}
+              reset={resetEditorText}
+              onAddPost={onAddPost}
+            />
+            {listPictures.length > 0 && (
+              <div className="list-images-container">
+                {listPictures.map((image, index) => {
+                  return (
+                    <div className="img-container">
+                      <img className="upload-img" alt="" src={image.url} />
+                      <div
+                        className="delete-img-btn"
+                        onClick={() => removePicture(index)}
+                      >
+                        <CIcon name="cil-x" />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          <div
-            onClick={() => pickImgRef.current.click()}
-            className="add-image-btn-container"
-          >
-            <div className="add-image-btn">
-              <CIcon name="cil-image-plus" />
+                  );
+                })}
+              </div>
+            )}
+            <div
+              onClick={() => pickImgRef.current.click()}
+              className="add-image-btn-container"
+            >
+              <div className="add-image-btn">
+                <CIcon name="cil-image-plus" />
               Thêm ảnh
               <input
-                type="file"
-                onChange={onPickImageChange}
-                multiple
-                ref={pickImgRef}
-                style={{ display: "none" }}
-                accept="image/*"
-              />
+                  type="file"
+                  onChange={onPickImageChange}
+                  multiple
+                  ref={pickImgRef}
+                  style={{ display: "none" }}
+                  accept="image/*"
+                />
+              </div>
             </div>
-          </div>
-        </CModalBody>
-        <CModalFooter>
-          <CButton className="submit-btn" onClick={addPostClick}>
-            Đăng bài
+          </CModalBody>
+          <CModalFooter>
+            <CButton className="submit-btn" onClick={addPostClick}>
+              Đăng bài
           </CButton>
-        </CModalFooter>
-      </CModal>
+          </CModalFooter>
+        </CModal> : null
+      }
     </div>
   );
 }

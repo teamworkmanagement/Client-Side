@@ -12,9 +12,11 @@ import Modals from "src/shared_components/views/notifications/modals/Modals";
 import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
+import { useHistory } from "react-router";
 
 function GanttChart(props) {
   const input = useRef(null);
+  const history = useHistory();
   //const tasks = useSelector((state) => state.app.tasks);
   const handleTasks = useSelector((state) => state.app.handleTasks);
   const users = useSelector((state) => state.app.users);
@@ -199,6 +201,12 @@ function GanttChart(props) {
   const openEditPoup = async (taskId, task) => {
     setModalTask(null);
     setIsShowEditPopup(true);
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search + `&t=${taskId}`,
+    });
+
     const taskModal = await taskApi.getTaskById(taskId);
     setModalTask({
       ...taskModal.data,
@@ -209,6 +217,11 @@ function GanttChart(props) {
 
   function closeForm() {
     gantt.hideLightbox();
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+    });
   }
 
   function updateGanttTask(task) {

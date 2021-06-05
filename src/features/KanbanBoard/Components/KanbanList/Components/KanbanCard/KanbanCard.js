@@ -1,12 +1,16 @@
 import CIcon from "@coreui/icons-react";
 import { CProgress } from "@coreui/react";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import taskApi from "src/api/taskApi";
 import TaskEditModal from "./Components/TaskEditModal/TaskEditModal";
 import "./KanbanCard.scss";
+import { useHistory, useLocation } from "react-router";
+import queryString from 'query-string';
+import { setTaskSelected } from "src/features/KanbanBoard/kanbanSlice";
+import { useDispatch } from "react-redux";
 
 KanbanCard.propTypes = {};
 
@@ -40,10 +44,50 @@ function KanbanCard(props) {
     return "";
   }*/
 
-  async function openEditPopup() {
+
+  const history = useHistory();
+
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const queryParams = queryString.parse(location.search);
+
+
+  /*const firstTask = useSelector(state => state.kanban.taskSelected);
+  useEffect(() => {
+    if (firstTask)
+      if (firstTask && firstTask === props.data.taskId) {
+        openEditPopup(firstTask);
+        dispatch(setTaskSelected(null));
+        console.log('firstask: ', firstTask);
+      }
+  }, [firstTask])*/
+
+  useEffect(() => {
+    const queryObj = queryString.parse(history.location.search);
+    if (props.data.taskId && !queryObj.t && isShowEditPopup) {
+      setIsShowEditPopup(false);
+    }
+
+    if (props.data.taskId && queryObj.t && queryObj.b) {
+      openEditPopup(props.data.taskId);
+    }
+  }, [history.location.search])
+
+
+  async function openEditPopup(taskId) {
     setModaTask(null);
     setIsShowEditPopup(true);
-    const taskModal = await taskApi.getTaskById(props.data.taskId);
+
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.t) {
+      history.push({
+        pathname: history.location.pathname,
+        search: history.location.search + `&t=${taskId}`,
+      });
+    }
+
+
+    const taskModal = await taskApi.getTaskById(taskId);
     setModaTask({
       ...taskModal.data,
       filesCount: props.data.filesCount,
@@ -127,6 +171,11 @@ function KanbanCard(props) {
   function onEditModalClose() {
     setIsShowEditPopup(false);
     console.log("ok");
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+    });
   }
 
   return (
@@ -156,7 +205,7 @@ function KanbanCard(props) {
                 ? `0.3rem solid ${props.data.taskThemeColor}`
                 : "1px",
             }}
-            onClick={openEditPopup}
+            onClick={() => openEditPopup(props.data.taskId)}
           >
             {props.data.taskImageUrl && (
               <div className="card-image-label">
