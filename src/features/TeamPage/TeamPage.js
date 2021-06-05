@@ -31,6 +31,7 @@ function TeamPage(props) {
   const dispatch = useDispatch();
   const [isOpeningBoard, setIsOpeningBoard] = useState(false);
   const teamLoading = useSelector((state) => state.app.teamLoading);
+  const activeTab = useSelector(state => state.team.activeTab);
   const [boardId, setBoardId] = useState(null);
   const history = useHistory();
   const location = useLocation();
@@ -77,9 +78,12 @@ function TeamPage(props) {
 
   const onActiveTabChange = (index) => {
     setActive(index);
-
-
   };
+
+  useEffect(() => {
+    if (activeTab)
+      setActive(activeTab);
+  }, [activeTab])
 
   useEffect(() => {
     let tab = "feed";
