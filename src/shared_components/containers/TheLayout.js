@@ -5,6 +5,8 @@ import MyLogin from "../views/pages/login/MyLogin/MyLogin";
 import ChatListSideBar from "./ChatListSideBar";
 import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
 import TeamTabsSideBar from "./TeamTabsSideBar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TheLayout = () => {
   return (
@@ -18,6 +20,11 @@ const TheLayout = () => {
           <TheContent />
         </div>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        progressClassName="toastProgress"
+      />
       {/* <ForgotPassword /> */}
     </div>
   );
