@@ -38,6 +38,11 @@ function ManageMyTasksPage(props) {
   }
 
   useEffect(() => {
+    if (!history.location.search)
+      setIsInBoard(false);
+  }, [history.location.search])
+
+  useEffect(() => {
     if (boardId)
       setIsInBoard(true);
   }, [boardId])

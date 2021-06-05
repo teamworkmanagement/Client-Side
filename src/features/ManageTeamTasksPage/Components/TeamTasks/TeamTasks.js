@@ -4,15 +4,15 @@ import "./TeamTasks.scss";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
 import { CButton, CButtonGroup, CInput, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import TaskList from "./Components/TaskList/TaskList";
 import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
-import TaskList from "src/features/TeamPage/Components/TeamTasks/Components/TaskList/TaskList";
-import { AiOutlineLeft } from "react-icons/ai";
-import { BsSearch } from "react-icons/bs";
+import { useHistory } from "react-router";
 
 TeamTasks.propTypes = {};
 
 function TeamTasks(props) {
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
+  const history = useHistory();
   function switchShowMode(index) {
     //debugger;
     console.log(index);
@@ -21,24 +21,29 @@ function TeamTasks(props) {
   }
   function goBackBoards() {
     if (props.goBackBoards) {
-      props.goBackBoards();
+      props.goBackBoards();      
     }
   }
   return (
-    <div className="team-tasks-container">
+    <div className="my-tasks-container">
       <div className="tasks-header">
         <div className="goback-label" onClick={goBackBoards}>
-          <AiOutlineLeft className="icon-goback" />
-          <div className="label-text">Trở lại danh sách bảng công việc</div>
+          <CIcon className="one" name="cil-check-alt" />
+          <CIcon className="two" name="cil-check-alt" />
+          <div className="label-text">Trở lại màn hình bảng công việc</div>
         </div>
         <div className="other-actions">
-          <div className="lookup-input">
-            <CInput
-              type="text"
-              name="teamName"
-              placeholder="Tìm công việc..."
-            />
-            <BsSearch className="icon-search" />
+          <div className="search-bar-container">
+            <div className="input-container">
+              <CInput
+                class="input-field"
+                placeholder="...tìm công việc"
+                type="text"
+              />
+              <div className="input-actions-group">
+                <CIcon name="cil-search" />
+              </div>
+            </div>
           </div>
           {showMode === 1 && (
             <div className="add-btn add-list-btn">

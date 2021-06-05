@@ -6,7 +6,7 @@ import CIcon from "@coreui/icons-react";
 import kanbanApi from "src/api/kanbanApi";
 import { useSelector } from "react-redux";
 import CreateMyBoardModal from "../CreateMyBoardModal/CreateMyBoardModal";
-import { BsSearch } from "react-icons/bs";
+import { useHistory } from "react-router";
 
 MyBoards.propTypes = {};
 
@@ -34,44 +34,53 @@ function MyBoards(props) {
     }
   }
 
-  const user = useSelector((state) => state.auth.currentUser);
+  const history = useHistory();
+  const user = useSelector(state => state.auth.currentUser);
   const [boards, setBoards] = useState([]);
   const [showAddBoard, setShowAddBoard] = useState(false);
 
   useEffect(() => {
-    kanbanApi
-      .getBoardsForUser(user.id)
-      .then((res) => {
+    kanbanApi.getBoardsForUser(user.id)
+      .then(res => {
         setBoards(res.data);
-      })
-      .catch((err) => {});
-  }, []);
+      }).catch(err => {
 
+      });
+
+
+  }, [])
+
+
+  useEffect(() => {
+    console.log("myboards");
+  }, [history.location.search])
   const onCloseModal = (boardRes) => {
     setShowAddBoard(false);
-    if (!boardRes) return;
+    if (!boardRes)
+      return;
     console.log(boardRes);
     setBoards([...boards, boardRes.data]);
-  };
+  }
 
   return (
-    <div className="my-list-boards-container">
+    <div className="list-boards-container">
       <div className="list-boards-header">
-        <div className="lookup-input">
-          <CInput
-            type="text"
-            name="teamName"
-            placeholder="Tìm bảng công việc..."
-          />
-          <BsSearch className="icon-search" />
+        <div className="search-bar-container">
+          <div className="input-container">
+            <CInput
+              class="input-field"
+              placeholder="...tìm danh sách"
+              type="text"
+            />
+            <div className="input-actions-group">
+              <CIcon name="cil-search" />
+            </div>
+          </div>
         </div>
         <div className="other-actions">
-          <div
-            onClick={() => setShowAddBoard(true)}
-            className="add-btn add-task-btn"
-          >
+          <div onClick={() => setShowAddBoard(true)} className="add-btn add-task-btn">
             <CIcon name="cil-plus" />
-            Tạo bảng công việc mới
+            Tạo danh sách mới
           </div>
         </div>
       </div>

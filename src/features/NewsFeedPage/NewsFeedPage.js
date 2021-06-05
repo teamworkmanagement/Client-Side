@@ -22,12 +22,13 @@ import { setFilterChange } from "src/appSlice";
 import Loading from "./Components/Post/Components/Loading/Loading";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 import postApi from "src/api/postApi";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import PostEditor from "./Components/PostEditor/PostEditor";
 import { convertToRaw } from "draft-js";
 import uuid from "src/utils/file/uuid";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import firebase from "firebase/app";
+import queryString from 'query-string';
 
 NewsFeedPage.propTypes = {};
 
@@ -52,7 +53,12 @@ function NewsFeedPage(props) {
   const [listPictures, setListPictures] = useState([]);
   const [resetEditorText, setResetEditorText] = useState(-1);
 
+  const location = useLocation();
+  const queryParams = queryString.parse(location.search).p;
+
   const { teamId } = useParams();
+
+  console.log('queryParams: ', queryParams);
 
   useEffect(() => {
     if (teamId) setGrAddPost(teamId);
@@ -332,13 +338,7 @@ function NewsFeedPage(props) {
             </CCol>
           </CRow>
         </CCol>
-        <CCol
-          xl="3"
-          lg="3"
-          md="3"
-          sm="0"
-          className="d-sm-down-none side-panel-col"
-        >
+        {!queryParams ? <CCol xl="3" lg="3" md="3" sm="0" className="side-panel-col">
           <div className="side-panel-container">
             <div
               className="create-post-btn"
@@ -346,8 +346,8 @@ function NewsFeedPage(props) {
             >
               <div className="title">
                 <CIcon name="cil-pencil" />
-                Viết bài mới
-              </div>
+              Viết bài mới
+            </div>
             </div>
             <div
               className="toggle-filter-btn"
@@ -355,21 +355,21 @@ function NewsFeedPage(props) {
               style={
                 showFilter
                   ? {
-                      borderBottomLeftRadius: "0",
-                      borderBottomRightRadius: "0",
-                      borderBottom: "none",
-                    }
+                    borderBottomLeftRadius: "0",
+                    borderBottomRightRadius: "0",
+                    borderBottom: "none",
+                  }
                   : {
-                      borderBottomLeftRadius: "10px",
-                      borderBottomRightRadius: "10px",
-                      borderBottom: "1px solid #e6ebf1",
-                    }
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    borderBottom: "1px solid #e6ebf1",
+                  }
               }
             >
               <div className="title">
                 <CIcon name="cil-list-filter" />
-                Lọc bản tin
-              </div>
+              Lọc bản tin
+            </div>
               {showFilter ? (
                 <img
                   className="expand-icon"
@@ -404,7 +404,7 @@ function NewsFeedPage(props) {
                         <div className="group-name">{item.groupName}</div>
                         <div className="group-member-count">
                           {item.groupMemberCount} Thành viên
-                        </div>
+                      </div>
                       </div>
                       <div className="group-new-count">
                         <CBadge className="badge-danger">
@@ -417,10 +417,10 @@ function NewsFeedPage(props) {
               </div>
             )}
           </div>
-        </CCol>
+        </CCol> : null}
       </CRow>
 
-      <CModal show={showCreatePost} onClosed={onModalClose}>
+      {!queryParams ? <CModal show={showCreatePost} onClosed={onModalClose}>
         <CModalHeader closeButton></CModalHeader>
         <CModalBody>
           {!teamId ? (
@@ -459,8 +459,8 @@ function NewsFeedPage(props) {
           >
             <div className="add-image-btn">
               <CIcon name="cil-image-plus" />
-              Thêm ảnh
-              <input
+            Thêm ảnh
+            <input
                 type="file"
                 onChange={onPickImageChange}
                 multiple
@@ -474,9 +474,9 @@ function NewsFeedPage(props) {
         <CModalFooter>
           <CButton className="submit-btn" onClick={addPostClick}>
             Đăng bài
-          </CButton>
+        </CButton>
         </CModalFooter>
-      </CModal>
+      </CModal> : null}
     </div>
   );
 }

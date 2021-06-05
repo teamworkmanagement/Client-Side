@@ -15,23 +15,14 @@ import CIcon from "@coreui/icons-react";
 import ChatList from "./Components/ChatList/ChatList";
 import MessageList from "./Components/MessageList/MessageList";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getGroupChatForUser,
-  searchGroupChatForUser,
-  setCurrentGroup,
-  setLoadDone,
-} from "./chatSlice";
-import { v4 as uuidv4 } from "uuid";
+import { getGroupChatForUser, searchGroupChatForUser, setCurrentGroup, setLoadDone } from "./chatSlice";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
+import CreateNewConversationModal from "./Components/CreateNewConversation/CreateNewConversation";
 import { useHistory, useLocation } from "react-router";
-import queryString from "query-string";
-import AddMembers from "./Components/AddMembers/CreateNewConversation/AddMembers";
-import { BsSearch } from "react-icons/bs";
-import { IoInformationCircleOutline } from "react-icons/io";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import CreateChatInChatPage from "./Components/CreateNewConversation/CreateChatInChatPage";
-import { changeStateChatListSidebar } from "src/appSlice";
+import queryString from 'query-string';
+import AddMembers from "./Components/AddMembers/AddMembers";
+import uuid from "src/utils/file/uuid";
 
 ChatPage.propTypes = {};
 
@@ -60,6 +51,7 @@ function ChatPage(props) {
 
   const [group, setGroup] = useState(null);
 
+
   useEffect(() => {
     if (loadDone) {
       if (queryParams) {
@@ -69,23 +61,26 @@ function ChatPage(props) {
         }
       }
     }
-  }, [loadDone]);
+  }, [loadDone])
+
 
   useEffect(() => {
-    if (!currentGroup) return;
+    if (!currentGroup)
+      return;
     const gr = grChats.find((x) => x.groupChatId === currentGroup);
     setGroup(gr);
-  }, [currentGroup]);
+  }, [currentGroup])
 
   useEffect(() => {
     const params = {
       userId: userId,
-      currentGroup: queryParams?.g ? queryParams.g : null,
-    };
+      currentGroup: queryParams?.g ? queryParams.g : null
+    }
     dispatch(getGroupChatForUser({ params }));
     return function release() {
       dispatch(setLoadDone(false));
     };
+
   }, []);
 
   const onScroll = (e) => {
@@ -157,7 +152,7 @@ function ChatPage(props) {
         return;
       }
 
-      const folder = uuidv4();
+      const folder = uuid();
       const params = {
         Body: file,
         Bucket: "teamappstorage",
@@ -194,7 +189,7 @@ function ChatPage(props) {
   const onPickImage = (e) => {
     const file = e.target.files[0];
     const storageRef = firebaseConfig.storage().ref();
-    const fileRef = storageRef.child(`${uuidv4()}/${file.name}`);
+    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
     fileRef.put(file).then((data) => {
       console.log("Uploaded a file");
       data.ref.getDownloadURL().then((url) => {
@@ -243,135 +238,108 @@ function ChatPage(props) {
     const params = {
       userId: user.id,
       isSearch: true,
-      keyWord: e.target.value,
-    };
+      keyWord: e.target.value
+    }
     dispatch(searchGroupChatForUser({ params }));
-  };
+  }
 
   const onClose = () => {
     setShowAddConversation(false);
-  };
-  const toggleChatListSidebar = () => {
-    console.log("okjj");
-    dispatch(
-      changeStateChatListSidebar({
-        type: "chatlistsidebar",
-        chatListSidebarShow: true,
-      })
-    );
-  };
+  }
   return (
     <div className="chat-page-container">
       {loadDone ? (
-        <div className="chat-page-content">
+        <div className="chat-main-content">
           {!props.isInTeam && (
-            <div className="toggle-chat-list-sidebar-btn">
-              <CIcon
-                //className="ml-md-3 d-md-none toggle-chat-list-sidebar-icon"
-                className="ml-md-3 d-sm-down-block  d-md-none toggle-chat-list-sidebar-icon"
-                onClick={toggleChatListSidebar}
-                name="cil-menu"
-              />
+            <div className="chat-list">
+              <div className="chat-list-header">
+                <CInputGroup className="chat-list-search">
+                  <CInput
+                    placeholder="...tìm kiếm đoạn chat"
+                    id="appendedInputButton"
+                    type="text"
+                    onChange={onSearchChange}
+                  />
+                  <CInputGroupAppend>
+                    <CButton color="secondary">
+                      <CIcon name="cil-search" />
+                    </CButton>
+                  </CInputGroupAppend>
+                </CInputGroup>
+              </div>
+              <ChatList chatImages={chatImages} />
+              <div onClick={() => setShowAddConversation(true)} className="btn-add-chat">
+                <CIcon name="cil-plus" />
+                Tạo nhóm Chat mới
+              </div>
             </div>
           )}
-
-          <div className="chat-main-content">
+          <div className="chat-content">
             {!props.isInTeam && (
-              <div className="chat-list d-sm-down-none">
-                <div className="chat-list-header">
-                  <CInputGroup className="chat-list-search">
-                    <CInput
-                      placeholder="Tìm đoạn chat..."
-                      id="appendedInputButton"
-                      type="text"
-                      onChange={onSearchChange}
-                    />
-                    <CInputGroupAppend>
-                      <CButton color="secondary">
-                        <BsSearch className="icon-search" />
-                      </CButton>
-                    </CInputGroupAppend>
-                  </CInputGroup>
+              <div className="chat-content-header">
+                <div className="chat-group-title">
+                  <img alt="" src={group?.groupAvatar} />
+                  {group?.groupChatName}
                 </div>
-                <ChatList chatImages={chatImages} />
-                <div
-                  onClick={() => setShowAddConversation(true)}
-                  className="btn-add-chat"
-                >
-                  <CIcon name="cil-plus" />
-                  Tạo nhóm Chat mới
+                <div className="chat-group-actions">
+                  <div onClick={() => setShowAddMembers(true)} className="btn-add-member">
+                    <CIcon name="cil-user-follow" />
+                    Thêm thành viên
+                  </div>
+                  <div className="chat-header-actions-dropdown">
+                    <CDropdown>
+                      <CDropdownToggle id="dropdownMenuButton" caret>
+                        <div className="options">
+                          <CIcon name="cil-options" />
+                        </div>
+                      </CDropdownToggle>
+                      <CDropdownMenu
+                        aria-labelledby="dropdownMenuButton"
+                        placement="bottom-end"
+                      >
+                        <CDropdownItem className="first">
+                          <div className="info-icon-group">
+                            <CIcon name="cil-info" />
+                            <div className="overlay-border"></div>
+                            <CIcon name="cil-circle" className="icon-circle" />
+                          </div>
+                          Thông tin nhóm chat
+                        </CDropdownItem>
+                        <CDropdownItem className="last">
+                          <CIcon
+                            name="cil-user-follow"
+                            className="icon-delete"
+                          />
+                          Thêm thành viên
+                        </CDropdownItem>
+                      </CDropdownMenu>
+                    </CDropdown>
+                  </div>
                 </div>
               </div>
             )}
-            <div className="chat-content">
-              {!props.isInTeam && (
-                <div className="chat-content-header">
-                  <div className="chat-group-title">
-                    <img alt="" src={group?.groupAvatar} />
-                    {group?.groupChatName}
-                  </div>
-                  <div className="chat-group-actions">
-                    <div
-                      onClick={() => setShowAddMembers(true)}
-                      className="d-sm-down-none btn-add-member"
-                    >
-                      <CIcon name="cil-user-follow" />
-                      Thêm thành viên
-                    </div>
-                    <div className="chat-header-actions-dropdown">
-                      <CDropdown>
-                        <CDropdownToggle id="dropdownMenuButton" caret>
-                          <div className="options">
-                            <CIcon name="cil-options" />
-                          </div>
-                        </CDropdownToggle>
-                        <CDropdownMenu
-                          aria-labelledby="dropdownMenuButton"
-                          placement="bottom-end"
-                        >
-                          <CDropdownItem className="first">
-                            <div className="info-icon-group">
-                              <AiOutlineInfoCircle className="icon-info-chat" />
-                            </div>
-                            Thông tin nhóm chat
-                          </CDropdownItem>
-                          <CDropdownItem className="last">
-                            <CIcon
-                              name="cil-user-follow"
-                              className="icon-delete"
-                            />
-                            Thêm thành viên
-                          </CDropdownItem>
-                        </CDropdownMenu>
-                      </CDropdown>
-                    </div>
-                  </div>
-                </div>
-              )}
 
-              <div
-                ref={scrollRef}
-                onScroll={onScroll}
-                className="chat-content-message-list"
-              >
-                <MessageList
-                  reachBot={reachBot}
-                  reachTop={reachTop}
-                  sendMes={send}
-                  scrollFix={scrollFixed}
-                  scrollToBottom={scrollToBottom}
-                />
-                <div
-                  className="message-list-bottom-view"
-                  ref={messagesEndRef}
-                />
-              </div>
-              <div className="chat-content-footer">
+            <div
+              ref={scrollRef}
+              onScroll={onScroll}
+              className="chat-content-message-list"
+            >
+              <MessageList
+                reachBot={reachBot}
+                reachTop={reachTop}
+                sendMes={send}
+                scrollFix={scrollFixed}
+                scrollToBottom={scrollToBottom}
+              />
+              <div className="message-list-bottom-view" ref={messagesEndRef} />
+            </div>
+            <div className="chat-content-footer">
+              <div className="input-container">
                 <CInput
                   value={msg}
                   onKeyDown={handleKeyDown}
                   onChange={(e) => setMsg(e.target.value)}
-                  className="message-input-field"
+                  class="input-field"
                   type="text"
                 />
                 <div className="input-actions-group">
@@ -409,14 +377,8 @@ function ChatPage(props) {
           </div>
         </div>
       ) : null}
-      <CreateChatInChatPage
-        onCLoseModal={onClose}
-        showAddConversation={showAddConversation}
-      />
-      <AddMembers
-        onCLoseModal={() => setShowAddMembers(false)}
-        showAddMembers={showAddMembers}
-      />
+      <CreateNewConversationModal onCLoseModal={onClose} showAddConversation={showAddConversation} />
+      <AddMembers onCLoseModal={() => setShowAddMembers(false)} showAddMembers={showAddMembers} />
     </div>
   );
 }
