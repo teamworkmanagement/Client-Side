@@ -22,10 +22,13 @@ function ChatList(props) {
 
   useEffect(() => {
     if (currentGroup) {
-      history.push({
-        pathname: history.location.pathname,
-        search: `g=${currentGroup}`,
-      });
+      if (!history.location.pathname.startsWith('/team/')) {
+        history.push({
+          pathname: history.location.pathname,
+          search: `g=${currentGroup}`,
+        });
+      }
+
     };
   }, [currentGroup])
   return (

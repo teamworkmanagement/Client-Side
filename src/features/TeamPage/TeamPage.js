@@ -22,9 +22,11 @@ import TeamLoading from "./TeamLoading/TeamLoading";
 import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
 import BoardsPage from "./Components/BoardsPage/BoardsPage";
 import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
-import { useHistory, useLocation } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import queryString from "query-string";
 import { changeStateTeamTabsSidebar } from "src/appSlice";
+import teamApi from "src/api/teamApi";
+import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
@@ -157,8 +159,24 @@ function TeamPage(props) {
     );
   };
 
-  return (
-    <div className="team-container">
+  const [notfound, setNotfound] = useState(false);
+  const { teamId } = useParams();
+
+  useEffect(() => {
+    if (teamId) {
+      teamApi
+        .getAdmin(teamId)
+        .then((res) => {
+        })
+        .catch((err) => {
+          if (err.data?.ErrorCode === "404")
+            setNotfound(true);
+        });
+    }
+  }, [teamId])
+
+  const renderNormal = () => {
+    return <>
       <CTabs activeTab={active} onActiveTabChange={onActiveTabChange}>
         <CNav className="d-sm-down-none" variant="tabs">
           <CNavItem>
@@ -235,6 +253,11 @@ function TeamPage(props) {
         </div>
       </CTabs>
       <TeamLoading isLoading={teamLoading} />
+    </>
+  }
+  return (
+    <div className="team-container">
+      {notfound ? <NotFoundPage /> : renderNormal()}
     </div>
   );
 }
