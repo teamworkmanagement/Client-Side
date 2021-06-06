@@ -69,6 +69,8 @@ function KanbanList(props) {
                 {taskUIKanbans.map((item, index) => {
                   return (
                     <KanbanCard
+                      ownerId={props.ownerId}
+                      isOfTeam={props.isOfTeam}
                       key={item.taskId}
                       data={item}
                       index={index} //required by dnd

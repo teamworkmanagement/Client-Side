@@ -19,12 +19,13 @@ import { RiTableLine } from "react-icons/ri";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
 import queryString from 'query-string';
+import { unwrapResult } from "@reduxjs/toolkit";
 
 KanbanBoard.propTypes = {};
 
 function KanbanBoard(props) {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = useSelector(state => state.app.teamLoading);
 
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
@@ -164,7 +165,7 @@ function KanbanBoard(props) {
   const [boardId, setBoardId] = useState(null);
 
   useEffect(() => {
-    console.log(history.location.search);
+    /*console.log(history.location.search);
     const queryParams = queryString.parse(history.location.search);
     if (queryParams.b) {
       setBoardId(queryParams.b)
@@ -179,26 +180,58 @@ function KanbanBoard(props) {
       }).catch(err => {
         setNoTask(true);
       })
-    }
+    }*/
 
   }, [history.location.search])
+
+
+
+  const user = useSelector(state => state.auth.currentUser);
 
   useEffect(() => {
     if (!boardId)
       return;
     try {
       dispatch(setTeamLoading(true));
-      setIsLoading(true);
-      dispatch(getBoardDataForUI(boardId));
+
+      const pathname = history.location.pathname.split('/');
+      let params = {};
+      if (pathname.length === 3) {
+        params = {
+          isOfTeam: props.isOfTeam,
+          ownerId: props.isOfTeam ? pathname[2] : user.id,
+          boardId: boardId
+        }
+      }
+
+      else {
+        params = {
+          isOfTeam: props.isOfTeam,
+          ownerId: user.id,
+          boardId: boardId
+        }
+      }
+      /*dispatch(getBoardDataForUI({ params }))
+        .then(unwrapResult)
+        .then(originalPromiseResult => {
+          console.log('call done');
+          //props.notFound(false);
+        })
+        .catch(err => {
+          console.log(err);
+
+          if (err.data?.ErrorCode === "404") {
+            //props.notFound(true);
+          }
+        });*/
     } catch (err) {
     } finally {
-      setIsLoading(false);
       dispatch(setTeamLoading(false));
     }
   }, [boardId]);
 
-  return (
-    <div>
+  const renderNormal = () => {
+    return <>
       {kanbanLists.length > 0 && (
         <div className="kanban-board-container">
           {/* <CardLoading isLoading={isLoading} /> */}
@@ -221,6 +254,8 @@ function KanbanBoard(props) {
                   {kanbanLists.map((item, index) => {
                     return (
                       <KanbanList
+                        ownerId={props.ownerId}
+                        isOfTeam={props.isOfTeam}
                         key={item.kanbanListId}
                         data={item}
                         index={index}
@@ -234,9 +269,7 @@ function KanbanBoard(props) {
             </Droppable>
           </DragDropContext>
 
-          <div>
-            <CardLoading isLoading={isLoading} />
-          </div>
+
         </div>
       )}
 
@@ -249,10 +282,17 @@ function KanbanBoard(props) {
 
           <div className="noti-infor">
             Chưa có danh sách công việc nào trong bảng này
-          </div>
+        </div>
           <div className="create-btn">Tạo danh sách mới</div>
         </div>
       )}
+    </>
+  }
+  return (
+    <div>
+      {isLoading ? <div>
+        <CardLoading isLoading={isLoading} />
+      </div> : renderNormal()}
     </div>
   );
 }

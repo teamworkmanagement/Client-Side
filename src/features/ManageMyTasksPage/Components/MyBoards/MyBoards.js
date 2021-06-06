@@ -6,7 +6,8 @@ import CIcon from "@coreui/icons-react";
 import kanbanApi from "src/api/kanbanApi";
 import { useSelector } from "react-redux";
 import CreateMyBoardModal from "../CreateMyBoardModal/CreateMyBoardModal";
-import { BsSearch } from "react-icons/bs";
+import { BsClipboardData, BsSearch } from "react-icons/bs";
+import { VscSearchStop } from "react-icons/vsc";
 
 MyBoards.propTypes = {};
 
@@ -37,6 +38,7 @@ function MyBoards(props) {
   const user = useSelector((state) => state.auth.currentUser);
   const [boards, setBoards] = useState([]);
   const [showAddBoard, setShowAddBoard] = useState(false);
+  const [loadone, setLoadDone] = useState(false);
 
   useEffect(() => {
     kanbanApi
@@ -44,7 +46,10 @@ function MyBoards(props) {
       .then((res) => {
         setBoards(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { })
+      .finally(() => {
+        setLoadDone(true);
+      });
   }, []);
 
   const onCloseModal = (boardRes) => {
@@ -104,6 +109,19 @@ function MyBoards(props) {
         </CRow>
       </div>
       <CreateMyBoardModal showAddBoard={showAddBoard} onClose={onCloseModal} />
+
+      {boards.length === 0 && loadone && (
+        <div className="nodata-image">
+          <div className="icon-group">
+            <BsClipboardData className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">
+            Chưa có bảng công việc nào
+          </div>
+        </div>
+      )}
     </div>
   );
 }

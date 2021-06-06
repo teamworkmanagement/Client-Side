@@ -137,10 +137,11 @@ function TeamPage(props) {
 
 
   const boardRender = () => {
+    const pathname = history.location.pathname.split('/');
     return (
       <div>
         {isOpeningBoard ? (
-          <TeamTasks boardId={boardId} goBackListBoards={goBackListBoards} />
+          <TeamTasks ownerId={pathname[2]} boardId={boardId} goBackListBoards={goBackListBoards} />
         ) : (
           <BoardsPage openBoard={openBoard} />
         )}

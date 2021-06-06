@@ -11,6 +11,10 @@ import { useHistory } from "react-router";
 import TaskList from "src/features/TeamPage/Components/TeamTasks/Components/TaskList/TaskList";
 import { AiOutlineLeft } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { setTeamLoading } from "src/appSlice";
 
 MyTasks.propTypes = {};
 
@@ -38,6 +42,34 @@ function MyTasks(props) {
   const onCreateKBList = () => {
     setShowAddKBList(true);
   };
+
+  const [notfound, setNotFound] = useState(false);
+  const user = useSelector(state => state.auth.currentUser);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+
+    const params = {
+      isOfTeam: false,
+      ownerId: user.id,
+      boardId: props.boardId
+    }
+    dispatch(setTeamLoading(true))
+    dispatch(getBoardDataForUI({ params }))
+      .then(unwrapResult)
+      .then(originalPromiseResult => {
+        console.log('done call api');
+        dispatch(setTeamLoading(false))
+      })
+      .catch(err => {
+        console.log(err);
+
+        if (err.data?.ErrorCode === "404") {
+          setNotFound(true);
+          dispatch(setTeamLoading(false))
+        }
+      });
+  }, [])
 
   return (
     <div className="my-tasks-container">
@@ -108,7 +140,7 @@ function MyTasks(props) {
         onClose={onClose}
       />
 
-      {showMode === 1 && <KanbanBoard boardId={props.boardId} />}
+      {showMode === 1 && <KanbanBoard isOfTeam={false} boardId={props.boardId} />}
       {showMode === 2 && <TaskList boardId={props.boardId} />}
       {showMode === 3 && <GanttChart boardId={props.boardId} />}
     </div>

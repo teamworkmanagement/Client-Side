@@ -44,6 +44,7 @@ function BoardsPage(props) {
 
   const [boardLists, setBoardLists] = useState([]);
   const [showAddBoard, setShowAddBoard] = useState(false);
+  const [loadone, setLoadDone] = useState(false);
   const { teamId } = useParams();
 
   useEffect(() => {
@@ -52,7 +53,10 @@ function BoardsPage(props) {
       .then((res) => {
         setBoardLists(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { })
+      .finally(() => {
+        setLoadDone(true)
+      });
   }, []);
 
   const showModalAddBoard = () => {
@@ -120,7 +124,7 @@ function BoardsPage(props) {
         </div>
       )}
 
-      {boardLists.length === 0 && (
+      {boardLists.length === 0 && loadone && (
         <div className="nodata-image">
           <div className="icon-group">
             <BsClipboardData className="icon-task" />

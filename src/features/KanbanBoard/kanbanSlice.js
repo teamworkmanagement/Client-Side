@@ -7,10 +7,15 @@ import kanbanApi from "src/api/kanbanApi";
 
 export const getBoardDataForUI = createAsyncThunk(
     'kanban/getboardui',
-    async (boardId) => {
-        const data = await kanbanApi.getBoardUI(boardId);
-        //console.log('kanban data redux: ', data.data);
-        return data.data;
+    async (boardId, { rejectWithValue }) => {
+        try {
+            const data = await kanbanApi.getBoardUI(boardId);
+            //console.log('kanban data redux: ', data.data);
+            return data.data;
+        }
+        catch (err) {
+            return rejectWithValue(err);
+        }
     }
 );
 

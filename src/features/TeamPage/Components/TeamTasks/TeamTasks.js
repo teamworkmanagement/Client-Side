@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TeamTasks.scss";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
@@ -9,10 +9,17 @@ import GanttChart from "src/shared_components/MySharedComponents/GanttChart/Gant
 import CreateKBListModal from "./Components/CreateKBListModal/CreateKBListModal";
 import { AiOutlineLeft } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
+import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
+import { useDispatch } from "react-redux";
+import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useHistory } from "react-router";
+import { setTeamLoading } from "src/appSlice";
 
 TeamTasks.propTypes = {};
 
 function TeamTasks(props) {
+  const history = useHistory();
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
   const [showAddKBList, setShowAddKBList] = useState(false);
 
@@ -37,8 +44,41 @@ function TeamTasks(props) {
     setShowAddKBList(false);
   };
 
-  return (
-    <div className="tasks-team-container">
+  const [notfound, setNotFound] = useState(false);
+  const notFound = (value) => {
+    setNotFound(value);
+  }
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const pathname = history.location.pathname.split('/');
+    const params = {
+      isOfTeam: true,
+      ownerId: pathname[2],
+      boardId: props.boardId
+    }
+
+    dispatch(setTeamLoading(true));
+    dispatch(getBoardDataForUI({ params }))
+      .then(unwrapResult)
+      .then(originalPromiseResult => {
+        console.log('done call api');
+        dispatch(setTeamLoading(false));
+      })
+      .catch(err => {
+        console.log(err);
+
+        if (err.data?.ErrorCode === "404") {
+          setNotFound(true);
+        }
+
+        dispatch(setTeamLoading(false));
+      });
+  }, [])
+
+
+  const renderNormal = () => {
+    return <>
       <div className="tasks-header">
         <div className="goback-label" onClick={goBackListBoards}>
           <AiOutlineLeft className="icon-goback" />
@@ -56,13 +96,13 @@ function TeamTasks(props) {
           {showMode === 1 && (
             <div className="add-btn add-list-btn" onClick={addKBList}>
               <CIcon name="cil-plus" />
-              Tạo danh sách
+          Tạo danh sách
             </div>
           )}
           {(showMode === 2 || showMode === 3) && (
             <div className="add-btn add-task-btn">
               <CIcon name="cil-plus" />
-              Tạo công việc
+          Tạo công việc
             </div>
           )}
 
@@ -100,7 +140,7 @@ function TeamTasks(props) {
         </div>
       </div>
 
-      {showMode === 1 && <KanbanBoard boardId={props.boardId} />}
+      {showMode === 1 && <KanbanBoard ownerId={props.ownerId} isOfTeam={true} boardId={props.boardId} />}
       {showMode === 2 && <TaskList boardId={props.boardId} />}
       {showMode === 3 && <GanttChart boardId={props.boardId} />}
 
@@ -109,6 +149,11 @@ function TeamTasks(props) {
         showAddKBList={showAddKBList}
         onClose={onClose}
       />
+    </>
+  }
+  return (
+    <div className="tasks-team-container">
+      {notfound ? <NotFoundPage /> : renderNormal()}
     </div>
   );
 }

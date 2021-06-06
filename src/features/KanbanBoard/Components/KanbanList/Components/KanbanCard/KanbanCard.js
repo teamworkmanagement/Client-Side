@@ -69,11 +69,12 @@ function KanbanCard(props) {
     }
 
     if (props.data.taskId && queryObj.t && queryObj.b) {
-      openEditPopup(props.data.taskId);
+      openEditPopup(queryObj.t);
     }
   }, [history.location.search])
 
 
+  const user = useSelector(state => state.auth.currentUser);
   async function openEditPopup(taskId) {
     setModaTask(null);
     setIsShowEditPopup(true);
@@ -86,13 +87,48 @@ function KanbanCard(props) {
       });
     }
 
+    console.log(history.location.pathname);
+    console.log(history.location.search);
 
-    const taskModal = await taskApi.getTaskById(taskId);
+    /*const taskModal = await taskApi.getTaskById(taskId);
     setModaTask({
       ...taskModal.data,
       filesCount: props.data.filesCount,
       commentsCount: props.data.commentsCount,
-    });
+    });*/
+    const pathArr = history.location.pathname.split('/');
+    const queryOb = queryString.parse(history.location.search);
+    let params = {};
+    if (props.isOfTeam) {
+      params = {
+        isOfTeam: true,
+        ownerId: props.ownerId,
+        boardId: queryOb.b,
+        taskId: queryOb.t
+      }
+    }
+    else {
+      params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryOb.b,
+        taskId: queryOb.t
+      }
+    }
+    taskApi.getTaskByBoard({ params }).then(res => {
+      setModaTask({
+        ...res.data,
+        filesCount: props.data.filesCount,
+        commentsCount: props.data.commentsCount,
+      });
+    }).catch(err => {
+      console.log(history.location.search);
+      history.push({
+        pathname: history.location.pathname,
+        search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      });
+      setIsShowEditPopup(false);
+    })
   }
 
   function removeYearOfDate(date) {

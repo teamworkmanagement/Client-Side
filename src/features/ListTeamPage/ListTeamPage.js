@@ -26,6 +26,9 @@ import TeamLoading from "../TeamPage/TeamLoading/TeamLoading";
 import JoinTeamModal from "./JoinTeam/JoinTeamModal";
 import { CgLogIn } from "react-icons/cg";
 import { AiOutlineTeam } from "react-icons/ai";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { BsClipboardData, BsSearch } from "react-icons/bs";
+import { VscSearchStop } from "react-icons/vsc";
 
 ListTeamPage.propTypes = {};
 
@@ -212,6 +215,7 @@ function ListTeamPage(props) {
   const dispatch = useDispatch();
   const teams = useSelector((state) => state.team.teams);
   const user = useSelector((state) => state.auth.currentUser);
+  const [loadone, setLoadone] = useState(false);
 
   function getMemberCount() {
     return members.length;
@@ -220,7 +224,15 @@ function ListTeamPage(props) {
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      await dispatch(getTeamByUserId(user.id));
+      dispatch(getTeamByUserId(user.id))
+        .then(unwrapResult)
+        .then(res => {
+          setLoadone(true);
+        })
+        .catch(err => {
+          setLoadone(true);
+        });
+
       setIsLoading(false);
     }
 
@@ -250,18 +262,18 @@ function ListTeamPage(props) {
     "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
   ];
 
-  return (
-    <div className="list-team-container">
+  const renderNormal = () => {
+    return <>
       <div className="header-tool-bar">
         <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
           <CgLogIn className="icon-goin" />
           <AiOutlineTeam className="icon-group" />
-          Tham gia nhóm
-        </div>
+      Tham gia nhóm
+    </div>
         <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
           <CIcon name="cil-plus" />
-          Tạo nhóm mới
-        </div>
+      Tạo nhóm mới
+    </div>
         <CButtonGroup className="show-mode">
           <CTooltip placement="top" content="Lưới">
             <CButton
@@ -311,8 +323,8 @@ function ListTeamPage(props) {
                           >
                             <CDropdownItem className="first">
                               <CIcon name="cil-arrow-circle-right" />
-                              Vào nhóm
-                            </CDropdownItem>
+                          Vào nhóm
+                        </CDropdownItem>
                             <CDropdownItem className="middle">
                               <div className="dropdown-icon-group">
                                 <CIcon name="cil-bell" />
@@ -325,8 +337,8 @@ function ListTeamPage(props) {
                             </CDropdownItem>
                             <CDropdownItem className="last">
                               <CIcon name="cil-account-logout" />
-                              Rời nhóm
-                            </CDropdownItem>
+                          Rời nhóm
+                        </CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </div>
@@ -371,7 +383,7 @@ function ListTeamPage(props) {
                       onClick={() => navigateToTeam(team.teamId)}
                     >
                       Vào nhóm
-                    </div>
+                </div>
                   </div>
                 </CCol>
               );
@@ -435,7 +447,7 @@ function ListTeamPage(props) {
                           <div className="float-right">
                             <small className="text-muted">
                               11/01/2021 - 20/04/2021
-                            </small>
+                        </small>
                           </div>
                         </div>
                         <CProgress
@@ -456,9 +468,34 @@ function ListTeamPage(props) {
         </div>
       )}
 
+
       <TeamLoading isLoading={isLoading} />
       <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
       <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
+    </>
+  }
+
+  const renderEmpty = () => {
+    return <>
+      {teams.length === 0 && loadone && (
+        <div className="nodata-image">
+          <div className="icon-group">
+            <BsClipboardData className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">
+            Bạn chưa tham gia nhóm nào
+        </div>
+        </div>
+      )}
+    </>
+  }
+  return (
+    <div className="list-team-container">
+      {teams.length > 0 && renderNormal()}
+      {renderEmpty()}
+
     </div>
   );
 }
