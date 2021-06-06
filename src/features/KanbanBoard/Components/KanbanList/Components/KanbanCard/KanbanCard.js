@@ -68,13 +68,14 @@ function KanbanCard(props) {
       setIsShowEditPopup(false);
     }
 
-    if (props.data.taskId && queryObj.t && queryObj.b) {
+    if (props.data.taskId && queryObj.t && queryObj.b && !isShowEditPopup) {
       openEditPopup(queryObj.t);
     }
   }, [history.location.search])
 
 
   const user = useSelector(state => state.auth.currentUser);
+
   async function openEditPopup(taskId) {
     setModaTask(null);
     setIsShowEditPopup(true);
@@ -115,6 +116,8 @@ function KanbanCard(props) {
         taskId: queryOb.t
       }
     }
+
+
     taskApi.getTaskByBoard({ params }).then(res => {
       setModaTask({
         ...res.data,
