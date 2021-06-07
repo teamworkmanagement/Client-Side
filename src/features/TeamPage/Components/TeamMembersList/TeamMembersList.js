@@ -29,12 +29,19 @@ import StartChatMembers from "../StartChatMembers/StartChatMembers";
 import { BsSearch } from "react-icons/bs";
 import { AiOutlineTeam } from "react-icons/ai";
 import { VscSearchStop } from "react-icons/vsc";
+import { RiImageEditFill } from "react-icons/ri";
+import { FiEdit3 } from "react-icons/fi";
+import EditTeamNameModal from "./EditTeamNameModal/EditTeamNameModal";
+import EditTeamDescriptionModal from "./EditTeamDescriptionModal/EditTeamDescriptionModal";
 
 TeamMembersList.propTypes = {};
 
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
   const history = useHistory();
+  const teamName = "Nhóm ôn thi TOEIC";
+  const teamDescription =
+    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.";
   const [currentPage, setCurrentPage] = useState(1);
   function switchShowMode(index) {
     if (index === showMode) return;
@@ -46,56 +53,6 @@ function TeamMembersList(props) {
     { key: "actions", label: "Hành động", _style: { width: "5%" } },
   ];
 
-  const usersData = [
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-1.jpg",
-      name: "Nguyễn Tiến Dũng",
-      email: "dungnguyen@gmail.com",
-      isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-2.jpg",
-      name: "Võ Anh Tấn",
-      email: "demotan14@gmail.com",
-      isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-4.jpg",
-      name: "Anthony Phan",
-      email: "phanthi1972@gmail.com",
-      isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-5.jpg",
-      name: "Phương Thanh",
-      email: "mrphuongth@gmail.com",
-      isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-6.jpg",
-      name: "Tú Hảo",
-      email: "haotheface@gmail.com",
-      isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-7.jpg",
-      name: "Samu Liu",
-      email: "africaSam@gmail.com",
-      isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-8.jpg",
-      name: "Nguyễn Tiến Dũng",
-      email: "dungnguyen@gmail.com",
-      isLeader: false,
-    },
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-9.jpg",
-      name: "Nguyễn Tiến Dũng",
-      email: "dungnguyen@gmail.com",
-      isLeader: false,
-    },
-  ];
   const leaderData = [
     {
       avatar: "https://emilus.themenate.net/img/avatars/thumb-4.jpg",
@@ -113,6 +70,8 @@ function TeamMembersList(props) {
   const [members, setMembers] = useState([]);
   const [team, setTeam] = useState({});
   const [showInvite, setShowInvite] = useState(false);
+  const [showEditName, setShowEditName] = useState(false);
+  const [showEditDescription, setShowEditDescription] = useState(false);
   const [showStartChat, setShowStartChat] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [toastContent, setToastContent] = useState("");
@@ -244,7 +203,6 @@ function TeamMembersList(props) {
 
   const onStartChatClose = () => {
     setShowStartChat(false);
-    console.log("zzzzzzzz");
   };
 
   function NoItemView() {
@@ -262,6 +220,14 @@ function TeamMembersList(props) {
       </div>
     );
   }
+
+  function onCloseEditNameModal() {
+    setShowEditName(false);
+  }
+  function onCloseEditDescriptionModal() {
+    setShowEditDescription(false);
+  }
+
   return (
     <div className="team-members-container">
       {redirect ? <Redirect from="/team" to={redirect} /> : null}
@@ -308,6 +274,48 @@ function TeamMembersList(props) {
               </CButton>
             </CTooltip>
           </CButtonGroup>
+        </div>
+      </div>
+      <div className="team-info-panel">
+        <div className="team-info-panel-content">
+          <div className="name-image-group">
+            <div className="team-image-container">
+              <img
+                alt=""
+                src="https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png"
+              />
+            </div>
+            <div className="team-name-actions">
+              <div className="team-name">
+                Nhóm ô eretgfjrjtn thi TsdererhegsggOEIC
+              </div>
+              <div className="actions-group">
+                <div className="btn-change-image">
+                  <RiImageEditFill className="icon-edit-image icon-edit" />
+                  Đổi ảnh
+                </div>
+                <div
+                  className="btn-change-name"
+                  onClick={() => setShowEditName(true)}
+                >
+                  <FiEdit3 className="icon-edit-image icon-edit" />
+                  Đổi tên nhóm
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="team-description-group">
+            <div className="label-description">
+              Mô tả
+              <div
+                className="icon-edit-container"
+                onClick={() => setShowEditDescription(true)}
+              >
+                <FiEdit3 className="icon-edit-description icon-edit" />
+              </div>
+            </div>
+            <div className="team-description">{teamDescription}</div>
+          </div>
         </div>
       </div>
       <CRow>
@@ -401,6 +409,25 @@ function TeamMembersList(props) {
         </CCol>
         <CCol lg="9" md="12" className="col-members">
           <div className="members-container">
+            <div className="members-list-header">
+              <div className="lookup-input">
+                <CInput
+                  type="text"
+                  name="teamName"
+                  placeholder="Tìm công việc..."
+                />
+                <BsSearch className="icon-search" />
+              </div>
+              <div
+                className="add-btn add-list-btn"
+                onClick={() => {
+                  setShowInvite(true);
+                }}
+              >
+                <CIcon name="cil-plus" />
+                Mời thành viên
+              </div>
+            </div>
             <div className="label">Thành viên</div>
             <CDataTable
               items={members}
@@ -503,6 +530,16 @@ function TeamMembersList(props) {
         ))}
       </div>
       <InviteMemberModal showAddInvite={showInvite} onClose={onClose} />
+      <EditTeamNameModal
+        teamName={teamName}
+        show={showEditName}
+        onClose={onCloseEditNameModal}
+      />
+      <EditTeamDescriptionModal
+        teamDescription={teamDescription}
+        show={showEditDescription}
+        onClose={onCloseEditDescriptionModal}
+      />
       <StartChatMembers
         showStartChat={showStartChat}
         fixedMembers={fixedMembers}

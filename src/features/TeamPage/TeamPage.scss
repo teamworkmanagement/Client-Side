@@ -310,10 +310,24 @@ $baseTransition: all 0.3s;
                     width: 1.55rem;
                     height: 1.55rem;
                 }
+                .icon-group {
+                    width: 1.55rem;
+                    height: 1.55rem;
+                    path {
+                        stroke: $subTextColor;
+                    }
+                }
                 &.active {
                     .c-icon {
                         width: 1.55rem;
                         height: 1.55rem;
+                    }
+                    .icon-group {
+                        width: 1.55rem;
+                        height: 1.55rem;
+                        path {
+                            stroke: white;
+                        }
                     }
                 }
                 .tab-name {

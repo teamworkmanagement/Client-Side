@@ -14,6 +14,7 @@ import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsP
 import ForgotPassword from "./shared_components/views/pages/forgotpassword/ForgotPassword";
 import NotFoundPage from "./shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import NoInternetPage from "./shared_components/MySharedComponents/NoInternetPage/NoInternetPage";
+import FeedbackPage from "./features/FeedbackPage/FeedbackPage";
 
 const Toaster = React.lazy(() =>
   import("./shared_components/views/notifications/toaster/Toaster")
@@ -126,7 +127,7 @@ const routes = [
     name: "Không có kết nối mạng",
     component: NoInternetPage,
   },
-  { path: "/dashboard", name: "Dashboard", component: DashBoardPage },
+  { path: "/dashboard", name: "Tổng quan", component: DashBoardPage },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
   {
@@ -169,6 +170,18 @@ const routes = [
     path: "/myaccount",
     name: "Tài khoản",
     component: AccountSettingsPage,
+    exact: true,
+  },
+  {
+    path: "/feedbacks",
+    name: "Góp ý cải thiện ứng dụng",
+    component: FeedbackPage,
+    exact: true,
+  },
+  {
+    path: "/test",
+    name: "test",
+    component: MyToaster,
     exact: true,
   },
   //{ path: "/team", name: "mychat", component: ChatPage, exact: true },

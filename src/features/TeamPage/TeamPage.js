@@ -25,15 +25,19 @@ import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
 import { useHistory, useLocation, useParams } from "react-router";
 import queryString from "query-string";
 import { changeStateTeamTabsSidebar } from "src/appSlice";
+
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import teamApi from "src/api/teamApi";
+
+import { GrGroup } from "react-icons/gr";
+
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
   const dispatch = useDispatch();
   const [isOpeningBoard, setIsOpeningBoard] = useState(false);
   const teamLoading = useSelector((state) => state.app.teamLoading);
-  const activeTab = useSelector(state => state.team.activeTab);
+  const activeTab = useSelector((state) => state.team.activeTab);
   const [boardId, setBoardId] = useState(null);
   const history = useHistory();
   const location = useLocation();
@@ -73,8 +77,8 @@ function TeamPage(props) {
 
     history.push({
       pathname: history.location.pathname,
-      search: history.location.search.split('&')[0],
-    })
+      search: history.location.search.split("&")[0],
+    });
   }
 
   const onActiveTabChange = (index) => {
@@ -82,9 +86,8 @@ function TeamPage(props) {
   };
 
   useEffect(() => {
-    if (activeTab)
-      setActive(activeTab);
-  }, [activeTab])
+    if (activeTab) setActive(activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     let tab = "feed";
@@ -113,6 +116,7 @@ function TeamPage(props) {
     }
 
     const queryParams = queryString.parse(history.location.search);
+
     if (queryParams.b && tab==="task") {
 
     }
@@ -122,20 +126,17 @@ function TeamPage(props) {
         search: `tab=${tab}`,
       });
     }
-
   }, [active]);
 
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
-    if (queryObj.tab && !queryObj.b && !queryObj.t)
-      setIsOpeningBoard(false);
+    if (queryObj.tab && !queryObj.b && !queryObj.t) setIsOpeningBoard(false);
     else {
       //setIsOpeningBoard(true);
-      console.log(history.location.search)
+      console.log(history.location.search);
       openBoard(queryObj.b);
     }
-  }, [history.location.search])
-
+  }, [history.location.search]);
 
   const boardRender = () => {
     const pathname = history.location.pathname.split('/');
@@ -182,6 +183,14 @@ function TeamPage(props) {
       <CTabs activeTab={active} onActiveTabChange={onActiveTabChange}>
         <CNav className="d-sm-down-none" variant="tabs">
           <CNavItem>
+            <CTooltip content="Thành viên nhóm" placement="right">
+              <CNavLink>
+                <GrGroup className="icon-group" />
+                <div className="tab-name">Thành viên nhóm</div>
+              </CNavLink>
+            </CTooltip>
+          </CNavItem>
+          <CNavItem>
             <CTooltip content="Bản tin nhóm" placement="right">
               <CNavLink>
                 <CIcon name="cil-newspaper" />
@@ -213,14 +222,7 @@ function TeamPage(props) {
               </CNavLink>
             </CTooltip>
           </CNavItem>
-          <CNavItem>
-            <CTooltip content="Thành viên nhóm" placement="right">
-              <CNavLink>
-                <CIcon name="cil-user" />
-                <div className="tab-name">Thành viên nhóm</div>
-              </CNavLink>
-            </CTooltip>
-          </CNavItem>
+
           <CNavItem>
             <CTooltip content="Thống kê" placement="right">
               <CNavLink>
@@ -239,17 +241,18 @@ function TeamPage(props) {
             />
           </div>
           <CTabContent>
+            <CTabPane>{active === 0 ? <TeamMembersList /> : null}</CTabPane>
             <CTabPane>
-              {active === 0 ? <NewsFeedPage isInTeam={true} /> : null}
+              {active === 1 ? <NewsFeedPage isInTeam={true} /> : null}
             </CTabPane>
-            <CTabPane>{active === 1 ? boardRender() : null}</CTabPane>
+            <CTabPane>{active === 2 ? boardRender() : null}</CTabPane>
             <CTabPane>
-              {active === 2 ? (
+              {active === 3 ? (
                 <ChatPage isInTeam={true} tabActiveTeam={active} />
               ) : null}
             </CTabPane>
-            <CTabPane>{active === 3 ? <ListFileTable /> : null}</CTabPane>
-            <CTabPane>{active === 4 ? <TeamMembersList /> : null}</CTabPane>
+            <CTabPane>{active === 4 ? <ListFileTable /> : null}</CTabPane>
+
             <CTabPane>{active === 5 ? <TeamStatistics /> : null}</CTabPane>
           </CTabContent>
         </div>

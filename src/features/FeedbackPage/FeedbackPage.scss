@@ -1,0 +1,74 @@
+$borderRadius: 0.625rem;
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$baseTransition: all 0.3s;
+@mixin NormalButtonStyle {
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+
+.feedback-page-container {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    .feedback-page-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        flex-grow: 1;
+        .title {
+            display: flex;
+            align-items: center;
+            font-size: 120%;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            .icon-title {
+                width: 2rem;
+                height: 2rem;
+                margin-top: -0.2rem;
+                margin-right: 0.5rem;
+            }
+        }
+        .feedback-box {
+            height: 5rem;
+            border-radius: $borderRadius;
+            flex-grow: 1;
+        }
+        .send-btn {
+            @include NormalButtonStyle;
+            margin-top: 1rem;
+            width: fit-content;
+            align-self: flex-end;
+        }
+    }
+    .image-feedback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        width: 50%;
+        img {
+            width: 100%;
+        }
+        @media (min-width: 1200px) {
+            padding: 6rem;
+        }
+        @media (max-width: 700px) {
+            padding: 1rem;
+        }
+        @media (max-width: 500px) {
+            display: none;
+        }
+    }
+}

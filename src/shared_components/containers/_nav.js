@@ -1,6 +1,8 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
 import { CImg } from "@coreui/react";
+import { MdHelpOutline } from "react-icons/md";
+import { RiFeedbackLine } from "react-icons/ri";
 
 const _nav = [
   {
@@ -90,11 +92,16 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Ứng dụng",
+    name: "Trợ giúp",
     to: "",
-    icon: {
-      name: "cil-settings",
-    },
+    icon: <MdHelpOutline className="mfe-2 icon-help" />,
+    label: true,
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Đóng góp ý kiến",
+    to: "/feedbacks",
+    icon: <RiFeedbackLine className="mfe-2 icon-help" />,
     label: true,
   },
 

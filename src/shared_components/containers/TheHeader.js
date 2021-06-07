@@ -29,6 +29,7 @@ import {
   setDarkMode,
   changeStateTeamTabsSidebar,
   changeStateChatListSidebar,
+  changeStateSettingOptionsSidebar,
 } from "src/appSlice";
 import "./TheHeader.scss";
 import { BsSearch } from "react-icons/bs";
@@ -53,6 +54,12 @@ const TheHeader = () => {
       changeStateChatListSidebar({
         type: "chatlistsidebar",
         chatListSidebarShow: val,
+      })
+    );
+    dispatch(
+      changeStateSettingOptionsSidebar({
+        type: "settingoptionssidebar",
+        settingOptionsSidebarShow: val,
       })
     );
   };

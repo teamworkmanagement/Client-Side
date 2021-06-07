@@ -287,6 +287,104 @@ $baseTransition: all 0.3s;
     flex-direction: column;
     align-items: center;
     height: 100%;
+    .team-info-panel {
+        padding: 1rem;
+        padding-bottom: 1.5rem;
+        padding-top: 0;
+        width: 100%;
+        .team-info-panel-content {
+            @include CardStyle;
+            padding: 1.5rem;
+            .name-image-group {
+                display: flex;
+                align-items: center;
+                .team-image-container {
+                    margin-right: 1rem;
+                    img {
+                        width: 6rem;
+                        height: 6rem;
+                        border-radius: 500rem;
+                    }
+                }
+                .team-name-actions {
+                    display: flex;
+                    flex-direction: column;
+                    .team-name {
+                        font-size: 150%;
+                        font-weight: bold;
+                        margin-bottom: 0.5rem;
+                    }
+                    .actions-group {
+                        display: flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+
+                        .icon-edit {
+                            width: 1rem;
+                            height: 1rem;
+                            margin-right: 0.5rem;
+                            &.icon-edit-image {
+                                width: 1.2rem;
+                                height: 1.2rem;
+                                margin-top: -0.1rem;
+                            }
+                        }
+                        .btn-change-image {
+                            @include NormalButtonStyle;
+                            margin-right: 0.5rem;
+                            margin-bottom: 0.5rem;
+                        }
+                        .btn-change-name {
+                            @include NormalButtonStyle;
+                            margin-bottom: 0.5rem;
+                        }
+                    }
+                }
+                @media (max-width: 550px) {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    .team-name-actions {
+                        margin: 0.5rem 0rem;
+                        align-items: center;
+                        .team-name {
+                            text-align: center;
+                        }
+                        .actions-group {
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
+            .team-description-group {
+                .label-description {
+                    font-weight: bold;
+                    // font-size: 90%;
+                    margin-bottom: 0.3rem;
+                    margin-top: 1rem;
+                    color: $subTextColor;
+                    display: flex;
+                    align-items: center;
+                    .icon-edit-container {
+                        cursor: pointer;
+                        padding: 0.3rem;
+                        margin-left: 0.3rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 500px;
+                        transition: all 0.1s;
+                        .icon-edit {
+                        }
+                        &:hover {
+                            background-color: rgba(0, 0, 0, 0.1);
+                        }
+                    }
+                }
+                .team-description {
+                }
+            }
+        }
+    }
     .no-item-view-table {
         .nodata-image {
             .noti-infor {
@@ -305,6 +403,7 @@ $baseTransition: all 0.3s;
         flex-wrap: wrap;
         margin-bottom: 0.5rem;
         width: 100%;
+        display: none;
         .other-actions {
             display: flex;
             flex-wrap: wrap;
@@ -398,6 +497,41 @@ $baseTransition: all 0.3s;
         .members-container {
             @include CardStyle;
             margin-bottom: 1rem;
+            .members-list-header {
+                display: flex;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+                .lookup-input {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0.5rem;
+
+                    input {
+                        border-radius: $borderRadius;
+                        padding-right: 1.8rem;
+                    }
+                    .icon-search {
+                        margin-left: -1.5rem;
+                        cursor: pointer;
+                        color: $subTextColor;
+                        transition: $baseTransition;
+
+                        &:hover {
+                            transform: scale(1.2);
+                            color: $textColor;
+                        }
+                    }
+                }
+                .add-btn {
+                    @include NormalButtonStyle;
+
+                    margin-bottom: 0.5rem;
+                    margin-left: 1rem;
+                    .c-icon {
+                        margin-right: 0.2rem;
+                    }
+                }
+            }
             .label {
                 margin-bottom: 1rem;
             }

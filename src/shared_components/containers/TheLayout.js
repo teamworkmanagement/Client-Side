@@ -7,6 +7,7 @@ import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
 import TeamTabsSideBar from "./TeamTabsSideBar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SettingOptionsSidebar from "./SettingOptionsSidebar";
 
 const TheLayout = () => {
   return (
@@ -14,6 +15,7 @@ const TheLayout = () => {
       <TheSidebar />
       <TeamTabsSideBar />
       <ChatListSideBar />
+      <SettingOptionsSidebar />
       <div className="c-wrapper">
         <TheHeader />
         <div className="c-body">

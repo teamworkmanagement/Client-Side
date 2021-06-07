@@ -534,6 +534,7 @@ const appSlice = createSlice({
     sidebarShow: "responsive",
     teamTabsSidebarShow: "false",
     chatListSidebarShow: "false",
+    settingOptionsSidebarShow: "false",
     currentPostPage: 1,
     darkMode: true,
     kanbanBoardData: initKanbanBoardData,
@@ -562,6 +563,12 @@ const appSlice = createSlice({
     changeStateChatListSidebar(state, payload) {
       if (payload.payload.type === "chatlistsidebar") {
         state.chatListSidebarShow = payload.payload.chatListSidebarShow;
+      }
+    },
+    changeStateSettingOptionsSidebar(state, payload) {
+      if (payload.payload.type === "settingoptionssidebar") {
+        state.settingOptionsSidebarShow =
+          payload.payload.settingOptionsSidebarShow;
       }
     },
     setNewNoti(state, action) {
@@ -778,5 +785,6 @@ export const {
   setNewNoti,
   changeStateTeamTabsSidebar,
   changeStateChatListSidebar,
+  changeStateSettingOptionsSidebar,
 } = actions; // named export
 export default reducer; // default export
