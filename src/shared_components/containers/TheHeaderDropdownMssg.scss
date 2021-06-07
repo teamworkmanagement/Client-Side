@@ -1,0 +1,100 @@
+$borderRadius: 0.625rem;
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$subTextColor: #768192;
+$textColor: #3c4b64;
+.header-message-dropdown {
+    .dropdown-menu {
+        box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+        border-radius: $borderRadius;
+        border: none;
+        width: 20rem;
+        overflow: hidden;
+        padding: 0;
+        .dropdown-header {
+            border-bottom: 1px solid rgba($subTextColor, 0.2);
+            .header-noti-list {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .title {
+                    font-size: 150%;
+                    color: $textColor;
+                    font-weight: bold;
+                }
+                .clear-btn {
+                    cursor: pointer;
+                    color: $baseColor;
+                    &:hover {
+                        color: $darkerBaseColor;
+                    }
+                }
+            }
+        }
+        .noti-list {
+            overflow-y: auto;
+            height: 21rem;
+            .noti-item {
+                border-top: 1px solid rgba($subTextColor, 0.2);
+
+                padding: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                img {
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius: 500px;
+                    margin-right: 0.7rem;
+                }
+                .noti-content {
+                    width: 3rem;
+                    flex-grow: 1;
+                    strong {
+                        margin-right: 0.5rem;
+                    }
+                }
+                .noti-time {
+                    margin-left: 0.8rem;
+                    color: $subTextColor;
+                }
+                &:first-child {
+                    border-top: none;
+                }
+                &:last-child {
+                    border-bottom: 1px solid rgba($subTextColor, 0.2);
+                }
+                &:hover {
+                    background-color: rgba($subTextColor, 0.2);
+                }
+            }
+        }
+
+        .no-noti-view {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            font-size: 120%;
+            color: rgba($subTextColor, 0.8);
+            justify-content: center;
+            .icon-speaker {
+                margin-right: 0.5rem;
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+        .load-more-noti-btn {
+            color: $baseColor;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0.5rem;
+            text-align: center;
+            border-top: 1px solid rgba($subTextColor, 0.2);
+            &:hover {
+                color: $darkerBaseColor;
+            }
+        }
+    }
+}

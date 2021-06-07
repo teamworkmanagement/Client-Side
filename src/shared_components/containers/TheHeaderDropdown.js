@@ -6,23 +6,26 @@ import {
   CDropdownMenu,
   CDropdownToggle,
   CImg,
+  CSwitch,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { useSelector } from "react-redux";
+import { VscFeedback } from "react-icons/vsc";
+import { MdHelpOutline } from "react-icons/md";
+import { BiLogOut } from "react-icons/bi";
+import "./TheHeaderDropdown.scss";
 
 const TheHeaderDropdown = () => {
+  const user = useSelector((state) => state.auth.currentUser);
   return (
     <CDropdown inNav className="c-header-nav-items mx-2" direction="down">
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <div className="c-avatar">
-          <CImg
-            src={"../avatars/6.jpg"}
-            className="c-avatar-img"
-            alt="admin@bootstrapmaster.com"
-          />
+          <CImg src={user.userAvatar} className="c-avatar-img" alt="" />
         </div>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownItem header tag="div" color="light" className="text-center">
+        {/* <CDropdownItem header tag="div" color="light" className="text-center">
           <strong>Account</strong>
         </CDropdownItem>
         <CDropdownItem>
@@ -55,33 +58,44 @@ const TheHeaderDropdown = () => {
         </CDropdownItem>
         <CDropdownItem header tag="div" color="light" className="text-center">
           <strong>Settings</strong>
-        </CDropdownItem>
-        <CDropdownItem>
-          <CIcon name="cil-user" className="mfe-2" />
-          Profile
-        </CDropdownItem>
-        <CDropdownItem>
-          <CIcon name="cil-settings" className="mfe-2" />
-          Settings
-        </CDropdownItem>
-        <CDropdownItem>
-          <CIcon name="cil-credit-card" className="mfe-2" />
-          Payments
-          <CBadge color="secondary" className="mfs-auto">
-            42
-          </CBadge>
-        </CDropdownItem>
-        <CDropdownItem>
-          <CIcon name="cil-file" className="mfe-2" />
-          Projects
-          <CBadge color="primary" className="mfs-auto">
-            42
-          </CBadge>
+        </CDropdownItem> */}
+        <CDropdownItem className="dropdown-item-user">
+          <img alt="" src={user.userAvatar} />
+          <div className="user-name">{user.fullName}</div>
         </CDropdownItem>
         <CDropdownItem divider />
         <CDropdownItem>
-          <CIcon name="cil-lock-locked" className="mfe-2" />
-          Lock Account
+          <CIcon name="cil-user" className="mfe-2" />
+          Cài đặt tài khoản
+        </CDropdownItem>
+        <div className="darkmode-item">
+          <div className="title">
+            <CIcon name="cil-moon" className="mfe-2" />
+            Chế độ tối
+          </div>
+          <CSwitch
+            className={"mx-1"}
+            shape={"pill"}
+            color={"info"}
+            variant={"opposite"}
+            labelOn={"\u2713"}
+            labelOff={"\u2715"}
+            defaultValue="false"
+          />
+        </div>
+        <CDropdownItem divider />
+        <CDropdownItem>
+          <VscFeedback className="mfe-2 icon-feedback" />
+          Đóng góp cho ứng dụng
+        </CDropdownItem>
+        <CDropdownItem>
+          <MdHelpOutline className="mfe-2 icon-help" />
+          Trợ giúp
+        </CDropdownItem>
+        <CDropdownItem divider />
+        <CDropdownItem>
+          <BiLogOut className="mfe-2 icon-logout" />
+          Đăng xuất
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

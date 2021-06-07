@@ -1,0 +1,68 @@
+$subTextColor: #768192;
+.user-info-modal {
+    .modal-content {
+        margin-top: 0 !important;
+    }
+    .modal-body {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        display: flex;
+        flex-direction: column;
+        .divider {
+            height: 1px;
+            //width: 100%;
+            background-color: rgba($subTextColor, 0.2);
+            margin: 1rem -1rem;
+            &.notshow {
+                visibility: hidden;
+            }
+        }
+        .label {
+            font-weight: bold;
+            font-size: 90%;
+            color: $subTextColor;
+            margin-bottom: 0.8rem;
+        }
+        .info-item {
+            margin-top: 0.8rem;
+            display: flex;
+            .info-item-icon {
+                width: 1.2rem;
+                height: 1.2rem;
+                //margin-top: -0.2rem;
+                margin-right: 0.5rem;
+                &.icon-home {
+                    width: 1.6rem;
+                    height: 1.6rem;
+                }
+                &.github-icon {
+                    width: 1.35rem;
+                    height: 1.35rem;
+                    margin-left: -0.1rem;
+                }
+            }
+            a {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 1rem;
+                flex-grow: 1;
+            }
+        }
+        .overview-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            img {
+                width: 7rem;
+                height: 7rem;
+                border-radius: 500rem;
+            }
+            .user-name {
+                margin-top: 1rem;
+                font-weight: bold;
+                font-size: 110%;
+            }
+        }
+    }
+}
