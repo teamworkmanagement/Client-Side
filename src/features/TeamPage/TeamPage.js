@@ -22,10 +22,15 @@ import TeamLoading from "./TeamLoading/TeamLoading";
 import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
 import BoardsPage from "./Components/BoardsPage/BoardsPage";
 import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
-import { useHistory, useLocation } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import queryString from "query-string";
 import { changeStateTeamTabsSidebar } from "src/appSlice";
+
+import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
+import teamApi from "src/api/teamApi";
+
 import { GrGroup } from "react-icons/gr";
+
 TeamPage.propTypes = {};
 
 function TeamPage(props) {
@@ -62,7 +67,6 @@ function TeamPage(props) {
     return 0;
   });
 
-  console.log(queryParams);
 
   function openBoard(boardId) {
     setBoardId(boardId);
@@ -112,8 +116,11 @@ function TeamPage(props) {
     }
 
     const queryParams = queryString.parse(history.location.search);
-    if (queryParams.b) {
-    } else {
+
+    if (queryParams.b && tab==="task") {
+
+    }
+    else {
       history.push({
         pathname: history.location.pathname,
         search: `tab=${tab}`,
@@ -132,10 +139,11 @@ function TeamPage(props) {
   }, [history.location.search]);
 
   const boardRender = () => {
+    const pathname = history.location.pathname.split('/');
     return (
       <div>
         {isOpeningBoard ? (
-          <TeamTasks boardId={boardId} goBackListBoards={goBackListBoards} />
+          <TeamTasks ownerId={pathname[2]} boardId={boardId} goBackListBoards={goBackListBoards} />
         ) : (
           <BoardsPage openBoard={openBoard} />
         )}
@@ -152,8 +160,26 @@ function TeamPage(props) {
     );
   };
 
-  return (
-    <div className="team-container">
+
+  const [notfound, setNotfound] = useState(false);
+  const { teamId } = useParams();
+
+  useEffect(() => {
+    if (teamId) {
+      teamApi
+        .getAdmin(teamId)
+        .then((res) => {
+        })
+        .catch((err) => {
+          if (err.data?.ErrorCode === "404")
+            setNotfound(true);
+        });
+    }
+  }, [teamId])
+
+
+  const renderNormal = () => {
+    return <>
       <CTabs activeTab={active} onActiveTabChange={onActiveTabChange}>
         <CNav className="d-sm-down-none" variant="tabs">
           <CNavItem>
@@ -231,6 +257,11 @@ function TeamPage(props) {
           </CTabContent>
         </div>
       </CTabs>
+    </>
+  }
+  return (
+    <div className="team-container">
+      {notfound ? <NotFoundPage /> : renderNormal()}
       <TeamLoading isLoading={teamLoading} />
     </div>
   );

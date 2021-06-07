@@ -2,13 +2,13 @@ import axiosClient from "./axiosClient";
 
 
 const taskApi = {
-    getTaskById(taskId) {
-        const url = `/task/${taskId}`;
-        return axiosClient.get(url);
-    },
     dragTask(params) {
         const url = `/task/drag-task`;
         return axiosClient.post(url, params);
+    },
+    getTaskByBoard(params) {
+        const url = '/task/boardtask';
+        return axiosClient.get(url, params);
     },
     /*
     {

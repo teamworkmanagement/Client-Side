@@ -63,36 +63,34 @@ function KanbanCard(props) {
   }, [firstTask])*/
 
   useEffect(() => {
-    const queryObj = queryString.parse(history.location.search);
+    /*const queryObj = queryString.parse(history.location.search);
     if (props.data.taskId && !queryObj.t && isShowEditPopup) {
       setIsShowEditPopup(false);
     }
 
-    if (props.data.taskId && queryObj.t && queryObj.b) {
-      openEditPopup(props.data.taskId);
-    }
+    /*if (queryObj.gr && queryObj.t && queryObj.b && !isShowEditPopup) {
+      console.log(history.location.search);
+      console.log(isShowEditPopup)
+      openEditPopup(queryObj.t);
+      console.log('call api');
+    }*/
   }, [history.location.search])
 
 
+  const user = useSelector(state => state.auth.currentUser);
+
   async function openEditPopup(taskId) {
-    setModaTask(null);
-    setIsShowEditPopup(true);
+    //setModaTask(null);
+    //setIsShowEditPopup(true);
 
     const queryObj = queryString.parse(history.location.search);
+    console.log(queryObj);
     if (!queryObj.t) {
       history.push({
         pathname: history.location.pathname,
         search: history.location.search + `&t=${taskId}`,
       });
     }
-
-
-    const taskModal = await taskApi.getTaskById(taskId);
-    setModaTask({
-      ...taskModal.data,
-      filesCount: props.data.filesCount,
-      commentsCount: props.data.commentsCount,
-    });
   }
 
   function removeYearOfDate(date) {
@@ -191,11 +189,7 @@ function KanbanCard(props) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <TaskEditModal
-            closePopup={onEditModalClose}
-            isShowEditPopup={isShowEditPopup}
-            data={modalTask}
-          />
+          
 
           <div
             className="card-component"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TeamTasks.scss";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
@@ -8,6 +8,13 @@ import GanttChart from "src/shared_components/MySharedComponents/GanttChart/Gant
 import TaskList from "src/features/TeamPage/Components/TeamTasks/Components/TaskList/TaskList";
 import { AiOutlineLeft } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
+import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
+import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
+import queryString from 'query-string';
+import { useHistory } from "react-router";
+import { setTeamLoading } from "src/appSlice";
 
 TeamTasks.propTypes = {};
 
@@ -24,8 +31,40 @@ function TeamTasks(props) {
       props.goBackBoards();
     }
   }
-  return (
-    <div className="team-tasks-container">
+
+  const [notfound, setNotFound] = useState(false);
+  const user = useSelector(state => state.auth.currentUser);
+  const dispatch = useDispatch();
+
+  const history = useHistory();
+  useEffect(() => {
+    const queryOb = queryString.parse(history.location.search);
+    const params = {
+      isOfTeam: true,
+      ownerId: queryOb.gr,
+      boardId: props.boardId
+    }
+    
+    dispatch(setTeamLoading(true));
+    dispatch(getBoardDataForUI({ params }))
+      .then(unwrapResult)
+      .then(originalPromiseResult => {
+        console.log('done call api');
+        dispatch(setTeamLoading(false));
+      })
+      .catch(err => {
+        console.log(err);
+
+        if (err.data?.ErrorCode === "404") {
+          setNotFound(true);
+        }
+        dispatch(setTeamLoading(false));
+      });
+  }, [])
+
+  const renderNormal = () => {
+    const queryO = queryString.parse(history.location.search);
+    return <>
       <div className="tasks-header">
         <div className="goback-label" onClick={goBackBoards}>
           <AiOutlineLeft className="icon-goback" />
@@ -43,13 +82,13 @@ function TeamTasks(props) {
           {showMode === 1 && (
             <div className="add-btn add-list-btn">
               <CIcon name="cil-plus" />
-              Tạo danh sách
+          Tạo danh sách
             </div>
           )}
           {(showMode === 2 || showMode === 3) && (
             <div className="add-btn add-task-btn">
               <CIcon name="cil-plus" />
-              Tạo công việc
+          Tạo công việc
             </div>
           )}
 
@@ -87,9 +126,14 @@ function TeamTasks(props) {
         </div>
       </div>
 
-      {showMode === 1 && <KanbanBoard boardId={props.boardId} />}
+      {showMode === 1 && <KanbanBoard ownerId={queryO.gr} isOfTeam={true} boardId={props.boardId} />}
       {showMode === 2 && <TaskList boardId={props.boardId} />}
       {showMode === 3 && <GanttChart boardId={props.boardId} />}
+    </>
+  }
+  return (
+    <div className="team-tasks-container">
+      {notfound ? <NotFoundPage /> : renderNormal()}
     </div>
   );
 }

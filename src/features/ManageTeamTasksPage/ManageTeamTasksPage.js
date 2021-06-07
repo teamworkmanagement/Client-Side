@@ -20,14 +20,14 @@ function ManageTeamTasksPage(props) {
     if (queryParams.b)
       return queryParams.b;
   });
-  function goToBoard(boardId) {
+  function goToBoard(item) {
     /*setBoardId(boardId);
     setIsInBoard(true);*/
     history.push({
       pathname: history.location.pathname,
-      search: `b=${boardId}`,
+      search: `gr=${item.kanbanBoardTeamId}&b=${item.kanbanBoardId}`,
     })
-    setBoardId(boardId);
+    setBoardId(item.kanbanBoardId);
   }
   function goBackBoards() {
     setIsInBoard(false);
@@ -45,7 +45,7 @@ function ManageTeamTasksPage(props) {
   }, [history.location.search])
 
   useEffect(() => {
-    
+
   }, [boardId])
   return (
     <div className="teamtasks-page-container">

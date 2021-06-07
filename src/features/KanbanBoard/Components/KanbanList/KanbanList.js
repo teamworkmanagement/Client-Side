@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./KanbanList.scss";
 import KanbanCard from "./Components/KanbanCard/KanbanCard";
@@ -19,6 +19,9 @@ import CIcon from "@coreui/icons-react";
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
 import kanbanApi from "src/api/kanbanApi";
+import { useHistory } from "react-router";
+import taskApi from "src/api/taskApi";
+import queryString from 'query-string';
 
 KanbanList.propTypes = {};
 
@@ -27,6 +30,7 @@ function KanbanList(props) {
   const dispatch = useDispatch();
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const [showAddCard, setShowAddCard] = useState(false);
+  const [taskObj, setTaskObj] = useState(null);
 
   const { taskUIKanbans } = props.data;
 
@@ -43,6 +47,40 @@ function KanbanList(props) {
       params
     }).then(res => { }).catch(err => { })
   }
+
+  const history = useHistory();
+  const user = useSelector(state => state.auth.currentUser);
+  useEffect(() => {
+    /*const queryObj = queryString.parse(history.location.search);
+
+    if (!queryObj.t || !queryObj.b)
+      return;
+    let params = {};
+    if (props.isOfTeam) {
+      params = {
+        isOfTeam: true,
+        ownerId: props.ownerId,
+        boardId: queryObj.b,
+        taskId: queryObj.t,
+      }
+    }
+    else {
+      params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryObj.b,
+        taskId: queryObj.t
+      }
+    }
+
+    taskApi.getTaskByBoard({ params }).then(res => {
+
+    }).catch(err => {
+
+    });*/
+
+
+  }, [history.location.search])
   return (
     <Draggable draggableId={props.data.kanbanListId} isDragDisabled={props.data.kanbanListOrderInBoard === -999999} index={props.index}>
       {(provided) => (
@@ -69,6 +107,8 @@ function KanbanList(props) {
                 {taskUIKanbans.map((item, index) => {
                   return (
                     <KanbanCard
+                      ownerId={props.ownerId}
+                      isOfTeam={props.isOfTeam}
                       key={item.taskId}
                       data={item}
                       index={index} //required by dnd

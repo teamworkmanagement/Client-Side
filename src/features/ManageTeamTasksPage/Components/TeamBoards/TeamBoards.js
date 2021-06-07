@@ -5,7 +5,8 @@ import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useSelector } from "react-redux";
 import kanbanApi from "src/api/kanbanApi";
-import { BsSearch } from "react-icons/bs";
+import { BsClipboardData, BsSearch } from "react-icons/bs";
+import { VscSearchStop } from "react-icons/vsc";
 
 TeamBoards.propTypes = {};
 
@@ -92,13 +93,14 @@ function TeamBoards(props) {
     },
   ];
 
-  function goToBoard(boardId) {
+  function goToBoard(item) {
     if (props.goToBoard) {
-      props.goToBoard(boardId);
+      props.goToBoard(item);
     }
   }
 
   const [boards, setBoards] = useState([]);
+  const [loadone, setLoadDone] = useState(false);
   useEffect(() => {
     kanbanApi
       .getBoardsForUserTeams(user.id)
@@ -106,7 +108,10 @@ function TeamBoards(props) {
         console.log(res);
         setBoards(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { })
+      .finally(() => {
+        setLoadDone(true);
+      });
   }, []);
 
   return (
@@ -142,7 +147,7 @@ function TeamBoards(props) {
               >
                 <div
                   className="board-item"
-                  onClick={() => goToBoard(item.kanbanBoardId)}
+                  onClick={() => goToBoard(item)}
                 >
                   <div className="board-title">{item.kanbanBoardName}</div>
                   <div className="board-team-infor">
@@ -160,6 +165,18 @@ function TeamBoards(props) {
           })}
         </CRow>
       </div>
+      {boards.length === 0 && loadone && (
+        <div className="nodata-image">
+          <div className="icon-group">
+            <BsClipboardData className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">
+            Chưa có bảng công việc nào
+          </div>
+        </div>
+      )}
     </div>
   );
 }
