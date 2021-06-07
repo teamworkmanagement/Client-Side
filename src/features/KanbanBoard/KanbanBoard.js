@@ -11,7 +11,7 @@ import {
 } from "src/appSlice";
 import { CButton, CButtonGroup } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { getBoardDataForUI, handleDragEnd, setTaskSelected } from "./kanbanSlice";
+
 import taskApi from "src/api/taskApi";
 import kanbanApi from "src/api/kanbanApi";
 import CardLoading from "./Components/KanbanList/Components/KanbanCard/Components/CardLoading/CardLoading";
@@ -20,7 +20,7 @@ import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
 import queryString from 'query-string';
 import { unwrapResult } from "@reduxjs/toolkit";
-
+import TaskEditModal from "./Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 KanbanBoard.propTypes = {};
 
 function KanbanBoard(props) {
@@ -163,30 +163,71 @@ function KanbanBoard(props) {
   const [notask, setNoTask] = useState(false);
 
   const [boardId, setBoardId] = useState(null);
+  const [isShowEditPopup, setIsShowEditPopup] = useState(false);
+  const [modalTaskObj, setModaTaskObj] = useState(null);
+
+
+  const tasks = [];
+  kanbanLists.map((kl) => {
+    kl.taskUIKanbans.map((task) => {
+      tasks.push(task);
+    });
+  });
 
   useEffect(() => {
-    /*console.log(history.location.search);
-    const queryParams = queryString.parse(history.location.search);
-    if (queryParams.b) {
-      setBoardId(queryParams.b)
-    }
-    else {
-      setBoardId(null);
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.t && isShowEditPopup) {
+      setIsShowEditPopup(false);
     }
 
-    if (queryParams.t) {
-      taskApi.getTaskById(queryParams.t).then(res => {
-        dispatch(setTaskSelected(queryParams.t));
-      }).catch(err => {
-        setNoTask(true);
-      })
-    }*/
+    if (queryObj.t && queryObj.b && !isShowEditPopup) {
+      console.log(history.location.search);
+      console.log(isShowEditPopup)
+      openEditPopup(queryObj.t);
+      console.log('call api');
+      return;
+    }
 
   }, [history.location.search])
 
-
-
   const user = useSelector(state => state.auth.currentUser);
+
+  const openEditPopup = (taskId) => {
+    setIsShowEditPopup(true);
+    const queryObj = queryString.parse(history.location.search);
+    let params = {};
+    if (props.isOfTeam) {
+      params = {
+        isOfTeam: true,
+        ownerId: props.ownerId,
+        boardId: queryObj.b,
+        taskId: taskId
+      }
+    }
+    else {
+      params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryObj.b,
+        taskId: taskId
+      }
+    }
+
+    taskApi.getTaskByBoard({ params }).then(res => {
+      setModaTaskObj(res.data);
+      console.log(res.data);
+    }).catch(err => {
+      history.push({
+        pathname: history.location.pathname,
+        search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      });
+      setIsShowEditPopup(false);
+    })
+  }
+
+
+
+
 
   useEffect(() => {
     if (!boardId)
@@ -288,11 +329,28 @@ function KanbanBoard(props) {
       )}
     </>
   }
+
+  function onEditModalClose() {
+    setIsShowEditPopup(false);
+    console.log("ok");
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+    });
+  }
+
   return (
     <div>
       {isLoading ? <div>
         <CardLoading isLoading={isLoading} />
       </div> : renderNormal()}
+
+      <TaskEditModal
+        closePopup={onEditModalClose}
+        isShowEditPopup={isShowEditPopup}
+        data={modalTaskObj}
+      />
     </div>
   );
 }

@@ -63,7 +63,6 @@ function TeamPage(props) {
     return 0;
   });
 
-  console.log(queryParams);
 
   function openBoard(boardId) {
     setBoardId(boardId);
@@ -114,7 +113,7 @@ function TeamPage(props) {
     }
 
     const queryParams = queryString.parse(history.location.search);
-    if (queryParams.b) {
+    if (queryParams.b && tab==="task") {
 
     }
     else {
