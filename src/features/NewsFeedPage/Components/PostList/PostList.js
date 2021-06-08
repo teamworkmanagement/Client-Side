@@ -8,7 +8,7 @@ import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import Empty from "../Post/Components/Empty/Empty";
 import Loading from "../Post/Components/Loading/Loading";
 import CIcon from "@coreui/icons-react";
-import { useLocation, useParams } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import queryString from 'query-string';
 
 PostList.propTypes = {};
@@ -31,13 +31,14 @@ function PostList(props) {
 
   const { teamId } = useParams();
 
+  const history = useHistory();
   useEffect(() => {
     async function getPosts() {
       try {
         setIsLoading(true);
         const params = {
           ...props.filter,
-          SkipItems: filterChanged ? 0 : listPosts.length,
+          SkipItems: filterChanged ? 0 : queryParams ? 0 : listPosts.length,
           postId: queryParams,
         };
 
@@ -49,7 +50,7 @@ function PostList(props) {
           outPut = await postApi.getPaginationUser({ params });
         }
 
-        if (filterChanged) {
+        if (filterChanged || queryParams) {
           dispatch(setFilterChange(false));
           setListPosts(outPut.data.items);
         } else {
@@ -65,7 +66,7 @@ function PostList(props) {
     }
 
     getPosts();
-  }, [pageNumber, props.filter, teamId]);
+  }, [pageNumber, props.filter, teamId, history.location.search]);
 
   //o trong team
   /* useEffect(() => {

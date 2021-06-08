@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CBadge,
   CDropdown,
@@ -30,6 +30,7 @@ const TheHeaderDropdownMssg = () => {
   const newNoti = useSelector((state) => state.app.newNotfication);
   const [itemsCount, setItemsCount] = useState(0);
   const user = useSelector((state) => state.auth.currentUser);
+  const [triggerLoad, setTriggerLoad] = useState(0);
   const listNoti = [
     {
       notiOwnerName: "Dũng Nguyễn",
@@ -66,37 +67,28 @@ const TheHeaderDropdownMssg = () => {
     const params = {
       UserId: user.id,
       PageSize: 5,
-      SkipItems: 0,
+      SkipItems: notis.length,
     };
 
     notiApi
       .getNoti({ params })
       .then((res) => {
         console.log(res.data);
-        setNotis(res.data.items);
-
+        const notissss = [...notis].concat(res.data.items);
+        setNotis(notissss);
         setItemsCount(
-          [...res.data.items].filter((x) => !!!x.notificationStatus).length
+          [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => {});
-  }, []);
+      .catch((err) => { });
+  }, [triggerLoad]);
 
   useEffect(() => {
     if (!newNoti) return;
     const clone = [...notis];
 
     setItemsCount(itemsCount + 1);
-    clone.splice(0, 0, {
-      notificationId: uuid(),
-      notificationCreatedAt: new Date(),
-      notificationImage:
-        "https://firebasestorage.googleapis.com/v0/b/fir-fcm-5eb6f.appspot.com/o/notification_500px.png?alt=media&token=e68bc511-fdd4-4f76-90d9-11e86a143f21",
-      notificationStatus: false,
-      notificationContent: newNoti.notificationContent,
-      notificationLink: newNoti.notificationLink,
-    });
-
+    clone.splice(0, 0, newNoti);
     setNotis(clone);
     console.log(newNoti);
     //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
@@ -110,8 +102,8 @@ const TheHeaderDropdownMssg = () => {
       userId: user.id,
     };
     //notiApi.readNoti(payload).then(res => { }).catch(err => { });
-    let cloneNotis = [...notis];
-    let obj = cloneNotis.find((n) => n.notificationId === noti.notificationId);
+    const cloneNotis = [...notis];
+    const obj = cloneNotis.find((n) => n.notificationId === noti.notificationId);
 
     if (obj.notificationStatus === false) {
       obj.notificationStatus = true;
@@ -147,13 +139,17 @@ const TheHeaderDropdownMssg = () => {
     }
     return noti.notiType;
   }
+
+  const bellRef = useRef(null);
+
+
   return (
     <CDropdown
       inNav
       className="c-header-nav-item mx-2 header-message-dropdown"
       direction="down"
     >
-      <CDropdownToggle className="c-header-nav-link" caret={false}>
+      <CDropdownToggle ref={bellRef} className="c-header-nav-link" caret={false}>
         <CIcon name="cil-bell" />
         <CBadge shape="pill" color="danger">
           {itemsCount}
@@ -210,29 +206,32 @@ const TheHeaderDropdownMssg = () => {
               );
             })}
           </div> */}
-          {listNoti.length > 0 && (
+          {notis.length > 0 && (
             <div className="noti-list">
-              {listNoti.map((noti) => {
+              {notis.map((noti) => {
                 return (
-                  <div className="noti-item">
-                    <img alt="" src={noti.notiOwnerImage} />
+                  <div onClick={() => onClick(noti)} className="noti-item">
+                    <img alt="" src={noti.notificationActionAvatar} />
                     <div className="noti-content">
-                      <strong>{noti.notiOwnerName}</strong>
-                      {getNotiContent(noti)}
+                      <strong>{noti.notificationActionFullName}</strong>
+                      {noti.notificationContent}
                     </div>
-                    <div className="noti-time">{noti.notiTime}</div>
+                    <div className="noti-time"><TimeAgo
+                      locale="vi"
+                      datetime={noti.notificationCreatedAt}
+                    ></TimeAgo></div>
                   </div>
                 );
               })}
             </div>
           )}
-          {listNoti.length === 0 && (
+          {notis.length === 0 && (
             <div className="no-noti-view">
               <HiOutlineBan className="icon-speaker" />
               Bạn chưa có thông báo mới
             </div>
           )}
-          <div className="load-more-noti-btn">Xem thêm</div>
+          <div className="load-more-noti-btn" onClick={() => setTriggerLoad(triggerLoad + 1)}>Xem thêm</div>
         </CDropdownMenu>
       </div>
     </CDropdown>
