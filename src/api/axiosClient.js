@@ -19,7 +19,6 @@ axiosClient.interceptors.request.use(
     return config;
   },
   function (error) {
-    console.log("request error");
     // Do something with request error
     return Promise.reject(error);
   }
@@ -41,7 +40,6 @@ axiosClient.interceptors.response.use(
       //console.log('er1 res', err.response);
       //console.log('er1 data', err.response.data);
 
-      console.log("er1status", err.response);
       if (err.response.status === 401) store.dispatch(setValueAuth(false));
 
       if (err.response.status === 500) {
@@ -61,7 +59,6 @@ axiosClient.interceptors.response.use(
             });
           })
           .catch((error) => {
-            console.log("error next: ", error);
             store.dispatch(setValueAuth(false));
             return Promise.reject(error);
           });
@@ -88,13 +85,11 @@ axiosClient.interceptors.response.use(
             });
           })
           .catch((error) => {
-            console.log("error next: ", error);
             store.dispatch(setValueAuth(false));
             return Promise.reject(error);
           });
       }
     } else {
-      console.log("er3", err);
     }
     return Promise.reject(err);
   }

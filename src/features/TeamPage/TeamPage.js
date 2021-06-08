@@ -48,16 +48,17 @@ function TeamPage(props) {
   const [active, setActive] = useState(() => {
     if (queryParams != null) {
       switch (queryParams.tab) {
-        case "feed":
-          return 0;
-        case "task":
-          return 1;
-        case "message":
-          return 2;
-        case "files":
-          return 3;
         case "members":
+          return 0;
+        case "feed":
+          return 1;
+        case "task":
+          return 2;
+        case "message":
+          return 3;
+        case "files":
           return 4;
+
         case "statistics":
           return 5;
         default:
@@ -66,7 +67,6 @@ function TeamPage(props) {
     }
     return 0;
   });
-
 
   function openBoard(boardId) {
     setBoardId(boardId);
@@ -86,41 +86,40 @@ function TeamPage(props) {
   };
 
   useEffect(() => {
-    if (activeTab) setActive(activeTab);
+    if (activeTab !== null && activeTab !== undefined) setActive(activeTab);
   }, [activeTab]);
 
   useEffect(() => {
-    let tab = "feed";
+    let tab = "teaminfo";
     switch (active) {
       case 0:
-        tab = "feed";
+        tab = "teaminfo";
         break;
       case 1:
-        tab = "task";
+        tab = "feed";
         break;
       case 2:
-        tab = "message";
+        tab = "task";
         break;
       case 3:
-        tab = "files";
+        tab = "message";
         break;
       case 4:
-        tab = "members";
+        tab = "files";
         break;
+
       case 5:
         tab = "statistics";
         break;
       default:
-        tab = "feed";
+        tab = "teaminfo";
         break;
     }
 
     const queryParams = queryString.parse(history.location.search);
 
-    if (queryParams.b && tab==="task") {
-
-    }
-    else {
+    if (queryParams.b && tab === "task") {
+    } else {
       history.push({
         pathname: history.location.pathname,
         search: `tab=${tab}`,
@@ -133,17 +132,20 @@ function TeamPage(props) {
     if (queryObj.tab && !queryObj.b && !queryObj.t) setIsOpeningBoard(false);
     else {
       //setIsOpeningBoard(true);
-      console.log(history.location.search);
       openBoard(queryObj.b);
     }
   }, [history.location.search]);
 
   const boardRender = () => {
-    const pathname = history.location.pathname.split('/');
+    const pathname = history.location.pathname.split("/");
     return (
       <div>
         {isOpeningBoard ? (
-          <TeamTasks ownerId={pathname[2]} boardId={boardId} goBackListBoards={goBackListBoards} />
+          <TeamTasks
+            ownerId={pathname[2]}
+            boardId={boardId}
+            goBackListBoards={goBackListBoards}
+          />
         ) : (
           <BoardsPage openBoard={openBoard} />
         )}
@@ -160,7 +162,6 @@ function TeamPage(props) {
     );
   };
 
-
   const [notfound, setNotfound] = useState(false);
   const { teamId } = useParams();
 
@@ -168,97 +169,96 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => {
-        })
+        .then((res) => {})
         .catch((err) => {
-          if (err.data?.ErrorCode === "404")
-            setNotfound(true);
+          if (err.data?.ErrorCode === "404") setNotfound(true);
         });
     }
-  }, [teamId])
-
+  }, [teamId]);
 
   const renderNormal = () => {
-    return <>
-      <CTabs activeTab={active} onActiveTabChange={onActiveTabChange}>
-        <CNav className="d-sm-down-none" variant="tabs">
-          <CNavItem>
-            <CTooltip content="Thành viên nhóm" placement="right">
-              <CNavLink>
-                <GrGroup className="icon-group" />
-                <div className="tab-name">Thành viên nhóm</div>
-              </CNavLink>
-            </CTooltip>
-          </CNavItem>
-          <CNavItem>
-            <CTooltip content="Bản tin nhóm" placement="right">
-              <CNavLink>
-                <CIcon name="cil-newspaper" />
-                <div className="tab-name">Bản tin nhóm</div>
-              </CNavLink>
-            </CTooltip>
-          </CNavItem>
-          <CNavItem>
-            <CTooltip content="Công việc" placement="right">
-              <CNavLink>
-                <CIcon name="cil-storage" />
-                <div className="tab-name">Công việc</div>
-              </CNavLink>
-            </CTooltip>
-          </CNavItem>
-          <CNavItem>
-            <CTooltip content="Tin nhắn nhóm" placement="right">
-              <CNavLink>
-                <CIcon name="cil-send" />
-                <div className="tab-name">Tin nhắn nhóm</div>
-              </CNavLink>
-            </CTooltip>
-          </CNavItem>
-          <CNavItem>
-            <CTooltip content="Tài liệu" placement="right">
-              <CNavLink>
-                <CIcon name="cil-description" />
-                <div className="tab-name">Tài liệu</div>
-              </CNavLink>
-            </CTooltip>
-          </CNavItem>
+    return (
+      <>
+        <CTabs activeTab={active} onActiveTabChange={onActiveTabChange}>
+          <CNav className="d-sm-down-none" variant="tabs">
+            <CNavItem>
+              <CTooltip content="Thông tin nhóm" placement="right">
+                <CNavLink>
+                  <GrGroup className="icon-group" />
+                  <div className="tab-name">Thành viên nhóm</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
+            <CNavItem>
+              <CTooltip content="Bản tin nhóm" placement="right">
+                <CNavLink>
+                  <CIcon name="cil-newspaper" />
+                  <div className="tab-name">Bản tin nhóm</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
+            <CNavItem>
+              <CTooltip content="Công việc" placement="right">
+                <CNavLink>
+                  <CIcon name="cil-storage" />
+                  <div className="tab-name">Công việc</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
+            <CNavItem>
+              <CTooltip content="Tin nhắn nhóm" placement="right">
+                <CNavLink>
+                  <CIcon name="cil-send" />
+                  <div className="tab-name">Tin nhắn nhóm</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
+            <CNavItem>
+              <CTooltip content="Tài liệu" placement="right">
+                <CNavLink>
+                  <CIcon name="cil-description" />
+                  <div className="tab-name">Tài liệu</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
 
-          <CNavItem>
-            <CTooltip content="Thống kê" placement="right">
-              <CNavLink>
-                <CIcon name="cil-chart-line" />
-                <div className="tab-name">Thống kê</div>
-              </CNavLink>
-            </CTooltip>
-          </CNavItem>
-        </CNav>
-        <div className="tab-content-container">
-          <div className="toggle-team-tabs-sidebar-btn">
-            <CIcon
-              className="ml-md-3 d-md-none toggle-icon"
-              onClick={toggleTeamTabsSidebar}
-              name="cil-menu"
-            />
+            <CNavItem>
+              <CTooltip content="Thống kê" placement="right">
+                <CNavLink>
+                  <CIcon name="cil-chart-line" />
+                  <div className="tab-name">Thống kê</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
+          </CNav>
+          <div className="tab-content-container">
+            <div className="toggle-team-tabs-sidebar-btn">
+              <CIcon
+                className="ml-md-3 d-md-none toggle-icon"
+                onClick={toggleTeamTabsSidebar}
+                name="cil-menu"
+              />
+            </div>
+            <CTabContent>
+              <CTabPane>{active === 0 ? <TeamMembersList /> : null}</CTabPane>
+              <CTabPane>
+                {active === 1 ? <NewsFeedPage isInTeam={true} /> : null}
+              </CTabPane>
+              <CTabPane>{active === 2 ? boardRender() : null}</CTabPane>
+              <CTabPane>
+                {active === 3 ? (
+                  <ChatPage isInTeam={true} tabActiveTeam={active} />
+                ) : null}
+              </CTabPane>
+              <CTabPane>{active === 4 ? <ListFileTable /> : null}</CTabPane>
+
+              <CTabPane>{active === 5 ? <TeamStatistics /> : null}</CTabPane>
+            </CTabContent>
           </div>
-          <CTabContent>
-            <CTabPane>{active === 0 ? <TeamMembersList /> : null}</CTabPane>
-            <CTabPane>
-              {active === 1 ? <NewsFeedPage isInTeam={true} /> : null}
-            </CTabPane>
-            <CTabPane>{active === 2 ? boardRender() : null}</CTabPane>
-            <CTabPane>
-              {active === 3 ? (
-                <ChatPage isInTeam={true} tabActiveTeam={active} />
-              ) : null}
-            </CTabPane>
-            <CTabPane>{active === 4 ? <ListFileTable /> : null}</CTabPane>
-
-            <CTabPane>{active === 5 ? <TeamStatistics /> : null}</CTabPane>
-          </CTabContent>
-        </div>
-      </CTabs>
-    </>
-  }
+        </CTabs>
+      </>
+    );
+  };
   return (
     <div className="team-container">
       {notfound ? <NotFoundPage /> : renderNormal()}
