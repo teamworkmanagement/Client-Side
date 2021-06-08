@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./TeamMembersList.scss";
 import {
@@ -33,6 +33,7 @@ import { RiImageEditFill } from "react-icons/ri";
 import { FiEdit3 } from "react-icons/fi";
 import EditTeamNameModal from "./EditTeamNameModal/EditTeamNameModal";
 import EditTeamDescriptionModal from "./EditTeamDescriptionModal/EditTeamDescriptionModal";
+import firebaseConfig from "src/utils/firebase/firebaseConfig";
 
 TeamMembersList.propTypes = {};
 
@@ -80,6 +81,8 @@ function TeamMembersList(props) {
   const user = useSelector((state) => state.auth.currentUser);
   const { teamId } = useParams();
 
+  const imgPickerRef = useRef(null);
+
   const [redirect, setRedirect] = useState(null);
 
   const toasters = (() => {
@@ -98,7 +101,7 @@ function TeamMembersList(props) {
         console.log(res);
         setAdmin(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     const params = {
       teamId: teamId,
@@ -113,14 +116,14 @@ function TeamMembersList(props) {
         setMembers(res.data.items);
         setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     teamApi
       .getTeam(teamId)
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [teamId]);
 
   const currentPageChange = (index) => {
@@ -141,7 +144,7 @@ function TeamMembersList(props) {
         setMembers(res.data.items);
         setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const onClose = (e) => {
@@ -198,7 +201,7 @@ function TeamMembersList(props) {
           ]);
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const onStartChatClose = () => {
@@ -228,6 +231,41 @@ function TeamMembersList(props) {
     setShowEditDescription(false);
   }
 
+  const onUpdateTeam = (object) => {
+    console.log(object);
+    const { name, value } = object;
+    const newTeam = {
+      ...team,
+      [name]: value,
+    };
+
+    teamApi.updateTeam(newTeam)
+      .then(res => {
+        setTeam(newTeam);
+      }).catch(err => {
+
+      })
+  }
+
+  const onPickImage = (e) => {
+    const file = e.target.files[0];
+    const storageRef = firebaseConfig.storage().ref();
+    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
+    fileRef.put(file).then((data) => {
+      console.log("Uploaded a file");
+      data.ref.getDownloadURL().then((url) => {
+        console.log(url);
+        onUpdateTeam({
+          name: 'teamImageUrl',
+          value: url
+        })
+      });
+    });
+  }
+
+  const openPickImage = () => {
+    imgPickerRef.current.click();
+  }
   return (
     <div className="team-members-container">
       {redirect ? <Redirect from="/team" to={redirect} /> : null}
@@ -282,17 +320,24 @@ function TeamMembersList(props) {
             <div className="team-image-container">
               <img
                 alt=""
-                src="https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png"
+                src={team.teamImageUrl}
               />
             </div>
             <div className="team-name-actions">
               <div className="team-name">
-                Nhóm ô eretgfjrjtn thi TsdererhegsggOEIC
+                {team.teamName}
               </div>
               <div className="actions-group">
-                <div className="btn-change-image">
+                <div onClick={openPickImage} className="btn-change-image">
                   <RiImageEditFill className="icon-edit-image icon-edit" />
                   Đổi ảnh
+                  <input
+                    accept="image/*"
+                    onChange={onPickImage}
+                    ref={imgPickerRef}
+                    type="file"
+                    style={{ display: "none" }}
+                  />
                 </div>
                 <div
                   className="btn-change-name"
@@ -314,7 +359,7 @@ function TeamMembersList(props) {
                 <FiEdit3 className="icon-edit-description icon-edit" />
               </div>
             </div>
-            <div className="team-description">{teamDescription}</div>
+            <div className="team-description">{team.teamDescription}</div>
           </div>
         </div>
       </div>
@@ -531,13 +576,15 @@ function TeamMembersList(props) {
       </div>
       <InviteMemberModal showAddInvite={showInvite} onClose={onClose} />
       <EditTeamNameModal
-        teamName={teamName}
+        teamName={team.teamName}
         show={showEditName}
+        onSave={onUpdateTeam}
         onClose={onCloseEditNameModal}
       />
       <EditTeamDescriptionModal
-        teamDescription={teamDescription}
+        teamDescription={team.teamDescription}
         show={showEditDescription}
+        onSave={onUpdateTeam}
         onClose={onCloseEditDescriptionModal}
       />
       <StartChatMembers

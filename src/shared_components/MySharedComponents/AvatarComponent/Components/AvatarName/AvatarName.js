@@ -21,7 +21,7 @@ function AvatarName(props) {
       >
         Dũng Nguyễn
       </div>
-      <UserInfoModal show={showInfoModal} onClose={onCloseModal} />
+      <UserInfoModal userId={props.userId} show={showInfoModal} onClose={onCloseModal} />
     </div>
   );
 }

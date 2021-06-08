@@ -20,10 +20,27 @@ import MyToaster from "src/features/ToastTest/ToastTest";
 EditTeamNameModal.propTypes = {};
 
 function EditTeamNameModal(props) {
+  const [value, setValue] = useState("");
+
+  useEffect(()=>{
+    setValue(props.teamName);
+  },[props.teamName])
+
   function handleOnClose() {
     if (props.onClose) {
       props.onClose();
     }
+  }
+
+  const onSave = () => {
+    if (!value)
+      alert('error');
+    props.onSave({
+      name: 'teamName',
+      value: value,
+    });
+
+    handleOnClose();
   }
 
   return (
@@ -37,11 +54,12 @@ function EditTeamNameModal(props) {
       <CModalBody className="new-card-form">
         <CInput
           type="text"
-          defaultValue={props.teamName}
+          value={value}
           placeholder="Nhập tên nhóm..."
+          onChange={(e) => setValue(e.target.value)}
           autoFocus
         />
-        <CButton className="add-card-btn">Lưu</CButton>
+        <CButton onClick={onSave} className="add-card-btn">Lưu</CButton>
       </CModalBody>
     </CModal>
   );

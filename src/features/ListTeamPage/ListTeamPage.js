@@ -347,7 +347,7 @@ function ListTeamPage(props) {
                       <img
                         className="team-avatar"
                         alt=""
-                        src={teamImages[index]}
+                        src={team.teamImageUrl}
                       />
                       <div className="team-name">{team.teamName}</div>
                       <div className="team-description">

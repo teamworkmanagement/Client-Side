@@ -10,10 +10,10 @@ const MyToaster = () => {
       <AvatarComponent
         userName="Dũng Nguyễn"
         userImage="https://emilus.themenate.net/img/avatars/thumb-2.jpg"
-        userId=""
+        userId="f3997f78-4723-4332-8171-add514ae91cd"
       />
-      <AvatarImage userName="Dũng Nguyễn" userImage="" userId="" />
-      <AvatarName userName="Dũng Nguyễn" userId="" />
+      <AvatarImage userName="Dũng Nguyễn" userImage="" userId="f3997f78-4723-4332-8171-add514ae91cd" />
+      <AvatarName userName="Dũng Nguyễn" userId="f3997f78-4723-4332-8171-add514ae91cd" />
       <div></div>
     </div>
   );

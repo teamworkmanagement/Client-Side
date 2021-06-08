@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./AvatarImage.scss";
 import UserInfoModal from "src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal";
+import userApi from "src/api/userApi";
 
 AvatarImage.propTypes = {};
 
@@ -24,6 +25,7 @@ function AvatarImage(props) {
       return words[0].slice(0, 1);
     }
   }
+
   return (
     <div className="avatar-image">
       {props.userImage ? (
@@ -32,7 +34,7 @@ function AvatarImage(props) {
         <div className="image-name">{getImageName()}</div>
       )}
       <div className="avatar-mask" onClick={() => setShowInfoModal(true)}></div>
-      <UserInfoModal show={showInfoModal} onClose={onCloseModal} />
+      <UserInfoModal userId={props.userId} show={showInfoModal} onClose={onCloseModal} />
     </div>
   );
 }
