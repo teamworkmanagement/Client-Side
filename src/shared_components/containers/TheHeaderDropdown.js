@@ -9,14 +9,38 @@ import {
   CSwitch,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { VscFeedback } from "react-icons/vsc";
 import { MdHelpOutline } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import "./TheHeaderDropdown.scss";
+import { useHistory } from "react-router";
+import { delete_cookie, logout } from "src/utils/auth";
+import { setAuthF } from "../views/pages/login/authSlice";
 
 const TheHeaderDropdown = () => {
   const user = useSelector((state) => state.auth.currentUser);
+
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const goToAccountSetting = () => {
+    history.push({
+      pathname: '/myaccount',
+      search: null,
+    });
+  }
+
+  const goToFeedbacks = () => {
+    history.push({
+      pathname: '/feedbacks',
+      search: null,
+    });
+  }
+
+  const onLogout = () => {
+    dispatch(setAuthF());
+    delete_cookie('backup');
+  }
   return (
     <CDropdown inNav className="c-header-nav-items mx-2" direction="down">
       <CDropdownToggle className="c-header-nav-link" caret={false}>
@@ -64,7 +88,7 @@ const TheHeaderDropdown = () => {
           <div className="user-name">{user.fullName}</div>
         </CDropdownItem>
         <CDropdownItem divider />
-        <CDropdownItem>
+        <CDropdownItem onClick={() => goToAccountSetting()}>
           <CIcon name="cil-user" className="mfe-2" />
           Cài đặt tài khoản
         </CDropdownItem>
@@ -84,7 +108,7 @@ const TheHeaderDropdown = () => {
           />
         </div>
         <CDropdownItem divider />
-        <CDropdownItem>
+        <CDropdownItem onClick={() => goToFeedbacks()}>
           <VscFeedback className="mfe-2 icon-feedback" />
           Đóng góp cho ứng dụng
         </CDropdownItem>
@@ -93,7 +117,7 @@ const TheHeaderDropdown = () => {
           Trợ giúp
         </CDropdownItem>
         <CDropdownItem divider />
-        <CDropdownItem>
+        <CDropdownItem onClick={() => onLogout()}>
           <BiLogOut className="mfe-2 icon-logout" />
           Đăng xuất
         </CDropdownItem>
