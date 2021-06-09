@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./UserInfoModal.scss";
 import { CModal, CModalBody, CModalHeader } from "@coreui/react";
@@ -6,11 +6,12 @@ import { FiCalendar } from "react-icons/fi";
 import { HiOutlineHome, HiOutlineMail } from "react-icons/hi";
 import { AiFillGithub } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
+import userApi from "src/api/userApi";
 
 UserInfoModal.propTypes = {};
 
 function UserInfoModal(props) {
-  const user = {
+  const userzzz = {
     userName: "Nguyễn Dũng",
     userImage: "https://emilus.themenate.net/img/avatars/thumb-1.jpg",
     userDescription:
@@ -23,11 +24,31 @@ function UserInfoModal(props) {
     userFBLink:
       "https://www.facebook.com/nhkhoa99/jkhbgbijhgbgjeirbgeirgberigebrgeirgbsdfhgdhffdfffffffffffffffffffffffffffffffffffffffffff-fgnfn",
   };
+
+  //const user = props.user;
+
+  const [user, setUser] = useState({});
   function handleOnClose() {
     if (props.onClose) {
       props.onClose();
     }
   }
+
+  useEffect(() => {
+    if (props.userId) {
+      console.log(props.userId);
+      userApi.getById(props.userId)
+        .then(res => {
+          console.log(res.data);
+          setUser(res.data);
+        })
+        .catch(err => {
+
+        })
+    }
+
+  }, [props.userId])
+
 
   return (
     <CModal
@@ -39,8 +60,8 @@ function UserInfoModal(props) {
       <CModalHeader closeButton></CModalHeader>
       <CModalBody className="modal-body">
         <div className="overview-info">
-          <img alt="" src={user.userImage} />
-          <div className="user-name">{user.userName}</div>
+          <img alt="" src={user.userImageUrl} />
+          <div className="user-name">{user.userFullname}</div>
         </div>
         <div className="divider"></div>
         <div className="detail-info">
@@ -48,7 +69,7 @@ function UserInfoModal(props) {
           <div className="user-description">{user.userDescription}</div>
           <div className="user-birthdate-item info-item">
             <FiCalendar className="info-item-icon" />
-            {user.userBirthDate}
+            {user.userDateOfBirth}
           </div>
         </div>
         <div className="divider notshow"></div>
@@ -79,8 +100,8 @@ function UserInfoModal(props) {
           <div className="user-fb-item info-item">
             <FaFacebook className="info-item-icon " />
 
-            <a href={user.userFBLink} target="_blank" rel="noopener noreferrer">
-              {user.userFBLink}
+            <a href={user.userFacebookLink} target="_blank" rel="noopener noreferrer">
+              {user.userFacebookLink}
             </a>
           </div>
         </div>

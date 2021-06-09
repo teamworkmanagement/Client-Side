@@ -37,6 +37,10 @@ const teamApi = {
     getBoardsByTeam(teamId) {
         const url = `/team/boards-by-team/${teamId}`;
         return axiosClient.get(url);
+    },
+    updateTeam(payload) {
+        const url = `/team`;
+        return axiosClient.put(url, payload);
     }
 };
 

@@ -1,21 +1,17 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import {
-  CSidebar,
-  CSidebarNav,
-  CSidebarNavItem,
   CNavItem,
-  CNavLink,
+  CNavLink, CSidebar,
+  CSidebarNav
 } from "@coreui/react";
+import React from "react";
+import { BiKey } from "react-icons/bi";
+import { BsInfoCircle } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+// sidebar nav config
+import { changeStateSettingOptionsSidebar, changeUserSetting } from "src/appSlice";
 import "./SettingOptionsSidebar.scss";
 
-import CIcon from "@coreui/icons-react";
 
-// sidebar nav config
-import { changeStateSettingOptionsSidebar } from "src/appSlice";
-import { setActiveTab } from "src/features/ListTeamPage/teamSlice";
-import { BsInfoCircle } from "react-icons/bs";
-import { BiKey } from "react-icons/bi";
 
 const SettingOptionsSidebar = (props) => {
   const dispatch = useDispatch();
@@ -31,13 +27,13 @@ const SettingOptionsSidebar = (props) => {
   };
 
   const onClick = (index) => {
-    // dispatch(setActiveTab(index));
-    // dispatch(
-    //   changeStateTeamTabsSidebar({
-    //     type: "teamtabssidebar",
-    //     teamTabsSidebarShow: false,
-    //   })
-    // );
+    dispatch(changeUserSetting(index));
+    dispatch(
+      changeStateSettingOptionsSidebar({
+        type: "settingoptionssidebar",
+        settingOptionsSidebarShow: false,
+      })
+    );
   };
   return (
     <CSidebar

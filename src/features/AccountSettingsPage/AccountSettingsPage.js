@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./AccountSettingsPage.scss";
 import {
@@ -25,6 +25,7 @@ import { changeStateSettingOptionsSidebar } from "src/appSlice";
 AccountSettingsPage.propTypes = {};
 
 function AccountSettingsPage(props) {
+  const userSetting = useSelector(state => state.app.userSetting);
   const [selectedOptions, setSelectedOptions] = useState(0); //0:INFO, 1:PASSWORD
   const user = { ...useSelector((state) => state.auth.currentUser) };
   const [userInfo, setUserInfo] = useState(user);
@@ -56,6 +57,11 @@ function AccountSettingsPage(props) {
     });
   };
 
+  useEffect(() => {
+    if (userSetting !== null && userSetting !== undefined)
+      setSelectedOptions(userSetting);
+  }, [userSetting])
+
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     if (name === "newPassword") setNewDirty(true);
@@ -75,7 +81,7 @@ function AccountSettingsPage(props) {
       .then((res) => {
         dispatch(setCurrentUser(userInfo));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const changePasswordClick = () => {
@@ -103,18 +109,16 @@ function AccountSettingsPage(props) {
       <div className="account-page-content">
         <div className="setting-options d-sm-down-none">
           <div
-            className={`tab-setting tab-infor ${
-              selectedOptions === 0 ? "active" : ""
-            }`}
+            className={`tab-setting tab-infor ${selectedOptions === 0 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(0)}
           >
             <BsInfoCircle className="icon-info icon" />
             Thông tin của bạn
           </div>
           <div
-            className={`tab-setting tab-passowrd ${
-              selectedOptions === 1 ? "active" : ""
-            }`}
+            className={`tab-setting tab-passowrd ${selectedOptions === 1 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(1)}
           >
             <BiKey className="icon-password icon" />
@@ -265,12 +269,12 @@ function AccountSettingsPage(props) {
                     (changePWObject.confirmPassword === "" ||
                       changePWObject.confirmPassword === null ||
                       changePWObject.confirmPassword !==
-                        changePWObject.newPassword)
+                      changePWObject.newPassword)
                   }
                   valid={
                     confirmDirty &&
                     changePWObject.confirmPassword ===
-                      changePWObject.newPassword
+                    changePWObject.newPassword
                   }
                   name="confirmPassword"
                 />

@@ -13,6 +13,10 @@ const userApi = {
     searchAddUserChatExists(params) {
         const url = '/user/search-user-add-chat';
         return axiosClient.get(url, params);
+    },
+    getById(userId) {
+        const url = `/user/${userId}`;
+        return axiosClient.get(url);
     }
 };
 
