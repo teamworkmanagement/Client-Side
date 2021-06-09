@@ -29,9 +29,10 @@ import { CChartLine } from "@coreui/react-chartjs";
 import { getStyle, hexToRgba } from "@coreui/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { getTeamByUserId } from "../ListTeamPage/teamSlice.js";
+
 import { unwrapResult } from "@reduxjs/toolkit";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
+import teamApi from "src/api/teamApi";
 DashBoardPage.propTypes = {};
 
 const random = (min, max) => {
@@ -43,7 +44,7 @@ const brandDanger = getStyle("danger") || "#f86c6b";
 
 function DashBoardPage(props) {
   const [progressTimeMode, setProgressTimeMode] = useState(1); //1:week, 2:month, 3:year
-  const teams = useSelector((state) => state.team.teams);
+  const [teams, setTeams] = useState([]);
   const members = useSelector((state) => state.app.users);
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -216,24 +217,17 @@ function DashBoardPage(props) {
     history.push(`/team/${teamId}`);
   };
 
-  useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
-      dispatch(getTeamByUserId(user.id))
-        .then(unwrapResult)
-        .then((res) => {
-          setLoadone(true);
-        })
-        .catch((err) => {
-          setLoadone(true);
-        });
 
-      setIsLoading(false);
-    }
-
-    loadData();
-  }, []);
   console.log(teams);
+
+  useEffect(() => {
+    teamApi.getAllTeamByUser(user.id)
+      .then(res => {
+        setTeams(res.data);
+      }).catch(err => {
+
+      })
+  }, [])
 
   return (
     <div className="dash-board-container">
