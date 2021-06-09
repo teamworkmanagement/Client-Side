@@ -226,10 +226,10 @@ function ListTeamPage(props) {
       setIsLoading(true);
       dispatch(getTeamByUserId(user.id))
         .then(unwrapResult)
-        .then(res => {
+        .then((res) => {
           setLoadone(true);
         })
-        .catch(err => {
+        .catch((err) => {
           setLoadone(true);
         });
 
@@ -263,239 +263,244 @@ function ListTeamPage(props) {
   ];
 
   const renderNormal = () => {
-    return <>
-      <div className="header-tool-bar">
-        <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
-          <CgLogIn className="icon-goin" />
-          <AiOutlineTeam className="icon-group" />
-      Tham gia nhóm
-    </div>
-        <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
-          <CIcon name="cil-plus" />
-      Tạo nhóm mới
-    </div>
-        <CButtonGroup className="show-mode">
-          <CTooltip placement="top" content="Lưới">
-            <CButton
-              className={`first mode-btn ${showMode === 1 && "active"}`}
-              color="secondary"
-              onClick={() => switchShowMode(1)}
-              type="button"
-            >
-              <CIcon name="cil-grid" />
-            </CButton>
-          </CTooltip>
-          <CTooltip placement="top" content="Danh sách">
-            <CButton
-              className={`last mode-btn ${showMode === 2 && "active"}`}
-              color="secondary"
-              onClick={() => switchShowMode(2)}
-            >
-              <CIcon name="cil-list" />
-            </CButton>
-          </CTooltip>
-        </CButtonGroup>
-      </div>
-      {showMode === 1 && (
-        <div className="grid-view-container">
-          <CRow className="grid-view">
-            {teams.map((team, index) => {
-              return (
-                <CCol
-                  sm="6"
-                  lg="3"
-                  key={index}
-                  style={{ animationDelay: `${index / 20}s` }}
-                  className="grid-item-container"
-                >
-                  <div className="item-content">
-                    <div className="team-header">
-                      <div className="header-actions-dropdown">
-                        <CDropdown>
-                          <CDropdownToggle id="dropdownMenuButton" caret>
-                            <div className="lane-actions">
-                              <CIcon name="cil-options" />
-                            </div>
-                          </CDropdownToggle>
-                          <CDropdownMenu
-                            aria-labelledby="dropdownMenuButton"
-                            placement="bottom-end"
-                          >
-                            <CDropdownItem className="first">
-                              <CIcon name="cil-arrow-circle-right" />
-                          Vào nhóm
-                        </CDropdownItem>
-                            <CDropdownItem className="middle">
-                              <div className="dropdown-icon-group">
-                                <CIcon name="cil-bell" />
-                                <CIcon
-                                  className="rotate-45"
-                                  name="cil-window-minimize"
-                                />
+    return (
+      <>
+        <div className="header-tool-bar">
+          <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
+            <CgLogIn className="icon-goin" />
+            <AiOutlineTeam className="icon-group" />
+            Tham gia nhóm
+          </div>
+          <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
+            <CIcon name="cil-plus" />
+            Tạo nhóm mới
+          </div>
+          <CButtonGroup className="show-mode">
+            <CTooltip placement="top" content="Lưới">
+              <CButton
+                className={`first mode-btn ${showMode === 1 && "active"}`}
+                color="secondary"
+                onClick={() => switchShowMode(1)}
+                type="button"
+              >
+                <CIcon name="cil-grid" />
+              </CButton>
+            </CTooltip>
+            <CTooltip placement="top" content="Danh sách">
+              <CButton
+                className={`last mode-btn ${showMode === 2 && "active"}`}
+                color="secondary"
+                onClick={() => switchShowMode(2)}
+              >
+                <CIcon name="cil-list" />
+              </CButton>
+            </CTooltip>
+          </CButtonGroup>
+        </div>
+        {showMode === 1 && (
+          <div className="grid-view-container">
+            <CRow className="grid-view">
+              {teams.map((team, index) => {
+                return (
+                  <CCol
+                    sm="6"
+                    lg="3"
+                    key={index}
+                    style={{ animationDelay: `${index / 20}s` }}
+                    className="grid-item-container"
+                  >
+                    <div className="item-content">
+                      <div className="team-header">
+                        <div className="header-actions-dropdown">
+                          <CDropdown>
+                            <CDropdownToggle id="dropdownMenuButton" caret>
+                              <div className="lane-actions">
+                                <CIcon name="cil-options" />
                               </div>
-                              <div className="special-text">Tắt thông báo</div>
-                            </CDropdownItem>
-                            <CDropdownItem className="last">
-                              <CIcon name="cil-account-logout" />
-                          Rời nhóm
-                        </CDropdownItem>
-                          </CDropdownMenu>
-                        </CDropdown>
-                      </div>
-                    </div>
-                    <div className="team-infor">
-                      <img
-                        className="team-avatar"
-                        alt=""
-                        src={team.teamImageUrl}
-                      />
-                      <div className="team-name">{team.teamName}</div>
-                      <div className="team-description">
-                        {team.teamDescription}
-                      </div>
-                    </div>
-                    <div className="team-detail-infor">
-                      <div className="member-infor">
-                        <CIcon name="cil-group" />
-                        <div className="member-count">
-                          {team.teamMemberCount}
+                            </CDropdownToggle>
+                            <CDropdownMenu
+                              aria-labelledby="dropdownMenuButton"
+                              placement="bottom-end"
+                            >
+                              <CDropdownItem className="first">
+                                <CIcon name="cil-arrow-circle-right" />
+                                Vào nhóm
+                              </CDropdownItem>
+                              <CDropdownItem className="middle">
+                                <div className="dropdown-icon-group">
+                                  <CIcon name="cil-bell" />
+                                  <CIcon
+                                    className="rotate-45"
+                                    name="cil-window-minimize"
+                                  />
+                                </div>
+                                <div className="special-text">
+                                  Tắt thông báo
+                                </div>
+                              </CDropdownItem>
+                              <CDropdownItem className="last">
+                                <CIcon name="cil-account-logout" />
+                                Rời nhóm
+                              </CDropdownItem>
+                            </CDropdownMenu>
+                          </CDropdown>
                         </div>
                       </div>
-                      <div className="divider"></div>
-                      <div className="leader-infor">
-                        <div className="icon-group">
-                          <CIcon name="cil-flag-alt" />
+                      <div className="team-infor">
+                        <img
+                          className="team-avatar"
+                          alt=""
+                          src={teamImages[index]}
+                        />
+                        <div className="team-name">{team.teamName}</div>
+                        <div className="team-description">
+                          {team.teamDescription}
                         </div>
-                        <CTooltip placement="top" content={team.teamLeaderName}>
-                          <div className="leader-name">
+                      </div>
+                      <div className="team-detail-infor">
+                        <div className="member-infor">
+                          <CIcon name="cil-group" />
+                          <div className="member-count">
+                            {team.teamMemberCount}
+                          </div>
+                        </div>
+                        <div className="divider"></div>
+                        <div className="leader-infor">
+                          <div className="icon-group">
+                            <CIcon name="cil-flag-alt" />
+                          </div>
+                          <CTooltip
+                            placement="top"
+                            content={team.teamLeaderName}
+                          >
+                            <div className="leader-name">
+                              <img
+                                className="leader-avatar"
+                                alt=""
+                                src={team.teamLeaderImageUrl}
+                              />
+                              {team.teamLeaderName}
+                            </div>
+                          </CTooltip>
+                        </div>
+                      </div>
+                      <div
+                        className="team-action"
+                        onClick={() => navigateToTeam(team.teamId)}
+                      >
+                        Vào nhóm
+                      </div>
+                    </div>
+                  </CCol>
+                );
+              })}
+            </CRow>
+          </div>
+        )}
+        {showMode === 2 && (
+          <div className="table-view-container">
+            <div className="table-content">
+              <table className="table table-hover  mb-0 d-none d-sm-table">
+                <thead className="thead-light">
+                  <tr>
+                    <th className="text-center">
+                      <CIcon name="cil-people" />
+                    </th>
+                    <th>Tên nhóm</th>
+                    <th>Trưởng nhóm</th>
+
+                    <th>Tiến độ</th>
+                    <th className="text-center">Thành viên</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teams.map((team, index) => {
+                    return (
+                      <tr
+                        onClick={() => navigateToTeam(team.teamId)}
+                        style={{ animationDelay: `${index / 20}s` }}
+                      >
+                        <td className="text-center">
+                          <div className="c-avatar">
                             <img
-                              className="leader-avatar"
+                              src={team.teamImageUrl}
+                              className="c-avatar-img"
+                              alt="admin@bootstrapmaster.com"
+                            />
+                          </div>
+                        </td>
+                        <td>
+                          <div>{team.teamName}</div>
+                          <div className="small text-muted">
+                            {team.teamDescription}
+                          </div>
+                        </td>
+                        <td>
+                          <div className="leader-cell">
+                            <img
+                              className="team-leader-avatar"
                               alt=""
                               src={team.teamLeaderImageUrl}
                             />
-                            {team.teamLeaderName}
+                            <div className="">{team.teamLeaderName}</div>
                           </div>
-                        </CTooltip>
-                      </div>
-                    </div>
-                    <div
-                      className="team-action"
-                      onClick={() => navigateToTeam(team.teamId)}
-                    >
-                      Vào nhóm
-                </div>
-                  </div>
-                </CCol>
-              );
-            })}
-          </CRow>
-        </div>
-      )}
-      {showMode === 2 && (
-        <div className="table-view-container">
-          <div className="table-content">
-            <table className="table table-hover  mb-0 d-none d-sm-table">
-              <thead className="thead-light">
-                <tr>
-                  <th className="text-center">
-                    <CIcon name="cil-people" />
-                  </th>
-                  <th>Tên nhóm</th>
-                  <th>Trưởng nhóm</th>
-
-                  <th>Tiến độ</th>
-                  <th className="text-center">Thành viên</th>
-                </tr>
-              </thead>
-              <tbody>
-                {teams.map((team, index) => {
-                  return (
-                    <tr
-                      onClick={() => navigateToTeam(team.teamId)}
-                      style={{ animationDelay: `${index / 20}s` }}
-                    >
-                      <td className="text-center">
-                        <div className="c-avatar">
-                          <img
-                            src={team.teamImageUrl}
-                            className="c-avatar-img"
-                            alt="admin@bootstrapmaster.com"
+                        </td>
+                        <td>
+                          <div className="clearfix">
+                            <div className="float-left">
+                              <strong>50%</strong>
+                            </div>
+                            <div className="float-right">
+                              <small className="text-muted">
+                                11/01/2021 - 20/04/2021
+                              </small>
+                            </div>
+                          </div>
+                          <CProgress
+                            className="progress-xs"
+                            color="success"
+                            value="50"
                           />
-                        </div>
-                      </td>
-                      <td>
-                        <div>{team.teamName}</div>
-                        <div className="small text-muted">
-                          {team.teamDescription}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="leader-cell">
-                          <img
-                            className="team-leader-avatar"
-                            alt=""
-                            src={team.teamLeaderImageUrl}
-                          />
-                          <div className="">{team.teamLeaderName}</div>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="clearfix">
-                          <div className="float-left">
-                            <strong>50%</strong>
-                          </div>
-                          <div className="float-right">
-                            <small className="text-muted">
-                              11/01/2021 - 20/04/2021
-                        </small>
-                          </div>
-                        </div>
-                        <CProgress
-                          className="progress-xs"
-                          color="success"
-                          value="50"
-                        />
-                      </td>
-                      <td className="text-center">
-                        <AvatarList users={members} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+                        <td className="text-center">
+                          <AvatarList users={members} />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-
-      <TeamLoading isLoading={isLoading} />
-      <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
-      <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
-    </>
-  }
+        <TeamLoading isLoading={isLoading} />
+        <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
+        <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
+      </>
+    );
+  };
 
   const renderEmpty = () => {
-    return <>
-      {teams.length === 0 && loadone && (
-        <div className="nodata-image">
-          <div className="icon-group">
-            <BsClipboardData className="icon-task" />
-            <VscSearchStop className="icon-search" />
-          </div>
+    return (
+      <>
+        {teams.length === 0 && loadone && (
+          <div className="nodata-image">
+            <div className="icon-group">
+              <BsClipboardData className="icon-task" />
+              <VscSearchStop className="icon-search" />
+            </div>
 
-          <div className="noti-infor">
-            Bạn chưa tham gia nhóm nào
-        </div>
-        </div>
-      )}
-    </>
-  }
+            <div className="noti-infor">Bạn chưa tham gia nhóm nào</div>
+          </div>
+        )}
+      </>
+    );
+  };
   return (
     <div className="list-team-container">
       {teams.length > 0 && renderNormal()}
       {renderEmpty()}
-
     </div>
   );
 }

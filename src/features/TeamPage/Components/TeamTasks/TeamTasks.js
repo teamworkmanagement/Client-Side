@@ -47,25 +47,25 @@ function TeamTasks(props) {
   const [notfound, setNotFound] = useState(false);
   const notFound = (value) => {
     setNotFound(value);
-  }
+  };
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const pathname = history.location.pathname.split('/');
+    const pathname = history.location.pathname.split("/");
     const params = {
       isOfTeam: true,
       ownerId: pathname[2],
-      boardId: props.boardId
-    }
+      boardId: props.boardId,
+    };
 
     dispatch(setTeamLoading(true));
     dispatch(getBoardDataForUI({ params }))
       .then(unwrapResult)
-      .then(originalPromiseResult => {
-        console.log('done call api');
+      .then((originalPromiseResult) => {
+        console.log("done call api");
         dispatch(setTeamLoading(false));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
 
         if (err.data?.ErrorCode === "404") {
@@ -74,83 +74,93 @@ function TeamTasks(props) {
 
         dispatch(setTeamLoading(false));
       });
-  }, [])
-
+  }, []);
 
   const renderNormal = () => {
-    return <>
-      <div className="tasks-header">
-        <div className="goback-label" onClick={goBackListBoards}>
-          <AiOutlineLeft className="icon-goback" />
-          <div className="label-text">Trở lại danh sách bảng công việc</div>
-        </div>
-        <div className="other-actions">
-          <div className="lookup-input">
-            <CInput
-              type="text"
-              name="teamName"
-              placeholder="Tìm công việc..."
-            />
-            <BsSearch className="icon-search" />
+    return (
+      <>
+        <div className="tasks-header">
+          <div className="goback-label" onClick={goBackListBoards}>
+            <AiOutlineLeft className="icon-goback" />
+            <div className="label-text">Trở lại danh sách bảng công việc</div>
           </div>
-          {showMode === 1 && (
-            <div className="add-btn add-list-btn" onClick={addKBList}>
-              <CIcon name="cil-plus" />
-          Tạo danh sách
-            </div>
-          )}
-          {(showMode === 2 || showMode === 3) && (
-            <div className="add-btn add-task-btn">
-              <CIcon name="cil-plus" />
-          Tạo công việc
-            </div>
-          )}
+          <div className="other-actions">
+            {(showMode === 2 || showMode === 3) && (
+              <div className="lookup-input">
+                <CInput
+                  type="text"
+                  name="teamName"
+                  placeholder="Tìm công việc..."
+                />
+                <BsSearch className="icon-search" />
+              </div>
+            )}
 
-          <CButtonGroup className="show-mode">
-            <CTooltip placement="top" content="Thẻ kanban">
-              <CButton
-                className={`first mode-btn ${showMode === 1 && "active"}`}
-                color="secondary"
-                onClick={() => switchShowMode(1)}
-                type="button"
-              >
-                <CIcon name="cil-columns" />
-              </CButton>
-            </CTooltip>
-            <CTooltip placement="top" content="Danh sách">
-              <CButton
-                className={` mode-btn ${showMode === 2 && "active"}`}
-                color="secondary"
-                onClick={() => switchShowMode(2)}
-              >
-                <CIcon name="cil-list" />
-              </CButton>
-            </CTooltip>
+            {showMode === 1 && (
+              <div className="add-btn add-list-btn" onClick={addKBList}>
+                <CIcon name="cil-plus" />
+                Tạo danh sách
+              </div>
+            )}
+            {(showMode === 2 || showMode === 3) && (
+              <div className="add-btn add-task-btn">
+                <CIcon name="cil-plus" />
+                Tạo công việc
+              </div>
+            )}
 
-            <CTooltip placement="top" content="Biểu đồ Gantt">
-              <CButton
-                className={`last mode-btn ${showMode === 3 && "active"}`}
-                color="secondary"
-                onClick={() => switchShowMode(3)}
-              >
-                <CIcon name="cil-chart" className="rotate-90" />
-              </CButton>
-            </CTooltip>
-          </CButtonGroup>
+            <CButtonGroup className="show-mode">
+              <CTooltip placement="top" content="Thẻ kanban">
+                <CButton
+                  className={`first mode-btn ${showMode === 1 && "active"}`}
+                  color="secondary"
+                  onClick={() => switchShowMode(1)}
+                  type="button"
+                >
+                  <CIcon name="cil-columns" />
+                </CButton>
+              </CTooltip>
+              <CTooltip placement="top" content="Danh sách">
+                <CButton
+                  className={` mode-btn ${showMode === 2 && "active"}`}
+                  color="secondary"
+                  onClick={() => switchShowMode(2)}
+                >
+                  <CIcon name="cil-list" />
+                </CButton>
+              </CTooltip>
+
+              <CTooltip placement="top" content="Biểu đồ Gantt">
+                <CButton
+                  className={`last mode-btn ${showMode === 3 && "active"}`}
+                  color="secondary"
+                  onClick={() => switchShowMode(3)}
+                >
+                  <CIcon name="cil-chart" className="rotate-90" />
+                </CButton>
+              </CTooltip>
+            </CButtonGroup>
+          </div>
         </div>
-      </div>
 
-      {showMode === 1 && <KanbanBoard ownerId={props.ownerId} isOfTeam={true} boardId={props.boardId} />}
-      {showMode === 2 && <TaskList boardId={props.boardId} />}
-      {showMode === 3 && <GanttChart boardId={props.boardId} />}
+        {showMode === 1 && (
+          <KanbanBoard
+            ownerId={props.ownerId}
+            isOfTeam={true}
+            boardId={props.boardId}
+          />
+        )}
+        {showMode === 2 && <TaskList boardId={props.boardId} />}
+        {showMode === 3 && <GanttChart boardId={props.boardId} />}
 
-      <CreateKBListModal
-        boardId={props.boardId}
-        showAddKBList={showAddKBList}
-        onClose={onClose}
-      />
-    </>
-  }
+        <CreateKBListModal
+          boardId={props.boardId}
+          showAddKBList={showAddKBList}
+          onClose={onClose}
+        />
+      </>
+    );
+  };
   return (
     <div className="tasks-team-container">
       {notfound ? <NotFoundPage /> : renderNormal()}

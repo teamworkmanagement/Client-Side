@@ -50,7 +50,7 @@ function MessageList(props) {
           skipItems++;
         }
       }
-
+      //debugger;
       console.log("1st time: ", props.reachTop);
 
       if (isSelected) {
@@ -115,8 +115,9 @@ function MessageList(props) {
             isLabel: true,
           });
           arrayWithLabels.push(newArray[0]);
+        } else {
+          arrayWithLabels.push(newArray[newArray.length - 1]);
         }
-        arrayWithLabels.push(newArray[newArray.length - 1]);
         //thêm class cho từng message
         for (let i = 0; i < arrayWithLabels.length; i++) {
           if (arrayWithLabels[i].isLabel) continue;

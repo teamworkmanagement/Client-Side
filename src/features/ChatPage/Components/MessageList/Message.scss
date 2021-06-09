@@ -384,23 +384,29 @@ $message-not-mine-backgroundcolor: #ededed;
 }
 
 .message-item-container.mine {
-    .start {
-        .message-text {
-            border-radius: $borderRadius;
-            border-bottom-right-radius: $not-borderRadius;
+    &.start {
+        .message-content {
+            .message-text {
+                border-radius: $borderRadius;
+                border-bottom-right-radius: $not-borderRadius;
+            }
         }
     }
-    .middle {
-        .message-text {
-            border-radius: $borderRadius;
-            border-bottom-right-radius: $not-borderRadius;
-            border-top-right-radius: $not-borderRadius;
+    &.middle {
+        .message-content {
+            .message-text {
+                border-radius: $borderRadius;
+                border-bottom-right-radius: $not-borderRadius;
+                border-top-right-radius: $not-borderRadius;
+            }
         }
     }
-    .end {
-        .message-text {
-            border-radius: $borderRadius;
-            border-top-right-radius: $not-borderRadius;
+    &.end {
+        .message-content {
+            .message-text {
+                border-radius: $borderRadius;
+                border-top-right-radius: $not-borderRadius;
+            }
         }
     }
 }
