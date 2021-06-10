@@ -5,7 +5,7 @@ import { signalRAddNewList, signalRAddNewTask, signalRMoveList, signalRMoveTask,
 
 
 
-const connection = setupSignalRConnection('https://localhost:9001/hubkanban');
+export const connection = setupSignalRConnection('https://localhost:9001/hubkanban');
 connection.on("AddNewTask", payload => {
     console.log("add new card ", payload);
     store.dispatch(signalRAddNewTask(payload));
@@ -37,7 +37,7 @@ connection.on("MoveList", payload => {
 })
 
 connection.on("UpdateTask", payload => {
-    console.log("Move task ", payload);
+    console.log("Update task ", payload);
     store.dispatch(signalRUpdateTask(payload));
 })
 

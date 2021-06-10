@@ -10,6 +10,7 @@ import {
 } from "@coreui/react";
 import taskApi from "src/api/taskApi";
 import { useDispatch, useSelector } from "react-redux";
+import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 
 CreateCardModal.propTypes = {};
 
@@ -41,15 +42,15 @@ function CreateCardModal(props) {
       const obj = kbLists.find(x => x.kanbanListId === props.kblistId);
       let pos = -9999;
       if (obj.taskUIKanbans.length === 0)
-        pos = 65536;
-      else pos = obj.taskUIKanbans[obj.taskUIKanbans.length - 1].orderInList + 65536;
+        pos = genNewRank();
+      else pos = FindNextRank(obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList);
       taskApi
         .addNewTask({
           taskName: taskName,
           taskCreatedAt: new Date().toISOString(),
           taskCompletedPercent: 0,
           taskBelongedId: props.kblistId,
-          taskOrderInList: pos,
+          taskRankInList: pos,
           taskStartDate: date,
           taskStatus: 'todo',
           taskDeadline: date.addDays(1),
