@@ -221,12 +221,14 @@ function TaskEditModal(props) {
             };
           });
 
-          setOptions(ops);
+          //setOptions(ops);
 
           const findObj = ops.find((x) => x.value === props.data.userId);
           if (findObj) setCurrent(findObj);
         })
         .catch((err) => { });
+
+     
     }
   }, [props.data]);
 

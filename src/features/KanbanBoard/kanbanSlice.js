@@ -36,6 +36,7 @@ const kanbanSlice = createSlice({
             moveList: null,
             updateTask: null,
             updateList: null,
+            reAssignUser: null
         }
     },
     reducers: {
@@ -163,6 +164,16 @@ const kanbanSlice = createSlice({
             const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
             obj.kanbanListRankInBoard = action.payload.position;
             state.kanbanBoard.kanbanLists.sort((x, y) => x.kanbanListRankInBoard > y.kanbanListRankInBoard);
+        },
+
+        reAssignUser(state, action) {
+            const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
+            if (list) {
+                state.signalrData.reAssignUser = action.payload;
+                const task = list.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
+                task.userId = action.payload.userId;
+                task.userAvatar = action.payload.userAvatar;
+            }
         }
     },
     extraReducers: {
@@ -187,6 +198,7 @@ export const {
     setCurrentBoard,
     setTaskSelected,
     dragListLocal,
-    dragTaskLocal
+    dragTaskLocal,
+    reAssignUser
 } = actions;
 export default reducer;

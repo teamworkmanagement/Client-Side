@@ -215,6 +215,59 @@ function KanbanBoard(props) {
     }
   }, [updateTask])
 
+  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
+
+  /*useEffect(() => {
+    const queryObj = queryString.parse(history.location.search);
+
+    if (!queryObj.t) return;
+
+    if (assignUser && assignUser.taskId === queryObj.t) {
+
+      let params = {};
+      if (props.isOfTeam) {
+        params = {
+          isOfTeam: true,
+          ownerId: props.ownerId,
+          boardId: queryObj.b,
+          taskId: assignUser.taskId
+        }
+      }
+      else {
+        params = {
+          isOfTeam: false,
+          ownerId: user.id,
+          boardId: queryObj.b,
+          taskId: assignUser.taskId
+        }
+      }
+
+      taskApi.getTaskByBoard({ params }).then(res => {
+        setModaTaskObj(res.data);
+      }).catch(err => {
+
+      })
+    }
+  }, [assignUser])*/
+
+  useEffect(() => {
+    console.log(assignUser);
+    const queryObj = queryString.parse(history.location.search);
+
+    if (!queryObj.t) return;
+
+    if (assignUser && assignUser.taskId === queryObj.t) {
+      if (assignUser.userId === modalTaskObj.userId)
+        return;
+      else {
+        setModaTaskObj({
+          ...modalTaskObj,
+          userId: assignUser.userId === "" ? null : assignUser.userId,
+          userAvatar: assignUser.userAvatar === "" ? null : assignUser.userAvatar,
+        });
+      }
+    }
+  }, [assignUser])
 
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);

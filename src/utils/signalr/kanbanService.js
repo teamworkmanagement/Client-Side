@@ -1,6 +1,6 @@
 import { setupSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
-import { signalRAddNewList, signalRAddNewTask, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
+import { reAssignUser, signalRAddNewList, signalRAddNewTask, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
 
 
 
@@ -43,6 +43,11 @@ connection.on("UpdateTask", payload => {
 
 connection.on("UpdateList", payload => {
     store.dispatch(signalRUpdateList(payload));
+})
+
+connection.on("ReAssignUser", payload => {
+    console.log("reassign: ", payload);
+    store.dispatch(reAssignUser(payload));
 })
 
 export const disconnectKanbanService = () => {
