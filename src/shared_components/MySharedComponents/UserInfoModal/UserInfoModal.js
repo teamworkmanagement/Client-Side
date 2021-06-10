@@ -37,19 +37,17 @@ function UserInfoModal(props) {
   useEffect(() => {
     if (props.userId) {
       console.log(props.userId);
-      userApi.getById(props.userId)
-        .then(res => {
+      userApi
+        .getById(props.userId)
+        .then((res) => {
           console.log(res.data);
           setUser(res.data);
         })
-        .catch(err => {
-
-        })
+        .catch((err) => {});
     }
+  }, [props.userId]);
 
-  }, [props.userId])
-
-
+  console.log(user);
   return (
     <CModal
       className="user-info-modal"
@@ -61,15 +59,19 @@ function UserInfoModal(props) {
       <CModalBody className="modal-body">
         <div className="overview-info">
           <img alt="" src={user.userImageUrl} />
-          <div className="user-name">{user.userFullname}</div>
+          <div className="user-name">
+            {user.userFullname ? user.userFullname : "..."}
+          </div>
         </div>
         <div className="divider"></div>
         <div className="detail-info">
           <div className="label">Chi tiết</div>
-          <div className="user-description">{user.userDescription}</div>
+          <div className="user-description">
+            {user.userDescription ? user.userDescription : "..."}
+          </div>
           <div className="user-birthdate-item info-item">
             <FiCalendar className="info-item-icon" />
-            {user.userDateOfBirth}
+            {user.userDateOfBirth ? user.userDateOfBirth : "..."}
           </div>
         </div>
         <div className="divider notshow"></div>
@@ -77,11 +79,11 @@ function UserInfoModal(props) {
           <div className="label">Liên lạc</div>
           <div className="user-email-item info-item">
             <HiOutlineMail className="info-item-icon" />
-            {user.userEmail}
+            {user.userEmail ? user.userEmail : "..."}
           </div>
           <div className="user-address-item info-item">
             <HiOutlineHome className="info-item-icon  icon-home" />
-            {user.userAddress}
+            {user.userAddress ? user.userAddress : "..."}
           </div>
         </div>
         <div className="divider notshow"></div>
@@ -94,14 +96,18 @@ function UserInfoModal(props) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {user.userGithubLink}
+              {user.userGithubLink ? user.userGithubLink : "..."}
             </a>
           </div>
           <div className="user-fb-item info-item">
             <FaFacebook className="info-item-icon " />
 
-            <a href={user.userFacebookLink} target="_blank" rel="noopener noreferrer">
-              {user.userFacebookLink}
+            <a
+              href={user.userFacebookLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {user.userFacebookLink ? user.userFacebookLink : "..."}
             </a>
           </div>
         </div>

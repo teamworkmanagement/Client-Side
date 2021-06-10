@@ -363,6 +363,6 @@ export const {
   changeStateTeamTabsSidebar,
   changeStateChatListSidebar,
   changeStateSettingOptionsSidebar,
-  changeUserSetting
+  changeUserSetting,
 } = actions; // named export
 export default reducer; // default export

@@ -4,6 +4,7 @@ $lighterBaseColor: #ebf1fe;
 $darkerBaseColor: #3363ca;
 $baseTransition: all 0.3s;
 @mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
     background-color: $baseColor;
     color: white;
     padding: 0.5rem 1rem;

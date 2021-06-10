@@ -1,0 +1,50 @@
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+.task-version-list-modal {
+    .modal-body {
+        .task-version-info {
+            padding: 1rem;
+            padding-top: 0.5rem;
+            border: $borderStyle;
+            border-radius: $borderRadius;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            .version-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                .avatar {
+                    display: flex;
+                    align-items: center;
+                    margin-top: 0.5rem;
+                    img {
+                        width: 2rem;
+                        height: 2rem;
+                        border-radius: 500rem;
+                        margin-right: 0.5rem;
+                    }
+                    .name {
+                        font-weight: bold;
+                    }
+                }
+                .update-date {
+                    margin-top: 0.5rem;
+                }
+            }
+            .version-content {
+                margin-top: 0.5rem;
+                .content-before,
+                .content-after {
+                    font-weight: bold;
+                }
+            }
+            &:hover {
+                box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%),
+                    0 5px 12px 4px rgb(0 0 0 / 9%);
+            }
+        }
+    }
+}

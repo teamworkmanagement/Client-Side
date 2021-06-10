@@ -115,6 +115,7 @@ $baseTransition: all 0.3s;
 }
 
 @mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
     background-color: $baseColor;
     color: white;
     padding: 0.5rem 1rem;
@@ -287,6 +288,9 @@ $baseTransition: all 0.3s;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    .nodata-image {
+        align-self: center;
+    }
     .header-tool-bar {
         @include HeaderToolBar;
         display: flex;

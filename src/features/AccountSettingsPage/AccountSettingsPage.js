@@ -8,11 +8,17 @@ import {
   CInvalidFeedback,
   CLabel,
   CRow,
+  CTextarea,
   CValidFeedback,
 } from "@coreui/react";
 import { BiKey } from "react-icons/bi";
 import { BsInfoCircle } from "react-icons/bs";
-import { AiFillEdit } from "react-icons/ai";
+import {
+  AiFillEdit,
+  AiOutlineLock,
+  AiOutlineDelete,
+  AiFillGithub,
+} from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import authApi from "src/api/authApi";
 import {
@@ -21,11 +27,13 @@ import {
 } from "src/shared_components/views/pages/login/authSlice";
 import CIcon from "@coreui/icons-react";
 import { changeStateSettingOptionsSidebar } from "src/appSlice";
+import { FiEdit3 } from "react-icons/fi";
+import { FaFacebookSquare } from "react-icons/fa";
 
 AccountSettingsPage.propTypes = {};
 
 function AccountSettingsPage(props) {
-  const userSetting = useSelector(state => state.app.userSetting);
+  const userSetting = useSelector((state) => state.app.userSetting);
   const [selectedOptions, setSelectedOptions] = useState(0); //0:INFO, 1:PASSWORD
   const user = { ...useSelector((state) => state.auth.currentUser) };
   const [userInfo, setUserInfo] = useState(user);
@@ -60,7 +68,7 @@ function AccountSettingsPage(props) {
   useEffect(() => {
     if (userSetting !== null && userSetting !== undefined)
       setSelectedOptions(userSetting);
-  }, [userSetting])
+  }, [userSetting]);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -81,7 +89,7 @@ function AccountSettingsPage(props) {
       .then((res) => {
         dispatch(setCurrentUser(userInfo));
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const changePasswordClick = () => {
@@ -109,19 +117,21 @@ function AccountSettingsPage(props) {
       <div className="account-page-content">
         <div className="setting-options d-sm-down-none">
           <div
-            className={`tab-setting tab-infor ${selectedOptions === 0 ? "active" : ""
-              }`}
+            className={`tab-setting tab-infor ${
+              selectedOptions === 0 ? "active" : ""
+            }`}
             onClick={() => ChooseSettingOption(0)}
           >
             <BsInfoCircle className="icon-info icon" />
             Thông tin của bạn
           </div>
           <div
-            className={`tab-setting tab-passowrd ${selectedOptions === 1 ? "active" : ""
-              }`}
+            className={`tab-setting tab-passowrd ${
+              selectedOptions === 1 ? "active" : ""
+            }`}
             onClick={() => ChooseSettingOption(1)}
           >
-            <BiKey className="icon-password icon" />
+            <AiOutlineLock className="icon-password icon" />
             Đổi mật khẩu
           </div>
         </div>
@@ -129,88 +139,174 @@ function AccountSettingsPage(props) {
         <div className="settings-content">
           {selectedOptions === 0 && (
             <div className="setting-content setting-infor-content">
-              <CRow className="">
-                <CCol sm="12" md="4" xl="4" className="image-col content-col">
-                  <div className="avatar">
-                    <img
-                      alt=""
-                      src="https://emilus.themenate.net/img/avatars/thumb-4.jpg"
+              <div className="avatar-group">
+                <img
+                  alt=""
+                  src="https://emilus.themenate.net/img/avatars/thumb-4.jpg"
+                />
+                <div className="avatar-action-group">
+                  <div className="change-image-btn">
+                    <FiEdit3 className="change-ava-icon" />
+                    Đổi ảnh đại diện
+                  </div>
+                  <div className="remove-image-btn">
+                    <AiOutlineDelete className="icon delete-ava-icon" />
+                    Xóa ảnh
+                  </div>
+                </div>
+              </div>
+              <CRow className="info-row">
+                <CCol sm="12" lg="6">
+                  <CFormGroup>
+                    <CLabel className="input-label" htmlFor="inputIsValid">
+                      <div className="require-item">*</div>Họ tên
+                    </CLabel>
+                    <CInput
+                      id="fullname-input"
+                      placeholder="Nhập họ tên..."
+                      autoComplete
+                      name="fullName"
+                      value={userInfo.fullName}
+                      onChange={handleInputChange}
+                      invalid={
+                        userInfo.fullName === "" || userInfo.fullName === null
+                      }
                     />
-                    <div className="icon-container">
-                      <AiFillEdit className="icon-edit-image" />
-                    </div>
-                  </div>
+                    <CInvalidFeedback>Tên không hợp lệ</CInvalidFeedback>
+                  </CFormGroup>
                 </CCol>
-                <CCol sm="12" md="8" xl="8" className="info-col content-col">
-                  <div className="form-groups">
-                    <CFormGroup>
-                      <CLabel className="input-label" htmlFor="inputIsValid">
-                        Họ tên
-                      </CLabel>
-                      <CInput
-                        id="fullname-input"
-                        placeholder="Nhập họ tên..."
-                        autoComplete
-                        name="fullName"
-                        value={userInfo.fullName}
-                        onChange={handleInputChange}
-                        invalid={
-                          userInfo.fullName === "" || userInfo.fullName === null
-                        }
-                      />
-                      <CInvalidFeedback>Tên không hợp lệ</CInvalidFeedback>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel className="input-label" htmlFor="email-input">
-                        Email
-                      </CLabel>
-                      <CInput
-                        type="email"
-                        id="email-input"
-                        placeholder="Nhập email..."
-                        autoComplete="email"
-                        name="email"
-                        value={userInfo.email}
-                        onChange={handleInputChange}
-                        invalid={
-                          userInfo.email === "" || userInfo.email === null
-                        }
-                      />
-                      <CInvalidFeedback>Email không hợp lệ</CInvalidFeedback>
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel className="input-label" htmlFor="phone-input">
-                        Số điện thoại
-                      </CLabel>
-                      <CInput
-                        id="phone-input"
-                        placeholder="Nhập số điện thoại..."
-                        name="userPhoneNumber"
-                        value={userInfo.userPhoneNumber}
-                        onChange={handleInputChange}
-                      />
-                    </CFormGroup>
-                    <CFormGroup>
-                      <CLabel className="input-label" htmlFor="birthDate-input">
-                        Ngày sinh
-                      </CLabel>
-                      <CInput
-                        name="userDob"
-                        id="birthDate-input"
-                        value={userInfo.userDob}
-                        type="date"
-                        onChange={handleInputChange}
-                      />
-                      <CInvalidFeedback>
-                        Ngày sinh không hợp lệ
-                      </CInvalidFeedback>
-                    </CFormGroup>
-                  </div>
-                  <div onClick={updateUserInfo} className="save-btn">
-                    Lưu lại
-                  </div>
+                <CCol sm="12" lg="6">
+                  <CFormGroup>
+                    <CLabel className="input-label" htmlFor="phone-input">
+                      <div className="require-item not-show">*</div>Số điện
+                      thoại
+                    </CLabel>
+                    <CInput
+                      id="phone-input"
+                      placeholder="Nhập số điện thoại..."
+                      name="userPhoneNumber"
+                      value={userInfo.userPhoneNumber}
+                      onChange={handleInputChange}
+                    />
+                  </CFormGroup>
                 </CCol>
               </CRow>
+              <CRow className="info-row">
+                <CCol sm="12" lg="6">
+                  <CFormGroup>
+                    <CLabel className="input-label" htmlFor="email-input">
+                      <div className="require-item">*</div>Email
+                    </CLabel>
+                    <CInput
+                      type="email"
+                      id="email-input"
+                      placeholder="Nhập email..."
+                      autoComplete="email"
+                      name="email"
+                      value={userInfo.email}
+                      onChange={handleInputChange}
+                      invalid={userInfo.email === "" || userInfo.email === null}
+                    />
+                    <CInvalidFeedback>Email không hợp lệ</CInvalidFeedback>
+                  </CFormGroup>
+                </CCol>
+                <CCol sm="12" lg="6">
+                  <CFormGroup>
+                    <CLabel className="input-label" htmlFor="birthDate-input">
+                      <div className="require-item not-show">*</div>Ngày sinh
+                    </CLabel>
+                    <CInput
+                      name="userDob"
+                      id="birthDate-input"
+                      value={userInfo.userDob}
+                      type="date"
+                      onChange={handleInputChange}
+                    />
+                    <CInvalidFeedback>Ngày sinh không hợp lệ</CInvalidFeedback>
+                  </CFormGroup>
+                </CCol>
+              </CRow>
+              <CRow className="info-row">
+                <CCol sm="12" lg="8">
+                  <CFormGroup>
+                    <CLabel className="input-label" htmlFor="email-input">
+                      <div className="require-item not-show">*</div>Mô tả bản
+                      thân
+                    </CLabel>
+                    <CTextarea
+                      type="text"
+                      id="des-input"
+                      placeholder="Thông tin bản thân..."
+                      name="description"
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
+                    />
+                    <CInvalidFeedback>Email không hợp lệ</CInvalidFeedback>
+                  </CFormGroup>
+                </CCol>
+              </CRow>
+              <CRow className="info-row">
+                <CCol sm="12" lg="8">
+                  <CFormGroup>
+                    <CLabel className="input-label" htmlFor="email-input">
+                      <div className="require-item not-show">*</div>Địa chỉ
+                    </CLabel>
+                    <CInput
+                      type="text"
+                      id="des-input"
+                      placeholder="Địa chỉ..."
+                      name="description"
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
+                    />
+                  </CFormGroup>
+                </CCol>
+              </CRow>
+              <CRow className="info-row">
+                <CCol sm="12" lg="8">
+                  <CFormGroup>
+                    <CLabel className="input-label" htmlFor="email-input">
+                      <div className="require-item not-show">*</div>Liên kết
+                      khác
+                    </CLabel>
+                    <div className="social-group">
+                      <div className="social-label">
+                        <AiFillGithub className="github-icon icon" /> Github
+                      </div>
+                      <CInput
+                        type="text"
+                        id="des-input"
+                        placeholder="Github link..."
+                        name="description"
+                        //value={userInfo.email}
+                        //onChange={handleInputChange}
+                        //invalid={userInfo.email === "" || userInfo.email === null}
+                      />
+                    </div>
+                    <div className="social-group">
+                      <div className="social-label">
+                        <FaFacebookSquare className="github-icon icon" />{" "}
+                        Facebook
+                      </div>
+                      <CInput
+                        type="text"
+                        id="des-input"
+                        placeholder="Facebook link..."
+                        name="description"
+                        //value={userInfo.email}
+                        //onChange={handleInputChange}
+                        //invalid={userInfo.email === "" || userInfo.email === null}
+                      />
+                    </div>
+                  </CFormGroup>
+                </CCol>
+              </CRow>
+
+              <div onClick={updateUserInfo} className="save-btn">
+                Lưu lại
+              </div>
             </div>
           )}
           {selectedOptions === 1 && (
@@ -269,12 +365,12 @@ function AccountSettingsPage(props) {
                     (changePWObject.confirmPassword === "" ||
                       changePWObject.confirmPassword === null ||
                       changePWObject.confirmPassword !==
-                      changePWObject.newPassword)
+                        changePWObject.newPassword)
                   }
                   valid={
                     confirmDirty &&
                     changePWObject.confirmPassword ===
-                    changePWObject.newPassword
+                      changePWObject.newPassword
                   }
                   name="confirmPassword"
                 />
@@ -282,7 +378,7 @@ function AccountSettingsPage(props) {
                   xác nhận mật khẩu mới không trùng khớp
                 </CInvalidFeedback>
               </CFormGroup>
-              <div onClick={changePasswordClick} className="save-btn">
+              <div onClick={changePasswordClick} className="save-btn-password">
                 Cập nhật
               </div>
             </div>

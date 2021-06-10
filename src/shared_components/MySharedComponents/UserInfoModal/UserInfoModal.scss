@@ -2,6 +2,7 @@ $subTextColor: #768192;
 .user-info-modal {
     .modal-content {
         margin-top: 0 !important;
+        min-width: 15rem;
     }
     .modal-body {
         padding-left: 2rem;
@@ -32,8 +33,9 @@ $subTextColor: #768192;
                 //margin-top: -0.2rem;
                 margin-right: 0.5rem;
                 &.icon-home {
-                    width: 1.6rem;
-                    height: 1.6rem;
+                    width: 1.3rem;
+                    height: 1.3rem;
+                    margin-left: -0.05rem;
                 }
                 &.github-icon {
                     width: 1.35rem;

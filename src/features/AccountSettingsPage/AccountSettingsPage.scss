@@ -115,6 +115,7 @@ $baseTransition: all 0.3s;
 }
 
 @mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
     background-color: $baseColor;
     color: white;
     padding: 0.5rem 1rem;
@@ -286,18 +287,23 @@ $baseTransition: all 0.3s;
                 display: flex;
                 align-items: center;
                 background-color: white;
-                padding: 1rem 2rem;
-                border: $borderStyle;
+                padding: 0.7rem 2rem;
+                //border: $borderStyle;
                 border-right: none;
                 cursor: pointer;
+                margin: 0.5rem 0rem;
                 transition: $baseTransition;
                 .icon {
                     margin-right: 0.5rem;
                     width: 1rem;
                     height: 1rem;
+                    &.icon-password {
+                        width: 1.15rem;
+                        height: 1.15rem;
+                    }
                 }
                 &:first-child {
-                    border-top-left-radius: $borderRadius;
+                    //border-top-left-radius: $borderRadius;
                 }
                 &:hover {
                     background-color: $lighterBaseColor;
@@ -313,86 +319,139 @@ $baseTransition: all 0.3s;
             padding: 0;
             width: 5rem;
             flex-grow: 1;
+            input {
+                height: 2.5rem;
+            }
             .setting-content {
-                padding: 1rem;
+                padding: 1.5rem;
                 border: none;
                 border-left: $borderStyle;
                 border-top-right-radius: $borderRadius;
                 height: 100%;
                 display: flex;
                 flex-direction: column;
-                align-items: flex-end;
-                .row {
-                    margin: 0;
-                    .content-col {
-                        padding: 0;
-
-                        &.image-col {
-                            //padding-right: ;
-                            display: flex;
-                            justify-content: center;
-                            .avatar {
-                                display: flex;
-                                justify-content: center;
-                                padding-top: 1rem;
-                                position: relative;
-                                width: fit-content;
-                                height: fit-content;
-                                img {
-                                    width: 10rem;
-                                    height: 10rem;
-                                    border-radius: 500px;
-                                }
-                                .icon-container {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    background-color: $baseColor;
-                                    border-radius: 50px;
-                                    position: absolute;
-                                    bottom: 0.6rem;
-                                    right: 0.6rem;
-                                    padding: 0.5rem;
-                                    cursor: pointer;
-                                    .icon-edit-image {
-                                        color: white;
-                                        width: 1rem;
-                                        height: 1rem;
-                                    }
-                                    &:hover {
-                                        background-color: $baseColor;
-                                    }
-                                }
+                padding-right: 5rem;
+                .avatar-group {
+                    display: flex;
+                    align-items: center;
+                    img {
+                        width: 6rem;
+                        height: 6rem;
+                        border-radius: 500rem;
+                        margin: 1rem;
+                    }
+                    .avatar-action-group {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: -1rem;
+                        .change-image-btn {
+                            @include NormalButtonStyle;
+                            margin-right: 0.5rem;
+                            .change-ava-icon {
+                                margin-right: 0.5rem;
                             }
                         }
-                        &.info-col {
-                            padding: 0.5rem 1rem;
-                            display: flex;
+                        .remove-image-btn {
+                            @include NormalButtonStyle;
+                            color: $textColor;
+                            background-color: white;
+                            border: $borderStyle;
+                            .delete-ava-icon {
+                                width: 1.1rem;
+                                height: 1.1rem;
+                                margin-right: 0.3rem;
+                            }
+                            &:hover {
+                                background-color: white;
+                                color: #ff6b72;
+                                //border-color: $lighterBaseColor;
+                            }
+                        }
+                        @media (max-width: 400px) {
                             flex-direction: column;
-                            justify-content: space-between;
-                            align-items: flex-end;
-                            .form-groups {
-                                width: 100%;
-                                .form-group {
-                                    margin-bottom: 2rem;
+                            margin-bottom: 0rem;
+                            .change-image-btn {
+                                margin-bottom: 0.5rem;
+                            }
+                        }
+                    }
+                    @media (max-width: 550px) {
+                        flex-direction: column;
+
+                        margin-bottom: 1rem;
+                        .avatar-action-group {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+
+                .info-row {
+                    margin: 0;
+                    .form-group {
+                        margin-bottom: 2rem;
+                        .social-group {
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 1rem;
+                            &:first-child {
+                                margin-top: 0.5rem;
+                            }
+                            .social-label {
+                                display: flex;
+                                align-items: center;
+                                margin-right: 0.5rem;
+                                .icon {
+                                    margin-right: 0.3rem;
+                                    width: 1.3rem;
+                                    height: 1.3rem;
                                 }
-                                .input-label {
-                                    //margin-left: 0.5rem;
-                                    font-weight: bold;
-                                    color: $subTextColor;
-                                }
-                                .form-control {
-                                    color: $textColor;
-                                }
-                                input {
-                                    border-radius: $borderRadius;
+                            }
+                            @media (max-width: 350px) {
+                                flex-direction: column;
+                                align-items: flex-start;
+                                .social-label {
+                                    margin-bottom: 0.5rem;
                                 }
                             }
                         }
                     }
+                    .input-label {
+                        //margin-left: 0.5rem;
+                        font-weight: bold;
+                        color: rgba($textColor, 0.9);
+                        display: flex;
+                        align-items: center;
+                        .require-item {
+                            color: #ff6b72;
+                            font-size: 1.2rem;
+                            margin-right: 0.1rem;
+                            margin-bottom: -0.2rem;
+                            &.not-show {
+                                visibility: hidden;
+                            }
+                        }
+                    }
+                    .form-control {
+                        color: $textColor;
+                        border-radius: $borderRadius;
+                        border: $borderStyle;
+                    }
+                    input {
+                        border-radius: $borderRadius;
+                    }
+                }
+                .save-btn {
+                    @include NormalButtonStyle;
+                    width: fit-content;
+                    margin-left: 1rem;
+                }
+                .save-btn-password {
+                    @include NormalButtonStyle;
+                    width: fit-content;
                 }
                 &.setting-password-content {
                     padding: 2rem;
+                    padding-right: 25rem;
                     .form-group {
                         margin-bottom: 2rem;
                         width: 100%;
@@ -408,6 +467,24 @@ $baseTransition: all 0.3s;
                     input {
                         border-radius: $borderRadius;
                     }
+                    @media (max-width: 1200px) {
+                        padding-right: 20rem;
+                    }
+                    @media (max-width: 1000px) {
+                        padding-right: 15rem;
+                    }
+                    @media (max-width: 800px) {
+                        padding-right: 10rem;
+                    }
+                    @media (max-width: 600px) {
+                        padding-right: 2rem;
+                    }
+                }
+                @media (max-width: 1000px) {
+                    padding-right: 1.5rem;
+                }
+                @media (max-width: 400px) {
+                    padding: 0.5rem;
                 }
             }
         }
