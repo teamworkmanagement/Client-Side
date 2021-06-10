@@ -21,6 +21,10 @@ import { useHistory } from "react-router";
 import queryString from 'query-string';
 import { unwrapResult } from "@reduxjs/toolkit";
 import TaskEditModal from "./Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
+import { FindNextRank, FindPreRank, FindRankBetween, genNewRank } from "src/utils/lexorank/lexorank";
+import { connection } from "src/utils/signalr/kanbanService";
+import { dragListLocal, dragTaskLocal } from "./kanbanSlice";
+
 KanbanBoard.propTypes = {};
 
 function KanbanBoard(props) {
@@ -37,7 +41,6 @@ function KanbanBoard(props) {
     )
   );
 
-  console.log(fixedList);
   //const fixedList = kanbanLists.find(x => x.kanbanListOrderInBoard === -999999);
   //kanbanLists = kanbanLists.filter(x => x.kanbanListOrderInBoard !== -999999)
 
@@ -47,11 +50,12 @@ function KanbanBoard(props) {
 
   function onDragEnd(result) {
     //call api update pos (task/list) here
+    console.log(connection.connectionId);
 
     const { destination, source, type, draggableId } = result;
 
     console.log(result);
-    return;
+    //return;
     if (!destination) return;
 
     if (
@@ -72,50 +76,46 @@ function KanbanBoard(props) {
       //cungf list
       if (destination.droppableId === source.droppableId) {
         if (destination.index === 0) {
-          pos = listTasksSource[0].orderInList / 2;
+          pos = FindPreRank(listTasksSource[0].taskRankInList);
         } else {
           if (destination.index === listTasksSource.length - 1) {
-            pos =
-              listTasksSource[listTasksSource.length - 1].orderInList + 65536;
+            pos = FindNextRank(listTasksSource[listTasksSource.length - 1].taskRankInList);
           } else {
             if (source.index < destination.index)
-              pos =
-                (listTasksSource[destination.index].orderInList +
-                  listTasksSource[destination.index + 1].orderInList) /
-                2;
+              pos = FindRankBetween(listTasksSource[destination.index].taskRankInList, listTasksSource[destination.index + 1].taskRankInList);
+
             else
-              pos =
-                (listTasksSource[destination.index].orderInList +
-                  listTasksSource[destination.index - 1].orderInList) /
-                2;
+              pos = FindRankBetween(listTasksSource[destination.index - 1].taskRankInList, listTasksSource[destination.index].taskRankInList);
           }
         }
       }
       //khacs list
       else {
         if (destination.index === 0) {
-          if (
-            listTasksSource[source.index].orderInList <
-            listTaskDestination[0]?.orderInList ||
-            listTaskDestination.length === 0
-          ) {
-            pos = listTasksSource[source.index].orderInList;
-          } else {
-            pos = listTaskDestination[destination.index].orderInList / 2;
+          if (listTaskDestination.length === 0) {
+            pos = genNewRank();
           }
-        } else {
+          else {
+            pos = FindPreRank(listTaskDestination[0].taskRankInList);
+          }
+        }
+        else {
           if (destination.index === listTaskDestination.length) {
-            pos =
-              listTaskDestination[listTaskDestination.length - 1].orderInList +
-              65536;
+            pos = FindNextRank(listTaskDestination[listTaskDestination.length - 1].taskRankInList)
+
           } else {
-            pos =
-              (listTaskDestination[destination.index].orderInList +
-                listTaskDestination[destination.index + 1].orderInList) /
-              2;
+            pos = FindRankBetween(listTaskDestination[destination.index - 1].taskRankInList,
+              listTaskDestination[destination.index].taskRankInList);
           }
         }
       }
+
+      dispatch(dragTaskLocal({
+        taskId: listTasksSource[source.index].taskId,
+        position: pos,
+        oldList: source.droppableId,
+        newList: destination.droppableId,
+      }));
 
       taskApi
         .dragTask({
@@ -123,36 +123,40 @@ function KanbanBoard(props) {
           position: pos,
           oldList: source.droppableId,
           newList: destination.droppableId,
+          boardId: currentBoard,
+          connectionId: connection.connectionId,
         })
         .then((res) => { })
         .catch((err) => { });
     } else {
       if (destination.index === 0) {
-        pos = cloneKbLists[0].kanbanListOrderInBoard / 2;
+        pos = FindPreRank(cloneKbLists[0].kanbanListRankInBoard);
       } else {
         if (destination.index === cloneKbLists.length - 1) {
-          pos =
-            cloneKbLists[cloneKbLists.length - 1].kanbanListOrderInBoard +
-            65536;
+          pos = FindNextRank(cloneKbLists[cloneKbLists.length - 1].kanbanListRankInBoard)
         } else {
           if (source.index < destination.index)
-            pos =
-              (cloneKbLists[destination.index].kanbanListOrderInBoard +
-                cloneKbLists[destination.index + 1].kanbanListOrderInBoard) /
-              2;
+            pos = FindRankBetween(cloneKbLists[destination.index].kanbanListRankInBoard,
+              cloneKbLists[destination.index + 1].kanbanListRankInBoard);
           else
-            pos =
-              (cloneKbLists[destination.index].kanbanListOrderInBoard +
-                cloneKbLists[destination.index - 1].kanbanListOrderInBoard) /
-              2;
+            pos = FindRankBetween(cloneKbLists[destination.index - 1].kanbanListRankInBoard,
+              cloneKbLists[destination.index].kanbanListRankInBoard);
         }
       }
+
+      dispatch(dragListLocal(
+        {
+          position: pos,
+          kanbanListId: draggableId,
+        }
+      ));
 
       kanbanApi
         .swapList({
           kanbanBoardId: currentBoard,
           position: pos,
           kanbanListId: draggableId,
+          connectionId: connection.connectionId,
         })
         .then((res) => { })
         .catch((err) => { });
@@ -174,6 +178,97 @@ function KanbanBoard(props) {
     });
   });
 
+  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+  const user = useSelector(state => state.auth.currentUser);
+
+  useEffect(() => {
+    console.log("realtime", updateTask);
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.t) return;
+
+    if (updateTask && updateTask.taskId === queryObj.t) {
+
+      console.log("realtime");
+
+      let params = {};
+      if (props.isOfTeam) {
+        params = {
+          isOfTeam: true,
+          ownerId: props.ownerId,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId
+        }
+      }
+      else {
+        params = {
+          isOfTeam: false,
+          ownerId: user.id,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId
+        }
+      }
+      taskApi.getTaskByBoard({ params }).then(res => {
+        setModaTaskObj(res.data);
+      }).catch(err => {
+
+      })
+    }
+  }, [updateTask])
+
+  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
+
+  /*useEffect(() => {
+    const queryObj = queryString.parse(history.location.search);
+
+    if (!queryObj.t) return;
+
+    if (assignUser && assignUser.taskId === queryObj.t) {
+
+      let params = {};
+      if (props.isOfTeam) {
+        params = {
+          isOfTeam: true,
+          ownerId: props.ownerId,
+          boardId: queryObj.b,
+          taskId: assignUser.taskId
+        }
+      }
+      else {
+        params = {
+          isOfTeam: false,
+          ownerId: user.id,
+          boardId: queryObj.b,
+          taskId: assignUser.taskId
+        }
+      }
+
+      taskApi.getTaskByBoard({ params }).then(res => {
+        setModaTaskObj(res.data);
+      }).catch(err => {
+
+      })
+    }
+  }, [assignUser])*/
+
+  useEffect(() => {
+    console.log(assignUser);
+    const queryObj = queryString.parse(history.location.search);
+
+    if (!queryObj.t) return;
+
+    if (assignUser && assignUser.taskId === queryObj.t) {
+      if (assignUser.userId === modalTaskObj.userId)
+        return;
+      else {
+        setModaTaskObj({
+          ...modalTaskObj,
+          userId: assignUser.userId === "" ? null : assignUser.userId,
+          userAvatar: assignUser.userAvatar === "" ? null : assignUser.userAvatar,
+        });
+      }
+    }
+  }, [assignUser])
+
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t && isShowEditPopup) {
@@ -190,7 +285,7 @@ function KanbanBoard(props) {
 
   }, [history.location.search])
 
-  const user = useSelector(state => state.auth.currentUser);
+
 
   const openEditPopup = (taskId) => {
     setIsShowEditPopup(true);
@@ -260,7 +355,7 @@ function KanbanBoard(props) {
         })
         .catch(err => {
           console.log(err);
-
+  
           if (err.data?.ErrorCode === "404") {
             //props.notFound(true);
           }
@@ -347,6 +442,7 @@ function KanbanBoard(props) {
       </div> : renderNormal()}
 
       <TaskEditModal
+        isOfTeam={props.isOfTeam}
         closePopup={onEditModalClose}
         isShowEditPopup={isShowEditPopup}
         data={modalTaskObj}

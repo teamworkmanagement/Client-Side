@@ -17,6 +17,10 @@ const userApi = {
     getById(userId) {
         const url = `/user/${userId}`;
         return axiosClient.get(url);
+    },
+    searchUsersKanban(params) {
+        const url = '/user/search-users-kanban';
+        return axiosClient.get(url, params);
     }
 };
 

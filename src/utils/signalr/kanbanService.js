@@ -1,11 +1,11 @@
 import { setupSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
-import { signalRAddNewList, signalRAddNewTask, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
+import { reAssignUser, signalRAddNewList, signalRAddNewTask, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
 
 
 
 
-const connection = setupSignalRConnection('https://localhost:9001/hubkanban');
+export const connection = setupSignalRConnection('https://localhost:9001/hubkanban');
 connection.on("AddNewTask", payload => {
     console.log("add new card ", payload);
     store.dispatch(signalRAddNewTask(payload));
@@ -37,12 +37,17 @@ connection.on("MoveList", payload => {
 })
 
 connection.on("UpdateTask", payload => {
-    console.log("Move task ", payload);
+    console.log("Update task ", payload);
     store.dispatch(signalRUpdateTask(payload));
 })
 
 connection.on("UpdateList", payload => {
     store.dispatch(signalRUpdateList(payload));
+})
+
+connection.on("ReAssignUser", payload => {
+    console.log("reassign: ", payload);
+    store.dispatch(reAssignUser(payload));
 })
 
 export const disconnectKanbanService = () => {

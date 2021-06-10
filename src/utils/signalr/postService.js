@@ -14,6 +14,7 @@ connection.on('RemoveReact', payload => {
 })
 
 connection.on('NewComment', payload => {
+    console.log('new comment: ', payload)
     store.dispatch(setNewComment(payload));
 })
 

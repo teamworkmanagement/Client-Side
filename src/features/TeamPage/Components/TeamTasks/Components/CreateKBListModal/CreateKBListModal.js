@@ -11,6 +11,7 @@ import {
 import kanbanApi from "src/api/kanbanApi";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 
 
 CreateKBListModal.propTypes = {};
@@ -29,14 +30,14 @@ function CreateKBListModal(props) {
 
     let pos = 0;
     if (listKBs.length === 0)
-      pos = pos + 65536;
+      pos = genNewRank();
     else
-      pos = listKBs[listKBs.length - 1].kanbanListOrderInBoard + 65536;
+      pos = FindNextRank(listKBs[listKBs.length - 1].kanbanListRankInBoard);
 
-    kanbanApi.addList({
+      kanbanApi.addList({
       kanbanListTitle: listName,
       kanbanListBoardBelongedId: props.boardId,
-      kanbanListOrderInBoard: pos
+      kanbanListRankInBoard: pos
     }).then(res => {
 
     }).catch(err => {
@@ -45,6 +46,8 @@ function CreateKBListModal(props) {
       setListName("");
       props.onClose();
     })
+
+    console.log('rank in :', pos);
   }
 
   useEffect(() => {

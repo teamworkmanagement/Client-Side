@@ -36,6 +36,7 @@ const kanbanSlice = createSlice({
             moveList: null,
             updateTask: null,
             updateList: null,
+            reAssignUser: null
         }
     },
     reducers: {
@@ -46,7 +47,6 @@ const kanbanSlice = createSlice({
             state.taskSelected = action.payload;
         },
         signalRAddNewTask(state, action) {
-            state.addNewTask = action.payload;
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
                 list.taskUIKanbans.push(action.payload);
@@ -61,8 +61,6 @@ const kanbanSlice = createSlice({
 
         },
         signalRRemoveTask(state, action) {
-            state.removeTask = action.payload;
-
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
                 const index = list.taskUIKanbans.findIndex(x => x.taskId === action.payload.taskId);
@@ -78,41 +76,105 @@ const kanbanSlice = createSlice({
 
         },
         signalRMoveTask(state, action) {
-            state.removeTask = action.payload;
-            if (action.payload.oldList === action.payload.newList) {
-                const listTasks = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
-                const task = listTasks.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
-                task.orderInList = action.payload.position;
-                listTasks.taskUIKanbans.sort((x, y) => x.orderInList - y.orderInList >= 0);
-            }
-            else {
-                const listTasksOld = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.oldList);
-                const index = listTasksOld.taskUIKanbans.findIndex(x => x.taskId === action.payload.taskId);
 
-                const task = { ...listTasksOld.taskUIKanbans[index], orderInList: action.payload.position };
-                listTasksOld.taskUIKanbans.splice(index, 1);
+            if (state.kanbanBoard.currentBoard === action.payload.boardId) {
+                if (action.payload.oldList === action.payload.newList) {
+                    const listTasks = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
+                    const task = listTasks.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
+                    console.log(task);
+                    task.taskRankInList = action.payload.position;
+                    listTasks.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+                }
+                else {
 
-                const listTasksNew = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
-                listTasksNew.taskUIKanbans.push(task);
+                    const listTasksOld = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.oldList);
 
-                listTasksNew.taskUIKanbans.sort((x, y) => x.orderInList - y.orderInList >= 0);
+                    const index = listTasksOld.taskUIKanbans.findIndex(x => x.taskId === action.payload.taskId);
+
+                    const task = { ...listTasksOld.taskUIKanbans[index], taskRankInList: action.payload.position, kanbanListId: action.payload.newList };
+                    listTasksOld.taskUIKanbans.splice(index, 1);
+
+
+                    const listTasksNew = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
+
+                    listTasksNew.taskUIKanbans.push(task);
+
+                    listTasksNew.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+                }
             }
         },
         signalRMoveList(state, action) {
-            state.removeList = action.payload;
+
             if (action.payload.kanbanBoardId === state.kanbanBoard.currentBoard) {
                 const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
-                obj.kanbanListOrderInBoard = action.payload.position;
-                state.kanbanBoard.kanbanLists.sort((x, y) => x.kanbanListOrderInBoard - y.kanbanListOrderInBoard >= 0);
+                obj.kanbanListRankInBoard = action.payload.position;
+                state.kanbanBoard.kanbanLists.sort((x, y) => x.kanbanListRankInBoard > y.kanbanListRankInBoard);
             }
 
         },
         signalRUpdateTask(state, action) {
-            state.updateTask = action.payload;
+            state.signalrData.updateTask = action.payload;
+
+            const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
+
+            if (list) {
+                const obj = list.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
+
+                obj.taskName = action.payload.taskName;
+                obj.taskStartDate = action.payload.taskStartDate;
+                obj.taskDeadline = action.payload.taskDeadline;
+                obj.taskStatus = action.payload.taskStatus;
+                obj.taskDescription = action.payload.taskDescription;
+
+                obj.taskImageUrl = action.payload.taskImageUrl;
+                obj.taskCompletedPercent = action.payload.taskCompletedPercent;
+
+                obj.taskThemeColor = action.payload.taskThemeColor;
+            }
         },
         signalRUpdateList(state, action) {
             state.updateList = action.payload;
         },
+
+        dragTaskLocal(state, action) {
+            if (action.payload.oldList === action.payload.newList) {
+                const listTasks = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
+                const task = listTasks.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
+                console.log(task);
+                task.taskRankInList = action.payload.position;
+                listTasks.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+            }
+            else {
+                const listTasksOld = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.oldList);
+
+                const index = listTasksOld.taskUIKanbans.findIndex(x => x.taskId === action.payload.taskId);
+
+                const task = { ...listTasksOld.taskUIKanbans[index], taskRankInList: action.payload.position, kanbanListId: action.payload.newList };
+                listTasksOld.taskUIKanbans.splice(index, 1);
+
+                const listTasksNew = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
+
+                listTasksNew.taskUIKanbans.push(task);
+
+                listTasksNew.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+            }
+        },
+
+        dragListLocal(state, action) {
+            const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
+            obj.kanbanListRankInBoard = action.payload.position;
+            state.kanbanBoard.kanbanLists.sort((x, y) => x.kanbanListRankInBoard > y.kanbanListRankInBoard);
+        },
+
+        reAssignUser(state, action) {
+            const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
+            if (list) {
+                state.signalrData.reAssignUser = action.payload;
+                const task = list.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
+                task.userId = action.payload.userId;
+                task.userAvatar = action.payload.userAvatar;
+            }
+        }
     },
     extraReducers: {
         [getBoardDataForUI.fulfilled]: (state, action) => {
@@ -134,6 +196,9 @@ export const {
     signalRUpdateTask,
     signalRUpdateList,
     setCurrentBoard,
-    setTaskSelected
+    setTaskSelected,
+    dragListLocal,
+    dragTaskLocal,
+    reAssignUser
 } = actions;
 export default reducer;

@@ -99,10 +99,11 @@ export const FindPreRank = (str) => {
   const preRank = FindRankBetween(MIN_RANK, str);
   return preRank;
 };
-export const genNewRank = (str) => {
-  const newRank = FindLetterBetween(MIN_RANK, MAX_RANK);
+export const genNewRank = () => {
+  const newRank = FindRankBetween(MIN_RANK, MAX_RANK);
   return newRank;
 };
+
 
 function FindLetterBetween(letterA, letterB) {
   const index1 = BASE_STR.indexOf(letterA);

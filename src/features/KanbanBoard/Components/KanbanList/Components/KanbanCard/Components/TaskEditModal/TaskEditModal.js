@@ -41,7 +41,9 @@ import { v4 as uuidv4 } from "uuid";
 import fileApi from "src/api/fileApi";
 import commentApi from "src/api/commentApi";
 import Select, { components } from "react-select";
+import AsyncSelect from "react-select/async";
 import axiosClient from "src/api/axiosClient";
+import userApi from "src/api/userApi";
 
 TaskEditModal.propTypes = {};
 
@@ -89,6 +91,8 @@ function TaskEditModal(props) {
   const users = useSelector((state) => state.app.users);
   const [value, setValue] = useState(null);
   const [renderedValue, setRenderedValue] = useState([0]);
+
+  const [updateTaskRequest, setUpdateTaskRequest] = useState(null);
 
   const [cmtLists, setCmtLists] = useState([]);
   const [attachments, setAttachments] = useState([]);
@@ -190,84 +194,6 @@ function TaskEditModal(props) {
   const imageRef = useRef(null);
   const fileRef = useRef(null);
 
-  /*const cmtLists = [
-    {
-      commentId: "comment_1",
-      commentPostId: "",
-      commentUserId: "user_1",
-      commentContent: "Chào các bạn mình là nguyễn hồng khoa nè",
-      commentCreatedAt: new Date(2020, 2, 3),
-      commentIsDeleted: false,
-      userName: "Khoa Nguyễn",
-    },
-    {
-      commentId: "comment_5",
-      commentPostId: "",
-      commentUserId: "user_1",
-      commentContent: "Task này cần hoàn thành trước hôm nay",
-      commentCreatedAt: new Date(2020, 2, 3),
-      commentIsDeleted: false,
-      userName: "Tiễu Dũng Dũng",
-    },
-    {
-      commentId: "comment_2",
-      commentPostId: "",
-      commentUserId: "user_1",
-      commentContent: "OK nha",
-      commentCreatedAt: new Date(2020, 2, 3),
-      commentIsDeleted: false,
-      userName: "A Thoòn",
-    },
-    {
-      commentId: "comment_3",
-      commentPostId: "",
-      commentUserId: "user_1",
-      commentContent: "Loremis bullshit",
-      commentCreatedAt: new Date(2020, 2, 3),
-      commentIsDeleted: false,
-      userName: "Sơn Tùng",
-    },
-    {
-      commentId: "comment_4",
-      commentPostId: "",
-      commentUserId: "user_1",
-      commentContent:
-        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
-      commentCreatedAt: new Date(2020, 2, 3),
-      commentIsDeleted: false,
-      userName: "Leader Nè",
-    },
-  ];*/
-
-  /*const attachments = [
-    {
-      fileId: "file_1",
-      fileName: "Báo cáo.docx",
-      fileType: "word",
-    },
-    {
-      fileId: "file_2",
-      fileName: "Seminar thuyết trình.pptx",
-      fileType: "powerpoint",
-    },
-    {
-      fileId: "file_3",
-      fileName: "Bản thống kê điểm.xls",
-      fileType: "excel",
-    },
-    {
-      fileId: "file_4",
-      fileName: "Báo cáo converted.pdf",
-      fileType: "pdf",
-    },
-    {
-      fileId: "file_5",
-      fileName: "images.rar",
-      fileType: "rar",
-    },
-  ];
-  */
-
   useEffect(() => {
     if (props.data) {
       setTask({ ...props.data });
@@ -295,30 +221,62 @@ function TaskEditModal(props) {
             };
           });
 
-          setOptions(ops);
+          //setOptions(ops);
 
           const findObj = ops.find((x) => x.value === props.data.userId);
           if (findObj) setCurrent(findObj);
         })
         .catch((err) => { });
+
+     
     }
   }, [props.data]);
 
   const onChange = (e) => {
     setCurrent(e);
+    console.log(e);
   };
 
   useEffect(() => {
     console.log(current);
     if (JSON.stringify(task) === JSON.stringify({})) return;
 
+    let payload = {};
+    if (current === null) {
+      payload = {
+        taskId: props.data.taskId,
+        currentUserId: null,
+      }
+    }
+    else {
+      payload = {
+        taskId: props.data.taskId,
+        currentUserId: current.value,
+      }
+    }
 
+    taskApi.reAssignTask(payload).then(res => { }).catch(err => { })
   }, [current]);
 
-  const dispatchUpdateTask = () => {
-    setTriggerUpdateTask(triggerUpdateTask + 1);
+  const dispatchUpdateTask = (obj) => {
+    //setTriggerUpdateTask(triggerUpdateTask + 1);
+    console.log(task);
+    const { name, value } = obj;
+    const { taskId, taskDescription, taskThemeColor, taskStartDate, taskStatus, taskCompletedPercent, taskImageUrl, taskDeadline, taskPoint } = task;
+    const updateObj = { taskId, taskDescription, taskThemeColor, taskStartDate, taskStatus, taskCompletedPercent, taskImageUrl, taskDeadline, taskPoint };
+    const newUpdateObj = { ...updateObj, [name]: value };
+    console.log(newUpdateObj);
+
+    taskApi.updateTask(newUpdateObj)
+      .then(res => { })
+      .catch(err => { })
   };
 
+  useEffect(() => {
+    if (updateTaskRequest) {
+
+    }
+  }, [updateTaskRequest])
   useEffect(() => {
     if (triggerUpdateTask < 0) return;
 
@@ -327,29 +285,12 @@ function TaskEditModal(props) {
     }
   }, [triggerUpdateTask]);
 
-  const assignedUserImage = getAssignedUserImage();
-  function getAssignedUserImage() {
-    //find handleTask
-    let userHandleId = "";
-    for (let i = 0; i < handleTasks.length; i++) {
-      if (handleTasks[i].handleTaskTaskId === task.taskId) {
-        userHandleId = handleTasks[i].handleTaskUserId;
-        break;
-      }
-    }
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].userId === userHandleId) {
-        return users[i].userImageUrl;
-      }
-    }
-    return "";
-  }
-
   function handleClose() {
     if (props.closePopup) {
       props.closePopup();
     }
   }
+
   function handleKeyDown(e) {
     const limit = 80;
 
@@ -357,6 +298,7 @@ function TaskEditModal(props) {
     // In case you have a limitation
     e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
   }
+
   function handleInputNameAndDes(e) {
     const { name, value } = e.target;
     if (name === "taskName") setTaskNameEditing(true);
@@ -368,6 +310,9 @@ function TaskEditModal(props) {
     });
   }
 
+  const updateTaskFunc = (obj) => {
+    console.log('update :', task);
+  }
   function onSaveTaskName() {
     if (
       task.taskName === "" ||
@@ -378,23 +323,10 @@ function TaskEditModal(props) {
       return;
     }
 
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskName: task.taskName,
-        taskThemeColor: task.taskThemeColor,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: task.taskCompletedPercent,
-        taskStartDate: task.taskStartDate,
-        taskDeadline: task.taskDeadline,
-        taskImageUrl: task.taskImageUrl,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-
-    //dispatch(updateTask(task));
-
-    dispatchUpdateTask();
+    dispatchUpdateTask({
+      name: 'taskName',
+      value: task.taskName
+    });
     setTaskNameEditing(false);
   }
 
@@ -404,75 +336,38 @@ function TaskEditModal(props) {
       return;
     }
 
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskDescription: task.taskDescription,
-        taskThemeColor: task.taskThemeColor,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: task.taskCompletedPercent,
-        taskStartDate: task.taskStartDate,
-        taskDeadline: task.taskDeadline,
-        taskImageUrl: task.taskImageUrl,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-
-    //dispatch(updateTask(task));
-
-    dispatchUpdateTask();
+    dispatchUpdateTask({
+      name: 'taskDescription',
+      value: task.taskDescription
+    });
     setTaskDescriptionEditing(false);
   }
 
   function onChangeDeadline(e) {
     const dateParts = e.target.value.split("-");
     const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-    const newTask = {
+
+    setTask({
       ...task,
-      taskDeadline: newDate,
-    };
-
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskStartDate: task.taskStartDate,
-        taskDeadline: newDate,
-        taskThemeColor: task.taskThemeColor,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: task.taskCompletedPercent,
-        taskImageUrl: task.taskImageUrl,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-    setTask(newTask);
-    dispatchUpdateTask();
-
-    //dispatch(updateTask(newTask));
+      taskDeadline: newDate
+    });
+    dispatchUpdateTask({
+      name: 'taskDeadline',
+      value: newDate
+    });
   }
   function onChangeStartDate(e) {
     const dateParts = e.target.value.split("-");
     const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-    const newTask = {
+
+    setTask({
       ...task,
-      taskStartDate: newDate,
-    };
-
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskStartDate: newDate,
-        taskDeadline: task.taskDeadline,
-        taskThemeColor: task.taskThemeColor,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: task.taskCompletedPercent,
-        taskImageUrl: task.taskImageUrl,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-    setTask(newTask);
-    dispatchUpdateTask();
-
-    //dispatch(updateTask(newTask));
+      taskStartDate: newDate
+    });
+    dispatchUpdateTask({
+      name: 'taskStartDate',
+      value: newDate
+    });
   }
 
   function getStatusText() {
@@ -503,78 +398,27 @@ function TaskEditModal(props) {
 
   function onChooseStatus(e) {
     const newStatus = e.target.classList[0];
+    let status = "";
     switch (newStatus) {
-      case "todo-status": {
-        const newTask = {
-          ...task,
-          taskStatus: "todo",
-        };
-
-        taskApi
-          .updateTask({
-            taskId: task.taskId,
-            taskThemeColor: task.taskThemeColor,
-            taskStatus: "todo",
-            taskCompletedPercent: task.taskCompletedPercent,
-            taskStartDate: task.taskStartDate,
-            taskDeadline: task.taskDeadline,
-            taskImageUrl: task.taskImageUrl,
-          })
-          .then((res) => { })
-          .catch((err) => { });
-
-        setTask(newTask);
-        dispatchUpdateTask();
-        //dispatch(updateTask(newTask));
-        return;
-      }
-      case "doing-status": {
-        const newTask = {
-          ...task,
-          taskStatus: "doing",
-        };
-
-        taskApi
-          .updateTask({
-            taskId: task.taskId,
-            taskThemeColor: task.taskThemeColor,
-            taskStatus: "doing",
-            taskCompletedPercent: task.taskCompletedPercent,
-            taskStartDate: task.taskStartDate,
-            taskDeadline: task.taskDeadline,
-            taskImageUrl: task.taskImageUrl,
-          })
-          .then((res) => { })
-          .catch((err) => { });
-        setTask(newTask);
-        dispatchUpdateTask();
-        //dispatch(updateTask(newTask));
-        return;
-      }
-      default: {
-        const newTask = {
-          ...task,
-          taskStatus: "done",
-        };
-
-        taskApi
-          .updateTask({
-            taskId: task.taskId,
-            taskThemeColor: task.taskThemeColor,
-            taskStatus: "done",
-            taskCompletedPercent: task.taskCompletedPercent,
-            taskStartDate: task.taskStartDate,
-            taskDeadline: task.taskDeadline,
-            taskImageUrl: task.taskImageUrl,
-          })
-          .then((res) => { })
-          .catch((err) => { });
-        setTask(newTask);
-        dispatchUpdateTask();
-        //dispatch(updateTask(newTask));
-        return;
-      }
+      case "todo-status":
+        status = "todo";
+        break;
+      case "doing-status":
+        status = "doing";
+        break;
+      default:
+        status = "done";
+        break;
     }
+
+    setTask({
+      ...task,
+      taskStatus: status
+    });
+    dispatchUpdateTask({
+      name: 'taskStatus',
+      value: status
+    })
   }
 
   function onButtonThemeClicked(e) {
@@ -592,73 +436,36 @@ function TaskEditModal(props) {
 
   function onChangeColorTask(colore) {
     changeColor(colore.hex);
-    const newTask = {
+    setTask({
       ...task,
-      taskThemeColor: colore.hex,
-    };
-
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskThemeColor: colore.hex,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: task.taskCompletedPercent,
-        taskStartDate: task.taskStartDate,
-        taskDeadline: task.taskDeadline,
-        taskImageUrl: task.taskImageUrl,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-    setTask(newTask);
-    dispatchUpdateTask();
-    //dispatch(updateTask(newTask));
+      taskThemeColor: colore.hex
+    });
+    dispatchUpdateTask({
+      name: 'taskThemeColor',
+      value: colore.hex
+    })
   }
 
   function onDeleteThemeTask() {
-    const newTask = {
+    setTask({
       ...task,
-      taskThemeColor: "",
-    };
-
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskThemeColor: null,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: task.taskCompletedPercent,
-        taskStartDate: task.taskStartDate,
-        taskDeadline: task.taskDeadline,
-        taskImageUrl: task.taskImageUrl,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-
-    changeColor("#FFF");
-    setTask(newTask);
-    dispatch(updateTask(newTask));
+      taskThemeColor: ""
+    });
+    dispatchUpdateTask({
+      name: 'taskThemeColor',
+      value: ""
+    })
   }
 
   function handleUpdateTask(value) {
-    const newTask = {
+    setTask({
       ...task,
-      taskCompletedPercent: value,
-    };
-
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskThemeColor: task.taskThemeColor,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: value,
-        taskStartDate: task.taskStartDate,
-        taskDeadline: task.taskDeadline,
-        taskImageUrl: task.taskImageUrl,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-    setTask(newTask);
-    dispatchUpdateTask();
-    //dispatch(updateTask(newTask));
+      taskCompletedPercent: value
+    });
+    dispatchUpdateTask({
+      name: 'taskCompletedPercent',
+      value: value
+    })
   }
 
   function getColorFromValue() {
@@ -675,24 +482,14 @@ function TaskEditModal(props) {
   }
 
   const onDeleteTaskAvatar = () => {
-    taskApi
-      .updateTask({
-        taskId: task.taskId,
-        taskDeadline: task.taskDeadline,
-        taskThemeColor: task.taskThemeColor,
-        taskStatus: task.taskStatus,
-        taskCompletedPercent: task.taskCompletedPercent,
-        taskImageUrl: null,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-
     setTask({
       ...task,
-      taskImageUrl: null,
+      taskImageUrl: value
     });
-
-    dispatchUpdateTask();
+    dispatchUpdateTask({
+      name: 'taskImageUrl',
+      value: null
+    })
   };
 
   const onPickImage = () => {
@@ -720,25 +517,25 @@ function TaskEditModal(props) {
               taskImageUrl: imageUrl,
             });
 
-            taskApi
-              .updateTask({
-                taskId: task.taskId,
-                taskStartDate: task.taskStartDate,
-                taskDeadline: task.taskDeadline,
-                taskThemeColor: task.taskThemeColor,
-                taskStatus: task.taskStatus,
-                taskCompletedPercent: task.taskCompletedPercent,
-                taskImageUrl: imageUrl,
-              })
-              .then((res) => { })
-              .catch((err) => { });
-
-            dispatchUpdateTask();
+            dispatchUpdateTask({
+              name: 'taskImageUrl',
+              value: imageUrl
+            })
           }
         })
         .send((err) => { });
     }
   };
+
+  const newComment = useSelector((state) => state.signalr.newComment);
+
+  useEffect(() => {
+    if (!newComment || !props.data) return;
+    if (newComment.commentTaskId === props.data.taskId) {
+      setCmtLists([newComment].concat([...cmtLists]));
+    }
+  }, [newComment]);
+
 
   const onAddComment = (e) => {
     if (e.key === "Enter") {
@@ -750,6 +547,8 @@ function TaskEditModal(props) {
             commentContent: commentContent,
             commentCreatedAt: new Date().toISOString(),
             commentIsDeleted: false,
+            commentUserName: user.fullName,
+            commentUserAvatar: user.userAvatar,
           })
           .then((res) => {
             setTask({
@@ -757,7 +556,7 @@ function TaskEditModal(props) {
               commentsCount: task.commentsCount + 1,
             });
 
-            const cmtObj = {
+            /*const cmtObj = {
               commentId: res.data.commentId,
               commentTaskId: res.data.commentTaskId,
               commentUserId: res.data.commentUserId,
@@ -771,7 +570,7 @@ function TaskEditModal(props) {
             cmtListsClone.splice(0, 0, cmtObj);
             setCmtLists(cmtListsClone);
 
-            dispatchUpdateTask();
+            dispatchUpdateTask();*/
           })
           .catch((err) => { });
       }
@@ -938,6 +737,37 @@ function TaskEditModal(props) {
   const [openPopoverLists, setOpenPopoverLists] = useState(false);
   const [openPopoverScores, setOpenPopoverScores] = useState(false);
 
+  const [inputValue, setInputValue] = useState("");
+  const handleInputChange = (e) => {
+    console.log(e);
+    setInputValue(e);
+  };
+
+  const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
+  const filterColors = async (inputValue) => {
+    try {
+      const params = {
+        boardId: currentBoard,
+        keyword: inputValue,
+      };
+      const res = await userApi.searchUsersKanban({ params });
+
+      console.log(res.data);
+
+      return res.data.map((x) => {
+        return {
+          value: x.userId,
+          label: x.userFullname,
+          img: x.userImageUrl,
+        };
+      });
+    } catch (err) { }
+  };
+
+  const loadOptions = async (inputValue, callback) => {
+    callback(await filterColors(inputValue));
+  };
+
   return (
     <div>
       <div>
@@ -1052,22 +882,25 @@ function TaskEditModal(props) {
                     <div className="infor-bar">
                       <CRow className="my-row">
                         <CCol className="col-6 my-col left">
-                          <div className="assign-group item-group">
+                          {props.isOfTeam && <div className="assign-group item-group">
                             <div className="assign-label label">
                               <CIcon name="cil-user-follow" />
-                              Giao cho
-                            </div>
+                            Giao cho
+                          </div>
                             {/*<div className="assigned-user-avatar">
-                              <img src={task.userAvatar} alt="" />
-                  </div>*/}
+                            <img src={task.userAvatar} alt="" />
+                </div>*/}
 
                             {/*<UserSelector onSelectedUser={onSelectedUser} currentValue={task} />*/}
                             <div style={{ width: "11rem" }}>
-                              <Select
+                              <AsyncSelect
                                 value={isFocused ? null : current}
                                 onChange={onChange}
                                 options={options}
                                 placeholder="Chọn thành viên"
+                                loadOptions={loadOptions}
+                                defaultOptions
+                                onInputChange={handleInputChange}
                                 components={{
                                   Option: CustomOption,
                                   SingleValue: ValueOption,
@@ -1080,7 +913,7 @@ function TaskEditModal(props) {
                                 blurInputOnSelect={true}
                               />
                             </div>
-                          </div>
+                          </div>}
                           <div className="start-group item-group">
                             <div className=" start-label label">
                               <CIcon name="cil-clock" />
