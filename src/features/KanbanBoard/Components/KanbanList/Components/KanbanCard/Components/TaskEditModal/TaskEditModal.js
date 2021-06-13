@@ -108,11 +108,7 @@ function TaskEditModal(props) {
   const [listScores, setListScores] = useState([
     {
       score: "0",
-      active: false,
-    },
-    {
-      score: "1",
-      active: false,
+      active: true,
     },
     {
       score: "1",
