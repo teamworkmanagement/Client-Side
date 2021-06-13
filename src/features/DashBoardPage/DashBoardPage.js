@@ -33,6 +33,7 @@ import { useHistory } from "react-router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import teamApi from "src/api/teamApi";
+import statisticsApi from "src/api/statisticsApi";
 DashBoardPage.propTypes = {};
 
 const random = (min, max) => {
@@ -51,6 +52,7 @@ function DashBoardPage(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentUser);
   const [loadone, setLoadone] = useState(false);
+  const [filter, setFilter] = useState('week');
   const myPosts = [
     {
       content:
@@ -111,7 +113,30 @@ function DashBoardPage(props) {
       value: 3,
     },
   ];
-  const defaultDatasets = (() => {
+
+  const [defaultDatasets, setDefaultDatasets] = useState([
+
+  ]);
+
+  /*const defaultDatasets = [
+    {
+      label: "Công việc cá nhân",
+      backgroundColor: hexToRgba(brandInfo, 10),
+      borderColor: brandInfo,
+      pointHoverBackgroundColor: brandInfo,
+      borderWidth: 2,
+      data: [10, 9, 4, 1, 44, 90, 100],
+    },
+    {
+      label: "Công việc nhóm",
+      backgroundColor: hexToRgba(brandSuccess, 20),
+      borderColor: brandSuccess,
+      pointHoverBackgroundColor: brandSuccess,
+      borderWidth: 2,
+      data: [2, 9, 8, 11, 30, 98, 30],
+    }
+  ]*/
+  /*const defaultDatasets = (() => {
     let elements = 7;
     switch (progressTimeMode) {
       case 2:
@@ -120,6 +145,7 @@ function DashBoardPage(props) {
       default:
         elements = 12;
     }
+
     const data1 = [];
     const data2 = [];
     const data3 = [];
@@ -155,7 +181,7 @@ function DashBoardPage(props) {
       //   data: data3,
       // },
     ];
-  })();
+  })();*/
   const defaultOptions = (() => {
     return {
       maintainAspectRatio: false,
@@ -175,8 +201,8 @@ function DashBoardPage(props) {
             ticks: {
               beginAtZero: true,
               maxTicksLimit: 5,
-              stepSize: Math.ceil(250 / 5),
-              max: 250,
+              stepSize: Math.ceil(10 / 5),
+              max: 10,
             },
             gridLines: {
               display: true,
@@ -217,9 +243,6 @@ function DashBoardPage(props) {
     history.push(`/team/${teamId}`);
   };
 
-
-  console.log(teams);
-
   useEffect(() => {
     teamApi.getAllTeamByUser(user.id)
       .then(res => {
@@ -228,6 +251,60 @@ function DashBoardPage(props) {
 
       })
   }, [])
+
+
+  const changeMode = (value) => {
+    setProgressTimeMode(value);
+    if (value == 1)
+      setFilter('week');
+    if (value == 2)
+      setFilter('month');
+    if (value == 3)
+      setFilter('year');
+  }
+
+  useEffect(() => {
+    async function getStatistics() {
+      console.log(filter);
+      const params = {
+        userId: user.id,
+        filter,
+      }
+      const data1 = [];
+      const data2 = [];
+
+      const res1 = await statisticsApi.getPersonalTaskDone({ params });
+      const res2 = await statisticsApi.getUserTaskDoneBoards({ params });
+
+      const max1 = Math.max(res1);
+      const max2 = Math.max(res2);
+
+      const max = Math.max(max1, max2);
+      
+      setDefaultDatasets([{
+        label: "Công việc cá nhân",
+        backgroundColor: hexToRgba(brandInfo, 10),
+        borderColor: brandInfo,
+        pointHoverBackgroundColor: brandInfo,
+        borderWidth: 2,
+        data: res1.data,
+      },
+      {
+        label: "Công việc nhóm",
+        backgroundColor: hexToRgba(brandSuccess, 20),
+        borderColor: brandSuccess,
+        pointHoverBackgroundColor: brandSuccess,
+        borderWidth: 2,
+        data: res2.data,
+      }]);
+    }
+
+    getStatistics();
+  }, [filter])
+
+  useEffect(() => {
+    console.log(defaultDatasets);
+  }, [defaultDatasets])
 
   return (
     <div className="dash-board-container">
@@ -299,7 +376,7 @@ function DashBoardPage(props) {
                   color="outline-secondary"
                   key={item.value}
                   className="mx-0"
-                  onClick={() => setProgressTimeMode(item.value)}
+                  onClick={() => changeMode(item.value)}
                   active={item.value === progressTimeMode}
                 >
                   {item.name}
