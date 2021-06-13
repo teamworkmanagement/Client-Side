@@ -7,8 +7,21 @@ import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHisto
 
 const MyToaster = () => {
   const [showTaskHistoryModal, setShowTaskHistoryModal] = useState(false);
+  const [details, setDetails] = useState([]);
   function onCloseTaskHistoryModal() {
     setShowTaskHistoryModal(false);
+  }
+
+  const onClickDetail = () => {
+    fetch('https://localhost:9001/api/taskver/bytaskid/d17cfc16-1c59-4818-aa3e-ada5ee19a46f')
+      .then(res => res.json())
+      .then(res => {
+        console.log(res.data);
+        setDetails(res.data);
+      }).catch(err => {
+
+      })
+    setShowTaskHistoryModal(true)
   }
   return (
     <div style={{ padding: "1.5rem" }}>
@@ -27,10 +40,11 @@ const MyToaster = () => {
         userId="f3997f78-4723-4332-8171-add514ae91cd"
       />
       <div className="divider" style={{ marginTop: "5rem" }}></div>
-      <CButton color="info" onClick={() => setShowTaskHistoryModal(true)}>
+      <CButton color="info" onClick={onClickDetail}>
         Xem lịch sử công việc
       </CButton>
       <TaskHistoryModal
+        details={details}
         show={showTaskHistoryModal}
         onClose={onCloseTaskHistoryModal}
       />

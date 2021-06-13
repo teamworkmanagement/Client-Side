@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TaskListItem.scss";
 import CIcon from "@coreui/icons-react";
@@ -14,6 +14,7 @@ import moment from "moment";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import taskApi from "src/api/taskApi";
 import { useHistory } from "react-router";
+import queryString from 'query-string';
 
 TaskListItem.propTypes = {};
 
@@ -93,6 +94,8 @@ function TaskListItem(props) {
     return "Trễ " + -spaceTime + " ngày";
   }
 
+  const user = useSelector(state => state.auth.currentUser);
+
   const openEditPoup = async () => {
     setModaTask(null);
     setIsShowEditPopup(true);
@@ -101,17 +104,86 @@ function TaskListItem(props) {
       pathname: history.location.pathname,
       search: history.location.search + `&t=${props.data.taskId}`,
     });
-    
-    const taskModal = await taskApi.getTaskById(props.data.taskId);
-    setModaTask({
-      ...taskModal.data,
-      filesCount: props.data.filesCount,
-      commentsCount: props.data.commentsCount,
-    });
+
+    const queryObj = queryString.parse(history.location.search);
+
+    let params = {};
+    if (props.isOfTeam) {
+      params = {
+        isOfTeam: true,
+        ownerId: props.ownerId,
+        boardId: queryObj.b,
+        taskId: props.data.taskId,
+        userRequest: user.id,
+      }
+    }
+    else {
+      params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryObj.b,
+        taskId: props.data.taskId,
+        userRequest: user.id,
+      }
+    }
+
+    taskApi.getTaskByBoard({ params }).then(res => {
+      setModaTask({
+        ...res.data,
+        filesCount: props.data.filesCount,
+        commentsCount: props.data.commentsCount,
+      });
+      console.log(res.data);
+    }).catch(err => {
+      history.push({
+        pathname: history.location.pathname,
+        search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      });
+      setIsShowEditPopup(false);
+    })
   };
 
+
+  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+
+  useEffect(() => {
+    console.log("realtime", updateTask);
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.t) return;
+
+    if (updateTask && updateTask.taskId === queryObj.t && updateTask.taskId === props.data.taskId) {
+
+      console.log("realtime");
+
+      let params = {};
+      if (props.isOfTeam) {
+        params = {
+          isOfTeam: true,
+          ownerId: props.ownerId,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId,
+          userRequest: user.id,
+        }
+      }
+      else {
+        params = {
+          isOfTeam: false,
+          ownerId: user.id,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId,
+          userRequest: user.id,
+        }
+      }
+      taskApi.getTaskByBoard({ params }).then(res => {
+        setModaTask(res.data);
+      }).catch(err => {
+
+      })
+    }
+  }, [updateTask])
+
   const onRemoveTask = () => {
-    
+
 
     if (props.closePopup) {
       props.closePopup();
@@ -134,7 +206,7 @@ function TaskListItem(props) {
             <div
               className="attachment infor"
               style={{ display: props.data.filesCount === 0 ? "none" : "flex" }}
-              // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+            // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
             >
               <CIcon name="cil-paperclip" className=""></CIcon>
               <div className="">{props.data.filesCount} </div>

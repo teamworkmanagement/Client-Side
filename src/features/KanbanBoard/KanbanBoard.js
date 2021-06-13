@@ -196,7 +196,8 @@ function KanbanBoard(props) {
           isOfTeam: true,
           ownerId: props.ownerId,
           boardId: queryObj.b,
-          taskId: updateTask.taskId
+          taskId: updateTask.taskId,
+          userRequest: user.id,
         }
       }
       else {
@@ -204,7 +205,8 @@ function KanbanBoard(props) {
           isOfTeam: false,
           ownerId: user.id,
           boardId: queryObj.b,
-          taskId: updateTask.taskId
+          taskId: updateTask.taskId,
+          userRequest: user.id,
         }
       }
       taskApi.getTaskByBoard({ params }).then(res => {
@@ -296,7 +298,8 @@ function KanbanBoard(props) {
         isOfTeam: true,
         ownerId: props.ownerId,
         boardId: queryObj.b,
-        taskId: taskId
+        taskId: taskId,
+        userRequest: user.id,
       }
     }
     else {
@@ -304,7 +307,8 @@ function KanbanBoard(props) {
         isOfTeam: false,
         ownerId: user.id,
         boardId: queryObj.b,
-        taskId: taskId
+        taskId: taskId,
+        userRequest: user.id,
       }
     }
 

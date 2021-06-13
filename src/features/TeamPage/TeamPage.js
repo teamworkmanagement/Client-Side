@@ -142,6 +142,7 @@ function TeamPage(props) {
       <div>
         {isOpeningBoard ? (
           <TeamTasks
+            isOfTeam={true}
             ownerId={pathname[2]}
             boardId={boardId}
             goBackListBoards={goBackListBoards}
@@ -169,7 +170,7 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => {})
+        .then((res) => { })
         .catch((err) => {
           if (err.data?.ErrorCode === "404") setNotfound(true);
         });

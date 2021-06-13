@@ -18,6 +18,7 @@ function CreateCardModal(props) {
 
   const kbLists = useSelector(state => state.kanban.kanbanBoard.kanbanLists);
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.currentUser);
   const [taskName, setTaskName] = useState("");
   function handleOnClose() {
     if (props.setShowAddCard) {
@@ -54,6 +55,7 @@ function CreateCardModal(props) {
           taskStartDate: date,
           taskStatus: 'todo',
           taskDeadline: date.addDays(1),
+          userActionId: user.id
         })
         .then((res) => {
 
