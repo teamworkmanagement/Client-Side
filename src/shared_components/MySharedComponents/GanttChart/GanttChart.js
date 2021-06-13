@@ -13,6 +13,7 @@ import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
+import queryString from 'query-string';
 
 function GanttChart(props) {
   const input = useRef(null);
@@ -43,23 +44,6 @@ function GanttChart(props) {
     //links: [{ id: 1, source: 1, target: 2, type: "0" }],
   };
   const [data, setData] = useState(initData);
-
-  function getAssignedUserImage(taskId) {
-    //find handleTask
-    let userHandleId = "";
-    for (let i = 0; i < handleTasks.length; i++) {
-      if (handleTasks[i].handleTaskTaskId === taskId) {
-        userHandleId = handleTasks[i].handleTaskUserId;
-        break;
-      }
-    }
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].userId === userHandleId) {
-        return users[i].userImageUrl;
-      }
-    }
-    return "";
-  }
 
   function refactorTasksForGantt() {
     var ganttTasks = [];
@@ -113,6 +97,8 @@ function GanttChart(props) {
     //return Math.round((after - before) / 86400000);
     return 3;
   }
+
+  const user = useSelector(state => state.auth.currentUser);
 
   useEffect(() => {
     gantt.config.scale_height = 54;
@@ -180,7 +166,13 @@ function GanttChart(props) {
 
     gantt.attachEvent("onAfterTaskUpdate", function (id, newTaskData) {
       //lấy data của newtaskdata => update task cũ ở đây
-      console.log(newTaskData);
+      console.log('zzzzz là : ', newTaskData);
+
+      if (newTaskData.realtime) {
+        newTaskData.realtime = false;
+        return;
+      }
+
 
       taskApi
         .updateTask({
@@ -192,9 +184,10 @@ function GanttChart(props) {
           taskStartDate: newTaskData.start_date,
           taskDeadline: newTaskData.end_date,
           taskImageUrl: newTaskData.taskImageUrl,
+          userActionId: user.id
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     });
   }, [data]);
 
@@ -207,12 +200,44 @@ function GanttChart(props) {
       search: history.location.search + `&t=${taskId}`,
     });
 
-    const taskModal = await taskApi.getTaskById(taskId);
-    setModalTask({
-      ...taskModal.data,
-      filesCount: task.filesCount,
-      commentsCount: task.commentsCount,
-    });
+    const queryObj = queryString.parse(history.location.search);
+
+    let params = {};
+    if (props.isOfTeam) {
+      params = {
+        isOfTeam: true,
+        ownerId: props.ownerId,
+        boardId: queryObj.b,
+        taskId: taskId,
+        userRequest: user.id,
+      }
+    }
+    else {
+      params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryObj.b,
+        taskId: taskId,
+        userRequest: user.id,
+      }
+    }
+
+    taskApi.getTaskByBoard({ params }).then(res => {
+      setModalTask({
+        ...res.data,
+        filesCount: task.filesCount,
+        commentsCount: task.commentsCount,
+      });
+      console.log(res.data);
+    }).catch(err => {
+      history.push({
+        pathname: history.location.pathname,
+        search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      });
+      setIsShowEditPopup(false);
+    })
+
+
   };
 
   function closeForm() {
@@ -238,16 +263,32 @@ function GanttChart(props) {
     //changes task's data
     console.log(moment(task.taskStartDate).format("DD-MM-YYYY"));
 
+    console.log("task là: ", task)
     //debugger;
     gantt.getTask(task.taskId).text = task.taskName;
     gantt.getTask(task.taskId).start_date = new Date(task.taskStartDate);
     gantt.getTask(task.taskId).end_date = new Date(task.taskDeadline);
     gantt.getTask(task.taskId).progress = task.taskCompletedPercent / 100;
+    gantt.getTask(task.taskId).realtime = true;
     if (task.taskThemeColor) {
       gantt.getTask(task.taskId).progressColor = task.taskThemeColor;
     }
     gantt.updateTask(task.taskId); //renders the updated task
   }
+
+  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+
+  useEffect(() => {
+    console.log("realtime", updateTask);
+    //const queryObj = queryString.parse(history.location.search);
+    //if (!queryObj.t) return;
+
+    if (updateTask) {
+      const taskClone = { ...updateTask }
+      taskClone.realtime = true;
+      updateGanttTask(taskClone)
+    }
+  }, [updateTask])
 
   return (
     <div className="gantt-container">

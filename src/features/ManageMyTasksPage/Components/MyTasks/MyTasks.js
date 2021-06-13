@@ -141,8 +141,8 @@ function MyTasks(props) {
       />
 
       {showMode === 1 && <KanbanBoard isOfTeam={false} boardId={props.boardId} />}
-      {showMode === 2 && <TaskList boardId={props.boardId} />}
-      {showMode === 3 && <GanttChart boardId={props.boardId} />}
+      {showMode === 2 && <TaskList isOfTeam={false} boardId={props.boardId} />}
+      {showMode === 3 && <GanttChart isOfTeam={false} boardId={props.boardId} />}
     </div>
   );
 }

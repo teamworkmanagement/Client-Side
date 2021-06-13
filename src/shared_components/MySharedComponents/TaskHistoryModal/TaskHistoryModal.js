@@ -8,11 +8,14 @@ import { AiFillGithub } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
 import userApi from "src/api/userApi";
 import TaskInfoModal from "../TaskInfoModal/TaskInfoModal";
+import moment from "moment";
+//import "moment/locale/vi";
+//moment.locale("vi");
 
 TaskHistoryModal.propTypes = {};
 
 function TaskHistoryModal(props) {
-  const taskVersions = [
+  /*const taskVersions = [
     {
       taskVersionUpdatedAt: "13/01/2021 11:11SA",
       taskVersionTaskName: "Một vòng trái Khế",
@@ -121,7 +124,7 @@ function TaskHistoryModal(props) {
         "https://emilus.themenate.net/img/avatars/thumb-6.jpg",
       taskVersionUserName: "Dũng Nguyễn",
     },
-  ];
+  ];*/
 
   const [taskVersion, setTaskVersion] = useState({});
 
@@ -161,6 +164,7 @@ function TaskHistoryModal(props) {
   }
 
   function renderVersionContent(index) {
+    const taskVersions = props.details;
     if (index === taskVersions.length - 1) {
       return <div className="version-content">Đã tạo mới công việc</div>;
     }
@@ -185,11 +189,11 @@ function TaskHistoryModal(props) {
       contentAfter = formatInfo(taskAfter.taskVersionTaskDescription);
     }
     if (
-      taskBefore.taskVersionTaskDeadline !== taskAfter.taskVersionTaskDeadline
+      new Date(taskBefore.taskVersionTaskDeadline).toDateString() !== new Date(taskAfter.taskVersionTaskDeadline).toDateString()
     ) {
       changedField = "Hạn hoàn thành";
-      contentBefore = formatInfo(taskBefore.taskVersionTaskDeadline);
-      contentAfter = formatInfo(taskAfter.taskVersionTaskDeadline);
+      contentBefore = formatInfo(moment(taskBefore.taskVersionTaskDeadline).format("DD/MM/YYYY, HH:mm:ss"));
+      contentAfter = formatInfo(moment(taskAfter.taskVersionTaskDeadline).format("DD/MM/YYYY, HH:mm:ss"));
     }
     if (taskBefore.taskVersionTaskStatus !== taskAfter.taskVersionTaskStatus) {
       changedField = "Trạng thái công việc";
@@ -234,7 +238,7 @@ function TaskHistoryModal(props) {
     >
       <CModalHeader closeButton></CModalHeader>
       <CModalBody className="modal-body">
-        {taskVersions.map((taskVersion, index) => {
+        {props.details.map((taskVersion, index) => {
           return (
             <div
               className="task-version-info"
@@ -242,11 +246,11 @@ function TaskHistoryModal(props) {
             >
               <div className="version-header">
                 <div className="avatar">
-                  <img alt="" src={taskVersion.taskVersionUserImage} />
-                  <div className="name">{taskVersion.taskVersionUserName}</div>
+                  <img alt="" src={taskVersion.taskVersionActionUserImage} />
+                  <div className="name">{taskVersion.taskVersionActionUserName}</div>
                 </div>
                 <div className="update-date">
-                  Ngày cập nhật: {taskVersion.taskVersionUpdatedAt}
+                  Ngày cập nhật: {moment(Date.parse(taskVersion.taskVersionUpdatedAt)).format("DD/MM/YYYY, HH:mm:ss")}
                 </div>
               </div>
               {renderVersionContent(index)}

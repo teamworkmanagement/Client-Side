@@ -150,8 +150,8 @@ function TeamTasks(props) {
             boardId={props.boardId}
           />
         )}
-        {showMode === 2 && <TaskList boardId={props.boardId} />}
-        {showMode === 3 && <GanttChart boardId={props.boardId} />}
+        {showMode === 2 && <TaskList ownerId={props.ownerId} isOfTeam={true} boardId={props.boardId} />}
+        {showMode === 3 && <GanttChart ownerId={props.ownerId} isOfTeam={true} boardId={props.boardId} />}
 
         <CreateKBListModal
           boardId={props.boardId}
