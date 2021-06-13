@@ -103,9 +103,7 @@ function TaskEditModal(props) {
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
-  const [kanbanLocal, setKanbanLocal] = useState(
-    refactorKanbanListWithActive()
-  );
+  const [kanbanLocal, setKanbanLocal] = useState([]);
 
   const [listScores, setListScores] = useState([
     {
@@ -158,6 +156,8 @@ function TaskEditModal(props) {
   function refactorKanbanListWithActive() {
     //set active cho list mà task này đang nằm trong đó, list đang dc chọn (active) sẽ có dấu check
     var cloneLists = [...kanbanLists];
+
+    console.log(cloneLists);
     for (let i = 0; i < cloneLists.length; i++) {
       cloneLists[i] = {
         ...cloneLists[i],
@@ -172,6 +172,21 @@ function TaskEditModal(props) {
     return cloneLists;
   }
 
+  useEffect(() => {
+    if (kanbanLists.length == 0)
+      return;
+    var cloneLists = [...kanbanLists];
+
+    console.log(cloneLists);
+    for (let i = 0; i < cloneLists.length; i++) {
+      cloneLists[i] = {
+        ...cloneLists[i],
+        active: false,
+      };
+    }
+
+    setKanbanLocal(cloneLists);
+  }, [kanbanLists])
   const addToast = () => {
     setToasts([
       ...toasts,
@@ -205,6 +220,24 @@ function TaskEditModal(props) {
       if (props.data.comments) setCmtLists(props.data.comments);
 
       if (props.data.files) setAttachments(props.data.files);
+
+
+      const index = kanbanLists.findIndex(x => x.kanbanListId === props.data.kanbanListId);
+      //set active cho list đang chứa task này
+      const localClone = [...kanbanLocal];
+
+      for (let i = 0; i < localClone.length; i++) {
+        localClone[i] = {
+          ...localClone[i],
+          active: false,
+        };
+      }
+      localClone[index] = {
+        ...localClone[index],
+        active: true,
+      };
+
+      setKanbanLocal(localClone);
     }
   }, [props.data]);
 
@@ -228,7 +261,7 @@ function TaskEditModal(props) {
         })
         .catch((err) => { });
 
-     
+
     }
   }, [props.data]);
 
@@ -264,7 +297,7 @@ function TaskEditModal(props) {
     const { name, value } = obj;
     const { taskId, taskDescription, taskThemeColor, taskStartDate, taskStatus, taskCompletedPercent, taskImageUrl, taskDeadline, taskPoint } = task;
     const updateObj = { taskId, taskDescription, taskThemeColor, taskStartDate, taskStatus, taskCompletedPercent, taskImageUrl, taskDeadline, taskPoint };
-    const newUpdateObj = { ...updateObj, [name]: value };
+    const newUpdateObj = { ...updateObj, [name]: value, userActionId: curUser.id };
     console.log(newUpdateObj);
 
     taskApi.updateTask(newUpdateObj)
@@ -676,6 +709,11 @@ function TaskEditModal(props) {
     setKanbanLocal(cloneLists);
   }
 
+  const changeListClick = (index) => {
+    selectList(index);
+    console.log('zzzzz');
+  }
+
   function renderContentList() {
     return (
       <div className="lists-popover-container">
@@ -685,7 +723,7 @@ function TaskEditModal(props) {
             return (
               <div
                 className={`list-item ${list.active ? "active" : ""}`}
-                onClick={() => selectList(index)}
+                onClick={() => changeListClick(index)}
               >
                 <CIcon name="cil-check-alt" />
                 <div>{list.kanbanListTitle}</div>
@@ -885,8 +923,8 @@ function TaskEditModal(props) {
                           {props.isOfTeam && <div className="assign-group item-group">
                             <div className="assign-label label">
                               <CIcon name="cil-user-follow" />
-                            Giao cho
-                          </div>
+                              Giao cho
+                            </div>
                             {/*<div className="assigned-user-avatar">
                             <img src={task.userAvatar} alt="" />
                 </div>*/}
@@ -1264,7 +1302,7 @@ function TaskEditModal(props) {
                     </div>
                   </Popover>
 
-                  <Popover
+                  {props.data.showPoint && <Popover
                     className="lists-select-popover"
                     isOpen={openPopoverScores}
                     align="start"
@@ -1279,7 +1317,7 @@ function TaskEditModal(props) {
                       <CIcon name="cil-sort-numeric-up" />
                       <div className="action-name">Cho điểm</div>
                     </div>
-                  </Popover>
+                  </Popover>}
 
                   <div className="action-item" onClick={onRemoveTask}>
                     <CIcon name="cil-trash" />

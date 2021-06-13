@@ -44,7 +44,7 @@ function TeamTasks(props) {
       ownerId: queryOb.gr,
       boardId: props.boardId
     }
-    
+
     dispatch(setTeamLoading(true));
     dispatch(getBoardDataForUI({ params }))
       .then(unwrapResult)
@@ -82,13 +82,13 @@ function TeamTasks(props) {
           {showMode === 1 && (
             <div className="add-btn add-list-btn">
               <CIcon name="cil-plus" />
-          Tạo danh sách
+              Tạo danh sách
             </div>
           )}
           {(showMode === 2 || showMode === 3) && (
             <div className="add-btn add-task-btn">
               <CIcon name="cil-plus" />
-          Tạo công việc
+              Tạo công việc
             </div>
           )}
 
@@ -127,8 +127,8 @@ function TeamTasks(props) {
       </div>
 
       {showMode === 1 && <KanbanBoard ownerId={queryO.gr} isOfTeam={true} boardId={props.boardId} />}
-      {showMode === 2 && <TaskList boardId={props.boardId} />}
-      {showMode === 3 && <GanttChart boardId={props.boardId} />}
+      {showMode === 2 && <TaskList ownerId={queryO.gr} boardId={props.boardId} isOfTeam={true} />}
+      {showMode === 3 && <GanttChart ownerId={queryO.gr} boardId={props.boardId} isOfTeam={true} />}
     </>
   }
   return (

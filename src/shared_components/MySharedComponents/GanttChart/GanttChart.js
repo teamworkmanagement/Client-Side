@@ -13,6 +13,7 @@ import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
+import queryString from 'query-string';
 
 function GanttChart(props) {
   const input = useRef(null);
@@ -198,6 +199,8 @@ function GanttChart(props) {
     });
   }, [data]);
 
+  const user = useSelector(state => state.auth.currentUser);
+
   const openEditPoup = async (taskId, task) => {
     setModalTask(null);
     setIsShowEditPopup(true);
@@ -207,12 +210,44 @@ function GanttChart(props) {
       search: history.location.search + `&t=${taskId}`,
     });
 
-    const taskModal = await taskApi.getTaskById(taskId);
-    setModalTask({
-      ...taskModal.data,
-      filesCount: task.filesCount,
-      commentsCount: task.commentsCount,
-    });
+    const queryObj = queryString.parse(history.location.search);
+
+    let params = {};
+    if (props.isOfTeam) {
+      params = {
+        isOfTeam: true,
+        ownerId: props.ownerId,
+        boardId: queryObj.b,
+        taskId: taskId,
+        userRequest: user.id,
+      }
+    }
+    else {
+      params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryObj.b,
+        taskId: taskId,
+        userRequest: user.id,
+      }
+    }
+
+    taskApi.getTaskByBoard({ params }).then(res => {
+      setModalTask({
+        ...res.data,
+        filesCount: task.filesCount,
+        commentsCount: task.commentsCount,
+      });
+      console.log(res.data);
+    }).catch(err => {
+      history.push({
+        pathname: history.location.pathname,
+        search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      });
+      setIsShowEditPopup(false);
+    })
+
+    
   };
 
   function closeForm() {
