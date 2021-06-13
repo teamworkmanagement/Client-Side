@@ -109,8 +109,12 @@ function TaskEditModal(props) {
 
   const [listScores, setListScores] = useState([
     {
-      score: "1",
+      score: "0",
       active: true,
+    },
+    {
+      score: "1",
+      active: false,
     },
     {
       score: "2",
@@ -226,9 +230,7 @@ function TaskEditModal(props) {
           const findObj = ops.find((x) => x.value === props.data.userId);
           if (findObj) setCurrent(findObj);
         })
-        .catch((err) => { });
-
-     
+        .catch((err) => {});
     }
   }, [props.data]);
 
@@ -246,37 +248,59 @@ function TaskEditModal(props) {
       payload = {
         taskId: props.data.taskId,
         currentUserId: null,
-      }
-    }
-    else {
+      };
+    } else {
       payload = {
         taskId: props.data.taskId,
         currentUserId: current.value,
-      }
+      };
     }
 
-    taskApi.reAssignTask(payload).then(res => { }).catch(err => { })
+    taskApi
+      .reAssignTask(payload)
+      .then((res) => {})
+      .catch((err) => {});
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
     //setTriggerUpdateTask(triggerUpdateTask + 1);
     console.log(task);
     const { name, value } = obj;
-    const { taskId, taskDescription, taskThemeColor, taskStartDate, taskStatus, taskCompletedPercent, taskImageUrl, taskDeadline, taskPoint } = task;
-    const updateObj = { taskId, taskDescription, taskThemeColor, taskStartDate, taskStatus, taskCompletedPercent, taskImageUrl, taskDeadline, taskPoint };
+    const {
+      taskId,
+      taskDescription,
+      taskThemeColor,
+      taskStartDate,
+      taskStatus,
+      taskCompletedPercent,
+      taskImageUrl,
+      taskDeadline,
+      taskPoint,
+    } = task;
+    const updateObj = {
+      taskId,
+      taskDescription,
+      taskThemeColor,
+      taskStartDate,
+      taskStatus,
+      taskCompletedPercent,
+      taskImageUrl,
+      taskDeadline,
+      taskPoint,
+    };
     const newUpdateObj = { ...updateObj, [name]: value };
     console.log(newUpdateObj);
 
-    taskApi.updateTask(newUpdateObj)
-      .then(res => { })
-      .catch(err => { })
+    taskApi
+      .updateTask(newUpdateObj)
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   useEffect(() => {
     if (updateTaskRequest) {
-
     }
-  }, [updateTaskRequest])
+  }, [updateTaskRequest]);
   useEffect(() => {
     if (triggerUpdateTask < 0) return;
 
@@ -311,8 +335,8 @@ function TaskEditModal(props) {
   }
 
   const updateTaskFunc = (obj) => {
-    console.log('update :', task);
-  }
+    console.log("update :", task);
+  };
   function onSaveTaskName() {
     if (
       task.taskName === "" ||
@@ -324,8 +348,8 @@ function TaskEditModal(props) {
     }
 
     dispatchUpdateTask({
-      name: 'taskName',
-      value: task.taskName
+      name: "taskName",
+      value: task.taskName,
     });
     setTaskNameEditing(false);
   }
@@ -337,8 +361,8 @@ function TaskEditModal(props) {
     }
 
     dispatchUpdateTask({
-      name: 'taskDescription',
-      value: task.taskDescription
+      name: "taskDescription",
+      value: task.taskDescription,
     });
     setTaskDescriptionEditing(false);
   }
@@ -349,11 +373,11 @@ function TaskEditModal(props) {
 
     setTask({
       ...task,
-      taskDeadline: newDate
+      taskDeadline: newDate,
     });
     dispatchUpdateTask({
-      name: 'taskDeadline',
-      value: newDate
+      name: "taskDeadline",
+      value: newDate,
     });
   }
   function onChangeStartDate(e) {
@@ -362,11 +386,11 @@ function TaskEditModal(props) {
 
     setTask({
       ...task,
-      taskStartDate: newDate
+      taskStartDate: newDate,
     });
     dispatchUpdateTask({
-      name: 'taskStartDate',
-      value: newDate
+      name: "taskStartDate",
+      value: newDate,
     });
   }
 
@@ -383,16 +407,41 @@ function TaskEditModal(props) {
     }
   }
 
+  const TODO_COLOR = "#FF5454";
+  const DOING_COLOR = "#EE8434";
+  const DONE_COLOR = "#2ABB7D";
+  const TODO_BACKGROUNDCOLOR = "#FBEAEA";
+  const DOING_BACKGROUNDCOLOR = "#FEF5EE";
+  const DONE_BACKGROUNDCOLOR = "#ECF5EA";
+
+  function getStatusBackgroundColor() {
+    switch (task.taskStatus) {
+      case "todo":
+        return TODO_BACKGROUNDCOLOR;
+      case "doing":
+        return DOING_BACKGROUNDCOLOR;
+      default:
+        return DONE_BACKGROUNDCOLOR;
+    }
+  }
   function getStatusColor() {
     switch (task.taskStatus) {
       case "todo":
-        return "#DE4436";
+        return TODO_COLOR;
       case "doing":
-        return "#FFC542";
-      case "done":
-        return "#04D182";
+        return DOING_COLOR;
       default:
-        return "#DE4436";
+        return DONE_COLOR;
+    }
+  }
+  function getStatusColorFormText(status) {
+    switch (status) {
+      case "todo":
+        return TODO_COLOR;
+      case "doing":
+        return DOING_COLOR;
+      default:
+        return DONE_COLOR;
     }
   }
 
@@ -413,12 +462,12 @@ function TaskEditModal(props) {
 
     setTask({
       ...task,
-      taskStatus: status
+      taskStatus: status,
     });
     dispatchUpdateTask({
-      name: 'taskStatus',
-      value: status
-    })
+      name: "taskStatus",
+      value: status,
+    });
   }
 
   function onButtonThemeClicked(e) {
@@ -438,34 +487,34 @@ function TaskEditModal(props) {
     changeColor(colore.hex);
     setTask({
       ...task,
-      taskThemeColor: colore.hex
+      taskThemeColor: colore.hex,
     });
     dispatchUpdateTask({
-      name: 'taskThemeColor',
-      value: colore.hex
-    })
+      name: "taskThemeColor",
+      value: colore.hex,
+    });
   }
 
   function onDeleteThemeTask() {
     setTask({
       ...task,
-      taskThemeColor: ""
+      taskThemeColor: "",
     });
     dispatchUpdateTask({
-      name: 'taskThemeColor',
-      value: ""
-    })
+      name: "taskThemeColor",
+      value: "",
+    });
   }
 
   function handleUpdateTask(value) {
     setTask({
       ...task,
-      taskCompletedPercent: value
+      taskCompletedPercent: value,
     });
     dispatchUpdateTask({
-      name: 'taskCompletedPercent',
-      value: value
-    })
+      name: "taskCompletedPercent",
+      value: value,
+    });
   }
 
   function getColorFromValue() {
@@ -484,12 +533,12 @@ function TaskEditModal(props) {
   const onDeleteTaskAvatar = () => {
     setTask({
       ...task,
-      taskImageUrl: value
+      taskImageUrl: value,
     });
     dispatchUpdateTask({
-      name: 'taskImageUrl',
-      value: null
-    })
+      name: "taskImageUrl",
+      value: null,
+    });
   };
 
   const onPickImage = () => {
@@ -518,12 +567,12 @@ function TaskEditModal(props) {
             });
 
             dispatchUpdateTask({
-              name: 'taskImageUrl',
-              value: imageUrl
-            })
+              name: "taskImageUrl",
+              value: imageUrl,
+            });
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -535,7 +584,6 @@ function TaskEditModal(props) {
       setCmtLists([newComment].concat([...cmtLists]));
     }
   }, [newComment]);
-
 
   const onAddComment = (e) => {
     if (e.key === "Enter") {
@@ -572,7 +620,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
@@ -613,10 +661,10 @@ function TaskEditModal(props) {
                 setAttachments(attachmentsClone);
                 dispatchUpdateTask();
               })
-              .catch((err) => { });
+              .catch((err) => {});
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -641,7 +689,10 @@ function TaskEditModal(props) {
       return;
     }
 
-    taskApi.removeTask(task.taskId).then(res => { }).catch(err => { })
+    taskApi
+      .removeTask(task.taskId)
+      .then((res) => {})
+      .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
@@ -743,7 +794,9 @@ function TaskEditModal(props) {
     setInputValue(e);
   };
 
-  const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
+  const currentBoard = useSelector(
+    (state) => state.kanban.kanbanBoard.currentBoard
+  );
   const filterColors = async (inputValue) => {
     try {
       const params = {
@@ -761,7 +814,7 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -804,7 +857,11 @@ function TaskEditModal(props) {
 
               <div
                 className="task-status-label-header"
-                style={{ backgroundColor: getStatusColor() }}
+                style={{
+                  backgroundColor: getStatusBackgroundColor(),
+                  color: getStatusColor(),
+                  fontWeight: "bold",
+                }}
               >
                 {getStatusText(task.taskStatus)}
               </div>
@@ -814,7 +871,7 @@ function TaskEditModal(props) {
         <CModalBody>
           {props.data ? (
             <CRow>
-              <CCol className="col-9">
+              <CCol className="" lg="9" sm="12">
                 <div className="form-content">
                   <div className="title-label">
                     <CIcon name="cil-credit-card" />
@@ -881,177 +938,199 @@ function TaskEditModal(props) {
                   <CCollapse className="advanced-collapse" show={showDetail}>
                     <div className="infor-bar">
                       <CRow className="my-row">
-                        <CCol className="col-6 my-col left">
-                          {props.isOfTeam && <div className="assign-group item-group">
-                            <div className="assign-label label">
-                              <CIcon name="cil-user-follow" />
-                            Giao cho
-                          </div>
-                            {/*<div className="assigned-user-avatar">
-                            <img src={task.userAvatar} alt="" />
-                </div>*/}
+                        {props.isOfTeam && (
+                          <CCol className="col-12">
+                            <div className="assign-group item-group">
+                              <div className="assign-label label">
+                                <CIcon name="cil-user-follow" />
+                                Giao cho
+                              </div>
 
-                            {/*<UserSelector onSelectedUser={onSelectedUser} currentValue={task} />*/}
-                            <div style={{ width: "11rem" }}>
-                              <AsyncSelect
-                                value={isFocused ? null : current}
-                                onChange={onChange}
-                                options={options}
-                                placeholder="Chọn thành viên"
-                                loadOptions={loadOptions}
-                                defaultOptions
-                                onInputChange={handleInputChange}
-                                components={{
-                                  Option: CustomOption,
-                                  SingleValue: ValueOption,
-                                }}
-                                onFocus={() => {
-                                  setFocus(true);
-                                  setCurrent(null);
-                                }}
-                                onBlur={() => setFocus(false)}
-                                blurInputOnSelect={true}
-                              />
-                            </div>
-                          </div>}
-                          <div className="start-group item-group">
-                            <div className=" start-label label">
-                              <CIcon name="cil-clock" />
-                              Ngày bắt đầu
-                            </div>
-                            <div className="start-date">
-                              <CInput
-                                type="date"
-                                id="date-from"
-                                name="date-input"
-                                placeholder="date"
-                                value={moment(task.taskStartDate).format(
-                                  "YYYY-MM-DD"
-                                )}
-                                onChange={onChangeStartDate}
-                              />
-                            </div>
-                          </div>
-                          <div className="theme-group item-group">
-                            <div className="theme-label label">
-                              <CIcon name="cil-color-palette" />
-                              Màu chủ đề
-                            </div>
-                            <button
-                              className="theme-color toggle-color-picker"
-                              onBlur={onButtonThemeBlur}
-                              onClick={onButtonThemeClicked}
-                              style={{
-                                backgroundColor: task.taskThemeColor
-                                  ? task.taskThemeColor
-                                  : "#fff",
-                                border: task.taskThemeColor
-                                  ? "none"
-                                  : "1px solid gray",
-                              }}
-                            >
-                              {isShowColorPicker ? (
-                                <CirclePicker
-                                  color={finalColor}
-                                  colors={[
-                                    "#D63031",
-                                    "#FC5C65",
-                                    "#EE5A24",
-                                    "#FD9644",
-                                    "#FFC312",
-                                    "#F7B731",
-                                    "#26DE81",
-                                    "#2BCBBA",
-                                    "#45AAF2",
-                                    "#4B7BEC",
-                                    "#A55EEA",
-                                    "#E84393",
-                                  ]}
-                                  onChangeComplete={onChangeColorTask}
+                              <div style={{ width: "11rem" }}>
+                                <AsyncSelect
+                                  value={isFocused ? null : current}
+                                  onChange={onChange}
+                                  options={options}
+                                  placeholder="Chọn thành viên"
+                                  loadOptions={loadOptions}
+                                  defaultOptions
+                                  onInputChange={handleInputChange}
+                                  components={{
+                                    Option: CustomOption,
+                                    SingleValue: ValueOption,
+                                  }}
+                                  onFocus={() => {
+                                    setFocus(true);
+                                    setCurrent(null);
+                                  }}
+                                  onBlur={() => setFocus(false)}
+                                  blurInputOnSelect={true}
                                 />
-                              ) : null}
-                              {task.taskThemeColor && (
-                                <div
-                                  className="delete-theme-icon"
-                                  onClick={onDeleteThemeTask}
-                                >
-                                  <CIcon name="cil-x" />
-                                </div>
-                              )}
-                            </button>
-                          </div>
-                        </CCol>
-                        <CCol className="col-6 my-col right">
-                          <div className="hidden-group assign-group item-group">
-                            <div className="assign-label label">
-                              <CIcon name="cil-user-follow" />
-                              Giao cho
+                              </div>
                             </div>
-                            <div className="assigned-user-avatar">
-                              <img src={task.userAvatar} alt="" />
+                          </CCol>
+                        )}
+                        <CRow>
+                          <CCol lg="6" sm="6" xs="12">
+                            <div className="start-group item-group">
+                              <div className=" start-label label">
+                                <CIcon name="cil-clock" />
+                                Ngày bắt đầu
+                              </div>
+                              <div className="start-date">
+                                <CInput
+                                  type="date"
+                                  id="date-from"
+                                  name="date-input"
+                                  placeholder="date"
+                                  value={moment(task.taskStartDate).format(
+                                    "YYYY-MM-DD"
+                                  )}
+                                  onChange={onChangeStartDate}
+                                />
+                              </div>
                             </div>
-                          </div>
-                          <div className="due-group item-group">
-                            <div className=" due-label label">
-                              <CIcon name="cil-clock" />
-                              Hạn hoàn thành
+                          </CCol>
+                          <CCol lg="6" sm="6" xs="12">
+                            <div className="due-group item-group">
+                              <div className=" due-label label">
+                                <CIcon name="cil-clock" />
+                                Hạn hoàn thành
+                              </div>
+                              <div className=" due-date">
+                                <CInput
+                                  type="date"
+                                  id="date-from"
+                                  name="date-input"
+                                  placeholder="date"
+                                  value={moment(task.taskDeadline).format(
+                                    "YYYY-MM-DD"
+                                  )}
+                                  onChange={onChangeDeadline}
+                                />
+                              </div>
                             </div>
-                            <div className=" due-date">
-                              <CInput
-                                type="date"
-                                id="date-from"
-                                name="date-input"
-                                placeholder="date"
-                                value={moment(task.taskDeadline).format(
-                                  "YYYY-MM-DD"
+                          </CCol>
+                        </CRow>
+                        <CRow>
+                          <CCol lg="6" sm="6" xs="12">
+                            <div className="theme-group item-group">
+                              <div className="theme-label label">
+                                <CIcon name="cil-color-palette" />
+                                Màu chủ đề
+                              </div>
+                              <button
+                                className="theme-color toggle-color-picker"
+                                onBlur={onButtonThemeBlur}
+                                onClick={onButtonThemeClicked}
+                                style={{
+                                  backgroundColor: task.taskThemeColor
+                                    ? task.taskThemeColor
+                                    : "#fff",
+                                  border: task.taskThemeColor
+                                    ? "none"
+                                    : "1px solid gray",
+                                }}
+                              >
+                                {isShowColorPicker ? (
+                                  <CirclePicker
+                                    color={finalColor}
+                                    colors={[
+                                      "#D63031",
+                                      "#FC5C65",
+                                      "#EE5A24",
+                                      "#FD9644",
+                                      "#FFC312",
+                                      "#F7B731",
+                                      "#26DE81",
+                                      "#2BCBBA",
+                                      "#45AAF2",
+                                      "#4B7BEC",
+                                      "#A55EEA",
+                                      "#E84393",
+                                    ]}
+                                    onChangeComplete={onChangeColorTask}
+                                  />
+                                ) : null}
+                                {task.taskThemeColor && (
+                                  <div
+                                    className="delete-theme-icon"
+                                    onClick={onDeleteThemeTask}
+                                  >
+                                    <CIcon name="cil-x" />
+                                  </div>
                                 )}
-                                onChange={onChangeDeadline}
-                              />
+                              </button>
                             </div>
-                          </div>
-                          <div className="status-group item-group">
-                            <div className="status-label label">
-                              <CIcon name="cil-task" />
-                              Trạng thái
-                            </div>
-                            <div className="task-status-dropdown status-infor">
-                              <CDropdown>
-                                <CDropdownToggle
-                                  id="dropdownMenuButton"
-                                  className="my-btn"
-                                  style={{ backgroundColor: getStatusColor() }}
-                                >
-                                  {getStatusText()}
-                                </CDropdownToggle>
-                                <CDropdownMenu
-                                  aria-labelledby="dropdownMenuButton"
-                                  placement="bottom-end"
-                                  onClick={onChooseStatus}
-                                >
-                                  {task.taskStatus !== "todo" && (
-                                    <CDropdownItem className="todo-status">
-                                      <div className="color-dot"></div>
-                                      Đang chờ
-                                    </CDropdownItem>
-                                  )}
+                          </CCol>
+                          <CCol lg="6" sm="6" xs="12">
+                            <div className="status-group item-group">
+                              <div className="status-label label">
+                                <CIcon name="cil-task" />
+                                Trạng thái
+                              </div>
+                              <div className="task-status-dropdown status-infor">
+                                <CDropdown>
+                                  <CDropdownToggle
+                                    id="dropdownMenuButton"
+                                    className="my-btn"
+                                    style={{
+                                      backgroundColor:
+                                        getStatusBackgroundColor(),
+                                      color: getStatusColor(),
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {getStatusText()}
+                                  </CDropdownToggle>
+                                  <CDropdownMenu
+                                    aria-labelledby="dropdownMenuButton"
+                                    placement="bottom-end"
+                                    onClick={onChooseStatus}
+                                  >
+                                    {task.taskStatus !== "todo" && (
+                                      <CDropdownItem className="todo-status">
+                                        <div
+                                          className="color-dot"
+                                          style={{
+                                            backgroundColor:
+                                              getStatusColorFormText("todo"),
+                                          }}
+                                        ></div>
+                                        Đang chờ
+                                      </CDropdownItem>
+                                    )}
 
-                                  {task.taskStatus !== "doing" && (
-                                    <CDropdownItem className="doing-status">
-                                      <div className="color-dot"></div>
-                                      Đang thực hiện
-                                    </CDropdownItem>
-                                  )}
-                                  {task.taskStatus !== "done" && (
-                                    <CDropdownItem className="done-status">
-                                      <div className="color-dot"></div>
-                                      Hoàn thành
-                                    </CDropdownItem>
-                                  )}
-                                </CDropdownMenu>
-                              </CDropdown>
+                                    {task.taskStatus !== "doing" && (
+                                      <CDropdownItem className="doing-status">
+                                        <div
+                                          className="color-dot"
+                                          style={{
+                                            backgroundColor:
+                                              getStatusColorFormText("doing"),
+                                          }}
+                                        ></div>
+                                        Đang thực hiện
+                                      </CDropdownItem>
+                                    )}
+                                    {task.taskStatus !== "done" && (
+                                      <CDropdownItem className="done-status">
+                                        <div
+                                          className="color-dot"
+                                          style={{
+                                            backgroundColor:
+                                              getStatusColorFormText("done"),
+                                          }}
+                                        ></div>
+                                        Hoàn thành
+                                      </CDropdownItem>
+                                    )}
+                                  </CDropdownMenu>
+                                </CDropdown>
+                              </div>
                             </div>
-                          </div>
-                        </CCol>
+                          </CCol>
+                        </CRow>
                       </CRow>
 
                       <div className="progress-group item-group">
@@ -1060,10 +1139,6 @@ function TaskEditModal(props) {
                           Tiến độ
                         </div>
 
-                        {/* <ProgressSlider
-                      task={props.data}
-                      value={props.data.taskCompletedPercent}
-                    /> */}
                         <div className="slider-container">
                           <Range
                             className="range"
@@ -1245,7 +1320,7 @@ function TaskEditModal(props) {
                   </div>
                 </div>
               </CCol>
-              <CCol className="col-3">
+              <CCol className="" lg="3" sm="12">
                 <div className="form-actions">
                   <Popover
                     className="lists-select-popover"

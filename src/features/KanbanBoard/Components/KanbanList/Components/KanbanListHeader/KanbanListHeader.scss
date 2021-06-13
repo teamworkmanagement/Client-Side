@@ -15,8 +15,9 @@
             margin-left: 0.5rem;
             width: 1rem;
             flex-grow: 1;
+            font-weight: bold;
+            font-size: 110%;
             .title {
-                font-weight: 500;
                 margin-right: 0.5rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -29,8 +30,12 @@
                 //padding: 0.1rem 0rem 0.1rem 0rem;
                 margin-right: 0.5rem;
             }
-            .cards-count {
-            }
+        }
+        .cards-count {
+            border: 1px solid #a8a8a8;
+            border-radius: 5px;
+            padding: 0.2rem 0.5rem;
+            margin-right: -1rem;
         }
         .lane-actions {
             margin-left: 0.5rem;

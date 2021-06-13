@@ -45,9 +45,8 @@ function KanbanListHeader(props) {
         <div className="normal-header">
           <div className="lane-title">
             <div className="title">{headerName}</div>
-            <div className="divider"></div>
-            <div className="cards-count">{props.cardCount}</div>
           </div>
+          <div className="cards-count">{props.cardCount}</div>
           <div className="header-actions-dropdown">
             <CDropdown>
               <CDropdownToggle id="dropdownMenuButton" caret>

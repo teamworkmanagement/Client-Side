@@ -130,7 +130,7 @@ function DashBoardPage(props) {
     }
     return [
       {
-        label: "Fix dashboard layout",
+        label: "Công việc cá nhân",
         backgroundColor: hexToRgba(brandInfo, 10),
         borderColor: brandInfo,
         pointHoverBackgroundColor: brandInfo,
@@ -138,22 +138,22 @@ function DashBoardPage(props) {
         data: data1,
       },
       {
-        label: "Phân quyền leader nhóm",
+        label: "Công việc nhóm",
         backgroundColor: hexToRgba(brandSuccess, 20),
         borderColor: brandSuccess,
         pointHoverBackgroundColor: brandSuccess,
         borderWidth: 2,
         data: data2,
       },
-      {
-        label: "Điền form khảo sát",
-        backgroundColor: hexToRgba(brandDanger, 10),
-        borderColor: brandDanger,
-        pointHoverBackgroundColor: brandDanger,
-        borderWidth: 1,
-        borderDash: [8, 5],
-        data: data3,
-      },
+      // {
+      //   label: "Điền form khảo sát",
+      //   backgroundColor: hexToRgba(brandDanger, 10),
+      //   borderColor: brandDanger,
+      //   pointHoverBackgroundColor: brandDanger,
+      //   borderWidth: 1,
+      //   borderDash: [8, 5],
+      //   data: data3,
+      // },
     ];
   })();
   const defaultOptions = (() => {

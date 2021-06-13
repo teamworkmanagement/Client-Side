@@ -8,9 +8,10 @@ import taskApi from "src/api/taskApi";
 import TaskEditModal from "./Components/TaskEditModal/TaskEditModal";
 import "./KanbanCard.scss";
 import { useHistory, useLocation } from "react-router";
-import queryString from 'query-string';
+import queryString from "query-string";
 import { setTaskSelected } from "src/features/KanbanBoard/kanbanSlice";
 import { useDispatch } from "react-redux";
+import { HiOutlineChat } from "react-icons/hi";
 
 KanbanCard.propTypes = {};
 
@@ -44,13 +45,18 @@ function KanbanCard(props) {
     return "";
   }*/
 
+  const TODO_COLOR = "#FF5454";
+  const DOING_COLOR = "#EE8434";
+  const DONE_COLOR = "#2ABB7D";
+  const TODO_BACKGROUNDCOLOR = "#FBEAEA";
+  const DOING_BACKGROUNDCOLOR = "#FEF5EE";
+  const DONE_BACKGROUNDCOLOR = "#ECF5EA";
 
   const history = useHistory();
 
   const location = useLocation();
   const dispatch = useDispatch();
   const queryParams = queryString.parse(location.search);
-
 
   /*const firstTask = useSelector(state => state.kanban.taskSelected);
   useEffect(() => {
@@ -74,10 +80,9 @@ function KanbanCard(props) {
       openEditPopup(queryObj.t);
       console.log('call api');
     }*/
-  }, [history.location.search])
+  }, [history.location.search]);
 
-
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   async function openEditPopup(taskId) {
     //setModaTask(null);
@@ -113,35 +118,18 @@ function KanbanCard(props) {
     }
   }
 
-  function getStatusColor(status) {
-    switch (status) {
-      case "todo":
-        return {
-          backgroundColor: "#DE4436",
-        };
-      case "doing":
-        return {
-          backgroundColor: "#FFC542",
-        };
-      default:
-        return {
-          backgroundColor: "#04D182",
-        };
-    }
-  }
-
-  function getProgressColor(progress) {
-    if (progress < 26) {
-      return "danger";
-    }
-    if (progress < 51) {
-      return "warning";
-    }
-    if (progress < 76) {
-      return "info";
-    }
-    return "success";
-  }
+  // function getProgressColor(progress) {
+  //   if (progress < 26) {
+  //     return "danger";
+  //   }
+  //   if (progress < 51) {
+  //     return "warning";
+  //   }
+  //   if (progress < 76) {
+  //     return "info";
+  //   }
+  //   return "success";
+  // }
 
   /*function getCardImage() {
     //debugger;
@@ -172,8 +160,69 @@ function KanbanCard(props) {
 
     history.push({
       pathname: history.location.pathname,
-      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      search: history.location.search.substring(
+        0,
+        history.location.search.lastIndexOf("&")
+      ),
     });
+  }
+
+  function getStatusBackgroundColor() {
+    switch (props.data.taskStatus) {
+      case "todo":
+        return TODO_BACKGROUNDCOLOR;
+      case "doing":
+        return DOING_BACKGROUNDCOLOR;
+      default:
+        return DONE_BACKGROUNDCOLOR;
+    }
+  }
+  function getStatusColor() {
+    switch (props.data.taskStatus) {
+      case "todo":
+        return TODO_COLOR;
+      case "doing":
+        return DOING_COLOR;
+      default:
+        return DONE_COLOR;
+    }
+  }
+  function getProgressBackgroundColor(progress) {
+    if (progress < 26) {
+      return TODO_BACKGROUNDCOLOR;
+    }
+    if (progress < 51) {
+      return "#FDF2DF";
+    }
+    if (progress < 76) {
+      return "#D5E9F7";
+    }
+    return "#E4F8F3";
+  }
+
+  function getProgressColor(progress) {
+    if (progress < 26) {
+      return TODO_COLOR;
+    }
+    if (progress < 51) {
+      return "#F9BC60";
+    }
+    if (progress < 76) {
+      return "#2F93D6";
+    }
+    return "#28C397";
+  }
+  function getProgressClass(progress) {
+    if (progress < 26) {
+      return "progress-25";
+    }
+    if (progress < 51) {
+      return "progress-50";
+    }
+    if (progress < 76) {
+      return "progress-75";
+    }
+    return "";
   }
 
   return (
@@ -189,8 +238,6 @@ function KanbanCard(props) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          
-
           <div
             className="card-component"
             style={{
@@ -207,64 +254,75 @@ function KanbanCard(props) {
               </div>
             )}
 
-            <div className="card-header">
-              <div className="title">{props.data.taskName}</div>
-            </div>
-            <div className="card-labels">
-              {props.data.taskDeadline && (
-                <div className="deadline">
-                  <div className="deadline-icon">
-                    <CIcon name="cil-calendar" />
-                  </div>
-                  <div className="date">
-                    {removeYearOfDate(props.data.taskDeadline)}
-                  </div>
-                </div>
-              )}
-              <div
-                style={getStatusColor(props.data.taskStatus)}
-                className="card-status"
-              >
-                {getStatusText(props.data.taskStatus)}
+            <div className="card-content">
+              <div className="card-header">
+                <div className="title">{props.data.taskName}</div>
               </div>
-            </div>
-            <div className="card-infor">
-              <div className="infor-group">
-                {props.data.commentsCount > 0 && (
-                  <div className="comment-infor">
-                    <div className="comment-icon">
-                      <CIcon name="cil-speech" />
+              <div className="card-labels">
+                {props.data.taskDeadline && (
+                  <div className="deadline">
+                    <div className="deadline-icon">
+                      <CIcon name="cil-calendar" />
                     </div>
-                    <div className="comment-count">
-                      {props.data.commentsCount}
+                    <div className="date">
+                      {removeYearOfDate(props.data.taskDeadline)}
                     </div>
                   </div>
                 )}
-                {props.data.filesCount > 0 && (
-                  <div className="attachment-infor">
-                    <div className="attachment-icon">
-                      <CIcon name="cil-paperclip" />
+                <div
+                  style={{
+                    backgroundColor: getStatusBackgroundColor(),
+                    color: getStatusColor(),
+                  }}
+                  className="card-status"
+                >
+                  {getStatusText(props.data.taskStatus)}
+                </div>
+              </div>
+              <div className="card-infor">
+                <div className="infor-group">
+                  {props.data.commentsCount > 0 && (
+                    <div className="comment-infor">
+                      <HiOutlineChat className="comment-icon" />
+                      <div className="comment-count">
+                        {props.data.commentsCount}
+                      </div>
                     </div>
-                    <div className="attachment-count">
-                      {props.data.filesCount}
+                  )}
+                  {props.data.filesCount > 0 && (
+                    <div className="attachment-infor">
+                      <div className="attachment-icon">
+                        <CIcon name="cil-paperclip" />
+                      </div>
+                      <div className="attachment-count">
+                        {props.data.filesCount}
+                      </div>
                     </div>
+                  )}
+                </div>
+                {props.data.userAvatar && (
+                  <div className="user-assign-avatar">
+                    <img alt="avatar" src={props.data.userAvatar} />
                   </div>
                 )}
               </div>
-              {props.data.userAvatar && (
-                <div className="user-assign-avatar">
-                  <img alt="avatar" src={props.data.userAvatar} />
+              <div className="card-progress">
+                <CProgress
+                  className={`${getProgressClass(
+                    props.data.taskCompletedPercent
+                  )}`}
+                  color={getProgressColor(props.data.taskCompletedPercent)}
+                  style={{
+                    background: getProgressBackgroundColor(
+                      props.data.taskCompletedPercent
+                    ),
+                  }}
+                  //animated
+                  value={props.data.taskCompletedPercent + 2}
+                />
+                <div className="progress-text">
+                  {props.data.taskCompletedPercent}%
                 </div>
-              )}
-            </div>
-            <div className="card-progress">
-              <CProgress
-                color={getProgressColor(props.data.taskCompletedPercent)}
-                animated
-                value={props.data.taskCompletedPercent + 2}
-              />
-              <div className="progress-text">
-                {props.data.taskCompletedPercent}%
               </div>
             </div>
           </div>

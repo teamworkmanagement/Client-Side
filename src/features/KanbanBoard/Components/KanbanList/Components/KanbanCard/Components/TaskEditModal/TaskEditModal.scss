@@ -128,8 +128,12 @@
                 //padding: 0rem 1rem;
                 padding: 0;
                 //flex-wrap: wrap;
+                .col {
+                    padding: 0;
+                }
                 .my-row {
                     display: flex;
+
                     .my-col {
                         display: flex;
                         flex-direction: column;
@@ -852,6 +856,7 @@
     cursor: pointer;
     justify-content: flex-end;
     align-items: center;
+    margin-bottom: 1.5rem;
     &:hover {
         font-weight: bold;
     }

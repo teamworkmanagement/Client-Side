@@ -21,12 +21,12 @@ import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
 import kanbanApi from "src/api/kanbanApi";
 import { useHistory } from "react-router";
 import taskApi from "src/api/taskApi";
-import queryString from 'query-string';
+import queryString from "query-string";
+import { BsPlusSquare } from "react-icons/bs";
 
 KanbanList.propTypes = {};
 
 function KanbanList(props) {
-
   const dispatch = useDispatch();
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const [showAddCard, setShowAddCard] = useState(false);
@@ -42,14 +42,17 @@ function KanbanList(props) {
     const params = {
       KanbanListId: props.data.kanbanListId,
       KanbanListBoardBelongedId: props.data.kanbanListBoardBelongedId,
-    }
-    kanbanApi.removeKanbanList({
-      params
-    }).then(res => { }).catch(err => { })
-  }
+    };
+    kanbanApi
+      .removeKanbanList({
+        params,
+      })
+      .then((res) => {})
+      .catch((err) => {});
+  };
 
   const history = useHistory();
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
   useEffect(() => {
     /*const queryObj = queryString.parse(history.location.search);
 
@@ -78,11 +81,13 @@ function KanbanList(props) {
     }).catch(err => {
 
     });*/
-
-
-  }, [history.location.search])
+  }, [history.location.search]);
   return (
-    <Draggable draggableId={props.data.kanbanListId} isDragDisabled={props.data.kanbanListOrderInBoard === -999999} index={props.index}>
+    <Draggable
+      draggableId={props.data.kanbanListId}
+      isDragDisabled={props.data.kanbanListOrderInBoard === -999999}
+      index={props.index}
+    >
       {(provided) => (
         <div
           className="kanbanlist-container"
@@ -125,8 +130,10 @@ function KanbanList(props) {
             className="kanbanlist-footer-container"
             onClick={() => setShowAddCard(true)}
           >
-            <CIcon name="cil-plus" />
-            Thêm thẻ
+            <div className="btn-add-card">
+              <BsPlusSquare className="icon-plus" />
+              Thêm thẻ
+            </div>
           </div>
           <CreateCardModal
             showAddCard={showAddCard}
