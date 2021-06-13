@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./TaskListItem.scss";
 import CIcon from "@coreui/icons-react";
@@ -142,6 +142,45 @@ function TaskListItem(props) {
       setIsShowEditPopup(false);
     })
   };
+
+
+  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+
+  useEffect(() => {
+    console.log("realtime", updateTask);
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.t) return;
+
+    if (updateTask && updateTask.taskId === queryObj.t && updateTask.taskId === props.data.taskId) {
+
+      console.log("realtime");
+
+      let params = {};
+      if (props.isOfTeam) {
+        params = {
+          isOfTeam: true,
+          ownerId: props.ownerId,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId,
+          userRequest: user.id,
+        }
+      }
+      else {
+        params = {
+          isOfTeam: false,
+          ownerId: user.id,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId,
+          userRequest: user.id,
+        }
+      }
+      taskApi.getTaskByBoard({ params }).then(res => {
+        setModaTask(res.data);
+      }).catch(err => {
+
+      })
+    }
+  }, [updateTask])
 
   const onRemoveTask = () => {
 
