@@ -107,8 +107,12 @@ function TaskEditModal(props) {
 
   const [listScores, setListScores] = useState([
     {
+      score: "0",
+      active: false,
+    },
+    {
       score: "1",
-      active: true,
+      active: false,
     },
     {
       score: "2",
@@ -238,6 +242,35 @@ function TaskEditModal(props) {
       };
 
       setKanbanLocal(localClone);
+
+
+      console.log(props.data.taskPoint)
+      if (props.data.taskPoint !== undefined && props.data.taskPoint !== null) {
+        const indexScore = listScores.findIndex(x => x.score == props.data.taskPoint);
+        //set active cho list đang chứa task này
+
+        const scoreClone = [...listScores];
+
+        console.log('cloneeeeee: ', scoreClone)
+        console.log('index lafL : ', indexScore)
+
+        for (let i = 0; i < scoreClone.length; i++) {
+          scoreClone[i] = {
+            ...scoreClone[i],
+            active: false,
+          };
+
+          if (i === indexScore) {
+            scoreClone[i] = {
+              ...scoreClone[i],
+              active: true,
+            };
+          }
+        }
+
+        setListScores(scoreClone);
+      }
+
     }
   }, [props.data]);
 
@@ -736,6 +769,7 @@ function TaskEditModal(props) {
   }
 
   function selectScore(index) {
+    console.log('selected');
     var cloneLists = [...listScores];
     for (let i = 0; i < cloneLists.length; i++) {
       cloneLists[i] = {
@@ -750,6 +784,16 @@ function TaskEditModal(props) {
       }
     }
     setListScores(cloneLists);
+
+    setTask({
+      ...task,
+      taskPoint: index + ""
+    });
+    
+    dispatchUpdateTask({
+      name: 'taskPoint',
+      value: index
+    });
   }
 
   function renderContentScore() {
