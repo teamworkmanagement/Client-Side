@@ -14,7 +14,8 @@ import moment from "moment";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import taskApi from "src/api/taskApi";
 import { useHistory } from "react-router";
-import queryString from 'query-string';
+import queryString from "query-string";
+import { AiOutlineDelete } from "react-icons/ai";
 
 TaskListItem.propTypes = {};
 
@@ -35,30 +36,76 @@ function TaskListItem(props) {
 
     history.push({
       pathname: history.location.pathname,
-      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      search: history.location.search.substring(
+        0,
+        history.location.search.lastIndexOf("&")
+      ),
     });
   }
 
+  const TODO_COLOR = "#FF5454";
+  const DOING_COLOR = "#EE8434";
+  const DONE_COLOR = "#2ABB7D";
+  const TODO_BACKGROUNDCOLOR = "#FBEAEA";
+  const DOING_BACKGROUNDCOLOR = "#FEF5EE";
+  const DONE_BACKGROUNDCOLOR = "#ECF5EA";
 
+  function getStatusBackgroundColor() {
+    switch (props.data.taskStatus) {
+      case "todo":
+        return TODO_BACKGROUNDCOLOR;
+      case "doing":
+        return DOING_BACKGROUNDCOLOR;
+      default:
+        return DONE_BACKGROUNDCOLOR;
+    }
+  }
   function getStatusColor(status) {
     switch (status) {
       case "todo":
-        return {
-          backgroundColor: "#DE4436",
-        };
+        return TODO_COLOR;
       case "doing":
-        return {
-          backgroundColor: "#FFC542",
-        };
-      case "done":
-        return {
-          backgroundColor: "#04D182",
-        };
+        return DOING_COLOR;
       default:
-        return {
-          backgroundColor: "#DE4436",
-        };
+        return DONE_COLOR;
     }
+  }
+  function getProgressBackgroundColor(progress) {
+    if (progress < 26) {
+      return TODO_BACKGROUNDCOLOR;
+    }
+    if (progress < 51) {
+      return "#FDF2DF";
+    }
+    if (progress < 76) {
+      return "#D5E9F7";
+    }
+    return "#E4F8F3";
+  }
+
+  function getProgressColor(progress) {
+    if (progress < 26) {
+      return TODO_COLOR;
+    }
+    if (progress < 51) {
+      return "#F9BC60";
+    }
+    if (progress < 76) {
+      return "#2F93D6";
+    }
+    return "#28C397";
+  }
+  function getProgressClass(progress) {
+    if (progress < 26) {
+      return "progress-25";
+    }
+    if (progress < 51) {
+      return "progress-50";
+    }
+    if (progress < 76) {
+      return "progress-75";
+    }
+    return "";
   }
 
   function getStatusText(status) {
@@ -94,7 +141,7 @@ function TaskListItem(props) {
     return "Trễ " + -spaceTime + " ngày";
   }
 
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   const openEditPoup = async () => {
     setModaTask(null);
@@ -115,44 +162,53 @@ function TaskListItem(props) {
         boardId: queryObj.b,
         taskId: props.data.taskId,
         userRequest: user.id,
-      }
-    }
-    else {
+      };
+    } else {
       params = {
         isOfTeam: false,
         ownerId: user.id,
         boardId: queryObj.b,
         taskId: props.data.taskId,
         userRequest: user.id,
-      }
+      };
     }
 
-    taskApi.getTaskByBoard({ params }).then(res => {
-      setModaTask({
-        ...res.data,
-        filesCount: props.data.filesCount,
-        commentsCount: props.data.commentsCount,
+    taskApi
+      .getTaskByBoard({ params })
+      .then((res) => {
+        setModaTask({
+          ...res.data,
+          filesCount: props.data.filesCount,
+          commentsCount: props.data.commentsCount,
+        });
+        console.log(res.data);
+      })
+      .catch((err) => {
+        history.push({
+          pathname: history.location.pathname,
+          search: history.location.search.substring(
+            0,
+            history.location.search.lastIndexOf("&")
+          ),
+        });
+        setIsShowEditPopup(false);
       });
-      console.log(res.data);
-    }).catch(err => {
-      history.push({
-        pathname: history.location.pathname,
-        search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
-      });
-      setIsShowEditPopup(false);
-    })
   };
 
-
-  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+  const updateTask = useSelector(
+    (state) => state.kanban.signalrData.updateTask
+  );
 
   useEffect(() => {
     console.log("realtime", updateTask);
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
 
-    if (updateTask && updateTask.taskId === queryObj.t && updateTask.taskId === props.data.taskId) {
-
+    if (
+      updateTask &&
+      updateTask.taskId === queryObj.t &&
+      updateTask.taskId === props.data.taskId
+    ) {
       console.log("realtime");
 
       let params = {};
@@ -163,28 +219,26 @@ function TaskListItem(props) {
           boardId: queryObj.b,
           taskId: updateTask.taskId,
           userRequest: user.id,
-        }
-      }
-      else {
+        };
+      } else {
         params = {
           isOfTeam: false,
           ownerId: user.id,
           boardId: queryObj.b,
           taskId: updateTask.taskId,
           userRequest: user.id,
-        }
+        };
       }
-      taskApi.getTaskByBoard({ params }).then(res => {
-        setModaTask(res.data);
-      }).catch(err => {
-
-      })
+      taskApi
+        .getTaskByBoard({ params })
+        .then((res) => {
+          setModaTask(res.data);
+        })
+        .catch((err) => {});
     }
-  }, [updateTask])
+  }, [updateTask]);
 
   const onRemoveTask = () => {
-
-
     if (props.closePopup) {
       props.closePopup();
     }
@@ -206,7 +260,7 @@ function TaskListItem(props) {
             <div
               className="attachment infor"
               style={{ display: props.data.filesCount === 0 ? "none" : "flex" }}
-            // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+              // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
             >
               <CIcon name="cil-paperclip" className=""></CIcon>
               <div className="">{props.data.filesCount} </div>
@@ -224,19 +278,33 @@ function TaskListItem(props) {
 
             <div className="progress infor">
               <CProgress
-                className="progress-bar"
+                className={` ${getProgressClass(
+                  props.data.taskCompletedPercent
+                )}`}
                 color={getProgressColor(props.data.taskCompletedPercent)}
+                style={{
+                  background: getProgressBackgroundColor(
+                    props.data.taskCompletedPercent
+                  ),
+                }}
                 value={props.data.taskCompletedPercent + 2}
               />
               <div className="progress-text">
                 {props.data.taskCompletedPercent}%
               </div>
             </div>
-            <div className="assigned-user infor">
-              <img alt="" className="avatar" src={props.data.userAvatar} />
-            </div>
+            {props.data.userId && (
+              <div className="assigned-user infor">
+                <img alt="" className="avatar" src={props.data.userAvatar} />
+              </div>
+            )}
             <div
-              style={getStatusColor(props.data.taskStatus)}
+              style={{
+                color: getStatusColor(props.data.taskStatus),
+                backgroundColor: getStatusBackgroundColor(
+                  props.data.taskStatus
+                ),
+              }}
               className="infor status"
             >
               {getStatusText(props.data.taskStatus)}
@@ -261,7 +329,7 @@ function TaskListItem(props) {
                   Chỉnh sửa
                 </CDropdownItem>
                 <CDropdownItem className="last" onClick={onRemoveTask}>
-                  <CIcon name="cil-trash" className="icon-delete" />
+                  <AiOutlineDelete className="icon-delete" />
                   Xóa
                 </CDropdownItem>
               </CDropdownMenu>

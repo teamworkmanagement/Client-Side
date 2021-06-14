@@ -283,7 +283,7 @@ $baseTransition: all 0.3s;
 }
 
 .gantt_task_line.gantt_bar_task {
-    @include GanttTaskAppear;
+    //@include GanttTaskAppear;
 }
 
 .gantt-container {
@@ -314,6 +314,35 @@ $baseTransition: all 0.3s;
                 white-space: pre;
             }
         }
+        .gantt_cell:first-child {
+            flex-grow: 1;
+            padding-left: 0;
+            .gantt_tree_content {
+                .column-content {
+                    display: flex;
+                    align-items: center;
+                    .icon-container {
+                        margin-right: 0.5rem;
+                        svg {
+                            width: 1.5rem;
+                            height: 1.5rem;
+                            margin-top: -0.25rem;
+                            &.not-show {
+                                visibility: hidden;
+                            }
+                        }
+                    }
+                    .column-name {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        font-weight: bold;
+                        font-size: 110%;
+                        color: #3e79f7;
+                    }
+                }
+            }
+        }
         .gantt_cell.gantt_last_cell {
             width: fit-content !important;
             .assigned-user-avatar {
@@ -332,44 +361,6 @@ $baseTransition: all 0.3s;
     .gantt_task_row.gantt_selected {
         background-color: #ebf1fe;
     }
-    // .nodata-image {
-    //     margin-top: 2rem;
-    //     display: flex;
-    //     flex-direction: column;
-    //     justify-content: center;
-    //     align-items: center;
-    //     height: fit-content;
-    //     .icon-group {
-    //         display: flex;
-    //         flex-direction: column;
-    //         align-items: flex-end;
-    //         .icon-task {
-    //             width: 5rem;
-    //             height: 5rem;
-    //             color: $subTextColor;
-    //         }
-    //         .icon-search {
-    //             width: 2.5rem;
-    //             height: 2.5rem;
-    //             color: $subTextColor;
-    //             margin-top: -1.5rem;
-    //             margin-right: -1.5rem;
-    //         }
-    //     }
-    //     .noti-infor {
-    //         font-size: 130%;
-    //         text-align: center;
-    //         font-weight: bold;
-    //         color: $subTextColor;
-    //     }
-    //     .create-btn {
-    //         @include NormalButtonStyle;
-    //         font-size: 120%;
-    //         padding: 0.5rem 1.2rem;
-    //         margin-top: 0.5rem;
-    //         font-weight: bold;
-    //     }
-    // }
 }
 
 .gantt_task_line.gantt_bar_task.gantt_task_inline_color {
@@ -388,7 +379,71 @@ div.gantt_scale_line:last-child:after {
     border-radius: 0.625rem;
 }
 .gantt_task_line.gantt_bar_task {
-    border-radius: 0.625rem;
+    border-radius: 500rem;
+    .gantt_task_content {
+        //font-weight: bold !important;
+        //text-shadow: 1px 1px 5px white;
+        display: flex;
+        color: white !important;
+    }
+    .task-content {
+        display: flex;
+        align-items: center;
+        color: white;
+        width: 100%;
+        .image-container {
+            border-radius: 500rem;
+            background-color: white;
+            padding: 0.1rem;
+            width: 2.2rem;
+            height: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            margin-left: -0.5rem;
+            img {
+                height: 100%;
+                width: 100%;
+                border-radius: 500rem;
+            }
+        }
+        .task-name {
+            font-size: 110%;
+            width: 1rem;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: start;
+        }
+    }
+}
+
+.gantt_side_content.gantt_left {
+    padding-right: 0.6rem;
+    .image-leftside {
+        width: 1.6rem;
+        height: 1.6rem;
+        border-radius: 500rem;
+    }
+}
+
+.gantt_grid_head_cell.gantt_grid_head_text {
+    font-weight: bold !important;
+}
+.gantt_scale_cell {
+    font-weight: bold !important;
+}
+.gantt_cell.gantt_cell_tree {
+    font-weight: bold;
+    color: #3e79f7 !important;
+}
+
+.percent-in-column {
+    font-weight: bold;
+    font-size: 85%;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .gantt-container::-webkit-scrollbar {
