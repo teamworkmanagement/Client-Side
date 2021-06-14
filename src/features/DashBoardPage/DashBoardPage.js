@@ -118,108 +118,42 @@ function DashBoardPage(props) {
 
   ]);
 
-  /*const defaultDatasets = [
-    {
-      label: "Công việc cá nhân",
-      backgroundColor: hexToRgba(brandInfo, 10),
-      borderColor: brandInfo,
-      pointHoverBackgroundColor: brandInfo,
-      borderWidth: 2,
-      data: [10, 9, 4, 1, 44, 90, 100],
+  const [defaultOptions, setDefaultOptions] = useState({
+    maintainAspectRatio: false,
+    legend: {
+      display: true,
     },
-    {
-      label: "Công việc nhóm",
-      backgroundColor: hexToRgba(brandSuccess, 20),
-      borderColor: brandSuccess,
-      pointHoverBackgroundColor: brandSuccess,
-      borderWidth: 2,
-      data: [2, 9, 8, 11, 30, 98, 30],
-    }
-  ]*/
-  /*const defaultDatasets = (() => {
-    let elements = 7;
-    switch (progressTimeMode) {
-      case 2:
-        elements = 30;
-        break;
-      default:
-        elements = 12;
-    }
-
-    const data1 = [];
-    const data2 = [];
-    const data3 = [];
-    for (let i = 0; i <= elements; i++) {
-      data1.push(random(50, 200));
-      data2.push(random(80, 100));
-      data3.push(random(20, 90));
-    }
-    return [
-      {
-        label: "Công việc cá nhân",
-        backgroundColor: hexToRgba(brandInfo, 10),
-        borderColor: brandInfo,
-        pointHoverBackgroundColor: brandInfo,
-        borderWidth: 2,
-        data: data1,
-      },
-      {
-        label: "Công việc nhóm",
-        backgroundColor: hexToRgba(brandSuccess, 20),
-        borderColor: brandSuccess,
-        pointHoverBackgroundColor: brandSuccess,
-        borderWidth: 2,
-        data: data2,
-      },
-      // {
-      //   label: "Điền form khảo sát",
-      //   backgroundColor: hexToRgba(brandDanger, 10),
-      //   borderColor: brandDanger,
-      //   pointHoverBackgroundColor: brandDanger,
-      //   borderWidth: 1,
-      //   borderDash: [8, 5],
-      //   data: data3,
-      // },
-    ];
-  })();*/
-  const defaultOptions = (() => {
-    return {
-      maintainAspectRatio: false,
-      legend: {
-        display: true,
-      },
-      scales: {
-        xAxes: [
-          {
-            gridLines: {
-              drawOnChartArea: true,
-            },
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            drawOnChartArea: true,
           },
-        ],
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              maxTicksLimit: 5,
-              stepSize: Math.ceil(10 / 5),
-              max: 10,
-            },
-            gridLines: {
-              display: true,
-            },
-          },
-        ],
-      },
-      elements: {
-        point: {
-          radius: 0,
-          hitRadius: 10,
-          hoverRadius: 4,
-          hoverBorderWidth: 3,
         },
+      ],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            maxTicksLimit: 10,
+            stepSize: Math.ceil(50 / 10),
+            max: 50,
+          },
+          gridLines: {
+            display: true,
+          },
+        },
+      ],
+    },
+    elements: {
+      point: {
+        radius: 0,
+        hitRadius: 10,
+        hoverRadius: 4,
+        hoverBorderWidth: 3,
       },
-    };
-  })();
+    },
+  });
 
   function getProgressChartLabels() {
     const labels = [];
@@ -276,11 +210,23 @@ function DashBoardPage(props) {
       const res1 = await statisticsApi.getPersonalTaskDone({ params });
       const res2 = await statisticsApi.getUserTaskDoneBoards({ params });
 
-      const max1 = Math.max(res1);
-      const max2 = Math.max(res2);
+      const max1 = res1.data.reduce(function (a, b) {
+        return Math.max(a, b);
+      });
+      const max2 = res2.data.reduce(function (a, b) {
+        return Math.max(a, b);
+      });
 
       const max = Math.max(max1, max2);
-      
+      const maxValue = Math.ceil(max / 10) * 10;
+
+      console.log(maxValue)
+
+      const optionsClone = { ...defaultOptions };
+      optionsClone.scales.yAxes[0].ticks.stepSize = Math.ceil(maxValue / 5);
+      optionsClone.scales.yAxes[0].ticks.max = maxValue;
+      setDefaultOptions(optionsClone);
+
       setDefaultDatasets([{
         label: "Công việc cá nhân",
         backgroundColor: hexToRgba(brandInfo, 10),
