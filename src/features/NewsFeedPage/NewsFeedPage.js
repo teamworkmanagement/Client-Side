@@ -29,6 +29,8 @@ import uuid from "src/utils/file/uuid";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import firebase from "firebase/app";
 import queryString from 'query-string';
+import teamApi from "src/api/teamApi";
+import { useHistory } from "react-router-dom";
 
 NewsFeedPage.propTypes = {};
 
@@ -64,48 +66,19 @@ function NewsFeedPage(props) {
 
   const pickImgRef = useRef(null);
 
-  const groupList = [
-    {
-      groupId: "1",
-      groupAvatar:
-        "https://dongnaireview.com/wp-content/uploads/2020/10/trung-tam-toeic-bien-hoa-5.jpg",
-      groupName: "Anh Văn TOEIC",
-      groupMemberCount: 11,
-      groupNewPostCount: 9,
-    },
-    {
-      groupId: "2",
-      groupAvatar:
-        "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png",
-      groupName: "Sinh viên A14 ktx",
-      groupMemberCount: 1200,
-      groupNewPostCount: 3,
-    },
-    {
-      groupId: "3",
-      groupAvatar:
-        "https://4.bp.blogspot.com/-ouhln8C_7Zo/V_g34H9nxpI/AAAAAAAADPU/fLYFgaxQEbsHueVCu9hREr8wLhAK2Q6SwCLcB/w0/j2team-security-chrome-extension-by-juno-okyo.png",
-      groupName: "J2Team Community",
-      groupMemberCount: 206700,
-      groupNewPostCount: 11,
-    },
-    {
-      groupId: "4",
-      groupAvatar:
-        "https://yt3.ggpht.com/ytc/AAUvwniuYOp7nc1JMuIIxreA55A0vm8mDYi2TyBgWI2JLw=s900-c-k-c0x00ffffff-no-rj",
-      groupName: "Kteam - Lập trình C/C++, C#, SQL",
-      groupMemberCount: 530972,
-      groupNewPostCount: 2,
-    },
-    {
-      groupId: "5",
-      groupAvatar:
-        "https://www.engo.edu.vn/wp-content/uploads/2020/07/TOEIC-min.png",
-      groupName: "18/09 lớp Toeic Speaking Writing cô Ngọc",
-      groupMemberCount: 1289,
-      groupNewPostCount: 2,
-    },
-  ];
+  const [groupList, setGroupList] = useState([]);
+
+
+  useEffect(() => {
+    teamApi.getTeamsRecommendForUser(user.id)
+      .then(res => {
+        setGroupList(res.data);
+      })
+      .catch(err => {
+
+      });
+  }, [])
+
   function toggleShowFilter() {
     const clonedShowFilter = { ...showFilter };
     setShowFilter(!showFilter);
@@ -314,6 +287,11 @@ function NewsFeedPage(props) {
     setListPictures(cloneListPictures);
   };
 
+
+  const history = useHistory();
+  const navigateToTeam = (teamId) => {
+    history.push(`/team/${teamId}`);
+  }
   return (
     <div className="newsfeed-page-container">
       <CRow>
@@ -397,6 +375,7 @@ function NewsFeedPage(props) {
                 {groupList.map((item, index) => {
                   return (
                     <div
+                      onClick={() => navigateToTeam(item.groupId)}
                       key={item.groupId}
                       className="post-group-item"
                       style={{ animationDelay: `${(index + 2) / 10}s` }}
@@ -464,8 +443,8 @@ function NewsFeedPage(props) {
             >
               <div className="add-image-btn">
                 <CIcon name="cil-image-plus" />
-              Thêm ảnh
-              <input
+                Thêm ảnh
+                <input
                   type="file"
                   onChange={onPickImageChange}
                   multiple
@@ -479,7 +458,7 @@ function NewsFeedPage(props) {
           <CModalFooter>
             <CButton className="submit-btn" onClick={addPostClick}>
               Đăng bài
-          </CButton>
+            </CButton>
           </CModalFooter>
         </CModal> : null
       }
