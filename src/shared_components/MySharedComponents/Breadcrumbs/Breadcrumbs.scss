@@ -1,0 +1,47 @@
+.breadcrumbs-container {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        color: #3e79f7;
+
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            margin-right: 0.5rem;
+            background-color: #ebf1fe;
+            padding: 0.25rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            .home-icon {
+                margin-right: 0.2rem;
+                width: 1.1rem;
+                height: 1.1rem;
+            }
+            &:hover {
+                background-color: #d4e1fe;
+            }
+        }
+        .arrow-icon {
+        }
+        &::before {
+            display: none;
+        }
+        &:last-child {
+            .breadcrumb-content {
+                cursor: initial;
+                background-color: white;
+                padding: 0.25rem 0rem;
+                // &:hover {
+                //     text-decoration: underline;
+                // }
+            }
+            .arrow-icon {
+                display: none;
+            }
+        }
+    }
+}
