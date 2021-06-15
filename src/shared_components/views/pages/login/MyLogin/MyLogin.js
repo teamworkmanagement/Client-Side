@@ -13,6 +13,10 @@ import {
   facebookProvider,
   googleProvider,
 } from "src/utils/firebase/authMethods";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { toast, ToastContainer } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
+import { startNotiService } from "src/utils/signalr/notiService";
 
 
 MyLogin.propTypes = {};
@@ -37,10 +41,30 @@ function MyLogin(props) {
   }
 
   const onLoginClick = () => {
-    dispatch(login(loginObject));
-    if (authStatus) {
-      history.push("/dashboard");
-    }
+    dispatch(login(loginObject))
+      .then(unwrapResult)
+      .then(originalPromiseResult => {
+      })
+      .catch(err => {
+        console.log('login err :', err);
+        if (err.Message.includes('Invalid Credentials')) {
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Mật khẩu không chính xác" />
+          );
+        }
+
+        if(err.Message.includes('No Accounts Registered')){
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Tài khoản không tồn tại" />
+          );
+        }
+      });
   }
 
   const onChange = (e) => {
@@ -120,76 +144,82 @@ function MyLogin(props) {
 
 
   return (
-    <div className="login-page-container">
-      <CRow className="row-header">
-        <div xl="2" md="1" sm="0"></div>
-        <CCol className="col-image1" sm="12" md="5" xl="4">
-          <img alt="" src="../images/login/chat.svg" />
-        </CCol>
-        <CCol className="col-image2" sm="12" md="6" xl="6">
-          <img alt="" src="../images/login/task.svg" />
-        </CCol>
-      </CRow>
-      <CRow className="row-content">
-        <CCol className="col1" sm="12" lg="7" xl="8">
-          <div className="title">
-            Trải nghiệm
-            <div>
-              <label className="title-teamwork">Teamwork</label>{" "}
-              <label>hiệu quả</label> và <label>nhanh chóng với</label>
+    <div>
+      <div className="login-page-container">
+        <CRow className="row-header">
+          <div xl="2" md="1" sm="0"></div>
+          <CCol className="col-image1" sm="12" md="5" xl="4">
+            <img alt="" src="../images/login/chat.svg" />
+          </CCol>
+          <CCol className="col-image2" sm="12" md="6" xl="6">
+            <img alt="" src="../images/login/task.svg" />
+          </CCol>
+        </CRow>
+        <CRow className="row-content">
+          <CCol className="col1" sm="12" lg="7" xl="8">
+            <div className="title">
+              Trải nghiệm
+              <div>
+                <label className="title-teamwork">Teamwork</label>{" "}
+                <label>hiệu quả</label> và <label>nhanh chóng với</label>
+              </div>
+              <div className="app-name">
+                <strong>ezTeam</strong>
+              </div>
             </div>
-            <div className="app-name">
-              <strong>ezTeam</strong>
+            <img alt="" src="../images/login/teamwork.svg" />
+          </CCol>
+          <CCol className="col2" xs="12" sm="10" lg="5" xl="4">
+            <CInput className="input-email" name="email" onChange={onChange} placeholder="Email tài khoản" />
+            <div className="password-group">
+              <CInput
+                className="input-password"
+                placeholder="Mật khẩu"
+                name="password"
+                onChange={onChange}
+                type={showPassword ? "text" : "password"}
+              />
+              {showPassword && (
+                <BsEye
+                  onClick={() => setShowPassword(false)}
+                  className="icon-password icon-showpassword"
+                />
+              )}
+              {!showPassword && (
+                <BsEyeSlash
+                  onClick={() => setShowPassword(true)}
+                  className=" icon-password icon-hidepassword"
+                />
+              )}
             </div>
-          </div>
-          <img alt="" src="../images/login/teamwork.svg" />
-        </CCol>
-        <CCol className="col2" xs="12" sm="10" lg="5" xl="4">
-          <CInput className="input-email" name="email" onChange={onChange} placeholder="Email tài khoản" />
-          <div className="password-group">
-            <CInput
-              className="input-password"
-              placeholder="Mật khẩu"
-              name="password"
-              onChange={onChange}
-              type={showPassword ? "text" : "password"}
-            />
-            {showPassword && (
-              <BsEye
-                onClick={() => setShowPassword(false)}
-                className="icon-password icon-showpassword"
-              />
-            )}
-            {!showPassword && (
-              <BsEyeSlash
-                onClick={() => setShowPassword(true)}
-                className=" icon-password icon-hidepassword"
-              />
-            )}
-          </div>
 
-          <div onClick={onForgotPassword} className="label-forgot">
-            <label>Quên mật khẩu?</label>
-          </div>
-          <div className="login-btn" onClick={onLoginClick}>Đăng nhập</div>
-          <div className="label-social">
-            <div className="line1 line"></div>
-            <div className="label"> Đăng nhập nhanh với</div>
-            <div className="line2 line"></div>
-          </div>
-          <div className="social-group">
-            {/*<FcGoogle className="google-icon social-icon" />
-            <SiFacebook className="fb-icon social-icon" />*/}
-            <CButton onClick={() => loginSocial("fb")}>Facebook</CButton>
-            <CButton onClick={() => loginSocial("gg")}>Google</CButton>
-          </div>
-          <div className="register-group">
-            Bạn chưa có tài khoản? Hãy <strong onClick={onCreateAccount}>
-              Tạo mới
-            </strong> tại đây!
-          </div>
-        </CCol>
-      </CRow>
+            <div onClick={onForgotPassword} className="label-forgot">
+              <label>Quên mật khẩu?</label>
+            </div>
+            <div className="login-btn" onClick={onLoginClick}>Đăng nhập</div>
+            <div className="label-social">
+              <div className="line1 line"></div>
+              <div className="label"> Đăng nhập nhanh với</div>
+              <div className="line2 line"></div>
+            </div>
+            <div className="social-group">
+              {/*<FcGoogle className="google-icon social-icon" />
+          <SiFacebook className="fb-icon social-icon" />*/}
+              <CButton onClick={() => loginSocial("fb")}>Facebook</CButton>
+              <CButton onClick={() => loginSocial("gg")}>Google</CButton>
+            </div>
+            <div className="register-group">
+              Bạn chưa có tài khoản? Hãy <strong onClick={onCreateAccount}>
+                Tạo mới
+              </strong> tại đây!
+            </div>
+          </CCol>
+        </CRow>
+      </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+      />
     </div>
   );
 }

@@ -499,7 +499,7 @@ function ListTeamPage(props) {
   };
   return (
     <div className="list-team-container">
-      {teams.length > 0 && renderNormal()}
+      {renderNormal()}
       {renderEmpty()}
     </div>
   );

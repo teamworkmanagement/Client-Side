@@ -33,6 +33,9 @@ import { useHistory } from "react-router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import teamApi from "src/api/teamApi";
+import statisticsApi from "src/api/statisticsApi";
+import axiosClient from "src/api/axiosClient";
+import { saveAs } from 'file-saver';
 DashBoardPage.propTypes = {};
 
 const random = (min, max) => {
@@ -51,6 +54,12 @@ function DashBoardPage(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentUser);
   const [loadone, setLoadone] = useState(false);
+  const [filter, setFilter] = useState('week');
+
+
+  const [userStatistics, setUserStatistics] = useState([]);
+  const [teamStatistics, setTeamStatistics] = useState([]);
+
   const myPosts = [
     {
       content:
@@ -111,89 +120,47 @@ function DashBoardPage(props) {
       value: 3,
     },
   ];
-  const defaultDatasets = (() => {
-    let elements = 7;
-    switch (progressTimeMode) {
-      case 2:
-        elements = 30;
-        break;
-      default:
-        elements = 12;
-    }
-    const data1 = [];
-    const data2 = [];
-    const data3 = [];
-    for (let i = 0; i <= elements; i++) {
-      data1.push(random(50, 200));
-      data2.push(random(80, 100));
-      data3.push(random(20, 90));
-    }
-    return [
-      {
-        label: "Công việc cá nhân",
-        backgroundColor: hexToRgba(brandInfo, 10),
-        borderColor: brandInfo,
-        pointHoverBackgroundColor: brandInfo,
-        borderWidth: 2,
-        data: data1,
-      },
-      {
-        label: "Công việc nhóm",
-        backgroundColor: hexToRgba(brandSuccess, 20),
-        borderColor: brandSuccess,
-        pointHoverBackgroundColor: brandSuccess,
-        borderWidth: 2,
-        data: data2,
-      },
-      // {
-      //   label: "Điền form khảo sát",
-      //   backgroundColor: hexToRgba(brandDanger, 10),
-      //   borderColor: brandDanger,
-      //   pointHoverBackgroundColor: brandDanger,
-      //   borderWidth: 1,
-      //   borderDash: [8, 5],
-      //   data: data3,
-      // },
-    ];
-  })();
-  const defaultOptions = (() => {
-    return {
-      maintainAspectRatio: false,
-      legend: {
-        display: true,
-      },
-      scales: {
-        xAxes: [
-          {
-            gridLines: {
-              drawOnChartArea: true,
-            },
+
+  const [defaultDatasets, setDefaultDatasets] = useState([
+
+  ]);
+
+  const [defaultOptions, setDefaultOptions] = useState({
+    maintainAspectRatio: false,
+    legend: {
+      display: true,
+    },
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            drawOnChartArea: true,
           },
-        ],
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              maxTicksLimit: 5,
-              stepSize: Math.ceil(250 / 5),
-              max: 250,
-            },
-            gridLines: {
-              display: true,
-            },
-          },
-        ],
-      },
-      elements: {
-        point: {
-          radius: 0,
-          hitRadius: 10,
-          hoverRadius: 4,
-          hoverBorderWidth: 3,
         },
+      ],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            maxTicksLimit: 10,
+            stepSize: Math.ceil(50 / 10),
+            max: 50,
+          },
+          gridLines: {
+            display: true,
+          },
+        },
+      ],
+    },
+    elements: {
+      point: {
+        radius: 0,
+        hitRadius: 10,
+        hoverRadius: 4,
+        hoverBorderWidth: 3,
       },
-    };
-  })();
+    },
+  });
 
   function getProgressChartLabels() {
     const labels = [];
@@ -217,9 +184,6 @@ function DashBoardPage(props) {
     history.push(`/team/${teamId}`);
   };
 
-
-  console.log(teams);
-
   useEffect(() => {
     teamApi.getAllTeamByUser(user.id)
       .then(res => {
@@ -229,6 +193,108 @@ function DashBoardPage(props) {
       })
   }, [])
 
+
+  const changeMode = (value) => {
+    setProgressTimeMode(value);
+    if (value == 1)
+      setFilter('week');
+    if (value == 2)
+      setFilter('month');
+    if (value == 3)
+      setFilter('year');
+  }
+
+  useEffect(() => {
+    async function getStatistics() {
+      console.log(filter);
+      const params = {
+        userId: user.id,
+        filter,
+      }
+      const data1 = [];
+      const data2 = [];
+
+      const res1 = await statisticsApi.getPersonalTaskDone({ params });
+      const res2 = await statisticsApi.getUserTaskDoneBoards({ params });
+
+      setUserStatistics(res1.data);
+      setTeamStatistics(res2.data);
+
+      const max1 = res1.data.reduce(function (a, b) {
+        return Math.max(a, b);
+      });
+      const max2 = res2.data.reduce(function (a, b) {
+        return Math.max(a, b);
+      });
+
+      const max = Math.max(max1, max2);
+      const maxValue = Math.ceil(max / 10) * 10;
+
+      console.log(maxValue)
+
+      const optionsClone = { ...defaultOptions };
+      optionsClone.scales.yAxes[0].ticks.stepSize = Math.ceil(maxValue / 5);
+      optionsClone.scales.yAxes[0].ticks.max = maxValue;
+      setDefaultOptions(optionsClone);
+
+      setDefaultDatasets([{
+        label: "Công việc cá nhân",
+        backgroundColor: hexToRgba(brandInfo, 10),
+        borderColor: brandInfo,
+        pointHoverBackgroundColor: brandInfo,
+        borderWidth: 2,
+        data: res1.data,
+      },
+      {
+        label: "Công việc nhóm",
+        backgroundColor: hexToRgba(brandSuccess, 20),
+        borderColor: brandSuccess,
+        pointHoverBackgroundColor: brandSuccess,
+        borderWidth: 2,
+        data: res2.data,
+      }]);
+    }
+
+    getStatistics();
+  }, [filter])
+
+  useEffect(() => {
+    console.log(defaultDatasets);
+  }, [defaultDatasets])
+
+
+  const exportExcel = () => {
+    /*axiosClient.get('https://localhost:9001/api/test/export-excel')
+      .then(res => new Blob([res], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.click();
+        //window.URL.revokeObjectURL(url);
+      })
+      .catch(err => {
+        console.log(err)
+      })*/
+
+
+
+    statisticsApi.exportPersonalAndTeamStat({
+      userStatis: userStatistics,
+      teamStatis: teamStatistics,
+    })
+      .then(blob => {
+        saveAs(blob, "abc.xlsx")
+        /*const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.click();
+        window.URL.revokeObjectURL(url);*/
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
   return (
     <div className="dash-board-container">
       <CRow className="counting-group">
@@ -299,7 +365,7 @@ function DashBoardPage(props) {
                   color="outline-secondary"
                   key={item.value}
                   className="mx-0"
-                  onClick={() => setProgressTimeMode(item.value)}
+                  onClick={() => changeMode(item.value)}
                   active={item.value === progressTimeMode}
                 >
                   {item.name}
@@ -307,7 +373,7 @@ function DashBoardPage(props) {
               ))}
             </CButtonGroup>
           </div>
-          <div className="export-btn">
+          <div className="export-btn" onClick={exportExcel}>
             Xuất Excel
             <CIcon name="cil-share-boxed" />
           </div>

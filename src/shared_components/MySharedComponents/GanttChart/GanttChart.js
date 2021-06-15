@@ -461,6 +461,7 @@ function GanttChart(props) {
         </div>
       )}
       <TaskEditModal
+        isOfTeam={props.isOfTeam}
         closePopup={closeForm}
         isShowEditPopup={isShowEditPopup}
         data={modalTask}

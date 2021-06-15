@@ -9,11 +9,12 @@ import { getStyle, hexToRgba } from "@coreui/utils";
 import CIcon from "@coreui/icons-react";
 import teamApi from "src/api/teamApi";
 import { useParams } from "react-router";
+import statisticsApi from "src/api/statisticsApi";
+import { saveAs } from 'file-saver';
 
 TeamStatistics.propTypes = {};
 
 const Option = (props) => {
-  console.log(props);
   return (
     <components.Option {...props}>
       <div className="option-board-item">
@@ -38,6 +39,14 @@ function TeamStatistics(props) {
   const [progressTimeMode, setProgressTimeMode] = useState(1); //1:week, 2:month, 3:year
   const [contributeMode, setContributeMode] = useState(1); //1:number, 2:score
   const [listBoards, setListBoards] = useState([]);
+
+  const [filterTeamObject, setFilterTeamObject] = useState(null);
+  const [filterMembersObject, setFilterMembersObject] = useState(null);
+  const [boardId, setBoardId] = useState(null);
+
+  const [boardTaskDone, setBoardTaskDone] = useState([]);
+  const [requestModels, setRequestModels] = useState([]);
+
   const listBoardszzz = [
     {
       value: 1,
@@ -54,7 +63,7 @@ function TeamStatistics(props) {
     { value: 9, label: "Relax planing", tasksCount: 7 },
     { value: 10, label: "Tasks Khóa luận", tasksCount: 21 },
   ];
-  const defaultDatasets = (() => {
+  /*const defaultDatasets = (() => {
     let elements = 7;
     switch (progressTimeMode) {
       case 2:
@@ -98,8 +107,8 @@ function TeamStatistics(props) {
         data: data3,
       },
     ];
-  })();
-  const defaultOptions = (() => {
+  })();*/
+  /*const defaultOptions = (() => {
     return {
       maintainAspectRatio: false,
       legend: {
@@ -136,7 +145,49 @@ function TeamStatistics(props) {
         },
       },
     };
-  })();
+  })();*/
+
+  const [defaultDatasets, setDefaultDatasets] = useState([
+
+  ]);
+
+  const [defaultOptions, setDefaultOptions] = useState({
+    maintainAspectRatio: false,
+    legend: {
+      display: true,
+    },
+    scales: {
+      xAxes: [
+        {
+          gridLines: {
+            drawOnChartArea: true,
+          },
+        },
+      ],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            maxTicksLimit: 10,
+            stepSize: Math.ceil(50 / 10),
+            max: 50,
+          },
+          gridLines: {
+            display: true,
+          },
+        },
+      ],
+    },
+    elements: {
+      point: {
+        radius: 0,
+        hitRadius: 10,
+        hoverRadius: 4,
+        hoverBorderWidth: 3,
+      },
+    },
+  });
+
   const defaultOptionsBar = (() => {
     return {
       maintainAspectRatio: false,
@@ -232,12 +283,94 @@ function TeamStatistics(props) {
     return color;
   };
 
+
+  useEffect(() => {
+    if (filterTeamObject) {
+      console.log('team filter', filterTeamObject);
+      const params = {
+        ...filterTeamObject
+      }
+      statisticsApi.getBoardTaskDone({
+        params
+      }).then(res => {
+
+        setBoardTaskDone(res.data);
+        const max = res.data.reduce(function (a, b) {
+          return Math.max(a, b);
+        });
+
+        const maxValue = Math.ceil(max / 10) * 10;
+        if (maxValue !== 0) {
+          const optionsClone = { ...defaultOptions };
+          optionsClone.scales.yAxes[0].ticks.stepSize = Math.ceil(maxValue / 5);
+          optionsClone.scales.yAxes[0].ticks.max = maxValue;
+
+          setDefaultOptions(optionsClone);
+        }
+
+
+        setDefaultDatasets([{
+          label: "Công việc nhóm",
+          backgroundColor: hexToRgba(brandInfo, 10),
+          borderColor: brandInfo,
+          pointHoverBackgroundColor: brandInfo,
+          borderWidth: 2,
+          data: res.data,
+        }]);
+
+
+      }).catch(err => {
+
+      })
+    }
+  }, [filterTeamObject])
+
+  useEffect(() => {
+    if (filterMembersObject) {
+      console.log('member filter', filterMembersObject);
+
+      const params = {
+        ...filterMembersObject
+      }
+      statisticsApi.getUserTaskDoneAndPoint({ params }).then(res => {
+
+        setRequestModels(res.data);
+
+        const lbls = [];
+        const dataBar = [];
+        const bgColor = [];
+        const bdColor = [];
+        res.data.forEach(ele => {
+          lbls.push(ele.userFullName);
+          dataBar.push(contributeMode == 1 ? ele.taskDoneCount : ele.point);
+          bgColor.push(hexToRgba(ele.colorCode, 10));
+          bdColor.push(ele.colorCode);
+        });
+
+        setLabels(lbls);
+
+        setBarDataSet([
+          {
+            label: contributeMode === 1 ? "Số công việc" : "Tổng điểm",
+            backgroundColor: bgColor,
+            data: dataBar,
+            borderColor: bdColor,
+            borderWidth: 1,
+            barThickness: 30,
+          },
+        ]);
+      }).catch(err => {
+
+      })
+    }
+  }, [filterMembersObject])
+
   const { teamId } = useParams();
   useEffect(() => {
     teamApi
       .getBoardsByTeam(teamId)
       .then((res) => {
-        console.log(res.data);
+
         const boards = res.data.map((x) => {
           return {
             value: x.kanbanBoardId,
@@ -248,9 +381,130 @@ function TeamStatistics(props) {
 
         setListBoards(boards);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, []);
 
+  useEffect(() => {
+    if (selectedBoard) {
+      setFilterMembersObject({
+        ...filterMembersObject,
+        boardId: selectedBoard.value,
+      });
+
+      setFilterTeamObject({
+        ...filterTeamObject,
+        boardId: selectedBoard.value,
+        filter: filterTeamObject ? filterTeamObject.filter : 'week'
+      });
+    }
+  }, [selectedBoard])
+
+  useEffect(() => {
+    if (!selectedBoard)
+      return;
+
+    if (progressTimeMode) {
+      setFilterTeamObject({
+        ...filterTeamObject,
+        filter: progressTimeMode === 1 ? 'week' : progressTimeMode === 2 ? 'month' : 'year',
+        boardId: selectedBoard.value,
+      });
+    }
+  }, [progressTimeMode]);
+
+  useEffect(() => {
+    if (!selectedBoard)
+      return;
+
+    if (contributeMode) {
+      setFilterMembersObject({
+        ...filterMembersObject,
+        boardId: selectedBoard.value,
+        type: contributeMode === 1 ? "task" : "score"
+      })
+    }
+  }, [contributeMode]);
+
+
+  /*
+    [
+                  "#FF4016",
+                  "#77D90C",
+                  "#FF8918",
+                  "#77D90C",
+                  "#2EC6AC",
+                  "#DB8739",
+                  "#F6CB61",
+                  "#EC2C7E",
+                  "#05B6F7",
+                  "#47DA64",
+                  "#EF73A7",
+                  "#55E4AD",
+                  "#0EA6C3",
+                  "blue",
+                ]
+  */
+  //const [borderColor, setBorderClor] = useState([]);
+
+  /*[
+                  hexToRgba("#FF4016", 10),
+                  hexToRgba("#77D90C", 10),
+                  hexToRgba("#FF8918", 10),
+                  hexToRgba("#77D90C", 10),
+                  hexToRgba("#2EC6AC", 10),
+                  hexToRgba("#DB8739", 10),
+                  hexToRgba("#F6CB61", 10),
+                  hexToRgba("#EC2C7E", 10),
+                  hexToRgba("#05B6F7", 10),
+                  hexToRgba("#47DA64", 10),
+                  hexToRgba("#EF73A7", 10),
+                  hexToRgba("#55E4AD", 10),
+                  hexToRgba("#0EA6C3", 10),
+                ] */
+
+  //const [backgroundColor, setBackgroundColor] = useState([]);
+
+  //const [barChartData, setBarChartData] = useState([]);
+
+  const [labels, setLabels] = useState([]);
+
+  /*[
+              {
+                label: contributeMode === 1 ? "Số công việc" : "Tổng điểm",
+                backgroundColor: { backgroundColor },
+                data: { barChartData },
+                borderColor: { borderColor },
+                borderWidth: 1,
+                barThickness: 30,
+              },
+            ] */
+  const [barDataSets, setBarDataSet] = useState([]);
+
+  const exportBoardExcel = () => {
+    console.log('click 1');
+    statisticsApi.exportTeamDoneBoard({
+      boardTaskDone: boardTaskDone
+    })
+      .then(blob => {
+        saveAs(blob, "boardTaskDone.xlsx")
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const exportGroupByUserExcel = () => {
+    console.log('click 2');
+    statisticsApi.exportTeamUserPointTask({
+      requestModels: requestModels
+    })
+      .then(blob => {
+        saveAs(blob, "pointandtaskgroupbyuser.xlsx")
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
   return (
     <div className=" team-statistics-container">
       <div className="header-label">Thống kê công việc nhóm Khóa luận Team</div>
@@ -263,7 +517,7 @@ function TeamStatistics(props) {
             components={{ Option: Option }}
             placeholder="Chọn bảng công việc..."
             options={listBoards}
-            onInputChange={() => {}}
+            onInputChange={() => { }}
             onChange={onChangeSelectedBoard}
           />
         </CCol>
@@ -287,7 +541,7 @@ function TeamStatistics(props) {
                 ))}
               </CButtonGroup>
             </div>
-            <div className="export-btn">
+            <div className="export-btn" onClick={exportBoardExcel}>
               Xuất Excel
               <CIcon name="cil-share-boxed" />
             </div>
@@ -319,65 +573,14 @@ function TeamStatistics(props) {
                 ))}
               </CButtonGroup>
             </div>
-            <div className="export-btn">
+            <div className="export-btn" onClick={exportGroupByUserExcel}>
               Xuất Excel
               <CIcon name="cil-share-boxed" />
             </div>
           </div>
           <CChartBar
-            datasets={[
-              {
-                label: contributeMode === 1 ? "Số công việc" : "Tổng điểm",
-                backgroundColor: [
-                  hexToRgba("#FF4016", 10),
-                  hexToRgba("#77D90C", 10),
-                  hexToRgba("#FF8918", 10),
-                  hexToRgba("#77D90C", 10),
-                  hexToRgba("#2EC6AC", 10),
-                  hexToRgba("#DB8739", 10),
-                  hexToRgba("#F6CB61", 10),
-                  hexToRgba("#EC2C7E", 10),
-                  hexToRgba("#05B6F7", 10),
-                  hexToRgba("#47DA64", 10),
-                  hexToRgba("#EF73A7", 10),
-                  hexToRgba("#55E4AD", 10),
-                  hexToRgba("#0EA6C3", 10),
-                ],
-                data: [40, 20, 12, 39, 55, 40, 39, 80, 40, 20, 12, 11],
-                borderColor: [
-                  "#FF4016",
-                  "#77D90C",
-                  "#FF8918",
-                  "#77D90C",
-                  "#2EC6AC",
-                  "#DB8739",
-                  "#F6CB61",
-                  "#EC2C7E",
-                  "#05B6F7",
-                  "#47DA64",
-                  "#EF73A7",
-                  "#55E4AD",
-                  "#0EA6C3",
-                  "blue",
-                ],
-                borderWidth: 1,
-                barThickness: 30,
-              },
-            ]}
-            labels={[
-              "khoa",
-              "Huy",
-              "Dũng",
-              "Cường",
-              "Trí",
-              "Tâm",
-              "Như",
-              "Khải",
-              "Phi",
-              "Thức",
-              "Duyên",
-              "Đông",
-            ]}
+            datasets={barDataSets}
+            labels={labels}
             options={defaultOptionsBar}
             style={{ height: "350px", marginTop: "10px" }}
           />

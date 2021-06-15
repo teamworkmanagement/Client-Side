@@ -41,6 +41,10 @@ const teamApi = {
     updateTeam(payload) {
         const url = `/team`;
         return axiosClient.put(url, payload);
+    },
+    getTeamsRecommendForUser(userId) {
+        const url = `/team/teams-recommend-user/${userId}`;
+        return axiosClient.get(url);
     }
 };
 

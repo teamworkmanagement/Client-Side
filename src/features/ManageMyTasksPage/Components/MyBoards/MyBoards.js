@@ -100,7 +100,7 @@ function MyBoards(props) {
                   <div className="board-title">{item.kanbanBoardName}</div>
                   <div className="tasks-count">
                     <CIcon name="cil-storage" />
-                    {item.taskCount}
+                    {item.tasksCount}
                   </div>
                 </div>
               </CCol>

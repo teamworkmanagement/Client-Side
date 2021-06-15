@@ -104,15 +104,15 @@ const TheHeaderDropdownMssg = () => {
     };
     //notiApi.readNoti(payload).then(res => { }).catch(err => { });
     const cloneNotis = [...notis];
-    const obj = cloneNotis.find(
-      (n) => n.notificationId === noti.notificationId
-    );
 
-    if (obj.notificationStatus === false) {
+    const obj = cloneNotis.find((n) => n.notificationGroup === noti.notificationGroup);
+
+
+    /*if (obj.notificationStatus === false) {
       obj.notificationStatus = true;
       setNotis(cloneNotis);
       setItemsCount(itemsCount - 1);
-    }
+    }*/
 
     if (obj.notificationLink)
       history.push({

@@ -21,6 +21,10 @@ const userApi = {
     searchUsersKanban(params) {
         const url = '/user/search-users-kanban';
         return axiosClient.get(url, params);
+    },
+    updateImageUrl(payload) {
+        const url = '/user/image';
+        return axiosClient.patch(url, payload);
     }
 };
 
