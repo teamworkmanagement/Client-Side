@@ -5,12 +5,12 @@ import { setNewNoti } from "src/appSlice";
 
 
 const connection = setupSignalRConnection('https://localhost:9001/hubnoti');
+connection.on('SendNoti', payload => {
+    store.dispatch(setNewNoti(payload));
+})
 export const startNotiService = () => {
 
     startSignalRConnection(connection);
-    connection.on('SendNoti', payload => {
-        store.dispatch(setNewNoti(payload));
-    })
 }
 
 export const disconnectNoti = () => {
