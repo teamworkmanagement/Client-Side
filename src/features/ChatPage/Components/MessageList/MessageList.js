@@ -16,6 +16,10 @@ import { useParams } from "react-router";
 import "./MessageList.scss";
 import CIcon from "@coreui/icons-react";
 import Message from "./Message.js";
+import { HiOutlineChatAlt2 } from "react-icons/hi";
+import { VscSearchStop } from "react-icons/vsc";
+import { AiOutlineMessage } from "react-icons/ai";
+import { BiMessageDetail } from "react-icons/bi";
 
 MessageList.propTypes = {};
 
@@ -340,13 +344,14 @@ function MessageList(props) {
   };
   return (
     <div>
-      {listMes.length == 0 ? (
+      {listMes.length === 0 ? (
         <div className="nodata-image">
-          <CIcon className="icon-glass" name="cil-envelope-closed" />
-
-          <div className="noti-infor">
-            Chưa có tin nhắn nào trong nhóm của bạn
+          <div className="icon-group">
+            <BiMessageDetail className="icon-task" />
+            <VscSearchStop className="icon-search" />
           </div>
+
+          <div className="noti-infor">Chưa có tin nhắn nào trong đoạn chat</div>
         </div>
       ) : (
         render()

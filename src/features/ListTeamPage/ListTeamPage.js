@@ -399,8 +399,8 @@ function ListTeamPage(props) {
         )}
         {showMode === 2 && (
           <div className="table-view-container">
-            <div className="table-content">
-              <table className="table table-hover  mb-0 d-none d-sm-table">
+            <div className="table-content table-responsive">
+              <table className="table table-hover  mb-0 ">
                 <thead className="thead-light">
                   <tr>
                     <th className="text-center">
@@ -409,7 +409,7 @@ function ListTeamPage(props) {
                     <th>Tên nhóm</th>
                     <th>Trưởng nhóm</th>
 
-                    <th>Tiến độ</th>
+                    {/* <th>Tiến độ</th> */}
                     <th className="text-center">Thành viên</th>
                   </tr>
                 </thead>
@@ -445,7 +445,7 @@ function ListTeamPage(props) {
                             <div className="">{team.teamLeaderName}</div>
                           </div>
                         </td>
-                        <td>
+                        {/* <td>
                           <div className="clearfix">
                             <div className="float-left">
                               <strong>50%</strong>
@@ -461,7 +461,7 @@ function ListTeamPage(props) {
                             color="success"
                             value="50"
                           />
-                        </td>
+                        </td> */}
                         <td className="text-center">
                           <AvatarList users={members} />
                         </td>

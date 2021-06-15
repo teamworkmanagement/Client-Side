@@ -305,6 +305,15 @@ $message-font-weight: normal;
     animation-delay: 0.3s;
 }
 
+.nodata-image-message-list {
+    display: flex;
+    flex-direction: column;
+    .icon-message {
+    }
+    .noti-infor {
+    }
+}
+
 .message-list::-webkit-scrollbar {
     width: 0.5rem;
 }

@@ -22,6 +22,7 @@ import { useHistory } from "react-router";
 import "./TheHeaderDropdownMssg.scss";
 import { AiOutlineNotification } from "react-icons/ai";
 import { HiOutlineBan } from "react-icons/hi";
+import { VscArrowUp } from "react-icons/vsc";
 // register it.
 timeago.register("vi", vi);
 
@@ -80,7 +81,7 @@ const TheHeaderDropdownMssg = () => {
           [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [triggerLoad]);
 
   useEffect(() => {
@@ -103,7 +104,9 @@ const TheHeaderDropdownMssg = () => {
     };
     //notiApi.readNoti(payload).then(res => { }).catch(err => { });
     const cloneNotis = [...notis];
-    const obj = cloneNotis.find((n) => n.notificationId === noti.notificationId);
+    const obj = cloneNotis.find(
+      (n) => n.notificationId === noti.notificationId
+    );
 
     if (obj.notificationStatus === false) {
       obj.notificationStatus = true;
@@ -142,6 +145,37 @@ const TheHeaderDropdownMssg = () => {
 
   const bellRef = useRef(null);
 
+  function convertTimeNoti(notiDate) {
+    const date = new Date(notiDate);
+    const today = new Date(Date.now());
+    if (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    ) {
+      //cùng ngày
+      var hour = date.getHours();
+      if (hour < 10) hour = "0" + hour;
+      var minute = date.getMinutes();
+      if (minute < 10) minute = "0" + minute;
+      return hour + ":" + minute;
+    }
+
+    var dateStr = date.getDate().toString();
+    if (dateStr.length === 1) dateStr = "0" + dateStr;
+    var monthStr = (date.getMonth() + 1).toString();
+    if (monthStr.length === 1) monthStr = "0" + monthStr;
+    const yearStr = date.getFullYear();
+
+    if (date.getFullYear() === today.getFullYear()) {
+      //cùng năm khác ngày
+      return dateStr + "/" + monthStr;
+    } else {
+      //khác năm
+      return dateStr + "/" + monthStr + "/" + yearStr;
+    }
+    //debugger;
+  }
 
   return (
     <CDropdown
@@ -149,7 +183,11 @@ const TheHeaderDropdownMssg = () => {
       className="c-header-nav-item mx-2 header-message-dropdown"
       direction="down"
     >
-      <CDropdownToggle ref={bellRef} className="c-header-nav-link" caret={false}>
+      <CDropdownToggle
+        ref={bellRef}
+        className="c-header-nav-link"
+        caret={false}
+      >
         <CIcon name="cil-bell" />
         <CBadge shape="pill" color="danger">
           {itemsCount}
@@ -164,62 +202,29 @@ const TheHeaderDropdownMssg = () => {
             </div>
           </CDropdownItem>
 
-          {/* <div className="fixed-noti">
-            {notis.map((noti) => {
-              return (
-                <CDropdownItem
-                  key={noti.notificationId}
-                  className={classNames({
-                    "bg-light": !!noti.notificationStatus === false,
-                  })}
-                  onClick={() => onClick(noti)}
-                >
-                  <div className="message">
-                    <div className="pt-3 mr-3 float-left">
-                      <div className="c-avatar">
-                        <CImg
-                          src={noti.notificationImage}
-                          className="c-avatar-img"
-                          alt="notiimg"
-                        />
-                        <span className="c-avatar-status bg-info"></span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="d-flex justify-content-start flex-column">
-                        <div className="text-muted">
-                          <span className="truncate">
-                            {noti.notificationContent}
-                          </span>
-                        </div>
-                        <small className="text-muted float-right mt-1">
-                          <TimeAgo
-                            locale="vi"
-                            datetime={noti.notificationCreatedAt}
-                          ></TimeAgo>
-                        </small>
-                      </div>
-                    </div>
-                  </div>
-                </CDropdownItem>
-              );
-            })}
-          </div> */}
           {notis.length > 0 && (
             <div className="noti-list">
               {notis.map((noti) => {
                 return (
-                  <div onClick={() => onClick(noti)} className="noti-item">
+                  <div
+                    onClick={() => onClick(noti)}
+                    className={`noti-item ${
+                      noti.notificationStatus ? "seen" : ""
+                    }`}
+                  >
+                    <div className="seen-signal"></div>
                     <img alt="" src={noti.notificationActionAvatar} />
                     <div className="noti-content">
                       <strong>{noti.notificationActionFullName}</strong>
                       {noti.notificationContent}
                     </div>
-                    <div className="noti-time"><TimeAgo
-                      locale="vi"
-                      datetime={noti.notificationCreatedAt}
-                    ></TimeAgo></div>
+                    <div className="noti-time">
+                      {/* <TimeAgo
+                        locale="vi"
+                        datetime={noti.notificationCreatedAt}
+                      ></TimeAgo> */}
+                      {convertTimeNoti(noti.notificationCreatedAt)}
+                    </div>
                   </div>
                 );
               })}
@@ -231,7 +236,12 @@ const TheHeaderDropdownMssg = () => {
               Bạn chưa có thông báo mới
             </div>
           )}
-          <div className="load-more-noti-btn" onClick={() => setTriggerLoad(triggerLoad + 1)}>Xem thêm</div>
+          <div
+            className="load-more-noti-btn"
+            onClick={() => setTriggerLoad(triggerLoad + 1)}
+          >
+            Xem thêm
+          </div>
         </CDropdownMenu>
       </div>
     </CDropdown>
