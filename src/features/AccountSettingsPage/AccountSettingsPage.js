@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./AccountSettingsPage.scss";
 import {
@@ -29,6 +29,9 @@ import CIcon from "@coreui/icons-react";
 import { changeStateSettingOptionsSidebar } from "src/appSlice";
 import { FiEdit3 } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
+import firebaseConfig from "src/utils/firebase/firebaseConfig";
+import uuid from "src/utils/file/uuid";
+import userApi from "src/api/userApi";
 
 AccountSettingsPage.propTypes = {};
 
@@ -50,7 +53,7 @@ function AccountSettingsPage(props) {
   const [newDirty, setNewDirty] = useState(false);
   const [confirmDirty, setConfirmDirty] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date(2021, 2, 1));
-  const userPassword = "khoanguyen";
+
   function ChooseSettingOption(index) {
     setSelectedOptions(index);
   }
@@ -82,14 +85,37 @@ function AccountSettingsPage(props) {
     });
   };
 
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+  function validatePhone(phone){
+    const re=/(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+    return re.test(phone);
+  }
   const updateUserInfo = () => {
+    if (!userInfo.fullName || !userInfo.email) {
+      alert('error empty');
+      return;
+    }
+
+    if(!validateEmail(userInfo.email)){
+      alert('error email');
+      return;
+    }
+
+    if(!validatePhone(userInfo.userPhoneNumber)){
+      alert('error phone');
+      return;
+    }
     console.log(userInfo);
     authApi
       .updateUserInfo(userInfo)
       .then((res) => {
         dispatch(setCurrentUser(userInfo));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const changePasswordClick = () => {
@@ -104,6 +130,52 @@ function AccountSettingsPage(props) {
       })
     );
   };
+
+  const imgPickerRef = useRef(null);
+  const pickImage = () => {
+    imgPickerRef.current.click();
+  }
+
+  const onPickImage = (e) => {
+    const file = e.target.files[0];
+    const storageRef = firebaseConfig.storage().ref();
+    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
+    fileRef.put(file).then((data) => {
+      console.log("Uploaded a file");
+      data.ref.getDownloadURL().then((url) => {
+        console.log(url);
+        userApi.updateImageUrl({
+          delete: false,
+          userId: userInfo.id,
+          imageUrl: url,
+        }).then(res => {
+          setUserInfo({
+            ...userInfo,
+            userAvatar: url,
+          })
+        }).catch(err => {
+
+        })
+      });
+    });
+  }
+
+
+
+  const removeImage = () => {
+    userApi.updateImageUrl({
+      delete: true,
+      userId: userInfo.id,
+      imageUrl: null,
+    }).then(res => {
+      setUserInfo({
+        ...userInfo,
+        userAvatar: `https://ui-avatars.com/api/?name=${userInfo.fullName}`,
+      })
+    }).catch(err => {
+
+    })
+  }
   return (
     <div className="account-page-container">
       <div className="toggle-setting-options-sidebar-btn">
@@ -117,18 +189,16 @@ function AccountSettingsPage(props) {
       <div className="account-page-content">
         <div className="setting-options d-sm-down-none">
           <div
-            className={`tab-setting tab-infor ${
-              selectedOptions === 0 ? "active" : ""
-            }`}
+            className={`tab-setting tab-infor ${selectedOptions === 0 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(0)}
           >
             <BsInfoCircle className="icon-info icon" />
             Thông tin của bạn
           </div>
           <div
-            className={`tab-setting tab-passowrd ${
-              selectedOptions === 1 ? "active" : ""
-            }`}
+            className={`tab-setting tab-passowrd ${selectedOptions === 1 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(1)}
           >
             <AiOutlineLock className="icon-password icon" />
@@ -142,14 +212,22 @@ function AccountSettingsPage(props) {
               <div className="avatar-group">
                 <img
                   alt=""
-                  src="https://emilus.themenate.net/img/avatars/thumb-4.jpg"
+                  src={userInfo.userAvatar}
                 />
                 <div className="avatar-action-group">
-                  <div className="change-image-btn">
+                  <div className="change-image-btn" onClick={pickImage}>
                     <FiEdit3 className="change-ava-icon" />
                     Đổi ảnh đại diện
+
+                    <input
+                      accept="image/*"
+                      onChange={onPickImage}
+                      ref={imgPickerRef}
+                      type="file"
+                      style={{ display: "none" }}
+                    />
                   </div>
-                  <div className="remove-image-btn">
+                  <div className="remove-image-btn" onClick={removeImage}>
                     <AiOutlineDelete className="icon delete-ava-icon" />
                     Xóa ảnh
                   </div>
@@ -237,10 +315,9 @@ function AccountSettingsPage(props) {
                       type="text"
                       id="des-input"
                       placeholder="Thông tin bản thân..."
-                      name="description"
-                      //value={userInfo.email}
-                      //onChange={handleInputChange}
-                      //invalid={userInfo.email === "" || userInfo.email === null}
+                      value={userInfo.userDescription}
+                      name="userDescription"
+                      onChange={handleInputChange}
                     />
                     <CInvalidFeedback>Email không hợp lệ</CInvalidFeedback>
                   </CFormGroup>
@@ -256,10 +333,12 @@ function AccountSettingsPage(props) {
                       type="text"
                       id="des-input"
                       placeholder="Địa chỉ..."
-                      name="description"
-                      //value={userInfo.email}
-                      //onChange={handleInputChange}
-                      //invalid={userInfo.email === "" || userInfo.email === null}
+                      value={userInfo.userAddress}
+                      onChange={handleInputChange}
+                      name="userAddress"
+                    //value={userInfo.email}
+                    //onChange={handleInputChange}
+                    //invalid={userInfo.email === "" || userInfo.email === null}
                     />
                   </CFormGroup>
                 </CCol>
@@ -279,10 +358,12 @@ function AccountSettingsPage(props) {
                         type="text"
                         id="des-input"
                         placeholder="Github link..."
-                        name="description"
-                        //value={userInfo.email}
-                        //onChange={handleInputChange}
-                        //invalid={userInfo.email === "" || userInfo.email === null}
+                        value={userInfo.userGithubLink}
+                        name="userGithubLink"
+                        onChange={handleInputChange}
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                     <div className="social-group">
@@ -294,10 +375,12 @@ function AccountSettingsPage(props) {
                         type="text"
                         id="des-input"
                         placeholder="Facebook link..."
-                        name="description"
-                        //value={userInfo.email}
-                        //onChange={handleInputChange}
-                        //invalid={userInfo.email === "" || userInfo.email === null}
+                        name="userFacebookLink"
+                        value={userInfo.userFacebookLink}
+                        onChange={handleInputChange}
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                   </CFormGroup>
@@ -365,12 +448,12 @@ function AccountSettingsPage(props) {
                     (changePWObject.confirmPassword === "" ||
                       changePWObject.confirmPassword === null ||
                       changePWObject.confirmPassword !==
-                        changePWObject.newPassword)
+                      changePWObject.newPassword)
                   }
                   valid={
                     confirmDirty &&
                     changePWObject.confirmPassword ===
-                      changePWObject.newPassword
+                    changePWObject.newPassword
                   }
                   name="confirmPassword"
                 />

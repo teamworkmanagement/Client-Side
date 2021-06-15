@@ -59,13 +59,13 @@ const authSlice = createSlice({
     },
     [login.rejected]: (state, action) => { },
     [login.fulfilled]: (state, action) => {
-      const { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial } = action.payload;
-      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial };
+      const { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial, userAddress, userDescription, userGithubLink, userFacebookLink } = action.payload;
+      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial, userAddress, userDescription, userGithubLink, userFacebookLink };
       state.loginStatus = true;
     },
     [socialLogin.fulfilled]: (state, action) => {
-      const { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial } = action.payload;
-      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial };
+      const { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial, userAddress, userDescription, userGithubLink, userFacebookLink } = action.payload;
+      state.currentUser = { id, fullName, email, userAvatar, userDob, userPhoneNumber, firstTimeSocial, userAddress, userDescription, userGithubLink, userFacebookLink };
       state.loginStatus = true;
     },
     [socialLogin.rejected]: (state, action) => {
