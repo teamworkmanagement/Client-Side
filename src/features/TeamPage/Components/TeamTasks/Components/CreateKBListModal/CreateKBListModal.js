@@ -13,13 +13,11 @@ import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 
-
 CreateKBListModal.propTypes = {};
 
 function CreateKBListModal(props) {
-
   const dispatch = useDispatch();
-  const listKBs = useSelector(state => state.kanban.kanbanBoard.kanbanLists);
+  const listKBs = useSelector((state) => state.kanban.kanbanBoard.kanbanLists);
   const [listName, setListName] = useState("");
 
   function onCreateBoard() {
@@ -29,50 +27,53 @@ function CreateKBListModal(props) {
     }
 
     let pos = 0;
-    if (listKBs.length === 0)
-      pos = genNewRank();
-    else
-      pos = FindNextRank(listKBs[listKBs.length - 1].kanbanListRankInBoard);
+    if (listKBs.length === 0) pos = genNewRank();
+    else pos = FindNextRank(listKBs[listKBs.length - 1].kanbanListRankInBoard);
 
-      kanbanApi.addList({
-      kanbanListTitle: listName,
-      kanbanListBoardBelongedId: props.boardId,
-      kanbanListRankInBoard: pos
-    }).then(res => {
+    kanbanApi
+      .addList({
+        kanbanListTitle: listName,
+        kanbanListBoardBelongedId: props.boardId,
+        kanbanListRankInBoard: pos,
+      })
+      .then((res) => {})
+      .catch((err) => {})
+      .finally(() => {
+        setListName("");
+        props.onClose();
+      });
 
-    }).catch(err => {
-
-    }).finally(() => {
-      setListName("");
-      props.onClose();
-    })
-
-    console.log('rank in :', pos);
+    console.log("rank in :", pos);
   }
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   const handleOnClose = () => {
     setListName("");
     props.onClose();
-  }
+  };
 
   return (
-    <CModal show={props.showAddKBList} onClose={handleOnClose} size="md">
+    <CModal
+      className="create-kb-list-modal"
+      show={props.showAddKBList}
+      onClose={handleOnClose}
+      size="sm"
+    >
       <CModalHeader closeButton>Danh sách mới</CModalHeader>
-      <CModalBody className="new-card-form">
+      <CModalBody className="new-list-form">
         <div className="name-label">Nhập tên danh sách:</div>
-        <CInput
-          type="text"
-          value={listName}
-          onChange={(e) => setListName(e.target.value)}
-          placeholder="Tên danh sách..."
-        />
-        <CButton onClick={onCreateBoard} className="add-card-btn">
-          Tạo
-        </CButton>
+        <div className="form-content">
+          <CInput
+            type="text"
+            value={listName}
+            onChange={(e) => setListName(e.target.value)}
+            placeholder="Tên danh sách..."
+          />
+          <CButton onClick={onCreateBoard} className="add-list-btn">
+            Tạo
+          </CButton>
+        </div>
       </CModalBody>
     </CModal>
   );

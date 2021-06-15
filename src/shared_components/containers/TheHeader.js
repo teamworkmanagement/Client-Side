@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   CHeader,
@@ -33,11 +33,14 @@ import {
 } from "src/appSlice";
 import "./TheHeader.scss";
 import { BsSearch } from "react-icons/bs";
+import { useHistory } from "react-router-dom";
+import Breadcrumbs from "../MySharedComponents/Breadcrumbs/Breadcrumbs";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.app.darkMode);
   const sidebarShow = useSelector((state) => state.app.sidebarShow);
+  const history = useHistory();
 
   const toggleSidebar = () => {
     const val = [true, "responsive"].includes(sidebarShow)
@@ -107,23 +110,14 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CSubheader className="px-3 justify-content-between">
-        <CBreadcrumbRouter
-          className="border-0 c-subheader-nav m-0 px-0 px-md-3"
-          routes={routes}
-        />
-        {/* <div className="dark-theme-container">
-          <div>Dark Theme</div>
-          <CSwitch
-            className={"mx-1"}
-            shape={"pill"}
-            color={"secondary"}
-            variant={"opposite"}
-            labelOn={"on"}
-            labelOff={"off"}
-            onClick={changeDarkMode}
-            defaultChecked={darkMode}
+        <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />
+        <div className="team-info-header">
+          <img
+            alt=""
+            src="https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png"
           />
-        </div> */}
+          <div className="team-name">Anh văn toeic 2</div>
+        </div>
       </CSubheader>
     </CHeader>
   );

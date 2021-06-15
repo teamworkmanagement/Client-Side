@@ -14,6 +14,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import CreateCardModal from "../CreateCardModal/CreateCardModal";
+import { AiOutlineDelete } from "react-icons/ai";
 
 KanbanListHeader.propTypes = {};
 
@@ -74,8 +75,8 @@ function KanbanListHeader(props) {
                   className="last"
                   onClick={() => props.removeList()}
                 >
-                  <CIcon name="cil-x" />
-                  Xóa list
+                  <AiOutlineDelete className="delete-icon" />
+                  Xóa danh sách
                 </CDropdownItem>
               </CDropdownMenu>
             </CDropdown>

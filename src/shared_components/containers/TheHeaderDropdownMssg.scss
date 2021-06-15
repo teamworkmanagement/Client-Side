@@ -37,12 +37,21 @@ $textColor: #3c4b64;
             height: 21rem;
             .noti-item {
                 border-top: 1px solid rgba($subTextColor, 0.2);
-
+                background-color: #ebf1fe;
                 padding: 1rem;
+                padding-left: 0.7rem;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 cursor: pointer;
+                transition: all 0.3s;
+                .seen-signal {
+                    background-color: #3e79f6;
+                    width: 0.5rem;
+                    height: 0.5rem;
+                    border-radius: 500px;
+                    margin-right: 0.5rem;
+                }
                 img {
                     width: 2rem;
                     height: 2rem;
@@ -68,6 +77,12 @@ $textColor: #3c4b64;
                 }
                 &:hover {
                     background-color: rgba($subTextColor, 0.2);
+                }
+                &.seen {
+                    background-color: white;
+                    .seen-signal {
+                        visibility: hidden;
+                    }
                 }
             }
         }

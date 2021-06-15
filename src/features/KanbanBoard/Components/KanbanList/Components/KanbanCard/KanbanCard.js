@@ -11,7 +11,7 @@ import { useHistory, useLocation } from "react-router";
 import queryString from "query-string";
 import { setTaskSelected } from "src/features/KanbanBoard/kanbanSlice";
 import { useDispatch } from "react-redux";
-import { HiOutlineChat } from "react-icons/hi";
+import { HiOutlineChat, HiOutlinePaperClip } from "react-icons/hi";
 
 KanbanCard.propTypes = {};
 
@@ -225,6 +225,8 @@ function KanbanCard(props) {
     return "";
   }
 
+  console.log(props.data);
+
   return (
     <Draggable
       isDragDisabled={isShowEditPopup}
@@ -289,18 +291,17 @@ function KanbanCard(props) {
                       </div>
                     </div>
                   )}
+
                   {props.data.filesCount > 0 && (
                     <div className="attachment-infor">
-                      <div className="attachment-icon">
-                        <CIcon name="cil-paperclip" />
-                      </div>
+                      <HiOutlinePaperClip className="file-icon" />
                       <div className="attachment-count">
                         {props.data.filesCount}
                       </div>
                     </div>
                   )}
                 </div>
-                {props.data.userAvatar && (
+                {props.data.userId && (
                   <div className="user-assign-avatar">
                     <img alt="avatar" src={props.data.userAvatar} />
                   </div>

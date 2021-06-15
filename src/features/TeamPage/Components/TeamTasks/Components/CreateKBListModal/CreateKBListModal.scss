@@ -1,33 +1,75 @@
-.modal {
-    .modal-dialog.modal-sm {
+//border
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+@mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+
+.create-kb-list-modal {
+    .modal-dialog {
         display: flex;
         justify-content: center;
         .modal-content {
             width: max-content;
             border-radius: 0.625rem;
             margin-top: 10rem;
+
             .modal-header {
                 font-weight: 500;
             }
-            .new-card-form {
+            .new-list-form {
                 display: flex;
-                align-items: center;
                 padding: 1.5rem;
                 width: max-content;
+                flex-wrap: wrap;
+                flex-direction: column;
                 .name-label {
                     margin-right: 1rem;
                     font-weight: 500;
+                    margin-bottom: 0.5rem;
                 }
-                input {
-                    border-radius: 0.625rem;
-                    width: 15rem;
-                }
-                .add-card-btn {
-                    background-color: #3e79f7;
-                    color: white;
-                    border-radius: 0.625rem;
-                    margin-left: 1rem;
-                    padding: 0.5rem 1rem !important;
+                .form-content {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    input {
+                        border-radius: $borderRadius;
+                        width: 15rem;
+                        margin-right: 1rem;
+                    }
+                    .add-list-btn {
+                        @include NormalButtonStyle;
+                    }
                 }
             }
         }

@@ -76,6 +76,32 @@ export const CustomOption = (props) => {
   );
 };
 
+const colorPalette1 = [
+  "#D63031",
+  "#FC5C65",
+  "#EE5A24",
+  "#FD9644",
+  "#FFC312",
+  "#F7B731",
+  "#26DE81",
+  "#2BCBBA",
+  "#45AAF2",
+  "#4B7BEC",
+  "#A55EEA",
+  "#E84393",
+];
+
+const colorPalette = [
+  "#1CCE67",
+  "#01DCE9",
+  "#FF6263",
+  "#FFCC12",
+  "#EA90EE",
+  "#FF8E50",
+  "#63B4FF",
+  "#9F63FF",
+];
+
 function TaskEditModal(props) {
   const [toasts, setToasts] = useState([]);
   const dispatch = useDispatch();
@@ -1118,20 +1144,7 @@ function TaskEditModal(props) {
                                 {isShowColorPicker ? (
                                   <CirclePicker
                                     color={finalColor}
-                                    colors={[
-                                      "#D63031",
-                                      "#FC5C65",
-                                      "#EE5A24",
-                                      "#FD9644",
-                                      "#FFC312",
-                                      "#F7B731",
-                                      "#26DE81",
-                                      "#2BCBBA",
-                                      "#45AAF2",
-                                      "#4B7BEC",
-                                      "#A55EEA",
-                                      "#E84393",
-                                    ]}
+                                    colors={colorPalette}
                                     onChangeComplete={onChangeColorTask}
                                   />
                                 ) : null}

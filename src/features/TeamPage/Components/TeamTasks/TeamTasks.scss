@@ -266,6 +266,7 @@ $baseTransition: all 0.3s;
     flex-direction: column;
     overflow-x: hidden;
     position: absolute;
+    overflow: inherit;
     .tasks-header {
         display: flex;
         justify-content: flex-end;
