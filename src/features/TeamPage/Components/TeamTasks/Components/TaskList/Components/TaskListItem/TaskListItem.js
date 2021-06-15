@@ -270,6 +270,7 @@ function TaskListItem(props) {
         </div>
       </div>
       <TaskEditModal
+        isOfTeam={props.isOfTeam}
         closePopup={onEditModalClose}
         isShowEditPopup={isShowEditPopup}
         data={modalTask}
