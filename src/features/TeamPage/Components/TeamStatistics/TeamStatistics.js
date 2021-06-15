@@ -10,6 +10,7 @@ import CIcon from "@coreui/icons-react";
 import teamApi from "src/api/teamApi";
 import { useParams } from "react-router";
 import statisticsApi from "src/api/statisticsApi";
+import { saveAs } from 'file-saver';
 
 TeamStatistics.propTypes = {};
 
@@ -42,6 +43,9 @@ function TeamStatistics(props) {
   const [filterTeamObject, setFilterTeamObject] = useState(null);
   const [filterMembersObject, setFilterMembersObject] = useState(null);
   const [boardId, setBoardId] = useState(null);
+
+  const [boardTaskDone, setBoardTaskDone] = useState([]);
+  const [requestModels, setRequestModels] = useState([]);
 
   const listBoardszzz = [
     {
@@ -290,6 +294,7 @@ function TeamStatistics(props) {
         params
       }).then(res => {
 
+        setBoardTaskDone(res.data);
         const max = res.data.reduce(function (a, b) {
           return Math.max(a, b);
         });
@@ -328,6 +333,9 @@ function TeamStatistics(props) {
         ...filterMembersObject
       }
       statisticsApi.getUserTaskDoneAndPoint({ params }).then(res => {
+
+        setRequestModels(res.data);
+
         const lbls = [];
         const dataBar = [];
         const bgColor = [];
@@ -472,6 +480,31 @@ function TeamStatistics(props) {
             ] */
   const [barDataSets, setBarDataSet] = useState([]);
 
+  const exportBoardExcel = () => {
+    console.log('click 1');
+    statisticsApi.exportTeamDoneBoard({
+      boardTaskDone: boardTaskDone
+    })
+      .then(blob => {
+        saveAs(blob, "boardTaskDone.xlsx")
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const exportGroupByUserExcel = () => {
+    console.log('click 2');
+    statisticsApi.exportTeamUserPointTask({
+      requestModels: requestModels
+    })
+      .then(blob => {
+        saveAs(blob, "pointandtaskgroupbyuser.xlsx")
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
   return (
     <div className=" team-statistics-container">
       <div className="header-label">Thống kê công việc nhóm Khóa luận Team</div>
@@ -508,7 +541,7 @@ function TeamStatistics(props) {
                 ))}
               </CButtonGroup>
             </div>
-            <div className="export-btn">
+            <div className="export-btn" onClick={exportBoardExcel}>
               Xuất Excel
               <CIcon name="cil-share-boxed" />
             </div>
@@ -540,7 +573,7 @@ function TeamStatistics(props) {
                 ))}
               </CButtonGroup>
             </div>
-            <div className="export-btn">
+            <div className="export-btn" onClick={exportGroupByUserExcel}>
               Xuất Excel
               <CIcon name="cil-share-boxed" />
             </div>

@@ -34,6 +34,8 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import teamApi from "src/api/teamApi";
 import statisticsApi from "src/api/statisticsApi";
+import axiosClient from "src/api/axiosClient";
+import { saveAs } from 'file-saver';
 DashBoardPage.propTypes = {};
 
 const random = (min, max) => {
@@ -53,6 +55,11 @@ function DashBoardPage(props) {
   const user = useSelector((state) => state.auth.currentUser);
   const [loadone, setLoadone] = useState(false);
   const [filter, setFilter] = useState('week');
+
+
+  const [userStatistics, setUserStatistics] = useState([]);
+  const [teamStatistics, setTeamStatistics] = useState([]);
+
   const myPosts = [
     {
       content:
@@ -210,6 +217,9 @@ function DashBoardPage(props) {
       const res1 = await statisticsApi.getPersonalTaskDone({ params });
       const res2 = await statisticsApi.getUserTaskDoneBoards({ params });
 
+      setUserStatistics(res1.data);
+      setTeamStatistics(res2.data);
+
       const max1 = res1.data.reduce(function (a, b) {
         return Math.max(a, b);
       });
@@ -252,6 +262,39 @@ function DashBoardPage(props) {
     console.log(defaultDatasets);
   }, [defaultDatasets])
 
+
+  const exportExcel = () => {
+    /*axiosClient.get('https://localhost:9001/api/test/export-excel')
+      .then(res => new Blob([res], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.click();
+        //window.URL.revokeObjectURL(url);
+      })
+      .catch(err => {
+        console.log(err)
+      })*/
+
+
+
+    statisticsApi.exportPersonalAndTeamStat({
+      userStatis: userStatistics,
+      teamStatis: teamStatistics,
+    })
+      .then(blob => {
+        saveAs(blob, "abc.xlsx")
+        /*const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.click();
+        window.URL.revokeObjectURL(url);*/
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
   return (
     <div className="dash-board-container">
       <CRow className="counting-group">
@@ -330,7 +373,7 @@ function DashBoardPage(props) {
               ))}
             </CButtonGroup>
           </div>
-          <div className="export-btn">
+          <div className="export-btn" onClick={exportExcel}>
             Xuất Excel
             <CIcon name="cil-share-boxed" />
           </div>

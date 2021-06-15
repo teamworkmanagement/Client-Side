@@ -37,6 +37,27 @@ const statisticsApi = {
         const url = "/statistics/user-task-done-boards";
         return axiosClient.get(url, params);
     },
+
+    exportPersonalAndTeamStat(payload) {
+        const url = '/statistics/export-personalandteam';
+        return axiosClient.post(url, payload, {
+            responseType: 'blob',
+        });
+    },
+
+    exportTeamDoneBoard(payload) {
+        const url = '/statistics/export-teamdoneboard';
+        return axiosClient.post(url, payload, {
+            responseType: 'blob',
+        });
+    }
+    ,
+    exportTeamUserPointTask(payload) {
+        const url = '/statistics/export-pointtask-groupbyuser';
+        return axiosClient.post(url, payload, {
+            responseType: 'blob',
+        });
+    }
 };
 
 export default statisticsApi;
