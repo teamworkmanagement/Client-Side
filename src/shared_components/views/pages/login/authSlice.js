@@ -1,16 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authApi from "../../../../api/authApi";
 
-export const register = createAsyncThunk("auth/register", async (payload) => {
-  const data = await authApi.register(payload);
-  console.log("register data: ", data);
+export const register = createAsyncThunk("auth/register", async (payload, { rejectWithValue }) => {
+  try {
+    const data = await authApi.register(payload);
+    console.log("register data: ", data);
+  }
+  catch (err) {
+    return rejectWithValue(err);
+  }
+
 });
 
 export const socialLogin = createAsyncThunk(
   "auth/social-login",
-  async (payload) => {
-    const data = await authApi.socialLogin(payload);
-    return data.data;
+  async (payload, { rejectWithValue }) => {
+    try {
+      const data = await authApi.socialLogin(payload);
+      return data.data;
+    }
+    catch (err) {
+      return rejectWithValue(err);
+    }
+
   }
 );
 
@@ -19,9 +31,15 @@ export const changePassword = createAsyncThunk("auth/changepassword", async (pay
   return data.data;
 });
 
-export const login = createAsyncThunk("auth/login", async (payload) => {
-  const data = await authApi.login(payload);
-  return data.data;
+export const login = createAsyncThunk("auth/login", async (payload, { rejectWithValue }) => {
+  try {
+    const data = await authApi.login(payload);
+    return data.data;
+  }
+  catch (err) {
+    return rejectWithValue(err);
+  }
+
 });
 
 export const islogin = createAsyncThunk("auth/isLogin", async () => {

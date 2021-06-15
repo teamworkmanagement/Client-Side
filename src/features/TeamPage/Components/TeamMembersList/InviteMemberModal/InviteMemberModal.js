@@ -22,6 +22,7 @@ InviteMemberModal.propTypes = {};
 function InviteMemberModal(props) {
   const { teamId } = useParams();
   const [email, setEmail] = useState("");
+  const user = useSelector(state => state.auth.currentUser);
 
   function handleOnClose() {
     if (props.onClose) {
@@ -34,20 +35,22 @@ function InviteMemberModal(props) {
     console.log(email);
     const obj = {
       isByEmail: true,
-      email: "email",
+      email: email,
       participationTeamId: teamId,
+      actionUserId: user.id,
     };
 
     try {
       const response = await teamApi.inviteUser(obj);
+      props.onClose(null);
     } catch (err) {
       console.log(err);
-      props.onClose(err.data.Message);
+      props.onClose(err.Message);
     } finally {
     }
   }
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   return (
     <CModal

@@ -46,9 +46,16 @@ const Login = () => {
     });
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    await dispatch(login(loginObject));
+    dispatch(login(loginObject))
+      .then(unwrapResult)
+      .then(originalPromiseResult => {
+
+      })
+      .catch(err => {
+        console.log('login err :', err);
+      });
     if (authStatus) {
       history.push("/dashboard");
     }

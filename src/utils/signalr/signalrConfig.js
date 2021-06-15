@@ -8,11 +8,11 @@ import {
 const isDev = true;
 //process.env.NODE_ENV === 'development';
 
-const startSignalRConnection = async (connection) => {
+export const startSignalRConnection = async (connection) => {
   try {
     await connection.start();
     console.assert(connection.state === HubConnectionState.Connected);
-    console.log("SignalR connection established");
+    console.log("SignalR connection established", connection.connectionId);
   } catch (err) {
     console.assert(connection.state === HubConnectionState.Disconnected);
     console.error("SignalR Connection Error: ", err);
@@ -66,7 +66,7 @@ export const setupSignalRConnection = (connectionHub, actionEventMap = {}) => {
     );
   });
 
-  startSignalRConnection(connection);
+  //startSignalRConnection(connection);
 
   /*connection.on('OnEvent', res => {
         const eventHandler = actionEventMap[res.eventType];

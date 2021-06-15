@@ -24,6 +24,8 @@ import { HiOutlineMail } from "react-icons/hi";
 import { BiKey } from "react-icons/bi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { IoIosArrowBack } from "react-icons/io";
+import { toast, ToastContainer } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 const ForgotPassword = () => {
   const history = useHistory();
@@ -41,10 +43,16 @@ const ForgotPassword = () => {
       setCurrentForm(2);
     }).catch(err => {
       console.log(err);
-      if (err.data) {
-        if (err.data.ErrorCode === "404")
-          alert("Tài khoản không tồn tại");
-      }
+
+      if (err.ErrorCode === "404")
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Email không tồn tại trong hệ thống"
+          />
+        )
+
     })
   }
   function GoBackSendCode() {
@@ -57,23 +65,43 @@ const ForgotPassword = () => {
       ...resetObj,
       email
     };
+
+    console.log(resetObj);
+    if (!resetObj.confirmPassword || !resetObj.password || !resetObj.token) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Bạn vui lòng nhập dữ liệu"
+        />);
+
+      return;
+    }
+
+    if (resetObj.confirmPassword !== resetObj.password) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Bạn vui lòng kiểm tra mật khẩu"
+        />);
+      return;
+    }
+
     authApi.resetPassword(payload)
       .then(res => {
         console.log(res);
         setCurrentForm(4);
       })
       .catch(err => {
-        if (err.data) {
-          console.log(err.data);
-          if (err.data.title) {
-            if (err.data.title.includes("validation")) {
-              alert("Xem lại mật khẩu đã nhập");
-            }
-          }
-
-          else {
-            alert("OTP không hợp lệ");
-          };
+        console.log(err);
+        if (err.Message?.includes('Error occured while reseting the password')) {
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Bạn vui lòng kiểm tra lại OTP"
+            />);
         }
       })
   }
@@ -345,6 +373,11 @@ const ForgotPassword = () => {
           </CCol>
         </CRow>
       </CContainer>
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+      />
     </div>
   );
 };

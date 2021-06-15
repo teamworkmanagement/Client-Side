@@ -1,4 +1,4 @@
-import { setupSignalRConnection } from "./signalrConfig";
+import { setupSignalRConnection, startSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
 import { reAssignUser, signalRAddNewList, signalRAddNewTask, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
 
@@ -6,49 +6,54 @@ import { reAssignUser, signalRAddNewList, signalRAddNewTask, signalRMoveList, si
 
 
 export const connection = setupSignalRConnection('https://localhost:9001/hubkanban');
-connection.on("AddNewTask", payload => {
-    console.log("add new card ", payload);
-    store.dispatch(signalRAddNewTask(payload));
-})
 
-connection.on("AddNewList", payload => {
-    console.log("add new list ", payload);
-    store.dispatch(signalRAddNewList(payload));
-})
+export const startKanbanService = () => {
+    startSignalRConnection(connection);
+    connection.on("AddNewTask", payload => {
+        console.log("add new card ", payload);
+        store.dispatch(signalRAddNewTask(payload));
+    })
 
-connection.on("RemoveTask", payload => {
-    console.log("remove task ", payload);
-    store.dispatch(signalRRemoveTask(payload));
-})
+    connection.on("AddNewList", payload => {
+        console.log("add new list ", payload);
+        store.dispatch(signalRAddNewList(payload));
+    })
 
-connection.on("RemoveList", payload => {
-    console.log("remove list ", payload);
-    store.dispatch(signalRRemoveList(payload));
-})
+    connection.on("RemoveTask", payload => {
+        console.log("remove task ", payload);
+        store.dispatch(signalRRemoveTask(payload));
+    })
 
-connection.on("MoveTask", payload => {
-    console.log("move task ", payload);
-    store.dispatch(signalRMoveTask(payload));
-})
+    connection.on("RemoveList", payload => {
+        console.log("remove list ", payload);
+        store.dispatch(signalRRemoveList(payload));
+    })
 
-connection.on("MoveList", payload => {
-    console.log("Move list ", payload);
-    store.dispatch(signalRMoveList(payload));
-})
+    connection.on("MoveTask", payload => {
+        console.log("move task ", payload);
+        store.dispatch(signalRMoveTask(payload));
+    })
 
-connection.on("UpdateTask", payload => {
-    console.log("Update task ", payload);
-    store.dispatch(signalRUpdateTask(payload));
-})
+    connection.on("MoveList", payload => {
+        console.log("Move list ", payload);
+        store.dispatch(signalRMoveList(payload));
+    })
 
-connection.on("UpdateList", payload => {
-    store.dispatch(signalRUpdateList(payload));
-})
+    connection.on("UpdateTask", payload => {
+        console.log("Update task ", payload);
+        store.dispatch(signalRUpdateTask(payload));
+    })
 
-connection.on("ReAssignUser", payload => {
-    console.log("reassign: ", payload);
-    store.dispatch(reAssignUser(payload));
-})
+    connection.on("UpdateList", payload => {
+        store.dispatch(signalRUpdateList(payload));
+    })
+
+    connection.on("ReAssignUser", payload => {
+        console.log("reassign: ", payload);
+        store.dispatch(reAssignUser(payload));
+    })
+}
+
 
 export const disconnectKanbanService = () => {
     connection.stop();

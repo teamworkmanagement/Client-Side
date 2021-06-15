@@ -37,8 +37,8 @@ axiosClient.interceptors.response.use(
     const originalRequest = err.config;
     if (err.response) {
       // client received an error response (5xx, 4xx)
-      //console.log('er1 res', err.response);
-      //console.log('er1 data', err.response.data);
+      console.log('er1 res', err.response);
+      console.log('er1 data', err.response.data);
 
       if (err.response.status === 401) store.dispatch(setValueAuth(false));
 
@@ -64,10 +64,10 @@ axiosClient.interceptors.response.use(
           });
       }
 
-      return Promise.reject(err.response);
+      return Promise.reject(err.response.data);
     } else if (err.request) {
       // client never received a response, or request never left
-      //console.log('er2', err.request.response);
+      console.log('er2', err.request.response);
       if (getCookie("TokenExpired") === "true") {
         return refreshTokenFunc()
           .then((data) => {
@@ -90,6 +90,7 @@ axiosClient.interceptors.response.use(
           });
       }
     } else {
+      console.log("er3", err);
     }
     return Promise.reject(err);
   }
