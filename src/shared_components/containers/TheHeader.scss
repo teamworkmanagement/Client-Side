@@ -269,6 +269,28 @@ $baseTransition: all 0.3s;
         height: 100%;
     }
 }
+.c-subheader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .team-info-header {
+        display: flex;
+        align-items: center;
+        img {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 500rem;
+            margin-right: 0.5rem;
+        }
+        .team-name {
+            font-weight: bold;
+            font-size: 110%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
 .lookup-input-header {
     display: flex;
     align-items: center;
