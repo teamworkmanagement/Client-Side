@@ -81,7 +81,7 @@ const TheHeaderDropdownMssg = () => {
           [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [triggerLoad]);
 
   useEffect(() => {
@@ -96,33 +96,31 @@ const TheHeaderDropdownMssg = () => {
   }, [newNoti]);
 
   const history = useHistory();
-  const onClick = (noti) => {
+  const onClick = (noti, index) => {
     console.log("onclick: ", noti);
-    const payload = {
-      groupId: noti.notificationGroup,
-      userId: user.id,
-    };
-    //notiApi.readNoti(payload).then(res => { }).catch(err => { });
-    const cloneNotis = [...notis];
+    if (!noti.notificationStatus) {
+      const payload = {
+        groupId: noti.notificationGroup,
+        userId: user.id,
+      };
 
-    const obj = cloneNotis.find((n) => n.notificationGroup === noti.notificationGroup);
+      notiApi.readNoti(payload).then(res => { }).catch(err => { });
+      const cloneNotis = [...notis];
 
-
-    /*if (obj.notificationStatus === false) {
-      obj.notificationStatus = true;
+      cloneNotis[index].notificationStatus = true;
       setNotis(cloneNotis);
       setItemsCount(itemsCount - 1);
-    }*/
+    }
 
-    if (obj.notificationLink)
+    if (noti.notificationLink)
       history.push({
-        pathname: obj.notificationLink.split("?")[0],
-        search: obj.notificationLink.split("?")[1]
-          ? obj.notificationLink.split("?")[1]
+        pathname: noti.notificationLink.split("?")[0],
+        search: noti.notificationLink.split("?")[1]
+          ? noti.notificationLink.split("?")[1]
           : null,
       });
-    console.log(obj.notificationLink.split("?")[0]);
-    console.log(obj.notificationLink.split("?")[1]);
+    /*console.log(noti.notificationLink.split("?")[0]);
+    console.log(noti.notificationLink.split("?")[1]);*/
   };
 
   function getNotiContent(noti) {
@@ -198,19 +196,17 @@ const TheHeaderDropdownMssg = () => {
           <CDropdownItem header tag="div" color="transparent">
             <div className="header-noti-list">
               <div className="title">Thông báo</div>
-              <div className="clear-btn">Xóa tất cả</div>
             </div>
           </CDropdownItem>
 
           {notis.length > 0 && (
             <div className="noti-list">
-              {notis.map((noti) => {
+              {notis.map((noti, index) => {
                 return (
                   <div
-                    onClick={() => onClick(noti)}
-                    className={`noti-item ${
-                      noti.notificationStatus ? "seen" : ""
-                    }`}
+                    onClick={() => onClick(noti, index)}
+                    className={`noti-item ${noti.notificationStatus ? "seen" : ""
+                      }`}
                   >
                     <div className="seen-signal"></div>
                     <img alt="" src={noti.notificationActionAvatar} />
