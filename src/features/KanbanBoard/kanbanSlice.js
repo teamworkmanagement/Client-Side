@@ -174,6 +174,10 @@ const kanbanSlice = createSlice({
                 task.userId = action.payload.userId;
                 task.userAvatar = action.payload.userAvatar;
             }
+        },
+        signalRChangeNameList(state, action) {
+            const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
+            obj.kanbanListTitle = action.payload.kanbanListName;
         }
     },
     extraReducers: {
@@ -199,6 +203,7 @@ export const {
     setTaskSelected,
     dragListLocal,
     dragTaskLocal,
-    reAssignUser
+    reAssignUser,
+    signalRChangeNameList
 } = actions;
 export default reducer;
