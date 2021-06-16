@@ -257,7 +257,29 @@ $baseTransition: all 0.3s;
         }
     }
 }
+@keyframes showInAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
 
+@mixin ItemAppear {
+    transition: all 0.3s ease-out;
+    transform: scale(0);
+    animation-name: showInAnimation;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+    animation-delay: 0.2s;
+    transform-origin: left;
+}
 //========================================
 .account-page-container {
     padding: 1.5rem;
@@ -284,6 +306,7 @@ $baseTransition: all 0.3s;
             padding: 0;
             width: fit-content;
             .tab-setting {
+                @include ItemAppear;
                 display: flex;
                 align-items: center;
                 background-color: white;
@@ -293,6 +316,12 @@ $baseTransition: all 0.3s;
                 cursor: pointer;
                 margin: 0.5rem 0rem;
                 transition: $baseTransition;
+                &.tab-1 {
+                    animation-delay: 0s;
+                }
+                &.tab-2 {
+                    animation-delay: 0.2s;
+                }
                 .icon {
                     margin-right: 0.5rem;
                     width: 1rem;

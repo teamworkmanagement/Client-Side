@@ -25,6 +25,7 @@ import {
   CToastBody,
   CToaster,
   CToastHeader,
+  CTooltip,
 } from "@coreui/react";
 import { CirclePicker } from "react-color";
 import ProgressSlider from "src/shared_components/MySharedComponents/ProgressSlider/ProgressSlider";
@@ -44,6 +45,8 @@ import Select, { components } from "react-select";
 import AsyncSelect from "react-select/async";
 import axiosClient from "src/api/axiosClient";
 import userApi from "src/api/userApi";
+import { BsArrowsMove } from "react-icons/bs";
+import { GrDocumentTime } from "react-icons/gr";
 
 TaskEditModal.propTypes = {};
 
@@ -125,6 +128,7 @@ function TaskEditModal(props) {
   const [triggerUpdateTask, setTriggerUpdateTask] = useState(-1); //cause setState is asynchonous action
 
   const curUser = useSelector((state) => state.auth.currentUser);
+  const [currentAssignedUser, setCurrentAssignedUser] = useState(null);
   const [commentContent, setCommentContent] = useState("");
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
@@ -240,6 +244,14 @@ function TaskEditModal(props) {
 
   useEffect(() => {
     if (props.data) {
+      if (props.data.userId) {
+        setCurrent({
+          value: props.data.userId,
+          label: props.data.userName,
+          img: props.data.userAvatar,
+        });
+        console.log(current);
+      }
       setTask({ ...props.data });
       changeColor(
         props.data.taskThemeColor ? props.data.taskThemeColor : "ffffff"
@@ -297,29 +309,6 @@ function TaskEditModal(props) {
 
         setListScores(scoreClone);
       }
-    }
-  }, [props.data]);
-
-  useEffect(() => {
-    if (props.data) {
-      axiosClient
-        .get(`/post/search-user?userId=${user.id}`)
-        .then((res) => {
-          const ops = res.data.map((x) => {
-            return {
-              value: x.userId,
-              label: x.userFullname,
-              img: x.userImageUrl,
-            };
-          });
-
-          //setOptions(ops);
-
-          const findObj = ops.find((x) => x.value === props.data.userId);
-          if (findObj) setCurrent(findObj);
-        })
-
-        .catch((err) => {});
     }
   }, [props.data]);
 
@@ -930,6 +919,36 @@ function TaskEditModal(props) {
     callback(await filterColors(inputValue));
   };
 
+  const [memberList, setMemberList] = useState([]);
+
+  useEffect(() => {
+    console.log(props.data);
+    if (props.data) {
+      try {
+        async function getAllMembers() {
+          const params = {
+            boardId: currentBoard,
+            keyword: inputValue,
+          };
+          const res = await userApi.searchUsersKanban({ params });
+
+          const listUsers = res.data.map((x) => {
+            return {
+              value: x.userId,
+              label: x.userFullname,
+              img: x.userImageUrl,
+            };
+          });
+          setMemberList(listUsers);
+          console.log(listUsers);
+          //return listUsers;
+        }
+
+        getAllMembers();
+      } catch (e) {}
+    }
+  }, [props.data]);
+
   return (
     <div>
       <div>
@@ -1055,11 +1074,26 @@ function TaskEditModal(props) {
                                 Giao cho
                               </div>
 
-                              <div style={{ width: "11rem" }}>
-                                <AsyncSelect
+                              <div style={{ width: "15rem" }}>
+                                <Select
+                                  className="basic-single"
+                                  value={current}
+                                  isClearable="true"
+                                  isSearchable="true"
+                                  name="member"
+                                  options={memberList}
+                                  placeholder="Chọn thành viên..."
+                                  components={{
+                                    Option: CustomOption,
+                                    SingleValue: ValueOption,
+                                  }}
+                                  noOptionsMessage={() => "Không tìm thấy"}
+                                  onChange={onChange}
+                                />
+                                {/* <AsyncSelect
                                   value={isFocused ? null : current}
                                   onChange={onChange}
-                                  options={options}
+                                  //options={options}
                                   placeholder="Chọn thành viên"
                                   loadOptions={loadOptions}
                                   defaultOptions
@@ -1068,13 +1102,13 @@ function TaskEditModal(props) {
                                     Option: CustomOption,
                                     SingleValue: ValueOption,
                                   }}
-                                  onFocus={() => {
-                                    setFocus(true);
-                                    setCurrent(null);
-                                  }}
-                                  onBlur={() => setFocus(false)}
-                                  blurInputOnSelect={true}
-                                />
+                                  // onFocus={() => {
+                                  //   setFocus(true);
+                                  //   setCurrent(null);
+                                  // }}
+                                  //onBlur={() => setFocus(false)}
+                                  //blurInputOnSelect={true}
+                                /> */}
                               </div>
                             </div>
                           </CCol>
@@ -1426,13 +1460,18 @@ function TaskEditModal(props) {
                     onClickOutside={() => setOpenPopoverLists(false)}
                     content={renderContentList()}
                   >
-                    <div
-                      className="action-item"
-                      onClick={() => setOpenPopoverLists(!openPopoverLists)}
+                    <CTooltip
+                      content="Chuyển công việc đến danh sách khác"
+                      placement="left"
                     >
-                      <CIcon name="cil-share-boxed" />
-                      <div className="action-name">Chuyển đến...</div>
-                    </div>
+                      <div
+                        className="action-item"
+                        onClick={() => setOpenPopoverLists(!openPopoverLists)}
+                      >
+                        <BsArrowsMove className="icon-move" />
+                        <div className="action-name">Chuyển đến...</div>
+                      </div>
+                    </CTooltip>
                   </Popover>
 
                   {props.data.showPoint && (
@@ -1444,20 +1483,32 @@ function TaskEditModal(props) {
                       onClickOutside={() => setOpenPopoverScores(false)}
                       content={renderContentScore()}
                     >
-                      <div
-                        className="action-item"
-                        onClick={() => setOpenPopoverScores(!openPopoverScores)}
-                      >
-                        <CIcon name="cil-sort-numeric-up" />
-                        <div className="action-name">Cho điểm</div>
-                      </div>
+                      <CTooltip content="Cho điểm công việc" placement="left">
+                        <div
+                          className="action-item"
+                          onClick={() =>
+                            setOpenPopoverScores(!openPopoverScores)
+                          }
+                        >
+                          <CIcon name="cil-sort-numeric-up" />
+                          <div className="action-name">Cho điểm</div>
+                        </div>
+                      </CTooltip>
                     </Popover>
                   )}
+                  <CTooltip content="Xem lịch sử chỉnh sửa" placement="left">
+                    <div className="action-item">
+                      <GrDocumentTime className="icon-version" />
+                      <div className="action-name">Lịch sử chỉnh sửa</div>
+                    </div>
+                  </CTooltip>
 
-                  <div className="action-item" onClick={onRemoveTask}>
-                    <CIcon name="cil-trash" />
-                    <div className="action-name">Xóa công việc</div>
-                  </div>
+                  <CTooltip content="Xóa công việc" placement="left">
+                    <div className="action-item" onClick={onRemoveTask}>
+                      <CIcon name="cil-trash" />
+                      <div className="action-name">Xóa công việc</div>
+                    </div>
+                  </CTooltip>
                 </div>
               </CCol>
             </CRow>

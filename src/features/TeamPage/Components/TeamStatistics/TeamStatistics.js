@@ -10,7 +10,7 @@ import CIcon from "@coreui/icons-react";
 import teamApi from "src/api/teamApi";
 import { useParams } from "react-router";
 import statisticsApi from "src/api/statisticsApi";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 TeamStatistics.propTypes = {};
 
@@ -147,9 +147,7 @@ function TeamStatistics(props) {
     };
   })();*/
 
-  const [defaultDatasets, setDefaultDatasets] = useState([
-
-  ]);
+  const [defaultDatasets, setDefaultDatasets] = useState([]);
 
   const [defaultOptions, setDefaultOptions] = useState({
     maintainAspectRatio: false,
@@ -255,6 +253,17 @@ function TeamStatistics(props) {
     },
   ];
 
+  const smallModeContributeList = [
+    {
+      name: "Số lượng",
+      value: 1,
+    },
+    {
+      name: "Tổng điểm",
+      value: 2,
+    },
+  ];
+
   function getProgressChartLabels() {
     const labels = [];
     var length = 7;
@@ -283,94 +292,93 @@ function TeamStatistics(props) {
     return color;
   };
 
-
   useEffect(() => {
     if (filterTeamObject) {
-      console.log('team filter', filterTeamObject);
+      console.log("team filter", filterTeamObject);
       const params = {
-        ...filterTeamObject
-      }
-      statisticsApi.getBoardTaskDone({
-        params
-      }).then(res => {
+        ...filterTeamObject,
+      };
+      statisticsApi
+        .getBoardTaskDone({
+          params,
+        })
+        .then((res) => {
+          setBoardTaskDone(res.data);
+          const max = res.data.reduce(function (a, b) {
+            return Math.max(a, b);
+          });
 
-        setBoardTaskDone(res.data);
-        const max = res.data.reduce(function (a, b) {
-          return Math.max(a, b);
-        });
+          const maxValue = Math.ceil(max / 10) * 10;
+          if (maxValue !== 0) {
+            const optionsClone = { ...defaultOptions };
+            optionsClone.scales.yAxes[0].ticks.stepSize = Math.ceil(
+              maxValue / 5
+            );
+            optionsClone.scales.yAxes[0].ticks.max = maxValue;
 
-        const maxValue = Math.ceil(max / 10) * 10;
-        if (maxValue !== 0) {
-          const optionsClone = { ...defaultOptions };
-          optionsClone.scales.yAxes[0].ticks.stepSize = Math.ceil(maxValue / 5);
-          optionsClone.scales.yAxes[0].ticks.max = maxValue;
+            setDefaultOptions(optionsClone);
+          }
 
-          setDefaultOptions(optionsClone);
-        }
-
-
-        setDefaultDatasets([{
-          label: "Công việc nhóm",
-          backgroundColor: hexToRgba(brandInfo, 10),
-          borderColor: brandInfo,
-          pointHoverBackgroundColor: brandInfo,
-          borderWidth: 2,
-          data: res.data,
-        }]);
-
-
-      }).catch(err => {
-
-      })
+          setDefaultDatasets([
+            {
+              label: "Công việc nhóm",
+              backgroundColor: hexToRgba(brandInfo, 10),
+              borderColor: brandInfo,
+              pointHoverBackgroundColor: brandInfo,
+              borderWidth: 2,
+              data: res.data,
+            },
+          ]);
+        })
+        .catch((err) => {});
     }
-  }, [filterTeamObject])
+  }, [filterTeamObject]);
 
   useEffect(() => {
     if (filterMembersObject) {
-      console.log('member filter', filterMembersObject);
+      console.log("member filter", filterMembersObject);
 
       const params = {
-        ...filterMembersObject
-      }
-      statisticsApi.getUserTaskDoneAndPoint({ params }).then(res => {
+        ...filterMembersObject,
+      };
+      statisticsApi
+        .getUserTaskDoneAndPoint({ params })
+        .then((res) => {
+          setRequestModels(res.data);
 
-        setRequestModels(res.data);
+          const lbls = [];
+          const dataBar = [];
+          const bgColor = [];
+          const bdColor = [];
+          res.data.forEach((ele) => {
+            lbls.push(ele.userFullName);
+            dataBar.push(contributeMode == 1 ? ele.taskDoneCount : ele.point);
+            bgColor.push(hexToRgba(ele.colorCode, 10));
+            bdColor.push(ele.colorCode);
+          });
 
-        const lbls = [];
-        const dataBar = [];
-        const bgColor = [];
-        const bdColor = [];
-        res.data.forEach(ele => {
-          lbls.push(ele.userFullName);
-          dataBar.push(contributeMode == 1 ? ele.taskDoneCount : ele.point);
-          bgColor.push(hexToRgba(ele.colorCode, 10));
-          bdColor.push(ele.colorCode);
-        });
+          setLabels(lbls);
 
-        setLabels(lbls);
-
-        setBarDataSet([
-          {
-            label: contributeMode === 1 ? "Số công việc" : "Tổng điểm",
-            backgroundColor: bgColor,
-            data: dataBar,
-            borderColor: bdColor,
-            borderWidth: 1,
-            barThickness: 30,
-          },
-        ]);
-      }).catch(err => {
-
-      })
+          setBarDataSet([
+            {
+              label: contributeMode === 1 ? "Số công việc" : "Tổng điểm",
+              backgroundColor: bgColor,
+              data: dataBar,
+              borderColor: bdColor,
+              borderWidth: 1,
+              barThickness: 30,
+            },
+          ]);
+        })
+        .catch((err) => {});
     }
-  }, [filterMembersObject])
+  }, [filterMembersObject]);
 
   const { teamId } = useParams();
   useEffect(() => {
     teamApi
       .getBoardsByTeam(teamId)
       .then((res) => {
-
         const boards = res.data.map((x) => {
           return {
             value: x.kanbanBoardId,
@@ -381,7 +389,7 @@ function TeamStatistics(props) {
 
         setListBoards(boards);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, []);
 
   useEffect(() => {
@@ -394,37 +402,39 @@ function TeamStatistics(props) {
       setFilterTeamObject({
         ...filterTeamObject,
         boardId: selectedBoard.value,
-        filter: filterTeamObject ? filterTeamObject.filter : 'week'
+        filter: filterTeamObject ? filterTeamObject.filter : "week",
       });
     }
-  }, [selectedBoard])
+  }, [selectedBoard]);
 
   useEffect(() => {
-    if (!selectedBoard)
-      return;
+    if (!selectedBoard) return;
 
     if (progressTimeMode) {
       setFilterTeamObject({
         ...filterTeamObject,
-        filter: progressTimeMode === 1 ? 'week' : progressTimeMode === 2 ? 'month' : 'year',
+        filter:
+          progressTimeMode === 1
+            ? "week"
+            : progressTimeMode === 2
+            ? "month"
+            : "year",
         boardId: selectedBoard.value,
       });
     }
   }, [progressTimeMode]);
 
   useEffect(() => {
-    if (!selectedBoard)
-      return;
+    if (!selectedBoard) return;
 
     if (contributeMode) {
       setFilterMembersObject({
         ...filterMembersObject,
         boardId: selectedBoard.value,
-        type: contributeMode === 1 ? "task" : "score"
-      })
+        type: contributeMode === 1 ? "task" : "score",
+      });
     }
   }, [contributeMode]);
-
 
   /*
     [
@@ -481,30 +491,32 @@ function TeamStatistics(props) {
   const [barDataSets, setBarDataSet] = useState([]);
 
   const exportBoardExcel = () => {
-    console.log('click 1');
-    statisticsApi.exportTeamDoneBoard({
-      boardTaskDone: boardTaskDone
-    })
-      .then(blob => {
-        saveAs(blob, "boardTaskDone.xlsx")
+    console.log("click 1");
+    statisticsApi
+      .exportTeamDoneBoard({
+        boardTaskDone: boardTaskDone,
       })
-      .catch(err => {
+      .then((blob) => {
+        saveAs(blob, "boardTaskDone.xlsx");
+      })
+      .catch((err) => {
         console.log(err);
-      })
-  }
+      });
+  };
 
   const exportGroupByUserExcel = () => {
-    console.log('click 2');
-    statisticsApi.exportTeamUserPointTask({
-      requestModels: requestModels
-    })
-      .then(blob => {
-        saveAs(blob, "pointandtaskgroupbyuser.xlsx")
+    console.log("click 2");
+    statisticsApi
+      .exportTeamUserPointTask({
+        requestModels: requestModels,
       })
-      .catch(err => {
+      .then((blob) => {
+        saveAs(blob, "pointandtaskgroupbyuser.xlsx");
+      })
+      .catch((err) => {
         console.log(err);
-      })
-  }
+      });
+  };
   return (
     <div className=" team-statistics-container">
       <div className="header-label">Thống kê công việc nhóm Khóa luận Team</div>
@@ -517,7 +529,7 @@ function TeamStatistics(props) {
             components={{ Option: Option }}
             placeholder="Chọn bảng công việc..."
             options={listBoards}
-            onInputChange={() => { }}
+            onInputChange={() => {}}
             onChange={onChangeSelectedBoard}
           />
         </CCol>
@@ -526,24 +538,26 @@ function TeamStatistics(props) {
         <div className="chart-progress-container">
           <div className="chart-header">
             <div className="chart-name">Tiến độ công việc nhóm</div>
-            <div className="timeline-mode">
-              <CButtonGroup className="float-right mr-3">
-                {modeProgressList.map((item) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={item.value}
-                    className="mx-0"
-                    onClick={() => setProgressTimeMode(item.value)}
-                    active={item.value === progressTimeMode}
-                  >
-                    {item.name}
-                  </CButton>
-                ))}
-              </CButtonGroup>
-            </div>
-            <div className="export-btn" onClick={exportBoardExcel}>
-              Xuất Excel
-              <CIcon name="cil-share-boxed" />
+            <div className="chart-btn-group">
+              <div className="timeline-mode">
+                <CButtonGroup className="float-right mr-3">
+                  {modeProgressList.map((item) => (
+                    <CButton
+                      color="outline-secondary"
+                      key={item.value}
+                      className="mx-0"
+                      onClick={() => setProgressTimeMode(item.value)}
+                      active={item.value === progressTimeMode}
+                    >
+                      {item.name}
+                    </CButton>
+                  ))}
+                </CButtonGroup>
+              </div>
+              <div className="export-btn" onClick={exportBoardExcel}>
+                Xuất Excel
+                <CIcon name="cil-share-boxed" />
+              </div>
             </div>
           </div>
           <CChartLine
@@ -558,24 +572,39 @@ function TeamStatistics(props) {
         <div className="chart-contribute-container">
           <div className="chart-header">
             <div className="chart-name">Đóng góp của thành viên</div>
-            <div className="timeline-mode">
-              <CButtonGroup className="float-right mr-3">
-                {modeContributeList.map((item) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={item.value}
-                    className="mx-0"
-                    onClick={() => setContributeMode(item.value)}
-                    active={item.value === contributeMode}
-                  >
-                    {item.name}
-                  </CButton>
-                ))}
-              </CButtonGroup>
-            </div>
-            <div className="export-btn" onClick={exportGroupByUserExcel}>
-              Xuất Excel
-              <CIcon name="cil-share-boxed" />
+            <div className="chart-btn-group">
+              <div className="timeline-mode">
+                <CButtonGroup className="float-right normal-group mr-3">
+                  {modeContributeList.map((item) => (
+                    <CButton
+                      color="outline-secondary"
+                      key={item.value}
+                      className="mx-0"
+                      onClick={() => setContributeMode(item.value)}
+                      active={item.value === contributeMode}
+                    >
+                      {item.name}
+                    </CButton>
+                  ))}
+                </CButtonGroup>
+                <CButtonGroup className="float-right small-group mr-3">
+                  {smallModeContributeList.map((item) => (
+                    <CButton
+                      color="outline-secondary"
+                      key={item.value}
+                      className="mx-0"
+                      onClick={() => setContributeMode(item.value)}
+                      active={item.value === contributeMode}
+                    >
+                      {item.name}
+                    </CButton>
+                  ))}
+                </CButtonGroup>
+              </div>
+              <div className="export-btn" onClick={exportGroupByUserExcel}>
+                Xuất Excel
+                <CIcon name="cil-share-boxed" />
+              </div>
             </div>
           </div>
           <CChartBar

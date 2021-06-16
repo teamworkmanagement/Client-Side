@@ -10,10 +10,6 @@ const _nav = [
     name: "Tổng quan",
     to: "/dashboard",
     icon: "cil-speedometer", //<CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon"/>,
-    badge: {
-      color: "info",
-      text: "NEW",
-    },
   },
   {
     _tag: "CSidebarNavItem",

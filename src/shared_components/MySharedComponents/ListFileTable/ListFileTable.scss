@@ -349,6 +349,7 @@ $animation-offset: 0s;
                 border: 1px solid $subTextColor;
                 border-left: none;
                 border-right: none;
+                border-bottom: 2px solid rgba(0, 0, 0, 0.5) !important;
                 &:first-child {
                     border-left: 1px solid $textColor;
                     border-left: 1px solid $subTextColor;

@@ -353,7 +353,7 @@ $baseTransition: all 0.3s;
                 }
                 tbody {
                     tr {
-                        @include TeamItemAppear;
+                        //@include TeamItemAppear;
                         cursor: pointer;
                     }
                 }

@@ -97,6 +97,7 @@ const TheHeaderDropdownMssg = () => {
 
   const history = useHistory();
   const onClick = (noti) => {
+    setShow(false);
     console.log("onclick: ", noti);
     const payload = {
       groupId: noti.notificationGroup,
@@ -105,8 +106,9 @@ const TheHeaderDropdownMssg = () => {
     //notiApi.readNoti(payload).then(res => { }).catch(err => { });
     const cloneNotis = [...notis];
 
-    const obj = cloneNotis.find((n) => n.notificationGroup === noti.notificationGroup);
-
+    const obj = cloneNotis.find(
+      (n) => n.notificationGroup === noti.notificationGroup
+    );
 
     /*if (obj.notificationStatus === false) {
       obj.notificationStatus = true;
@@ -177,6 +179,8 @@ const TheHeaderDropdownMssg = () => {
     //debugger;
   }
 
+  const [show, setShow] = useState(false);
+
   return (
     <CDropdown
       inNav
@@ -187,14 +191,21 @@ const TheHeaderDropdownMssg = () => {
         ref={bellRef}
         className="c-header-nav-link"
         caret={false}
+        onClick={() => setShow(true)}
       >
         <CIcon name="cil-bell" />
-        <CBadge shape="pill" color="danger">
-          {itemsCount}
-        </CBadge>
+        {itemsCount > 0 && (
+          <CBadge shape="pill" color="danger">
+            {itemsCount}
+          </CBadge>
+        )}
       </CDropdownToggle>
       <div>
-        <CDropdownMenu className="pt-0 fixedsize" placement="bottom-end">
+        <CDropdownMenu
+          show={show}
+          className="pt-0 fixedsize"
+          placement="bottom-end"
+        >
           <CDropdownItem header tag="div" color="transparent">
             <div className="header-noti-list">
               <div className="title">Thông báo</div>

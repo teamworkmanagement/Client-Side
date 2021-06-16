@@ -349,6 +349,7 @@ $baseTransition: all 0.3s;
         padding: 0;
         background-color: transparent;
         .kanbanlist-container {
+            overflow: initial;
             height: fit-content;
         }
     }

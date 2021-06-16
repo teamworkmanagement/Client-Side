@@ -282,23 +282,39 @@ $baseTransition: all 0.3s;
         padding: 0;
         margin-bottom: 1rem;
         .chart-header {
-            padding: 1rem;
+            padding: 0.5rem 1rem;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
             justify-content: space-between;
             .chart-name {
                 font-weight: bold;
+
+                margin: 0.5rem 0rem;
+                margin-right: 2rem;
             }
-            .timeline-mode {
-                @include TimelineModeGroupButton;
-                width: 8rem;
+            .chart-btn-group {
+                display: flex;
                 flex-grow: 1;
-            }
-            .export-btn {
-                @include NormalButtonStyle;
-                .c-icon {
-                    margin-left: 0.5rem;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                align-items: center;
+                .timeline-mode {
+                    margin: 0.5rem 0rem;
+                    @include TimelineModeGroupButton;
+                    width: fit-content;
+                    flex-grow: 1;
+                    .btn-group {
+                        margin-right: 0 !important;
+                    }
+                }
+                .export-btn {
+                    margin: 0.5rem 0rem;
+                    margin-left: 1rem;
+                    @include NormalButtonStyle;
+                    .c-icon {
+                        margin-left: 0.5rem;
+                    }
                 }
             }
         }
@@ -312,23 +328,59 @@ $baseTransition: all 0.3s;
         padding: 0;
         margin-bottom: 2rem;
         .chart-header {
-            padding: 1rem;
+            padding: 0.5rem 1rem;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
             justify-content: space-between;
             .chart-name {
                 font-weight: bold;
+
+                margin: 0.5rem 0rem;
+                margin-right: 2rem;
             }
-            .timeline-mode {
-                @include TimelineModeGroupButton;
-                width: 8rem;
+            .chart-btn-group {
+                display: flex;
                 flex-grow: 1;
-            }
-            .export-btn {
-                @include NormalButtonStyle;
-                .c-icon {
-                    margin-left: 0.5rem;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                align-items: center;
+                //width: 100%;
+                .timeline-mode {
+                    margin: 0.5rem 0rem;
+                    @include TimelineModeGroupButton;
+                    width: fit-content;
+                    flex-grow: 1;
+                    //width: 100%;
+                    .btn-group {
+                        margin-right: 0 !important;
+                        //width: 100%;
+                        button {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                        &.normal-group {
+                            display: inline-flex;
+                            @media (max-width: 430px) {
+                                display: none;
+                            }
+                        }
+                        &.small-group {
+                            display: inline-flex;
+                            @media (min-width: 430px) {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+                .export-btn {
+                    margin: 0.5rem 0rem;
+                    margin-left: 1rem;
+                    @include NormalButtonStyle;
+                    .c-icon {
+                        margin-left: 0.5rem;
+                    }
                 }
             }
         }
