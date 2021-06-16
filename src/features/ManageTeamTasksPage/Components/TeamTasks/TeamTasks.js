@@ -15,6 +15,7 @@ import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/
 import queryString from 'query-string';
 import { useHistory } from "react-router";
 import { setTeamLoading } from "src/appSlice";
+import CreateKBListModal from "src/features/TeamPage/Components/TeamTasks/Components/CreateKBListModal/CreateKBListModal";
 
 TeamTasks.propTypes = {};
 
@@ -34,6 +35,8 @@ function TeamTasks(props) {
 
   const [notfound, setNotFound] = useState(false);
   const user = useSelector(state => state.auth.currentUser);
+  const [showAddKBList, setShowAddKBList] = useState(false);
+
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -62,6 +65,15 @@ function TeamTasks(props) {
       });
   }, [])
 
+  const onClose = () => {
+    setShowAddKBList(false);
+  };
+
+  const onCreateKanbanList = () => {
+    console.log('zzzz');
+    setShowAddKBList(true);
+  }
+
   const renderNormal = () => {
     const queryO = queryString.parse(history.location.search);
     return <>
@@ -80,7 +92,7 @@ function TeamTasks(props) {
             <BsSearch className="icon-search" />
           </div>
           {showMode === 1 && (
-            <div className="add-btn add-list-btn">
+            <div className="add-btn add-list-btn" onClick={onCreateKanbanList}>
               <CIcon name="cil-plus" />
               Tạo danh sách
             </div>
@@ -134,6 +146,12 @@ function TeamTasks(props) {
   return (
     <div className="team-tasks-container">
       {notfound ? <NotFoundPage /> : renderNormal()}
+    
+      <CreateKBListModal
+        boardId={props.boardId}
+        showAddKBList={showAddKBList}
+        onClose={onClose}
+      />
     </div>
   );
 }

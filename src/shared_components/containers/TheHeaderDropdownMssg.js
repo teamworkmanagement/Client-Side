@@ -24,7 +24,11 @@ import { AiOutlineNotification } from "react-icons/ai";
 import { HiOutlineBan } from "react-icons/hi";
 import { VscArrowUp } from "react-icons/vsc";
 // register it.
-timeago.register("vi", vi);
+
+import moment from "moment";
+import "moment/locale/vi";
+
+moment.locale("vi");
 
 const TheHeaderDropdownMssg = () => {
   const [notis, setNotis] = useState([]);
@@ -89,7 +93,7 @@ const TheHeaderDropdownMssg = () => {
     const clone = [...notis];
 
     setItemsCount(itemsCount + 1);
-    clone.splice(0, 0, {...newNoti});
+    clone.splice(0, 0, { ...newNoti });
     setNotis(clone);
     console.log(newNoti);
     //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
@@ -156,7 +160,8 @@ const TheHeaderDropdownMssg = () => {
       if (hour < 10) hour = "0" + hour;
       var minute = date.getMinutes();
       if (minute < 10) minute = "0" + minute;
-      return hour + ":" + minute;
+      //return hour + ":" + minute;
+      return moment(notiDate).format("HH:mm");
     }
 
     var dateStr = date.getDate().toString();
@@ -167,10 +172,12 @@ const TheHeaderDropdownMssg = () => {
 
     if (date.getFullYear() === today.getFullYear()) {
       //cùng năm khác ngày
-      return dateStr + "/" + monthStr;
+      //return dateStr + "/" + monthStr;
+      return moment(notiDate).format("dd/MM")
     } else {
       //khác năm
-      return dateStr + "/" + monthStr + "/" + yearStr;
+      //return dateStr + "/" + monthStr + "/" + yearStr;
+      return moment(notiDate).format("dd/MM/yyyy");
     }
     //debugger;
   }
