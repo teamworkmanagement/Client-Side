@@ -29,6 +29,7 @@ import { AiOutlineTeam } from "react-icons/ai";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
+import teamApi from "src/api/teamApi";
 
 ListTeamPage.propTypes = {};
 
@@ -243,6 +244,21 @@ function ListTeamPage(props) {
     history.push(`/team/${teamId}`);
   };
 
+  const leaveTeam = (teamId) => {
+    console.log(teamId);
+    const params = {
+      "teamId": teamId,
+      "userId": user.id
+    };
+
+    teamApi.leaveTeam({ params })
+      .then(res => {
+        dispatch(getTeamByUserId(user.id))
+      })
+      .catch(err => {
+
+      });
+  }
   const renderNormal = () => {
     return (
       <>
@@ -303,23 +319,11 @@ function ListTeamPage(props) {
                               aria-labelledby="dropdownMenuButton"
                               placement="bottom-end"
                             >
-                              <CDropdownItem className="first">
+                              <CDropdownItem className="first" onClick={() => navigateToTeam(team.teamId)}>
                                 <CIcon name="cil-arrow-circle-right" />
                                 Vào nhóm
                               </CDropdownItem>
-                              <CDropdownItem className="middle">
-                                <div className="dropdown-icon-group">
-                                  <CIcon name="cil-bell" />
-                                  <CIcon
-                                    className="rotate-45"
-                                    name="cil-window-minimize"
-                                  />
-                                </div>
-                                <div className="special-text">
-                                  Tắt thông báo
-                                </div>
-                              </CDropdownItem>
-                              <CDropdownItem className="last">
+                              <CDropdownItem className="last" onClick={() => leaveTeam(team.teamId)}>
                                 <CIcon name="cil-account-logout" />
                                 Rời nhóm
                               </CDropdownItem>

@@ -89,7 +89,7 @@ const TheHeaderDropdownMssg = () => {
     const clone = [...notis];
 
     setItemsCount(itemsCount + 1);
-    clone.splice(0, 0, newNoti);
+    clone.splice(0, 0, {...newNoti});
     setNotis(clone);
     console.log(newNoti);
     //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);

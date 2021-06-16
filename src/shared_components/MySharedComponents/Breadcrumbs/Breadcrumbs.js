@@ -59,10 +59,10 @@ function Breadcrumbs(props) {
   }
 
   useEffect(() => {
-    console.log(history.location);
+    //console.log(history.location);
     const pathname = history.location.pathname;
     const pathParts = pathname.split("/");
-    console.log(pathParts);
+    //console.log(pathParts);
     const search = history.location.search;
     const currents = [];
     currents.push(getBreadcrumbByName("/dashboard"));

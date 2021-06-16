@@ -45,6 +45,10 @@ const teamApi = {
     getTeamsRecommendForUser(userId) {
         const url = `/team/teams-recommend-user/${userId}`;
         return axiosClient.get(url);
+    },
+    leaveTeam(payload) {
+        const url = '/participation';
+        return axiosClient.delete(url, payload);
     }
 };
 

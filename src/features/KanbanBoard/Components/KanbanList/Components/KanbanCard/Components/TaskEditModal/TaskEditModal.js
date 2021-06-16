@@ -44,6 +44,8 @@ import Select, { components } from "react-select";
 import AsyncSelect from "react-select/async";
 import axiosClient from "src/api/axiosClient";
 import userApi from "src/api/userApi";
+import TaskCommentInput from "./TaskCommentInput";
+import { convertToRaw } from "draft-js";
 
 TaskEditModal.propTypes = {};
 
@@ -319,7 +321,7 @@ function TaskEditModal(props) {
           if (findObj) setCurrent(findObj);
         })
 
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [props.data]);
 
@@ -347,8 +349,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
@@ -386,8 +388,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -665,7 +667,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -713,7 +715,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -754,10 +756,10 @@ function TaskEditModal(props) {
                 setAttachments(attachmentsClone);
                 dispatchUpdateTask();
               })
-              .catch((err) => {});
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -784,8 +786,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -923,11 +925,85 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const loadOptions = async (inputValue, callback) => {
     callback(await filterColors(inputValue));
+  };
+
+  String.prototype.replaceBetween = function (start, end, what) {
+    return this.substring(0, start) + what + this.substring(end);
+  };
+
+  const saveContent = (editorState) => {
+    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+    if (blocks.length === 1) {
+      if (blocks[0].text === "") return;
+    }
+    const cloneBlocks = [...blocks];
+
+    //tags
+    const obj = convertToRaw(editorState.getCurrentContent());
+
+    const mentions = [];
+    const entityMap = obj.entityMap;
+
+    //console.log(entityMap);
+    console.log(obj);
+    for (const property in entityMap) {
+      if (entityMap[property].type === "mention")
+        mentions.push(entityMap[property].data.mention);
+    }
+
+    //console.log(cloneBlocks);
+
+    cloneBlocks.forEach((block, index) => {
+      if (block.entityRanges.length > 0) {
+        block.entityRanges.forEach((entity) => {
+          var nameTag = block.text.substring(
+            entity.offset,
+            entity.offset + entity.length
+          );
+          block.text = block.text.replaceBetween(
+            entity.offset,
+            entity.offset + entity.length,
+            `<strong>@${nameTag}</strong>`
+          );
+          console.log(block.text);
+        });
+      }
+    });
+
+    console.log(cloneBlocks);
+
+    let value = cloneBlocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
+
+    let userIds = [];
+    if (mentions.length > 0) {
+      userIds = mentions.map((m) => m.id);
+    }
+
+    commentApi
+      .addComment({
+        commentTaskId: task.taskId,
+        commentUserId: user.id,
+        commentUserAvatar: user.userAvatar,
+        commentUserName: user.fullName,
+        commentContent: value,
+        commentCreatedAt: new Date().toISOString(),
+        commentIsDeleted: false,
+        commentUserTagIds: userIds,
+      })
+      .then(res=>{
+
+      })
+      .catch(err=>{
+        
+      })
+    console.log(value);
   };
 
   return (
@@ -1388,13 +1464,14 @@ function TaskEditModal(props) {
                       <img alt="" src="../avatars/6.jpg" />
                     </div>
                     <div className="input-container">
-                      <CInput
+                      {/*<CInput
                         type="text"
                         placeholder="Viết bình luận..."
                         onKeyDown={onAddComment}
                         onChange={(e) => setCommentContent(e.target.value)}
                         value={commentContent}
-                      />
+                      />*/}
+                      <TaskCommentInput saveContent={saveContent} boardId={currentBoard} />
                     </div>
                   </div>
                   <div className="comment-list">
