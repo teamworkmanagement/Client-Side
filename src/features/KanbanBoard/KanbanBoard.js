@@ -23,7 +23,8 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import TaskEditModal from "./Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import { FindNextRank, FindPreRank, FindRankBetween, genNewRank } from "src/utils/lexorank/lexorank";
 import { connection } from "src/utils/signalr/kanbanService";
-import { dragListLocal, dragTaskLocal } from "./kanbanSlice";
+import { dragListLocal, dragTaskLocal, setCurrentBoard } from "./kanbanSlice";
+import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 
 KanbanBoard.propTypes = {};
 
@@ -321,6 +322,10 @@ function KanbanBoard(props) {
         search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
       });
       setIsShowEditPopup(false);
+
+      if (err.Message && err.Message.includes('Not found permission')) {
+        dispatch(setCurrentBoard(null));
+      }
     })
   }
 
@@ -372,7 +377,7 @@ function KanbanBoard(props) {
 
   const renderNormal = () => {
     return <>
-      {kanbanLists.length > 0 && (
+      {kanbanLists.length > 0 && currentBoard && (
         <div className="kanban-board-container">
           {/* <CardLoading isLoading={isLoading} /> */}
 
@@ -413,7 +418,7 @@ function KanbanBoard(props) {
         </div>
       )}
 
-      {kanbanLists.length === 0 && (
+      {kanbanLists.length === 0 && currentBoard && (
         <div className="nodata-image">
           <div className="icon-group">
             <RiTableLine className="icon-task" />
@@ -422,8 +427,9 @@ function KanbanBoard(props) {
 
           <div className="noti-infor">
             Chưa có danh sách công việc nào trong bảng này
-        </div>
+          </div>
           <div className="create-btn">Tạo danh sách mới</div>
+
         </div>
       )}
     </>
@@ -445,6 +451,7 @@ function KanbanBoard(props) {
         <CardLoading isLoading={isLoading} />
       </div> : renderNormal()}
 
+      {!currentBoard && !isLoading && <NotFoundPage />}
       <TaskEditModal
         isOfTeam={props.isOfTeam}
         closePopup={onEditModalClose}

@@ -8,7 +8,7 @@ import GanttChart from "src/shared_components/MySharedComponents/GanttChart/Gant
 import TaskList from "src/features/TeamPage/Components/TeamTasks/Components/TaskList/TaskList";
 import { AiOutlineLeft } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
-import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { getBoardDataForUI, setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
@@ -36,6 +36,7 @@ function TeamTasks(props) {
   const [notfound, setNotFound] = useState(false);
   const user = useSelector(state => state.auth.currentUser);
   const [showAddKBList, setShowAddKBList] = useState(false);
+  const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
 
   const dispatch = useDispatch();
 
@@ -60,8 +61,14 @@ function TeamTasks(props) {
 
         if (err.data?.ErrorCode === "404") {
           setNotFound(true);
+          dispatch(setTeamLoading(false));
+          return;
         }
+
         dispatch(setTeamLoading(false));
+        dispatch(setCurrentBoard(null));
+        return;
+
       });
   }, [])
 
@@ -74,9 +81,8 @@ function TeamTasks(props) {
     setShowAddKBList(true);
   }
 
-  const renderNormal = () => {
-    const queryO = queryString.parse(history.location.search);
-    return <>
+  const renderHeader = () => {
+    return !currentBoard ? null : <>
       <div className="tasks-header">
         <div className="goback-label" onClick={goBackBoards}>
           <AiOutlineLeft className="icon-goback" />
@@ -137,6 +143,13 @@ function TeamTasks(props) {
           </CButtonGroup>
         </div>
       </div>
+    </>
+  }
+
+  const renderNormal = () => {
+    const queryO = queryString.parse(history.location.search);
+    return <>
+      {renderHeader()}
 
       {showMode === 1 && <KanbanBoard ownerId={queryO.gr} isOfTeam={true} boardId={props.boardId} />}
       {showMode === 2 && <TaskList ownerId={queryO.gr} boardId={props.boardId} isOfTeam={true} />}
@@ -146,7 +159,7 @@ function TeamTasks(props) {
   return (
     <div className="team-tasks-container">
       {notfound ? <NotFoundPage /> : renderNormal()}
-    
+
       <CreateKBListModal
         boardId={props.boardId}
         showAddKBList={showAddKBList}

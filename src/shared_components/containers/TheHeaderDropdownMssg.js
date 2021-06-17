@@ -173,7 +173,7 @@ const TheHeaderDropdownMssg = () => {
     if (date.getFullYear() === today.getFullYear()) {
       //cùng năm khác ngày
       //return dateStr + "/" + monthStr;
-      return moment(notiDate).format("dd/MM")
+      return moment(notiDate).format("DD/MM")
     } else {
       //khác năm
       //return dateStr + "/" + monthStr + "/" + yearStr;

@@ -36,6 +36,8 @@ function MessageList(props) {
   const newMessage = useSelector((state) => state.chat.newMessage);
   const { teamId } = useParams();
 
+  const [loading, setLoading] = useState(false);
+
   latestChat.current = listMes;
 
   const scrollToBottom = () => {
@@ -48,182 +50,193 @@ function MessageList(props) {
   //load tin nhan
   useEffect(() => {
     async function getMessage() {
-      let skipItems = 0;
-      for (let i = 0; i < listMes.length; i++) {
-        if (!listMes[i].isLabel) {
-          skipItems++;
+      try {
+        setLoading(true);
+
+        let skipItems = 0;
+        for (let i = 0; i < listMes.length; i++) {
+          if (!listMes[i].isLabel) {
+            skipItems++;
+          }
         }
-      }
-      //debugger;
-      console.log("1st time: ", props.reachTop);
+        //debugger;
+        console.log("1st time: ", props.reachTop);
 
-      if (isSelected) {
-        dispatch(setIsSelected(false));
-        setListMes([]);
-        skipItems = 0;
-      }
-      const params = {
-        GroupId: teamId ? teamId : currentGroup,
-        SkipItems: skipItems,
-        PageSize: 12,
-      };
-      const outPut = await messageApi.getPagination({ params });
-      if (outPut.data?.items.length === 0) {
-        return;
-      }
-
-      const newArray = outPut.data?.items.map((mes) => {
-        return {
-          id: mes.messageId,
-          message: mes.messageContent,
-          class: "normal",
-          isMine: mes.messageUserId === userId ? true : false,
-          time: mes.messageCreatedAt,
-          isLabel: false,
-          messageType: mes.messageType,
-          messengerUserAvatar: mes.messengerUserAvatar,
+        if (isSelected) {
+          dispatch(setIsSelected(false));
+          setListMes([]);
+          skipItems = 0;
+        }
+        const params = {
+          GroupId: teamId ? teamId : currentGroup,
+          SkipItems: skipItems,
+          PageSize: 12,
         };
-      });
-      const arrayWithLabels = [];
-      if (newArray) {
-        //Thêm label cách cho list mess
+        const outPut = await messageApi.getPagination({ params });
+        if (outPut.data?.items.length === 0) {
+          return;
+        }
 
-        for (let i = 0; i < newArray.length - 1; i++) {
-          if (i === 0) {
+        const newArray = outPut.data?.items.map((mes) => {
+          return {
+            id: mes.messageId,
+            message: mes.messageContent,
+            class: "normal",
+            isMine: mes.messageUserId === userId ? true : false,
+            time: mes.messageCreatedAt,
+            isLabel: false,
+            messageType: mes.messageType,
+            messengerUserAvatar: mes.messengerUserAvatar,
+          };
+        });
+        const arrayWithLabels = [];
+        if (newArray) {
+          //Thêm label cách cho list mess
+
+          for (let i = 0; i < newArray.length - 1; i++) {
+            if (i === 0) {
+              arrayWithLabels.push({
+                id: 1 + Math.random() * (100000 - 1),
+                message: moment(newArray[i].time).format("LLL"),
+                class: "",
+                isLabel: true,
+              });
+              arrayWithLabels.push(newArray[i]);
+              continue;
+            }
+            arrayWithLabels.push(newArray[i]);
+            const date1 = newArray[i].time;
+            const date2 = newArray[i + 1].time;
+            if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
+              arrayWithLabels.push({
+                id: 1 + Math.random() * (10000 - 1),
+                message: moment(date2).format("LLL"),
+                class: "",
+                isLabel: true,
+              });
+            }
+          }
+          if (newArray.length === 1) {
             arrayWithLabels.push({
               id: 1 + Math.random() * (100000 - 1),
-              message: moment(newArray[i].time).format("LLL"),
+              message: moment(newArray[0].time).format("LLL"),
               class: "",
               isLabel: true,
             });
-            arrayWithLabels.push(newArray[i]);
-            continue;
+            arrayWithLabels.push(newArray[0]);
+          } else {
+            arrayWithLabels.push(newArray[newArray.length - 1]);
           }
-          arrayWithLabels.push(newArray[i]);
-          const date1 = newArray[i].time;
-          const date2 = newArray[i + 1].time;
-          if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
-            arrayWithLabels.push({
-              id: 1 + Math.random() * (10000 - 1),
-              message: moment(date2).format("LLL"),
-              class: "",
-              isLabel: true,
-            });
-          }
-        }
-        if (newArray.length === 1) {
-          arrayWithLabels.push({
-            id: 1 + Math.random() * (100000 - 1),
-            message: moment(newArray[0].time).format("LLL"),
-            class: "",
-            isLabel: true,
-          });
-          arrayWithLabels.push(newArray[0]);
-        } else {
-          arrayWithLabels.push(newArray[newArray.length - 1]);
-        }
-        //thêm class cho từng message
-        for (let i = 0; i < arrayWithLabels.length; i++) {
-          if (arrayWithLabels[i].isLabel) continue;
+          //thêm class cho từng message
+          for (let i = 0; i < arrayWithLabels.length; i++) {
+            if (arrayWithLabels[i].isLabel) continue;
 
-          if (arrayWithLabels[i].isMine) {
-            if (i === arrayWithLabels.length - 1) {
-              //phần tử cuối
+            if (arrayWithLabels[i].isMine) {
+              if (i === arrayWithLabels.length - 1) {
+                //phần tử cuối
+                if (
+                  arrayWithLabels[i - 1].isLabel ||
+                  !arrayWithLabels[i - 1].isMine
+                ) {
+                  arrayWithLabels[i].class = "normal";
+                } else {
+                  if (arrayWithLabels[i - 1].class === "end") {
+                    arrayWithLabels[i].class = "normal";
+                  } else {
+                    arrayWithLabels[i].class = "end";
+                  }
+                }
+
+                continue;
+              }
+
+              //trường hợp bình thường
               if (
                 arrayWithLabels[i - 1].isLabel ||
                 !arrayWithLabels[i - 1].isMine
               ) {
-                arrayWithLabels[i].class = "normal";
-              } else {
-                if (arrayWithLabels[i - 1].class === "end") {
+                if (
+                  arrayWithLabels[i + 1].isLabel ||
+                  !arrayWithLabels[i + 1].isMine
+                ) {
                   arrayWithLabels[i].class = "normal";
                 } else {
+                  arrayWithLabels[i].class = "start";
+                }
+              } else {
+                if (
+                  arrayWithLabels[i + 1].isLabel ||
+                  !arrayWithLabels[i + 1].isMine
+                ) {
                   arrayWithLabels[i].class = "end";
+                } else {
+                  arrayWithLabels[i].class = "middle";
                 }
               }
-
-              continue;
-            }
-
-            //trường hợp bình thường
-            if (
-              arrayWithLabels[i - 1].isLabel ||
-              !arrayWithLabels[i - 1].isMine
-            ) {
-              if (
-                arrayWithLabels[i + 1].isLabel ||
-                !arrayWithLabels[i + 1].isMine
-              ) {
-                arrayWithLabels[i].class = "normal";
-              } else {
-                arrayWithLabels[i].class = "start";
-              }
             } else {
-              if (
-                arrayWithLabels[i + 1].isLabel ||
-                !arrayWithLabels[i + 1].isMine
-              ) {
-                arrayWithLabels[i].class = "end";
-              } else {
-                arrayWithLabels[i].class = "middle";
+              if (i === arrayWithLabels.length - 1) {
+                //phần tử cuối
+                if (
+                  arrayWithLabels[i - 1].isLabel ||
+                  arrayWithLabels[i - 1].isMine
+                ) {
+                  arrayWithLabels[i].class = "normal";
+                } else {
+                  if (arrayWithLabels[i - 1].class === "end") {
+                    arrayWithLabels[i].class = "normal";
+                  } else {
+                    arrayWithLabels[i].class = "end";
+                  }
+                }
+
+                continue;
               }
-            }
-          } else {
-            if (i === arrayWithLabels.length - 1) {
-              //phần tử cuối
+
+              //trường hợp bình thường
               if (
                 arrayWithLabels[i - 1].isLabel ||
                 arrayWithLabels[i - 1].isMine
               ) {
-                arrayWithLabels[i].class = "normal";
-              } else {
-                if (arrayWithLabels[i - 1].class === "end") {
+                if (
+                  arrayWithLabels[i + 1].isLabel ||
+                  arrayWithLabels[i + 1].isMine
+                ) {
                   arrayWithLabels[i].class = "normal";
                 } else {
-                  arrayWithLabels[i].class = "end";
+                  arrayWithLabels[i].class = "start";
                 }
-              }
-
-              continue;
-            }
-
-            //trường hợp bình thường
-            if (
-              arrayWithLabels[i - 1].isLabel ||
-              arrayWithLabels[i - 1].isMine
-            ) {
-              if (
-                arrayWithLabels[i + 1].isLabel ||
-                arrayWithLabels[i + 1].isMine
-              ) {
-                arrayWithLabels[i].class = "normal";
               } else {
-                arrayWithLabels[i].class = "start";
-              }
-            } else {
-              if (
-                arrayWithLabels[i + 1].isLabel ||
-                arrayWithLabels[i + 1].isMine
-              ) {
-                arrayWithLabels[i].class = "end";
-              } else {
-                arrayWithLabels[i].class = "middle";
+                if (
+                  arrayWithLabels[i + 1].isLabel ||
+                  arrayWithLabels[i + 1].isMine
+                ) {
+                  arrayWithLabels[i].class = "end";
+                } else {
+                  arrayWithLabels[i].class = "middle";
+                }
               }
             }
           }
         }
-      }
-      if (skipItems === 0) {
-        setListMes(arrayWithLabels);
-        setTimeout(() => {
-          scrollToBottom();
-        }, 0);
-      } else {
-        const newArray1 = arrayWithLabels.concat([...latestChat.current]);
-        setListMes(newArray1);
+        if (skipItems === 0) {
+          setListMes(arrayWithLabels);
+          setTimeout(() => {
+            scrollToBottom();
+          }, 0);
+        } else {
+          const newArray1 = arrayWithLabels.concat([...latestChat.current]);
+          setListMes(newArray1);
 
-        props.scrollFix(calculateDistanceScroll(arrayWithLabels));
+          props.scrollFix(calculateDistanceScroll(arrayWithLabels));
+        }
       }
+      catch (err) {
+
+      }
+      finally {
+        setLoading(false)
+      }
+
     }
 
     getMessage();
@@ -328,8 +341,8 @@ function MessageList(props) {
 
     chatApi
       .sendMes(props.sendMes.mesObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [props.sendMes]);
 
   const render = () => {
@@ -344,7 +357,7 @@ function MessageList(props) {
   };
   return (
     <div>
-      {listMes.length === 0 ? (
+      {!loading && (listMes.length === 0 || !listMes) ? (
         <div className="nodata-image">
           <div className="icon-group">
             <BiMessageDetail className="icon-task" />
