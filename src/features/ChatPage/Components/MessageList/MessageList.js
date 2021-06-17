@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import "./MessageList.scss";
+
 import { CTooltip } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -20,7 +20,8 @@ import { HiOutlineChatAlt2 } from "react-icons/hi";
 import { VscSearchStop } from "react-icons/vsc";
 import { AiOutlineMessage } from "react-icons/ai";
 import { BiMessageDetail } from "react-icons/bi";
-
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
+import "./MessageList.scss";
 MessageList.propTypes = {};
 
 function MessageList(props) {
@@ -35,6 +36,7 @@ function MessageList(props) {
   const latestChat = useRef(null);
   const newMessage = useSelector((state) => state.chat.newMessage);
   const { teamId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
 
   latestChat.current = listMes;
 
@@ -47,6 +49,7 @@ function MessageList(props) {
 
   //load tin nhan
   useEffect(() => {
+    setIsLoading(true);
     async function getMessage() {
       let skipItems = 0;
       for (let i = 0; i < listMes.length; i++) {
@@ -69,6 +72,7 @@ function MessageList(props) {
       };
       const outPut = await messageApi.getPagination({ params });
       if (outPut.data?.items.length === 0) {
+        setIsLoading(false);
         return;
       }
 
@@ -224,6 +228,7 @@ function MessageList(props) {
 
         props.scrollFix(calculateDistanceScroll(arrayWithLabels));
       }
+      setIsLoading(false);
     }
 
     getMessage();
@@ -233,6 +238,7 @@ function MessageList(props) {
 
   useEffect(() => {
     console.log(teamId);
+    setIsLoading(true);
     if (teamId) {
       setListMes([]);
       dispatch(setCurrentGroup(teamId));
@@ -343,8 +349,8 @@ function MessageList(props) {
     );
   };
   return (
-    <div>
-      {listMes.length === 0 ? (
+    <div className="message-list">
+      {listMes.length === 0 && !isLoading && (
         <div className="nodata-image">
           <div className="icon-group">
             <BiMessageDetail className="icon-task" />
@@ -353,9 +359,9 @@ function MessageList(props) {
 
           <div className="noti-infor">Chưa có tin nhắn nào trong đoạn chat</div>
         </div>
-      ) : (
-        render()
       )}
+      {isLoading && <Loading />}
+      {listMes.length > 0 && render()}
     </div>
   );
 }

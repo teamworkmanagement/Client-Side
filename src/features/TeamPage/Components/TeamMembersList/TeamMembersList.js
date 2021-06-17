@@ -34,6 +34,7 @@ import { FiEdit3 } from "react-icons/fi";
 import EditTeamNameModal from "./EditTeamNameModal/EditTeamNameModal";
 import EditTeamDescriptionModal from "./EditTeamDescriptionModal/EditTeamDescriptionModal";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 TeamMembersList.propTypes = {};
 
@@ -79,6 +80,7 @@ function TeamMembersList(props) {
   const [pages, setPages] = useState(1);
   const [fixedMembers, setFixedMembers] = useState([]);
   const user = useSelector((state) => state.auth.currentUser);
+  const [loadingMembers, setLoadingMembers] = useState(false);
   const { teamId } = useParams();
 
   const imgPickerRef = useRef(null);
@@ -95,18 +97,19 @@ function TeamMembersList(props) {
 
   useEffect(() => {
     if (!teamId) return;
+    setLoadingMembers(true);
     teamApi
       .getAdmin(teamId)
       .then((res) => {
         console.log(res);
         setAdmin(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
 
     const params = {
       teamId: teamId,
       pageNumber: 1,
-      pageSize: 1,
+      pageSize: 10,
     };
 
     teamApi
@@ -115,19 +118,23 @@ function TeamMembersList(props) {
         console.log(res.data.items);
         setMembers(res.data.items);
         setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+        setLoadingMembers(false);
       })
-      .catch((err) => { });
+      .catch((err) => {
+        setLoadingMembers(false);
+      });
 
     teamApi
       .getTeam(teamId)
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [teamId]);
 
   const currentPageChange = (index) => {
     if (index === 0) return;
+    setLoadingMembers(true);
     console.log(index);
     setCurrentPage(index);
 
@@ -143,8 +150,11 @@ function TeamMembersList(props) {
         console.log(res.data.items);
         setMembers(res.data.items);
         setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+        setLoadingMembers(false);
       })
-      .catch((err) => { });
+      .catch((err) => {
+        setLoadingMembers(false);
+      });
   };
 
   const onClose = (e) => {
@@ -201,7 +211,7 @@ function TeamMembersList(props) {
           ]);
         }
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const onStartChatClose = () => {
@@ -239,13 +249,13 @@ function TeamMembersList(props) {
       [name]: value,
     };
 
-    teamApi.updateTeam(newTeam)
-      .then(res => {
+    teamApi
+      .updateTeam(newTeam)
+      .then((res) => {
         setTeam(newTeam);
-      }).catch(err => {
-
       })
-  }
+      .catch((err) => {});
+  };
 
   const onPickImage = (e) => {
     const file = e.target.files[0];
@@ -256,16 +266,16 @@ function TeamMembersList(props) {
       data.ref.getDownloadURL().then((url) => {
         console.log(url);
         onUpdateTeam({
-          name: 'teamImageUrl',
-          value: url
-        })
+          name: "teamImageUrl",
+          value: url,
+        });
       });
     });
-  }
+  };
 
   const openPickImage = () => {
     imgPickerRef.current.click();
-  }
+  };
   return (
     <div className="team-members-container">
       {redirect ? <Redirect from="/team" to={redirect} /> : null}
@@ -318,15 +328,10 @@ function TeamMembersList(props) {
         <div className="team-info-panel-content">
           <div className="name-image-group">
             <div className="team-image-container">
-              <img
-                alt=""
-                src={team.teamImageUrl}
-              />
+              <img alt="" src={team.teamImageUrl} />
             </div>
             <div className="team-name-actions">
-              <div className="team-name">
-                {team.teamName}
-              </div>
+              <div className="team-name">{team.teamName}</div>
               <div className="actions-group">
                 <div onClick={openPickImage} className="btn-change-image">
                   <RiImageEditFill className="icon-edit-image icon-edit" />
@@ -474,76 +479,85 @@ function TeamMembersList(props) {
               </div>
             </div>
             <div className="label">Thành viên</div>
-            <CDataTable
-              items={members}
-              fields={fields}
-              noItemsViewSlot={NoItemView()}
-              scopedSlots={{
-                infor: (item) => {
-                  return (
-                    <td onClick={() => navigateToProfile(item)}>
-                      <div className="member-infor-container">
-                        <img
-                          className="member-avatar"
-                          alt=""
-                          src={item.userImageUrl}
-                        />
+            {loadingMembers && members.length === 0 && <Loading />}
+            {members.length > 0 && (
+              <CDataTable
+                items={members}
+                fields={fields}
+                noItemsViewSlot={NoItemView()}
+                scopedSlots={{
+                  infor: (item) => {
+                    return (
+                      <td onClick={() => navigateToProfile(item)}>
+                        <div className="member-infor-container">
+                          <img
+                            className="member-avatar"
+                            alt=""
+                            src={item.userImageUrl}
+                          />
 
-                        <div className="member-infor">
-                          <div className="member-name">{item.userFullname}</div>
-                          <div className="member-email">{item.userEmail}</div>
-                        </div>
-                      </div>
-                    </td>
-                  );
-                },
-                role: (item) => {
-                  return (
-                    <td onClick={() => navigateToProfile(item)}>
-                      <div className="member-role">
-                        <div className={`role-color`}></div>
-                        Thành viên
-                      </div>
-                    </td>
-                  );
-                },
-                actions: (item) => {
-                  return (
-                    <td>
-                      <div className="member-actions-dropdown">
-                        <CDropdown>
-                          <CDropdownToggle id="dropdownMenuButton" caret>
-                            <div className="lane-actions">
-                              <CIcon name="cil-options" className="rotate-90" />
+                          <div className="member-infor">
+                            <div className="member-name">
+                              {item.userFullname}
                             </div>
-                          </CDropdownToggle>
-                          <CDropdownMenu
-                            aria-labelledby="dropdownMenuButton"
-                            placement="bottom-end"
-                          >
-                            <CDropdownItem
-                              className="first"
-                              onClick={() => nhanTin(item)}
+                            <div className="member-email">{item.userEmail}</div>
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  },
+                  role: (item) => {
+                    return (
+                      <td onClick={() => navigateToProfile(item)}>
+                        <div className="member-role">
+                          <div className={`role-color`}></div>
+                          Thành viên
+                        </div>
+                      </td>
+                    );
+                  },
+                  actions: (item) => {
+                    return (
+                      <td>
+                        <div className="member-actions-dropdown">
+                          <CDropdown>
+                            <CDropdownToggle id="dropdownMenuButton" caret>
+                              <div className="lane-actions">
+                                <CIcon
+                                  name="cil-options"
+                                  className="rotate-90"
+                                />
+                              </div>
+                            </CDropdownToggle>
+                            <CDropdownMenu
+                              aria-labelledby="dropdownMenuButton"
+                              placement="bottom-end"
                             >
-                              <CIcon name="cil-send" />
-                              Nhắn tin
-                            </CDropdownItem>
-                            <CDropdownItem className="normal">
-                              <CIcon name="cil-find-in-page" />
-                              Xem thông tin
-                            </CDropdownItem>
-                            <CDropdownItem className="last">
-                              <CIcon name="cil-account-logout" />
-                              Mời rời nhóm
-                            </CDropdownItem>
-                          </CDropdownMenu>
-                        </CDropdown>
-                      </div>
-                    </td>
-                  );
-                },
-              }}
-            />
+                              <CDropdownItem
+                                className="first"
+                                onClick={() => nhanTin(item)}
+                              >
+                                <CIcon name="cil-send" />
+                                Nhắn tin
+                              </CDropdownItem>
+                              <CDropdownItem className="normal">
+                                <CIcon name="cil-find-in-page" />
+                                Xem thông tin
+                              </CDropdownItem>
+                              <CDropdownItem className="last">
+                                <CIcon name="cil-account-logout" />
+                                Mời rời nhóm
+                              </CDropdownItem>
+                            </CDropdownMenu>
+                          </CDropdown>
+                        </div>
+                      </td>
+                    );
+                  },
+                }}
+              />
+            )}
+
             {members.length > 0 && (
               <CPagination
                 className="pagination-team-members"

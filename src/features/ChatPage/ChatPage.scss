@@ -292,6 +292,12 @@ $baseTransition: all 0.3s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            .loading-container {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+                margin: 1rem;
+            }
             .chat-list-header {
                 height: 3rem;
                 .input-group.chat-list-search {
@@ -392,6 +398,10 @@ $baseTransition: all 0.3s;
                 overflow-y: scroll;
                 margin-bottom: 1rem;
                 margin-top: 0.5rem;
+                .load-container {
+                    display: flex;
+                    justify-content: center !important;
+                }
             }
             .chat-content-footer {
                 height: 3rem;

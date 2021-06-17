@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import postApi from "src/api/postApi";
 import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import Empty from "../Post/Components/Empty/Empty";
-import Loading from "../Post/Components/Loading/Loading";
 import CIcon from "@coreui/icons-react";
 import { useHistory, useLocation, useParams } from "react-router";
-import queryString from 'query-string';
+import queryString from "query-string";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 PostList.propTypes = {};
 

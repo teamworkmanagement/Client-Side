@@ -523,6 +523,10 @@ $baseTransition: all 0.3s;
         .members-container {
             @include CardStyle;
             margin-bottom: 1rem;
+            .loading-container {
+                justify-content: center;
+                display: flex;
+            }
             .members-list-header {
                 display: flex;
                 justify-content: flex-end;

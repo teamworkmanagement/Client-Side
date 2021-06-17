@@ -305,12 +305,18 @@ $message-font-weight: normal;
     animation-delay: 0.3s;
 }
 
-.nodata-image-message-list {
-    display: flex;
-    flex-direction: column;
-    .icon-message {
+.message-list {
+    .nodata-image-message-list {
+        display: flex;
+        flex-direction: column;
+        .icon-message {
+        }
+        .noti-infor {
+        }
     }
-    .noti-infor {
+    .loading-container {
+        display: flex !important;
+        justify-content: center !important;
     }
 }
 

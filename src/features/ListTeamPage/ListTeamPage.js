@@ -29,6 +29,7 @@ import { AiOutlineTeam } from "react-icons/ai";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 ListTeamPage.propTypes = {};
 
@@ -215,25 +216,26 @@ function ListTeamPage(props) {
   const dispatch = useDispatch();
   const teams = useSelector((state) => state.team.teams);
   const user = useSelector((state) => state.auth.currentUser);
-  const [loadone, setLoadone] = useState(false);
+  const [loadDone, setLoadone] = useState(false);
 
   function getMemberCount() {
     return members.length;
   }
 
   useEffect(() => {
+    console.log("loading teams");
     async function loadData() {
       setIsLoading(true);
       dispatch(getTeamByUserId(user.id))
         .then(unwrapResult)
         .then((res) => {
-          setLoadone(true);
+          setIsLoading(false);
         })
         .catch((err) => {
-          setLoadone(true);
+          setIsLoading(false);
         });
 
-      setIsLoading(false);
+      //setIsLoading(false);
     }
 
     loadData();
@@ -265,38 +267,6 @@ function ListTeamPage(props) {
   const renderNormal = () => {
     return (
       <>
-        <div className="header-tool-bar">
-          <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
-            <CgLogIn className="icon-goin" />
-            <AiOutlineTeam className="icon-group" />
-            Tham gia nhóm
-          </div>
-          <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
-            <CIcon name="cil-plus" />
-            Tạo nhóm mới
-          </div>
-          <CButtonGroup className="show-mode">
-            <CTooltip placement="top" content="Lưới">
-              <CButton
-                className={`first mode-btn ${showMode === 1 && "active"}`}
-                color="secondary"
-                onClick={() => switchShowMode(1)}
-                type="button"
-              >
-                <CIcon name="cil-grid" />
-              </CButton>
-            </CTooltip>
-            <CTooltip placement="top" content="Danh sách">
-              <CButton
-                className={`last mode-btn ${showMode === 2 && "active"}`}
-                color="secondary"
-                onClick={() => switchShowMode(2)}
-              >
-                <CIcon name="cil-list" />
-              </CButton>
-            </CTooltip>
-          </CButtonGroup>
-        </div>
         {showMode === 1 && (
           <div className="grid-view-container">
             <CRow className="grid-view">
@@ -474,9 +444,7 @@ function ListTeamPage(props) {
           </div>
         )}
 
-        <TeamLoading isLoading={isLoading} />
-        <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
-        <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
+        {/* <TeamLoading isLoading={isLoading} /> */}
       </>
     );
   };
@@ -484,7 +452,7 @@ function ListTeamPage(props) {
   const renderEmpty = () => {
     return (
       <>
-        {teams.length === 0 && loadone && (
+        {teams.length === 0 && !isLoading && (
           <div className="nodata-image">
             <div className="icon-group">
               <BsClipboardData className="icon-task" />
@@ -499,8 +467,44 @@ function ListTeamPage(props) {
   };
   return (
     <div className="list-team-container">
+      <div className="header-tool-bar">
+        <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
+          <CgLogIn className="icon-goin" />
+          <AiOutlineTeam className="icon-group" />
+          Tham gia nhóm
+        </div>
+        <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
+          <CIcon name="cil-plus" />
+          Tạo nhóm mới
+        </div>
+        <CButtonGroup className="show-mode">
+          <CTooltip placement="top" content="Lưới">
+            <CButton
+              className={`first mode-btn ${showMode === 1 && "active"}`}
+              color="secondary"
+              onClick={() => switchShowMode(1)}
+              type="button"
+            >
+              <CIcon name="cil-grid" />
+            </CButton>
+          </CTooltip>
+          <CTooltip placement="top" content="Danh sách">
+            <CButton
+              className={`last mode-btn ${showMode === 2 && "active"}`}
+              color="secondary"
+              onClick={() => switchShowMode(2)}
+            >
+              <CIcon name="cil-list" />
+            </CButton>
+          </CTooltip>
+        </CButtonGroup>
+      </div>
+      {/* <Loading /> */}
+      {isLoading && teams.length === 0 && <Loading />}
       {renderNormal()}
       {renderEmpty()}
+      <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
+      <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
     </div>
   );
 }

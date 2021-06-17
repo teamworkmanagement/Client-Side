@@ -327,6 +327,10 @@ $baseTransition: all 0.3s;
             }
         }
     }
+    .loading-container {
+        align-self: center;
+        margin-top: 1rem;
+    }
     .table-view-container {
         width: 100%;
         padding: 0rem 1.5rem;
