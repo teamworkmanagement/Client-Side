@@ -36,6 +36,10 @@ const kanbanApi = {
     renameKanbanList(payload) {
         const url = '/kanbanlist/name-list';
         return axiosClient.patch(url, payload);
+    },
+    searchKanbanBoards(params) {
+        const url = '/kanbanboard/search-boards';
+        return axiosClient.get(url, params);
     }
 };
 
