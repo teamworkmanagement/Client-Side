@@ -83,7 +83,7 @@ function TaskCommentInput(props) {
                 const res = await userApi.searchUsersKanban({ params });
 
 
-                const newMentions = res.data.map(x => {
+                const newMentions = res.data?.map(x => {
                     return {
                         name: x.userFullname,
                         id: x.userId,

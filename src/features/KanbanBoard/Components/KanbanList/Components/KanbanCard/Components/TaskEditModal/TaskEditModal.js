@@ -49,6 +49,7 @@ import { BsArrowsMove } from "react-icons/bs";
 import { GrDocumentTime } from "react-icons/gr";
 import TaskCommentInput from "./TaskCommentInput";
 import { convertToRaw } from "draft-js";
+import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 
 TaskEditModal.propTypes = {};
 
@@ -346,8 +347,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
@@ -385,8 +386,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -664,7 +665,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -712,7 +713,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -753,10 +754,10 @@ function TaskEditModal(props) {
                 setAttachments(attachmentsClone);
                 dispatchUpdateTask();
               })
-              .catch((err) => {});
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -783,8 +784,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -922,7 +923,7 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -940,9 +941,10 @@ function TaskEditModal(props) {
             boardId: currentBoard,
             keyword: inputValue,
           };
+          console.log(currentBoard)
           const res = await userApi.searchUsersKanban({ params });
 
-          const listUsers = res.data.map((x) => {
+          const listUsers = res.data?.map((x) => {
             return {
               value: x.userId,
               label: x.userFullname,
@@ -955,7 +957,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [props.data]);
 
@@ -1594,7 +1596,7 @@ function TaskEditModal(props) {
                     </Popover>
                   )}
                   <CTooltip content="Xem lịch sử chỉnh sửa" placement="left">
-                    <div className="action-item">
+                    <div className="action-item" onClick={viewHistory}>
                       <GrDocumentTime className="icon-version" />
                       <div className="action-name">Lịch sử chỉnh sửa</div>
                     </div>
@@ -1615,6 +1617,11 @@ function TaskEditModal(props) {
             </div>
           )}
         </CModalBody>
+        <TaskHistoryModal
+          details={details}
+          show={showTaskHistoryModal}
+          onClose={onCloseTaskHistoryModal}
+        />
       </CModal>
     </div>
   );

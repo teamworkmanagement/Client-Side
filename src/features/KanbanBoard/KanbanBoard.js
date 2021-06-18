@@ -259,6 +259,8 @@ function KanbanBoard(props) {
 
     if (!queryObj.t) return;
 
+    if(!modalTaskObj) return;
+
     if (assignUser && assignUser.taskId === queryObj.t) {
       if (assignUser.userId === modalTaskObj.userId)
         return;
