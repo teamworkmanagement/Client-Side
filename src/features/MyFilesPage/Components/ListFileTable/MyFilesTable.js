@@ -129,8 +129,6 @@ function MyFilesTable(props) {
       try {
         const params = {
           OwnerId: user.id,
-          PageNumber: page,
-          PageSize: pageSize,
           OwnerType: "user",
         };
         //const outPut = await fileApi.getFile({ params });

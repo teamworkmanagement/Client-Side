@@ -10,11 +10,13 @@ import { CgSoftwareUpload } from "react-icons/cg";
 import { VscSearchStop, VscSymbolFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useParams } from "react-router";
+import { toast } from "react-toastify";
 import fileApi from "src/api/fileApi";
 import { myBucket } from "src/utils/aws/config";
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
 import uuid from "src/utils/file/uuid";
 import useExitPrompt from "../../../utils/customHook/useExitPrompt";
+import CustomToast from "../CustomToast/CustomToast";
 import "./ListFileTable.scss";
 import UploadItem from "./ProgressBottom/UploadItem";
 
@@ -427,8 +429,6 @@ function ListFileTable(props) {
         const params = {
           OwnerId: teamId,
           OwnerType: "team",
-          PageNumber: page,
-          PageSize: pageSize,
         };
         //const outPut = await fileApi.getFile({ params });
 
@@ -451,7 +451,7 @@ function ListFileTable(props) {
         setDatas(dts);
         //setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         //console.log(outPut.data.items);
-      } catch (err) {}
+      } catch (err) { }
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -480,6 +480,20 @@ function ListFileTable(props) {
     );
   }
 
+  const copyFile = (item) => {
+    console.log(item);
+    fileApi.copyFile({
+      userId: user.id,
+      fileId: item.id,
+    }).then(res => {
+      toast(<CustomToast
+        type="success"
+        title="Thông báo"
+        message="Thành công!" />)
+    }).catch(err => {
+
+    })
+  }
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
       <div onClick={onClick} className="upload-container">
@@ -581,8 +595,8 @@ function ListFileTable(props) {
                     </div>
                   </CTooltip>
 
-                  <CTooltip placement="top" content="Lưu vào tệp của tôi">
-                    <div className="share-btn-container">
+                  <CTooltip placement="top" content="Lưu vào tệp của tôi" >
+                    <div className="share-btn-container" onClick={() => copyFile(item)}>
                       <CIcon name="cil-share-all" />
                     </div>
                   </CTooltip>
