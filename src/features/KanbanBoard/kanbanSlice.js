@@ -78,6 +78,7 @@ const kanbanSlice = createSlice({
         signalRMoveTask(state, action) {
 
             if (state.kanbanBoard.currentBoard === action.payload.boardId) {
+                state.signalrData.moveTask = action.payload;
                 if (action.payload.oldList === action.payload.newList) {
                     const listTasks = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
                     const task = listTasks.taskUIKanbans.find(x => x.taskId === action.payload.taskId);

@@ -46,6 +46,8 @@ import axiosClient from "src/api/axiosClient";
 import userApi from "src/api/userApi";
 import TaskCommentInput from "./TaskCommentInput";
 import { convertToRaw } from "draft-js";
+import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHistoryModal/TaskHistoryModal";
+import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 
 TaskEditModal.propTypes = {};
 
@@ -185,6 +187,15 @@ function TaskEditModal(props) {
   const [isFocused, setFocus] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
 
+
+  /**section modal history */
+  const [showTaskHistoryModal, setShowTaskHistoryModal] = useState(false);
+  const [details, setDetails] = useState([]);
+  function onCloseTaskHistoryModal() {
+    setShowTaskHistoryModal(false);
+  }
+
+
   function refactorKanbanListWithActive() {
     //set active cho list mà task này đang nằm trong đó, list đang dc chọn (active) sẽ có dấu check
     var cloneLists = [...kanbanLists];
@@ -217,7 +228,39 @@ function TaskEditModal(props) {
     }
 
     setKanbanLocal(cloneLists);
+    console.log('zzzzzzzz')
   }, [kanbanLists]);
+
+
+  const moveTask = useSelector(state => state.kanban.signalrData.moveTask);
+  useEffect(() => {
+    if (moveTask && moveTask.taskId == task.taskId && moveTask.oldList != moveTask.newList) {
+      console.log(moveTask);
+
+      const index = kanbanLists.findIndex(
+        (x) => x.kanbanListId === moveTask.newList
+      );
+      //set active cho list đang chứa task này
+      const localClone = [...kanbanLocal];
+
+      for (let i = 0; i < localClone.length; i++) {
+        localClone[i] = {
+          ...localClone[i],
+          active: false,
+        };
+      }
+      localClone[index] = {
+        ...localClone[index],
+        active: true,
+      };
+
+      setTask({
+        ...task,
+        kanbanListId: moveTask.newList,
+      })
+      setKanbanLocal(localClone);
+    }
+  }, [moveTask])
   const addToast = () => {
     setToasts([
       ...toasts,
@@ -429,9 +472,6 @@ function TaskEditModal(props) {
     });
   }
 
-  const updateTaskFunc = (obj) => {
-    console.log("update :", task);
-  };
   function onSaveTaskName() {
     if (
       task.taskName === "" ||
@@ -824,8 +864,43 @@ function TaskEditModal(props) {
 
   const changeListClick = (index) => {
     selectList(index);
-    console.log("zzzzz");
-  };
+    console.log("old zzzzz", task.kanbanListId);
+    console.log("new : ", kanbanLists[index].kanbanListId);
+
+    const oldKBList = task.kanbanListId;
+    const newKBList = kanbanLists[index].kanbanListId;
+
+    if (oldKBList == newKBList)
+      return;
+
+
+    const cloneKbLists = [...kanbanLists];
+    const listTaskDestination = cloneKbLists.find(
+      (x) => x.kanbanListId === newKBList
+    ).taskUIKanbans;
+
+    let pos = -999999;
+    if (listTaskDestination.length === 0) {
+      pos = genNewRank();
+    }
+    else {
+      pos = FindNextRank(listTaskDestination[listTaskDestination.length - 1].taskRankInList);
+    }
+
+    taskApi
+      .dragTask({
+        taskId: task.taskId,
+        position: pos,
+        oldList: oldKBList,
+        newList: newKBList,
+        boardId: currentBoard,
+      })
+      .then((res) => { })
+      .catch((err) => { });
+
+  }
+
+
 
   function renderContentList() {
     return (
@@ -997,14 +1072,26 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then(res=>{
+      .then(res => {
 
       })
-      .catch(err=>{
-        
+      .catch(err => {
+
       })
     console.log(value);
   };
+
+
+  const viewHistory = () => {
+    taskApi.getVersion(task.taskId)
+      .then(res => {
+        console.log(res.data);
+        setDetails(res.data);
+        setShowTaskHistoryModal(true)
+      }).catch(err => {
+
+      });
+  }
 
   return (
     <div>
@@ -1531,6 +1618,10 @@ function TaskEditModal(props) {
                     </Popover>
                   )}
 
+                  <div className="action-item" onClick={viewHistory}>
+                    <CIcon name="cil-notes" />
+                    <div className="action-name">Lịch sử</div>
+                  </div>
                   <div className="action-item" onClick={onRemoveTask}>
                     <CIcon name="cil-trash" />
                     <div className="action-name">Xóa công việc</div>
@@ -1544,6 +1635,12 @@ function TaskEditModal(props) {
             </div>
           )}
         </CModalBody>
+
+        <TaskHistoryModal
+          details={details}
+          show={showTaskHistoryModal}
+          onClose={onCloseTaskHistoryModal}
+        />
       </CModal>
     </div>
   );
