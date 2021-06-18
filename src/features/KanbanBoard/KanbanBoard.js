@@ -329,10 +329,6 @@ function KanbanBoard(props) {
     })
   }
 
-
-
-
-
   useEffect(() => {
     if (!boardId)
       return;
