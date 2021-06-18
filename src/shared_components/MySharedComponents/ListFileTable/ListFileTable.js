@@ -430,9 +430,11 @@ function ListFileTable(props) {
           PageNumber: page,
           PageSize: pageSize,
         };
-        const outPut = await fileApi.getFile({ params });
+        //const outPut = await fileApi.getFile({ params });
 
-        const dts = outPut.data.items.map((f) => {
+        const outPut = await fileApi.getAll({ params });
+
+        const dts = outPut.data.map((f) => {
           return {
             id: f.fileId,
             name: f.fileName,
@@ -447,8 +449,8 @@ function ListFileTable(props) {
         });
 
         setDatas(dts);
-        setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
-        console.log(outPut.data.items);
+        //setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
+        //console.log(outPut.data.items);
       } catch (err) {}
     }
     getDatas();
@@ -500,6 +502,7 @@ function ListFileTable(props) {
         //tableFilter
         //itemsPerPageSelect
         noItemsViewSlot={NoItemView()}
+        pagination
         itemsPerPage={5}
         hover
         sorter
@@ -589,7 +592,7 @@ function ListFileTable(props) {
           },
         }}
       />
-      {totals !== 0 ? (
+      {/*totals !== 0 ? (
         <CPagination
           className="pagination-team-files"
           activePage={page}
@@ -599,7 +602,7 @@ function ListFileTable(props) {
           doubleArrows={false}
           onActivePageChange={(i) => setActivePage(i)}
         />
-      ) : null}
+      ) : null*/}
 
       {upload ? <UploadItem progress={progress} name={cfile.name} /> : null}
       <Prompt when={upload} message="Cancel uploading file?" />
