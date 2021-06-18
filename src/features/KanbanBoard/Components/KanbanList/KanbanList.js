@@ -98,7 +98,8 @@ function KanbanList(props) {
             removeList={removeKbList}
             handleShowCreateCard={handleShowCreateCard}
             cardCount={props.data.taskUIKanbans.length}
-            title={headerTitle}
+            title={props.data.kanbanListTitle}
+            kanbanListId={props.data.kanbanListId}
             dragHandleProps={{ ...provided.dragHandleProps }}
           />
           <Droppable droppableId={props.data.kanbanListId} type="task">

@@ -78,6 +78,7 @@ const kanbanSlice = createSlice({
         signalRMoveTask(state, action) {
 
             if (state.kanbanBoard.currentBoard === action.payload.boardId) {
+                state.signalrData.moveTask = action.payload;
                 if (action.payload.oldList === action.payload.newList) {
                     const listTasks = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.newList);
                     const task = listTasks.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
@@ -174,6 +175,10 @@ const kanbanSlice = createSlice({
                 task.userId = action.payload.userId;
                 task.userAvatar = action.payload.userAvatar;
             }
+        },
+        signalRChangeNameList(state, action) {
+            const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
+            obj.kanbanListTitle = action.payload.kanbanListName;
         }
     },
     extraReducers: {
@@ -199,6 +204,7 @@ export const {
     setTaskSelected,
     dragListLocal,
     dragTaskLocal,
-    reAssignUser
+    reAssignUser,
+    signalRChangeNameList
 } = actions;
 export default reducer;

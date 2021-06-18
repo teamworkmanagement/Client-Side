@@ -21,7 +21,6 @@ import {
   setCurrentGroup,
   setLoadDone,
 } from "./chatSlice";
-import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import { useHistory, useLocation } from "react-router";
@@ -33,6 +32,8 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import CreateChatInChatPage from "./Components/CreateNewConversation/CreateChatInChatPage";
 import { changeStateChatListSidebar } from "src/appSlice";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
+import chatApi from "src/api/chatApi";
+import uuid from "src/utils/file/uuid";
 
 ChatPage.propTypes = {};
 
@@ -59,7 +60,7 @@ function ChatPage(props) {
   const imgPickerRef = useRef(null);
   const filePickerRef = useRef(null);
 
-  const [group, setGroup] = useState(null);
+  const group = useSelector(state => state.chat.groupChat.find(x => x.groupChatId === currentGroup))
 
   useEffect(() => {
     if (loadDone) {
@@ -73,9 +74,7 @@ function ChatPage(props) {
   }, [loadDone]);
 
   useEffect(() => {
-    if (!currentGroup) return;
-    const gr = grChats.find((x) => x.groupChatId === currentGroup);
-    setGroup(gr);
+
   }, [currentGroup]);
 
   useEffect(() => {
@@ -158,7 +157,7 @@ function ChatPage(props) {
         return;
       }
 
-      const folder = uuidv4();
+      const folder = uuid();
       const params = {
         Body: file,
         Bucket: "teamappstorage",
@@ -195,7 +194,7 @@ function ChatPage(props) {
   const onPickImage = (e) => {
     const file = e.target.files[0];
     const storageRef = firebaseConfig.storage().ref();
-    const fileRef = storageRef.child(`${uuidv4()}/${file.name}`);
+    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
     fileRef.put(file).then((data) => {
       console.log("Uploaded a file");
       data.ref.getDownloadURL().then((url) => {
@@ -216,28 +215,6 @@ function ChatPage(props) {
     });
   };
 
-  const chatImages = [
-    "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7",
-    "https://i.ytimg.com/vi/u2ypkUBGEHI/maxresdefault.jpg",
-    "https://scontent-sin6-3.xx.fbcdn.net/v/t1.6435-9/70944423_1289407744573535_1300646982062178304_n.jpg?_nc_cat=104&ccb=1-3&_nc_sid=825194&_nc_ohc=30N8un2vPewAX8QcAkk&_nc_ht=scontent-sin6-3.xx&oh=5ece776d1f0b830ca2f8e106d6452719&oe=609EBA21",
-    "https://emilus.themenate.net/img/avatars/thumb-3.jpg",
-    "https://emilus.themenate.net/img/avatars/thumb-6.jpg",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
-  ];
-
-  function getChatImage() {
-    for (let i = 0; i < grChats.length; i++) {
-      if (grChats[i].groupChatId === currentGroup) {
-        return chatImages[i];
-      }
-    }
-    return "";
-  }
 
   const onSearchChange = (e) => {
     console.log(e.target.value);
@@ -253,7 +230,6 @@ function ChatPage(props) {
     setShowAddConversation(false);
   };
   const toggleChatListSidebar = () => {
-    console.log("okjj");
     dispatch(
       changeStateChatListSidebar({
         type: "chatlistsidebar",
@@ -268,6 +244,39 @@ function ChatPage(props) {
   useEffect(() => {
     if (triggerAddConversation !== 0) setShowAddConversation(true);
   }, [triggerAddConversation]);
+
+  const imgAvatarPickerRef = useRef(null);
+  const onPickAvatarImage = (e) => {
+    const file = e.target.files[0];
+    const storageRef = firebaseConfig.storage().ref();
+    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
+    fileRef.put(file).then((data) => {
+      console.log("Uploaded a file");
+      data.ref.getDownloadURL().then((url) => {
+        console.log(url);
+        const payload = {
+          groupChatId: group.groupChatId,
+          imageUrl: url,
+        };
+
+        chatApi.changeGroupChatImageUrl(payload)
+          .then(res => {
+            //dispatch(updateGroupChatImage(payload));
+          }).catch(err => {
+
+          })
+      });
+    });
+  }
+
+  const onOpenPickAvatarImage = () => {
+    console.log('update')
+    imgAvatarPickerRef.current.click()
+  }
+
+  const onAddMembers = ()=>{
+    setShowAddMembers(true);
+  }
 
   return (
     <div className="chat-page-container">
@@ -302,7 +311,7 @@ function ChatPage(props) {
                 </CInputGroup>
               </div>
               {/* <Loading /> */}
-              {loadDone ? <ChatList chatImages={chatImages} /> : <Loading />}
+              {loadDone ? <ChatList /> : <Loading />}
               <div
                 onClick={() => setShowAddConversation(true)}
                 className="btn-add-chat"
@@ -313,20 +322,20 @@ function ChatPage(props) {
             </div>
           )}
           <div className="chat-content">
-            {!props.isInTeam && (
+            {!props.isInTeam && group && (
               <div className="chat-content-header">
                 <div className="chat-group-title">
                   <img alt="" src={group?.groupAvatar} />
                   {group?.groupChatName}
                 </div>
                 <div className="chat-group-actions">
-                  <div
-                    onClick={() => setShowAddMembers(true)}
-                    className="d-sm-down-none btn-add-member"
-                  >
-                    <CIcon name="cil-user-follow" />
-                    Thêm thành viên
-                  </div>
+                  <input
+                    accept="image/*"
+                    onChange={onPickAvatarImage}
+                    ref={imgAvatarPickerRef}
+                    type="file"
+                    style={{ display: "none" }}
+                  />
                   <div className="chat-header-actions-dropdown">
                     <CDropdown>
                       <CDropdownToggle id="dropdownMenuButton" caret>
@@ -338,19 +347,19 @@ function ChatPage(props) {
                         aria-labelledby="dropdownMenuButton"
                         placement="bottom-end"
                       >
-                        <CDropdownItem className="first">
+                        <CDropdownItem className="first" onClick={() => onOpenPickAvatarImage()}>
                           <div className="info-icon-group">
                             <AiOutlineInfoCircle className="icon-info-chat" />
                           </div>
-                          Thông tin nhóm chat
+                          Đổi avatar
                         </CDropdownItem>
-                        <CDropdownItem className="last">
+                        {!group.isOfTeam && <CDropdownItem onClick={onAddMembers} className="last">
                           <CIcon
                             name="cil-user-follow"
                             className="icon-delete"
                           />
                           Thêm thành viên
-                        </CDropdownItem>
+                        </CDropdownItem>}
                       </CDropdownMenu>
                     </CDropdown>
                   </div>

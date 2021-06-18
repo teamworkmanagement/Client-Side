@@ -30,6 +30,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
+import teamApi from "src/api/teamApi";
 
 ListTeamPage.propTypes = {};
 
@@ -245,24 +246,21 @@ function ListTeamPage(props) {
     history.push(`/team/${teamId}`);
   };
 
-  const teamImages = [
-    "https://www.innovationnewsnetwork.com/wp-content/uploads/2019/12/ST27-McGillU1-image-%C2%A9-iStock-Garsya.jpg",
-    "https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png",
-    "https://i.ytimg.com/vi/u2ypkUBGEHI/maxresdefault.jpg",
-    "https://vietnamleather.com/wp-content/uploads/2019/02/Untitled-1.png",
-    "https://yt3.ggpht.com/a/AATXAJw6d5yL9s0DzPGffnLQju6V7gB61Z4XBOAbIg=s900-c-k-c0xffffffff-no-rj-mo",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
-  ];
+  const leaveTeam = (teamId) => {
+    console.log(teamId);
+    const params = {
+      "teamId": teamId,
+      "userId": user.id
+    };
+
+    teamApi.leaveTeam({ params })
+      .then(res => {
+        dispatch(getTeamByUserId(user.id))
+      })
+      .catch(err => {
+
+      });
+  }
 
   const renderNormal = () => {
     return (
@@ -292,23 +290,11 @@ function ListTeamPage(props) {
                               aria-labelledby="dropdownMenuButton"
                               placement="bottom-end"
                             >
-                              <CDropdownItem className="first">
+                              <CDropdownItem className="first" onClick={() => navigateToTeam(team.teamId)}>
                                 <CIcon name="cil-arrow-circle-right" />
                                 Vào nhóm
                               </CDropdownItem>
-                              <CDropdownItem className="middle">
-                                <div className="dropdown-icon-group">
-                                  <CIcon name="cil-bell" />
-                                  <CIcon
-                                    className="rotate-45"
-                                    name="cil-window-minimize"
-                                  />
-                                </div>
-                                <div className="special-text">
-                                  Tắt thông báo
-                                </div>
-                              </CDropdownItem>
-                              <CDropdownItem className="last">
+                              <CDropdownItem className="last" onClick={() => leaveTeam(team.teamId)}>
                                 <CIcon name="cil-account-logout" />
                                 Rời nhóm
                               </CDropdownItem>
@@ -320,7 +306,7 @@ function ListTeamPage(props) {
                         <img
                           className="team-avatar"
                           alt=""
-                          src={teamImages[index]}
+                          src={team.teamImageUrl}
                         />
                         <div className="team-name">{team.teamName}</div>
                         <div className="team-description">
@@ -433,7 +419,7 @@ function ListTeamPage(props) {
                           />
                         </td> */}
                         <td className="text-center">
-                          <AvatarList users={members} />
+                          <AvatarList teamId={team.teamId} />
                         </td>
                       </tr>
                     );

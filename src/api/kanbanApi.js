@@ -32,6 +32,14 @@ const kanbanApi = {
     getBoardsForUserTeams(userId) {
         const url = `/kanbanboard/team-boards/${userId}`;
         return axiosClient.get(url);
+    },
+    renameKanbanList(payload) {
+        const url = '/kanbanlist/name-list';
+        return axiosClient.patch(url, payload);
+    },
+    searchKanbanBoards(params) {
+        const url = '/kanbanboard/search-boards';
+        return axiosClient.get(url, params);
     }
 };
 

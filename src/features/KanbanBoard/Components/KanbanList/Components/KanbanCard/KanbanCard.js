@@ -225,8 +225,6 @@ function KanbanCard(props) {
     return "";
   }
 
-  console.log(props.data);
-
   return (
     <Draggable
       isDragDisabled={isShowEditPopup}
