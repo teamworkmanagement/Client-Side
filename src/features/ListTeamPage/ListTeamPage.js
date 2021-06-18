@@ -29,7 +29,7 @@ import { AiOutlineTeam } from "react-icons/ai";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
-import teamApi from "src/api/teamApi";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 ListTeamPage.propTypes = {};
 
@@ -216,25 +216,26 @@ function ListTeamPage(props) {
   const dispatch = useDispatch();
   const teams = useSelector((state) => state.team.teams);
   const user = useSelector((state) => state.auth.currentUser);
-  const [loadone, setLoadone] = useState(false);
+  const [loadDone, setLoadone] = useState(false);
 
   function getMemberCount() {
     return members.length;
   }
 
   useEffect(() => {
+    console.log("loading teams");
     async function loadData() {
       setIsLoading(true);
       dispatch(getTeamByUserId(user.id))
         .then(unwrapResult)
         .then((res) => {
-          setLoadone(true);
+          setIsLoading(false);
         })
         .catch((err) => {
-          setLoadone(true);
+          setIsLoading(false);
         });
 
-      setIsLoading(false);
+      //setIsLoading(false);
     }
 
     loadData();
@@ -244,56 +245,28 @@ function ListTeamPage(props) {
     history.push(`/team/${teamId}`);
   };
 
-  const leaveTeam = (teamId) => {
-    console.log(teamId);
-    const params = {
-      "teamId": teamId,
-      "userId": user.id
-    };
+  const teamImages = [
+    "https://www.innovationnewsnetwork.com/wp-content/uploads/2019/12/ST27-McGillU1-image-%C2%A9-iStock-Garsya.jpg",
+    "https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png",
+    "https://i.ytimg.com/vi/u2ypkUBGEHI/maxresdefault.jpg",
+    "https://vietnamleather.com/wp-content/uploads/2019/02/Untitled-1.png",
+    "https://yt3.ggpht.com/a/AATXAJw6d5yL9s0DzPGffnLQju6V7gB61Z4XBOAbIg=s900-c-k-c0xffffffff-no-rj-mo",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+    "https://befitapparel.com/wp-content/uploads/https___blogs-images.forbes.com_marciaturner_files_2018_01_Wegmans-Produce-1.jpg",
+  ];
 
-    teamApi.leaveTeam({ params })
-      .then(res => {
-        dispatch(getTeamByUserId(user.id))
-      })
-      .catch(err => {
-
-      });
-  }
   const renderNormal = () => {
     return (
       <>
-        <div className="header-tool-bar">
-          <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
-            <CgLogIn className="icon-goin" />
-            <AiOutlineTeam className="icon-group" />
-            Tham gia nhóm
-          </div>
-          <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
-            <CIcon name="cil-plus" />
-            Tạo nhóm mới
-          </div>
-          <CButtonGroup className="show-mode">
-            <CTooltip placement="top" content="Lưới">
-              <CButton
-                className={`first mode-btn ${showMode === 1 && "active"}`}
-                color="secondary"
-                onClick={() => switchShowMode(1)}
-                type="button"
-              >
-                <CIcon name="cil-grid" />
-              </CButton>
-            </CTooltip>
-            <CTooltip placement="top" content="Danh sách">
-              <CButton
-                className={`last mode-btn ${showMode === 2 && "active"}`}
-                color="secondary"
-                onClick={() => switchShowMode(2)}
-              >
-                <CIcon name="cil-list" />
-              </CButton>
-            </CTooltip>
-          </CButtonGroup>
-        </div>
         {showMode === 1 && (
           <div className="grid-view-container">
             <CRow className="grid-view">
@@ -319,11 +292,23 @@ function ListTeamPage(props) {
                               aria-labelledby="dropdownMenuButton"
                               placement="bottom-end"
                             >
-                              <CDropdownItem className="first" onClick={() => navigateToTeam(team.teamId)}>
+                              <CDropdownItem className="first">
                                 <CIcon name="cil-arrow-circle-right" />
                                 Vào nhóm
                               </CDropdownItem>
-                              <CDropdownItem className="last" onClick={() => leaveTeam(team.teamId)}>
+                              <CDropdownItem className="middle">
+                                <div className="dropdown-icon-group">
+                                  <CIcon name="cil-bell" />
+                                  <CIcon
+                                    className="rotate-45"
+                                    name="cil-window-minimize"
+                                  />
+                                </div>
+                                <div className="special-text">
+                                  Tắt thông báo
+                                </div>
+                              </CDropdownItem>
+                              <CDropdownItem className="last">
                                 <CIcon name="cil-account-logout" />
                                 Rời nhóm
                               </CDropdownItem>
@@ -335,7 +320,7 @@ function ListTeamPage(props) {
                         <img
                           className="team-avatar"
                           alt=""
-                          src={team.teamImageUrl}
+                          src={teamImages[index]}
                         />
                         <div className="team-name">{team.teamName}</div>
                         <div className="team-description">
@@ -448,7 +433,7 @@ function ListTeamPage(props) {
                           />
                         </td> */}
                         <td className="text-center">
-                          <AvatarList teamId={team.teamId} />
+                          <AvatarList users={members} />
                         </td>
                       </tr>
                     );
@@ -459,9 +444,7 @@ function ListTeamPage(props) {
           </div>
         )}
 
-        <TeamLoading isLoading={isLoading} />
-        <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
-        <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
+        {/* <TeamLoading isLoading={isLoading} /> */}
       </>
     );
   };
@@ -469,7 +452,7 @@ function ListTeamPage(props) {
   const renderEmpty = () => {
     return (
       <>
-        {teams.length === 0 && loadone && (
+        {teams.length === 0 && !isLoading && (
           <div className="nodata-image">
             <div className="icon-group">
               <BsClipboardData className="icon-task" />
@@ -484,8 +467,44 @@ function ListTeamPage(props) {
   };
   return (
     <div className="list-team-container">
+      <div className="header-tool-bar">
+        <div onClick={onShowJoinTeam} className="join-team-btn normal-btn">
+          <CgLogIn className="icon-goin" />
+          <AiOutlineTeam className="icon-group" />
+          Tham gia nhóm
+        </div>
+        <div onClick={onShowAddTeam} className="create-team-btn normal-btn">
+          <CIcon name="cil-plus" />
+          Tạo nhóm mới
+        </div>
+        <CButtonGroup className="show-mode">
+          <CTooltip placement="top" content="Lưới">
+            <CButton
+              className={`first mode-btn ${showMode === 1 && "active"}`}
+              color="secondary"
+              onClick={() => switchShowMode(1)}
+              type="button"
+            >
+              <CIcon name="cil-grid" />
+            </CButton>
+          </CTooltip>
+          <CTooltip placement="top" content="Danh sách">
+            <CButton
+              className={`last mode-btn ${showMode === 2 && "active"}`}
+              color="secondary"
+              onClick={() => switchShowMode(2)}
+            >
+              <CIcon name="cil-list" />
+            </CButton>
+          </CTooltip>
+        </CButtonGroup>
+      </div>
+      {/* <Loading /> */}
+      {isLoading && teams.length === 0 && <Loading />}
       {renderNormal()}
       {renderEmpty()}
+      <CreateTeamModal showAddTeam={showAddTeam} onClose={onCloseAddTeam} />
+      <JoinTeamModal showJoinTeam={showJoinTeam} onClose={onCloseJoinTeam} />
     </div>
   );
 }

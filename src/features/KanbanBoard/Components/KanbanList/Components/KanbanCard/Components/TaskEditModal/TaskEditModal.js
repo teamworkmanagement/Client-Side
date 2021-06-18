@@ -25,6 +25,7 @@ import {
   CToastBody,
   CToaster,
   CToastHeader,
+  CTooltip,
 } from "@coreui/react";
 import { CirclePicker } from "react-color";
 import ProgressSlider from "src/shared_components/MySharedComponents/ProgressSlider/ProgressSlider";
@@ -44,10 +45,8 @@ import Select, { components } from "react-select";
 import AsyncSelect from "react-select/async";
 import axiosClient from "src/api/axiosClient";
 import userApi from "src/api/userApi";
-import TaskCommentInput from "./TaskCommentInput";
-import { convertToRaw } from "draft-js";
-import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHistoryModal/TaskHistoryModal";
-import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
+import { BsArrowsMove } from "react-icons/bs";
+import { GrDocumentTime } from "react-icons/gr";
 
 TaskEditModal.propTypes = {};
 
@@ -129,6 +128,7 @@ function TaskEditModal(props) {
   const [triggerUpdateTask, setTriggerUpdateTask] = useState(-1); //cause setState is asynchonous action
 
   const curUser = useSelector((state) => state.auth.currentUser);
+  const [currentAssignedUser, setCurrentAssignedUser] = useState(null);
   const [commentContent, setCommentContent] = useState("");
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
@@ -187,15 +187,6 @@ function TaskEditModal(props) {
   const [isFocused, setFocus] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
 
-
-  /**section modal history */
-  const [showTaskHistoryModal, setShowTaskHistoryModal] = useState(false);
-  const [details, setDetails] = useState([]);
-  function onCloseTaskHistoryModal() {
-    setShowTaskHistoryModal(false);
-  }
-
-
   function refactorKanbanListWithActive() {
     //set active cho list mà task này đang nằm trong đó, list đang dc chọn (active) sẽ có dấu check
     var cloneLists = [...kanbanLists];
@@ -228,39 +219,7 @@ function TaskEditModal(props) {
     }
 
     setKanbanLocal(cloneLists);
-    console.log('zzzzzzzz')
   }, [kanbanLists]);
-
-
-  const moveTask = useSelector(state => state.kanban.signalrData.moveTask);
-  useEffect(() => {
-    if (moveTask && moveTask.taskId == task.taskId && moveTask.oldList != moveTask.newList) {
-      console.log(moveTask);
-
-      const index = kanbanLists.findIndex(
-        (x) => x.kanbanListId === moveTask.newList
-      );
-      //set active cho list đang chứa task này
-      const localClone = [...kanbanLocal];
-
-      for (let i = 0; i < localClone.length; i++) {
-        localClone[i] = {
-          ...localClone[i],
-          active: false,
-        };
-      }
-      localClone[index] = {
-        ...localClone[index],
-        active: true,
-      };
-
-      setTask({
-        ...task,
-        kanbanListId: moveTask.newList,
-      })
-      setKanbanLocal(localClone);
-    }
-  }, [moveTask])
   const addToast = () => {
     setToasts([
       ...toasts,
@@ -285,6 +244,14 @@ function TaskEditModal(props) {
 
   useEffect(() => {
     if (props.data) {
+      if (props.data.userId) {
+        setCurrent({
+          value: props.data.userId,
+          label: props.data.userName,
+          img: props.data.userAvatar,
+        });
+        console.log(current);
+      }
       setTask({ ...props.data });
       changeColor(
         props.data.taskThemeColor ? props.data.taskThemeColor : "ffffff"
@@ -345,29 +312,6 @@ function TaskEditModal(props) {
     }
   }, [props.data]);
 
-  useEffect(() => {
-    if (props.data) {
-      axiosClient
-        .get(`/post/search-user?userId=${user.id}`)
-        .then((res) => {
-          const ops = res.data.map((x) => {
-            return {
-              value: x.userId,
-              label: x.userFullname,
-              img: x.userImageUrl,
-            };
-          });
-
-          //setOptions(ops);
-
-          const findObj = ops.find((x) => x.value === props.data.userId);
-          if (findObj) setCurrent(findObj);
-        })
-
-        .catch((err) => { });
-    }
-  }, [props.data]);
-
   const onChange = (e) => {
     setCurrent(e);
     console.log(e);
@@ -392,8 +336,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
@@ -431,8 +375,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -472,6 +416,9 @@ function TaskEditModal(props) {
     });
   }
 
+  const updateTaskFunc = (obj) => {
+    console.log("update :", task);
+  };
   function onSaveTaskName() {
     if (
       task.taskName === "" ||
@@ -707,7 +654,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -755,7 +702,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
@@ -796,10 +743,10 @@ function TaskEditModal(props) {
                 setAttachments(attachmentsClone);
                 dispatchUpdateTask();
               })
-              .catch((err) => { });
+              .catch((err) => {});
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -826,8 +773,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
@@ -864,43 +811,8 @@ function TaskEditModal(props) {
 
   const changeListClick = (index) => {
     selectList(index);
-    console.log("old zzzzz", task.kanbanListId);
-    console.log("new : ", kanbanLists[index].kanbanListId);
-
-    const oldKBList = task.kanbanListId;
-    const newKBList = kanbanLists[index].kanbanListId;
-
-    if (oldKBList == newKBList)
-      return;
-
-
-    const cloneKbLists = [...kanbanLists];
-    const listTaskDestination = cloneKbLists.find(
-      (x) => x.kanbanListId === newKBList
-    ).taskUIKanbans;
-
-    let pos = -999999;
-    if (listTaskDestination.length === 0) {
-      pos = genNewRank();
-    }
-    else {
-      pos = FindNextRank(listTaskDestination[listTaskDestination.length - 1].taskRankInList);
-    }
-
-    taskApi
-      .dragTask({
-        taskId: task.taskId,
-        position: pos,
-        oldList: oldKBList,
-        newList: newKBList,
-        boardId: currentBoard,
-      })
-      .then((res) => { })
-      .catch((err) => { });
-
-  }
-
-
+    console.log("zzzzz");
+  };
 
   function renderContentList() {
     return (
@@ -1000,98 +912,42 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const loadOptions = async (inputValue, callback) => {
     callback(await filterColors(inputValue));
   };
 
-  String.prototype.replaceBetween = function (start, end, what) {
-    return this.substring(0, start) + what + this.substring(end);
-  };
+  const [memberList, setMemberList] = useState([]);
 
-  const saveContent = (editorState) => {
-    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-    if (blocks.length === 1) {
-      if (blocks[0].text === "") return;
+  useEffect(() => {
+    console.log(props.data);
+    if (props.data) {
+      try {
+        async function getAllMembers() {
+          const params = {
+            boardId: currentBoard,
+            keyword: inputValue,
+          };
+          const res = await userApi.searchUsersKanban({ params });
+
+          const listUsers = res.data.map((x) => {
+            return {
+              value: x.userId,
+              label: x.userFullname,
+              img: x.userImageUrl,
+            };
+          });
+          setMemberList(listUsers);
+          console.log(listUsers);
+          //return listUsers;
+        }
+
+        getAllMembers();
+      } catch (e) {}
     }
-    const cloneBlocks = [...blocks];
-
-    //tags
-    const obj = convertToRaw(editorState.getCurrentContent());
-
-    const mentions = [];
-    const entityMap = obj.entityMap;
-
-    //console.log(entityMap);
-    console.log(obj);
-    for (const property in entityMap) {
-      if (entityMap[property].type === "mention")
-        mentions.push(entityMap[property].data.mention);
-    }
-
-    //console.log(cloneBlocks);
-
-    cloneBlocks.forEach((block, index) => {
-      if (block.entityRanges.length > 0) {
-        block.entityRanges.forEach((entity) => {
-          var nameTag = block.text.substring(
-            entity.offset,
-            entity.offset + entity.length
-          );
-          block.text = block.text.replaceBetween(
-            entity.offset,
-            entity.offset + entity.length,
-            `<strong>@${nameTag}</strong>`
-          );
-          console.log(block.text);
-        });
-      }
-    });
-
-    console.log(cloneBlocks);
-
-    let value = cloneBlocks
-      .map((block) => (!block.text.trim() && "\n") || block.text)
-      .join("<br>");
-
-    let userIds = [];
-    if (mentions.length > 0) {
-      userIds = mentions.map((m) => m.id);
-    }
-
-    commentApi
-      .addComment({
-        commentTaskId: task.taskId,
-        commentUserId: user.id,
-        commentUserAvatar: user.userAvatar,
-        commentUserName: user.fullName,
-        commentContent: value,
-        commentCreatedAt: new Date().toISOString(),
-        commentIsDeleted: false,
-        commentUserTagIds: userIds,
-      })
-      .then(res => {
-
-      })
-      .catch(err => {
-
-      })
-    console.log(value);
-  };
-
-
-  const viewHistory = () => {
-    taskApi.getVersion(task.taskId)
-      .then(res => {
-        console.log(res.data);
-        setDetails(res.data);
-        setShowTaskHistoryModal(true)
-      }).catch(err => {
-
-      });
-  }
+  }, [props.data]);
 
   return (
     <div>
@@ -1218,11 +1074,26 @@ function TaskEditModal(props) {
                                 Giao cho
                               </div>
 
-                              <div style={{ width: "11rem" }}>
-                                <AsyncSelect
+                              <div style={{ width: "15rem" }}>
+                                <Select
+                                  className="basic-single"
+                                  value={current}
+                                  isClearable="true"
+                                  isSearchable="true"
+                                  name="member"
+                                  options={memberList}
+                                  placeholder="Chọn thành viên..."
+                                  components={{
+                                    Option: CustomOption,
+                                    SingleValue: ValueOption,
+                                  }}
+                                  noOptionsMessage={() => "Không tìm thấy"}
+                                  onChange={onChange}
+                                />
+                                {/* <AsyncSelect
                                   value={isFocused ? null : current}
                                   onChange={onChange}
-                                  options={options}
+                                  //options={options}
                                   placeholder="Chọn thành viên"
                                   loadOptions={loadOptions}
                                   defaultOptions
@@ -1231,13 +1102,13 @@ function TaskEditModal(props) {
                                     Option: CustomOption,
                                     SingleValue: ValueOption,
                                   }}
-                                  onFocus={() => {
-                                    setFocus(true);
-                                    setCurrent(null);
-                                  }}
-                                  onBlur={() => setFocus(false)}
-                                  blurInputOnSelect={true}
-                                />
+                                  // onFocus={() => {
+                                  //   setFocus(true);
+                                  //   setCurrent(null);
+                                  // }}
+                                  //onBlur={() => setFocus(false)}
+                                  //blurInputOnSelect={true}
+                                /> */}
                               </div>
                             </div>
                           </CCol>
@@ -1551,14 +1422,13 @@ function TaskEditModal(props) {
                       <img alt="" src="../avatars/6.jpg" />
                     </div>
                     <div className="input-container">
-                      {/*<CInput
+                      <CInput
                         type="text"
                         placeholder="Viết bình luận..."
                         onKeyDown={onAddComment}
                         onChange={(e) => setCommentContent(e.target.value)}
                         value={commentContent}
-                      />*/}
-                      <TaskCommentInput saveContent={saveContent} boardId={currentBoard} />
+                      />
                     </div>
                   </div>
                   <div className="comment-list">
@@ -1590,13 +1460,18 @@ function TaskEditModal(props) {
                     onClickOutside={() => setOpenPopoverLists(false)}
                     content={renderContentList()}
                   >
-                    <div
-                      className="action-item"
-                      onClick={() => setOpenPopoverLists(!openPopoverLists)}
+                    <CTooltip
+                      content="Chuyển công việc đến danh sách khác"
+                      placement="left"
                     >
-                      <CIcon name="cil-share-boxed" />
-                      <div className="action-name">Chuyển đến...</div>
-                    </div>
+                      <div
+                        className="action-item"
+                        onClick={() => setOpenPopoverLists(!openPopoverLists)}
+                      >
+                        <BsArrowsMove className="icon-move" />
+                        <div className="action-name">Chuyển đến...</div>
+                      </div>
+                    </CTooltip>
                   </Popover>
 
                   {props.data.showPoint && (
@@ -1608,24 +1483,32 @@ function TaskEditModal(props) {
                       onClickOutside={() => setOpenPopoverScores(false)}
                       content={renderContentScore()}
                     >
-                      <div
-                        className="action-item"
-                        onClick={() => setOpenPopoverScores(!openPopoverScores)}
-                      >
-                        <CIcon name="cil-sort-numeric-up" />
-                        <div className="action-name">Cho điểm</div>
-                      </div>
+                      <CTooltip content="Cho điểm công việc" placement="left">
+                        <div
+                          className="action-item"
+                          onClick={() =>
+                            setOpenPopoverScores(!openPopoverScores)
+                          }
+                        >
+                          <CIcon name="cil-sort-numeric-up" />
+                          <div className="action-name">Cho điểm</div>
+                        </div>
+                      </CTooltip>
                     </Popover>
                   )}
+                  <CTooltip content="Xem lịch sử chỉnh sửa" placement="left">
+                    <div className="action-item">
+                      <GrDocumentTime className="icon-version" />
+                      <div className="action-name">Lịch sử chỉnh sửa</div>
+                    </div>
+                  </CTooltip>
 
-                  <div className="action-item" onClick={viewHistory}>
-                    <CIcon name="cil-notes" />
-                    <div className="action-name">Lịch sử</div>
-                  </div>
-                  <div className="action-item" onClick={onRemoveTask}>
-                    <CIcon name="cil-trash" />
-                    <div className="action-name">Xóa công việc</div>
-                  </div>
+                  <CTooltip content="Xóa công việc" placement="left">
+                    <div className="action-item" onClick={onRemoveTask}>
+                      <CIcon name="cil-trash" />
+                      <div className="action-name">Xóa công việc</div>
+                    </div>
+                  </CTooltip>
                 </div>
               </CCol>
             </CRow>
@@ -1635,12 +1518,6 @@ function TaskEditModal(props) {
             </div>
           )}
         </CModalBody>
-
-        <TaskHistoryModal
-          details={details}
-          show={showTaskHistoryModal}
-          onClose={onCloseTaskHistoryModal}
-        />
       </CModal>
     </div>
   );

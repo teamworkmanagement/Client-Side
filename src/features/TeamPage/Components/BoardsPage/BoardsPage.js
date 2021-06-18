@@ -8,7 +8,8 @@ import CreateBoardModal from "./CreateBoardModal/CreateBoardModal";
 import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory, useParams } from "react-router";
-import queryString from 'query-string';
+import queryString from "query-string";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 BoardsPage.propTypes = {};
 
@@ -37,25 +38,26 @@ function BoardsPage(props) {
 
       history.push({
         pathname: history.location.pathname,
-        search: history.location.search + `&b=${boardId}`
+        search: history.location.search + `&b=${boardId}`,
       });
     }
   }
 
   const [boardLists, setBoardLists] = useState([]);
   const [showAddBoard, setShowAddBoard] = useState(false);
-  const [loadone, setLoadDone] = useState(false);
   const { teamId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     kanbanApi
       .getAllKanbanForTeam(teamId)
       .then((res) => {
         setBoardLists(res.data);
       })
-      .catch((err) => { })
+      .catch((err) => {})
       .finally(() => {
-        setLoadDone(true)
+        setIsLoading(false);
       });
   }, []);
 
@@ -88,6 +90,7 @@ function BoardsPage(props) {
           </div>
         </div>
       </div>
+      {isLoading && boardLists.length === 0 && <Loading />}
       {boardLists.length > 0 && (
         <div className="list-boards">
           <CRow>
@@ -124,7 +127,7 @@ function BoardsPage(props) {
         </div>
       )}
 
-      {boardLists.length === 0 && loadone && (
+      {boardLists.length === 0 && !isLoading && (
         <div className="nodata-image">
           <div className="icon-group">
             <BsClipboardData className="icon-task" />

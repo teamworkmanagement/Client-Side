@@ -281,7 +281,7 @@ $baseTransition: all 0.3s;
         margin-top: -0.2rem;
     }
     &:hover {
-        background-color: $lighterBaseColor;
+        background-color: rgba($baseColor, 0.8);
     }
 }
 

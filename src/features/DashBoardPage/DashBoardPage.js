@@ -35,7 +35,7 @@ import AvatarList from "src/shared_components/MySharedComponents/AvatarList/Avat
 import teamApi from "src/api/teamApi";
 import statisticsApi from "src/api/statisticsApi";
 import axiosClient from "src/api/axiosClient";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 DashBoardPage.propTypes = {};
 
 const random = (min, max) => {
@@ -54,8 +54,7 @@ function DashBoardPage(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentUser);
   const [loadone, setLoadone] = useState(false);
-  const [filter, setFilter] = useState('week');
-
+  const [filter, setFilter] = useState("week");
 
   const [userStatistics, setUserStatistics] = useState([]);
   const [teamStatistics, setTeamStatistics] = useState([]);
@@ -121,9 +120,7 @@ function DashBoardPage(props) {
     },
   ];
 
-  const [defaultDatasets, setDefaultDatasets] = useState([
-
-  ]);
+  const [defaultDatasets, setDefaultDatasets] = useState([]);
 
   const [defaultOptions, setDefaultOptions] = useState({
     maintainAspectRatio: false,
@@ -185,24 +182,20 @@ function DashBoardPage(props) {
   };
 
   useEffect(() => {
-    teamApi.getAllTeamByUser(user.id)
-      .then(res => {
+    teamApi
+      .getAllTeamByUser(user.id)
+      .then((res) => {
         setTeams(res.data);
-      }).catch(err => {
-
       })
-  }, [])
-
+      .catch((err) => {});
+  }, []);
 
   const changeMode = (value) => {
     setProgressTimeMode(value);
-    if (value == 1)
-      setFilter('week');
-    if (value == 2)
-      setFilter('month');
-    if (value == 3)
-      setFilter('year');
-  }
+    if (value == 1) setFilter("week");
+    if (value == 2) setFilter("month");
+    if (value == 3) setFilter("year");
+  };
 
   useEffect(() => {
     async function getStatistics() {
@@ -210,7 +203,7 @@ function DashBoardPage(props) {
       const params = {
         userId: user.id,
         filter,
-      }
+      };
       const data1 = [];
       const data2 = [];
 
@@ -230,38 +223,39 @@ function DashBoardPage(props) {
       const max = Math.max(max1, max2);
       const maxValue = Math.ceil(max / 10) * 10;
 
-      console.log(maxValue)
+      console.log(maxValue);
 
       const optionsClone = { ...defaultOptions };
       optionsClone.scales.yAxes[0].ticks.stepSize = Math.ceil(maxValue / 5);
       optionsClone.scales.yAxes[0].ticks.max = maxValue;
       setDefaultOptions(optionsClone);
 
-      setDefaultDatasets([{
-        label: "Công việc cá nhân",
-        backgroundColor: hexToRgba(brandInfo, 10),
-        borderColor: brandInfo,
-        pointHoverBackgroundColor: brandInfo,
-        borderWidth: 2,
-        data: res1.data,
-      },
-      {
-        label: "Công việc nhóm",
-        backgroundColor: hexToRgba(brandSuccess, 20),
-        borderColor: brandSuccess,
-        pointHoverBackgroundColor: brandSuccess,
-        borderWidth: 2,
-        data: res2.data,
-      }]);
+      setDefaultDatasets([
+        {
+          label: "Công việc cá nhân",
+          backgroundColor: hexToRgba(brandInfo, 10),
+          borderColor: brandInfo,
+          pointHoverBackgroundColor: brandInfo,
+          borderWidth: 2,
+          data: res1.data,
+        },
+        {
+          label: "Công việc nhóm",
+          backgroundColor: hexToRgba(brandSuccess, 20),
+          borderColor: brandSuccess,
+          pointHoverBackgroundColor: brandSuccess,
+          borderWidth: 2,
+          data: res2.data,
+        },
+      ]);
     }
 
     getStatistics();
-  }, [filter])
+  }, [filter]);
 
   useEffect(() => {
     console.log(defaultDatasets);
-  }, [defaultDatasets])
-
+  }, [defaultDatasets]);
 
   const exportExcel = () => {
     /*axiosClient.get('https://localhost:9001/api/test/export-excel')
@@ -277,24 +271,23 @@ function DashBoardPage(props) {
         console.log(err)
       })*/
 
-
-
-    statisticsApi.exportPersonalAndTeamStat({
-      userStatis: userStatistics,
-      teamStatis: teamStatistics,
-    })
-      .then(blob => {
-        saveAs(blob, "abc.xlsx")
+    statisticsApi
+      .exportPersonalAndTeamStat({
+        userStatis: userStatistics,
+        teamStatis: teamStatistics,
+      })
+      .then((blob) => {
+        saveAs(blob, "abc.xlsx");
         /*const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
         link.click();
         window.URL.revokeObjectURL(url);*/
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
-      })
-  }
+      });
+  };
   return (
     <div className="dash-board-container">
       <CRow className="counting-group">
@@ -358,24 +351,26 @@ function DashBoardPage(props) {
       <div className="chart-progress-container">
         <div className="chart-header">
           <div className="chart-name">Tiến độ công việc</div>
-          <div className="timeline-mode">
-            <CButtonGroup className="float-right mr-3">
-              {modeProgressList.map((item) => (
-                <CButton
-                  color="outline-secondary"
-                  key={item.value}
-                  className="mx-0"
-                  onClick={() => changeMode(item.value)}
-                  active={item.value === progressTimeMode}
-                >
-                  {item.name}
-                </CButton>
-              ))}
-            </CButtonGroup>
-          </div>
-          <div className="export-btn" onClick={exportExcel}>
-            Xuất Excel
-            <CIcon name="cil-share-boxed" />
+          <div className="chart-btn-group">
+            <div className="timeline-mode">
+              <CButtonGroup className="float-right mr-3">
+                {modeProgressList.map((item) => (
+                  <CButton
+                    color="outline-secondary"
+                    key={item.value}
+                    className="mx-0"
+                    onClick={() => changeMode(item.value)}
+                    active={item.value === progressTimeMode}
+                  >
+                    {item.name}
+                  </CButton>
+                ))}
+              </CButtonGroup>
+            </div>
+            <div className="export-btn" onClick={exportExcel}>
+              Xuất Excel
+              <CIcon name="cil-share-boxed" />
+            </div>
           </div>
         </div>
         <CChartLine

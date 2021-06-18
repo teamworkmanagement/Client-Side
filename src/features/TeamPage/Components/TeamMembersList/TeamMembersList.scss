@@ -283,6 +283,30 @@ $baseTransition: all 0.3s;
     transform-origin: left;
 }
 
+@keyframes showInAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@mixin ItemAppear {
+    transition: all 0.3s ease-out;
+    transform: scale(0);
+    animation-name: showInAnimation;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+    animation-delay: 0.2s;
+    transform-origin: left;
+}
+
 .team-members-container {
     display: flex;
     flex-direction: column;
@@ -462,6 +486,7 @@ $baseTransition: all 0.3s;
     .col-leader {
         .leader-infor-container {
             @include CardStyle;
+            @include ItemAppear;
             display: flex;
 
             flex-direction: column;
@@ -498,6 +523,10 @@ $baseTransition: all 0.3s;
         .members-container {
             @include CardStyle;
             margin-bottom: 1rem;
+            .loading-container {
+                justify-content: center;
+                display: flex;
+            }
             .members-list-header {
                 display: flex;
                 justify-content: flex-end;
@@ -574,7 +603,7 @@ $baseTransition: all 0.3s;
         }
     }
     .table-responsive {
-        //overflow: visible;
+        overflow: inherit;
         .table {
             thead {
                 display: none;

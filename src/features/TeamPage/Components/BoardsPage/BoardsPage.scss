@@ -326,6 +326,11 @@ $baseTransition: all 0.3s;
             }
         }
     }
+    .loading-container {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+    }
     .list-boards {
         margin-top: 0.5rem;
         .row {

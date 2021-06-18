@@ -20,8 +20,8 @@ import {
   searchGroupChatForUser,
   setCurrentGroup,
   setLoadDone,
-  updateGroupChatImage,
 } from "./chatSlice";
+import { v4 as uuidv4 } from "uuid";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import { useHistory, useLocation } from "react-router";
@@ -32,8 +32,7 @@ import { IoInformationCircleOutline } from "react-icons/io";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import CreateChatInChatPage from "./Components/CreateNewConversation/CreateChatInChatPage";
 import { changeStateChatListSidebar } from "src/appSlice";
-import uuid from "src/utils/file/uuid";
-import chatApi from "src/api/chatApi";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 ChatPage.propTypes = {};
 
@@ -60,8 +59,7 @@ function ChatPage(props) {
   const imgPickerRef = useRef(null);
   const filePickerRef = useRef(null);
 
-  //const [group, setGroup] = useState(null);
-  const group = useSelector(state => state.chat.groupChat.find(x => x.groupChatId === currentGroup))
+  const [group, setGroup] = useState(null);
 
   useEffect(() => {
     if (loadDone) {
@@ -77,7 +75,7 @@ function ChatPage(props) {
   useEffect(() => {
     if (!currentGroup) return;
     const gr = grChats.find((x) => x.groupChatId === currentGroup);
-    //setGroup(gr);
+    setGroup(gr);
   }, [currentGroup]);
 
   useEffect(() => {
@@ -160,7 +158,7 @@ function ChatPage(props) {
         return;
       }
 
-      const folder = uuid();
+      const folder = uuidv4();
       const params = {
         Body: file,
         Bucket: "teamappstorage",
@@ -197,7 +195,7 @@ function ChatPage(props) {
   const onPickImage = (e) => {
     const file = e.target.files[0];
     const storageRef = firebaseConfig.storage().ref();
-    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
+    const fileRef = storageRef.child(`${uuidv4()}/${file.name}`);
     fileRef.put(file).then((data) => {
       console.log("Uploaded a file");
       data.ref.getDownloadURL().then((url) => {
@@ -218,7 +216,28 @@ function ChatPage(props) {
     });
   };
 
+  const chatImages = [
+    "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.6435-9/95384801_3541411182540556_323501399205740544_n.png?_nc_cat=1&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=PNRMG3JZivEAX8fDiPY&_nc_ht=scontent.fsgn5-3.fna&oh=f9d490f5d7f7a1b81999da2845b80923&oe=609FA0C7",
+    "https://i.ytimg.com/vi/u2ypkUBGEHI/maxresdefault.jpg",
+    "https://scontent-sin6-3.xx.fbcdn.net/v/t1.6435-9/70944423_1289407744573535_1300646982062178304_n.jpg?_nc_cat=104&ccb=1-3&_nc_sid=825194&_nc_ohc=30N8un2vPewAX8QcAkk&_nc_ht=scontent-sin6-3.xx&oh=5ece776d1f0b830ca2f8e106d6452719&oe=609EBA21",
+    "https://emilus.themenate.net/img/avatars/thumb-3.jpg",
+    "https://emilus.themenate.net/img/avatars/thumb-6.jpg",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+    "https://tse4.mm.bing.net/th?id=OIP.8InIv1pjxNACiiPqRmnDWQHaE8&pid=Api&P=0&w=264&h=177",
+  ];
 
+  function getChatImage() {
+    for (let i = 0; i < grChats.length; i++) {
+      if (grChats[i].groupChatId === currentGroup) {
+        return chatImages[i];
+      }
+    }
+    return "";
+  }
 
   const onSearchChange = (e) => {
     console.log(e.target.value);
@@ -243,203 +262,159 @@ function ChatPage(props) {
     );
   };
 
-
-  const triggerAddConversation = useSelector(state => state.chat.triggerAddConversation);
+  const triggerAddConversation = useSelector(
+    (state) => state.chat.triggerAddConversation
+  );
   useEffect(() => {
-    if (triggerAddConversation !== 0)
-      setShowAddConversation(true)
-  }, [triggerAddConversation])
+    if (triggerAddConversation !== 0) setShowAddConversation(true);
+  }, [triggerAddConversation]);
 
-
-  const imgAvatarPickerRef = useRef(null);
-  const onPickAvatarImage = (e) => {
-    const file = e.target.files[0];
-    const storageRef = firebaseConfig.storage().ref();
-    const fileRef = storageRef.child(`${uuid()}/${file.name}`);
-    fileRef.put(file).then((data) => {
-      console.log("Uploaded a file");
-      data.ref.getDownloadURL().then((url) => {
-        console.log(url);
-        const payload = {
-          groupChatId: group.groupChatId,
-          imageUrl: url,
-        };
-
-        chatApi.changeGroupChatImageUrl(payload)
-          .then(res => {
-            //dispatch(updateGroupChatImage(payload));
-          }).catch(err => {
-
-          })
-      });
-    });
-  }
-
-  const onOpenPickAvatarImage = () => {
-    console.log('update')
-    imgAvatarPickerRef.current.click()
-  }
-
-  const onAddMembers = ()=>{
-    setShowAddMembers(true);
-  }
   return (
     <div className="chat-page-container">
-      {loadDone ? (
-        <div className="chat-page-content">
+      <div className="chat-page-content">
+        {!props.isInTeam && (
+          <div className="toggle-chat-list-sidebar-btn">
+            <CIcon
+              //className="ml-md-3 d-md-none toggle-chat-list-sidebar-icon"
+              className="ml-md-3 d-sm-down-block  d-md-none toggle-chat-list-sidebar-icon"
+              onClick={toggleChatListSidebar}
+              name="cil-menu"
+            />
+          </div>
+        )}
+
+        <div className="chat-main-content">
           {!props.isInTeam && (
-            <div className="toggle-chat-list-sidebar-btn">
-              <CIcon
-                //className="ml-md-3 d-md-none toggle-chat-list-sidebar-icon"
-                className="ml-md-3 d-sm-down-block  d-md-none toggle-chat-list-sidebar-icon"
-                onClick={toggleChatListSidebar}
-                name="cil-menu"
-              />
+            <div className="chat-list d-sm-down-none">
+              <div className="chat-list-header">
+                <CInputGroup className="chat-list-search">
+                  <CInput
+                    placeholder="Tìm đoạn chat..."
+                    id="appendedInputButton"
+                    type="text"
+                    onChange={onSearchChange}
+                  />
+                  <CInputGroupAppend>
+                    <CButton color="secondary">
+                      <BsSearch className="icon-search" />
+                    </CButton>
+                  </CInputGroupAppend>
+                </CInputGroup>
+              </div>
+              {/* <Loading /> */}
+              {loadDone ? <ChatList chatImages={chatImages} /> : <Loading />}
+              <div
+                onClick={() => setShowAddConversation(true)}
+                className="btn-add-chat"
+              >
+                <CIcon name="cil-plus" />
+                Tạo nhóm Chat mới
+              </div>
             </div>
           )}
-
-          <div className="chat-main-content">
+          <div className="chat-content">
             {!props.isInTeam && (
-              <div className="chat-list d-sm-down-none">
-                <div className="chat-list-header">
-                  <CInputGroup className="chat-list-search">
-                    <CInput
-                      placeholder="Tìm đoạn chat..."
-                      id="appendedInputButton"
-                      type="text"
-                      onChange={onSearchChange}
-                    />
-                    <CInputGroupAppend>
-                      <CButton color="secondary">
-                        <BsSearch className="icon-search" />
-                      </CButton>
-                    </CInputGroupAppend>
-                  </CInputGroup>
+              <div className="chat-content-header">
+                <div className="chat-group-title">
+                  <img alt="" src={group?.groupAvatar} />
+                  {group?.groupChatName}
                 </div>
-                <ChatList />
-                <div
-                  onClick={() => setShowAddConversation(true)}
-                  className="btn-add-chat"
-                >
-                  <CIcon name="cil-plus" />
-                  Tạo nhóm Chat mới
+                <div className="chat-group-actions">
+                  <div
+                    onClick={() => setShowAddMembers(true)}
+                    className="d-sm-down-none btn-add-member"
+                  >
+                    <CIcon name="cil-user-follow" />
+                    Thêm thành viên
+                  </div>
+                  <div className="chat-header-actions-dropdown">
+                    <CDropdown>
+                      <CDropdownToggle id="dropdownMenuButton" caret>
+                        <div className="options">
+                          <CIcon name="cil-options" />
+                        </div>
+                      </CDropdownToggle>
+                      <CDropdownMenu
+                        aria-labelledby="dropdownMenuButton"
+                        placement="bottom-end"
+                      >
+                        <CDropdownItem className="first">
+                          <div className="info-icon-group">
+                            <AiOutlineInfoCircle className="icon-info-chat" />
+                          </div>
+                          Thông tin nhóm chat
+                        </CDropdownItem>
+                        <CDropdownItem className="last">
+                          <CIcon
+                            name="cil-user-follow"
+                            className="icon-delete"
+                          />
+                          Thêm thành viên
+                        </CDropdownItem>
+                      </CDropdownMenu>
+                    </CDropdown>
+                  </div>
                 </div>
               </div>
             )}
-            <div className="chat-content">
-              {!props.isInTeam && group && (
-                <div className="chat-content-header">
-                  <div className="chat-group-title">
-                    <img alt="" src={group?.groupAvatar} />
-                    {group?.groupChatName}
-                  </div>
-                  <div className="chat-group-actions">
-                    {/*<div
-                      onClick={() => setShowAddMembers(true)}
-                      className="d-sm-down-none btn-add-member"
-                    >
-                      <CIcon name="cil-user-follow" />
-                      Thêm thành viên
-                    </div>*/}
-                    <input
-                      accept="image/*"
-                      onChange={onPickAvatarImage}
-                      ref={imgAvatarPickerRef}
-                      type="file"
-                      style={{ display: "none" }}
-                    />
-                    <div className="chat-header-actions-dropdown">
-                      <CDropdown>
-                        <CDropdownToggle id="dropdownMenuButton" caret>
-                          <div className="options">
-                            <CIcon name="cil-options" />
-                          </div>
-                        </CDropdownToggle>
-                        <CDropdownMenu
-                          aria-labelledby="dropdownMenuButton"
-                          placement="bottom-end"
-                        >
-                          <CDropdownItem className="first" onClick={() => onOpenPickAvatarImage()}>
-                            <div className="info-icon-group">
-                              <AiOutlineInfoCircle className="icon-info-chat" />
-                            </div>
-                            Đổi avatar
 
-                          </CDropdownItem>
-                          {!group.isOfTeam && <CDropdownItem onClick={onAddMembers} className="last">
-                            <CIcon
-                              name="cil-user-follow"
-                              className="icon-delete"
-                            />
-                            Thêm thành viên
-                          </CDropdownItem>}
-                        </CDropdownMenu>
-                      </CDropdown>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div
-                ref={scrollRef}
-                onScroll={onScroll}
-                className="chat-content-message-list"
-              >
-                <MessageList
-                  reachBot={reachBot}
-                  reachTop={reachTop}
-                  sendMes={send}
-                  scrollFix={scrollFixed}
-                  scrollToBottom={scrollToBottom}
+            <div
+              ref={scrollRef}
+              onScroll={onScroll}
+              className="chat-content-message-list"
+            >
+              <MessageList
+                reachBot={reachBot}
+                reachTop={reachTop}
+                sendMes={send}
+                scrollFix={scrollFixed}
+                scrollToBottom={scrollToBottom}
+              />
+              <div className="message-list-bottom-view" ref={messagesEndRef} />
+            </div>
+            <div className="chat-content-footer">
+              <CInput
+                value={msg}
+                onKeyDown={handleKeyDown}
+                onChange={(e) => setMsg(e.target.value)}
+                className="message-input-field"
+                type="text"
+              />
+              <div className="input-actions-group">
+                <CIcon
+                  name="cil-paperclip"
+                  onClick={() => {
+                    filePickerRef.current.click();
+                  }}
                 />
-                <div
-                  className="message-list-bottom-view"
-                  ref={messagesEndRef}
+                <input
+                  onChange={onPickFile}
+                  ref={filePickerRef}
+                  type="file"
+                  style={{ display: "none" }}
                 />
-              </div>
-              <div className="chat-content-footer">
-                <CInput
-                  value={msg}
-                  onKeyDown={handleKeyDown}
-                  onChange={(e) => setMsg(e.target.value)}
-                  className="message-input-field"
-                  type="text"
+                <CIcon
+                  name="cil-image-plus"
+                  onClick={() => {
+                    imgPickerRef.current.click();
+                  }}
                 />
-                <div className="input-actions-group">
-                  <CIcon
-                    name="cil-paperclip"
-                    onClick={() => {
-                      filePickerRef.current.click();
-                    }}
-                  />
-                  <input
-                    onChange={onPickFile}
-                    ref={filePickerRef}
-                    type="file"
-                    style={{ display: "none" }}
-                  />
-                  <CIcon
-                    name="cil-image-plus"
-                    onClick={() => {
-                      imgPickerRef.current.click();
-                    }}
-                  />
-                  <input
-                    accept="image/*"
-                    onChange={onPickImage}
-                    ref={imgPickerRef}
-                    type="file"
-                    style={{ display: "none" }}
-                  />
-                  <div className="send-button">
-                    <CIcon name="cil-send" onClick={sendMessage} />
-                  </div>
+                <input
+                  accept="image/*"
+                  onChange={onPickImage}
+                  ref={imgPickerRef}
+                  type="file"
+                  style={{ display: "none" }}
+                />
+                <div className="send-button">
+                  <CIcon name="cil-send" onClick={sendMessage} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      ) : null}
+      </div>
+
       <CreateChatInChatPage
         onCLoseModal={onClose}
         showAddConversation={showAddConversation}

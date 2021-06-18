@@ -24,11 +24,7 @@ import { AiOutlineNotification } from "react-icons/ai";
 import { HiOutlineBan } from "react-icons/hi";
 import { VscArrowUp } from "react-icons/vsc";
 // register it.
-
-import moment from "moment";
-import "moment/locale/vi";
-
-moment.locale("vi");
+timeago.register("vi", vi);
 
 const TheHeaderDropdownMssg = () => {
   const [notis, setNotis] = useState([]);
@@ -85,7 +81,7 @@ const TheHeaderDropdownMssg = () => {
           [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [triggerLoad]);
 
   useEffect(() => {
@@ -93,38 +89,42 @@ const TheHeaderDropdownMssg = () => {
     const clone = [...notis];
 
     setItemsCount(itemsCount + 1);
-    clone.splice(0, 0, { ...newNoti });
+    clone.splice(0, 0, newNoti);
     setNotis(clone);
     console.log(newNoti);
     //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
   }, [newNoti]);
 
   const history = useHistory();
-  const onClick = (noti, index) => {
+  const onClick = (noti) => {
+    setShow(false);
     console.log("onclick: ", noti);
-    if (!noti.notificationStatus) {
-      const payload = {
-        groupId: noti.notificationGroup,
-        userId: user.id,
-      };
+    const payload = {
+      groupId: noti.notificationGroup,
+      userId: user.id,
+    };
+    //notiApi.readNoti(payload).then(res => { }).catch(err => { });
+    const cloneNotis = [...notis];
 
-      notiApi.readNoti(payload).then(res => { }).catch(err => { });
-      const cloneNotis = [...notis];
+    const obj = cloneNotis.find(
+      (n) => n.notificationGroup === noti.notificationGroup
+    );
 
-      cloneNotis[index].notificationStatus = true;
+    /*if (obj.notificationStatus === false) {
+      obj.notificationStatus = true;
       setNotis(cloneNotis);
       setItemsCount(itemsCount - 1);
-    }
+    }*/
 
-    if (noti.notificationLink)
+    if (obj.notificationLink)
       history.push({
-        pathname: noti.notificationLink.split("?")[0],
-        search: noti.notificationLink.split("?")[1]
-          ? noti.notificationLink.split("?")[1]
+        pathname: obj.notificationLink.split("?")[0],
+        search: obj.notificationLink.split("?")[1]
+          ? obj.notificationLink.split("?")[1]
           : null,
       });
-    /*console.log(noti.notificationLink.split("?")[0]);
-    console.log(noti.notificationLink.split("?")[1]);*/
+    console.log(obj.notificationLink.split("?")[0]);
+    console.log(obj.notificationLink.split("?")[1]);
   };
 
   function getNotiContent(noti) {
@@ -160,8 +160,7 @@ const TheHeaderDropdownMssg = () => {
       if (hour < 10) hour = "0" + hour;
       var minute = date.getMinutes();
       if (minute < 10) minute = "0" + minute;
-      //return hour + ":" + minute;
-      return moment(notiDate).format("HH:mm");
+      return hour + ":" + minute;
     }
 
     var dateStr = date.getDate().toString();
@@ -172,15 +171,15 @@ const TheHeaderDropdownMssg = () => {
 
     if (date.getFullYear() === today.getFullYear()) {
       //cùng năm khác ngày
-      //return dateStr + "/" + monthStr;
-      return moment(notiDate).format("DD/MM")
+      return dateStr + "/" + monthStr;
     } else {
       //khác năm
-      //return dateStr + "/" + monthStr + "/" + yearStr;
-      return moment(notiDate).format("dd/MM/yyyy");
+      return dateStr + "/" + monthStr + "/" + yearStr;
     }
     //debugger;
   }
+
+  const [show, setShow] = useState(false);
 
   return (
     <CDropdown
@@ -192,28 +191,37 @@ const TheHeaderDropdownMssg = () => {
         ref={bellRef}
         className="c-header-nav-link"
         caret={false}
+        onClick={() => setShow(true)}
       >
         <CIcon name="cil-bell" />
-        <CBadge shape="pill" color="danger">
-          {itemsCount}
-        </CBadge>
+        {itemsCount > 0 && (
+          <CBadge shape="pill" color="danger">
+            {itemsCount}
+          </CBadge>
+        )}
       </CDropdownToggle>
       <div>
-        <CDropdownMenu className="pt-0 fixedsize" placement="bottom-end">
+        <CDropdownMenu
+          show={show}
+          className="pt-0 fixedsize"
+          placement="bottom-end"
+        >
           <CDropdownItem header tag="div" color="transparent">
             <div className="header-noti-list">
               <div className="title">Thông báo</div>
+              <div className="clear-btn">Xóa tất cả</div>
             </div>
           </CDropdownItem>
 
           {notis.length > 0 && (
             <div className="noti-list">
-              {notis.map((noti, index) => {
+              {notis.map((noti) => {
                 return (
                   <div
-                    onClick={() => onClick(noti, index)}
-                    className={`noti-item ${noti.notificationStatus ? "seen" : ""
-                      }`}
+                    onClick={() => onClick(noti)}
+                    className={`noti-item ${
+                      noti.notificationStatus ? "seen" : ""
+                    }`}
                   >
                     <div className="seen-signal"></div>
                     <img alt="" src={noti.notificationActionAvatar} />
