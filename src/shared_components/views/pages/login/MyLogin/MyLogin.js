@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./MyLogin.scss";
-import { CButton, CCol, CInput, CRow } from "@coreui/react";
+import { CButton, CCol, CInput, CInputCheckbox, CRow } from "@coreui/react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
@@ -17,7 +17,9 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { toast, ToastContainer } from "react-toastify";
 import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 import { startNotiService } from "src/utils/signalr/notiService";
-
+import { FiLock, FiMail } from "react-icons/fi";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { FaFacebook } from "react-icons/fa";
 
 MyLogin.propTypes = {};
 
@@ -33,39 +35,40 @@ function MyLogin(props) {
 
   const history = useHistory();
   const onCreateAccount = () => {
-    history.push('/register');
-  }
+    history.push("/register");
+  };
 
   const onForgotPassword = () => {
-    history.push('/forgotpassword');
-  }
+    history.push("/forgotpassword");
+  };
 
   const onLoginClick = () => {
     dispatch(login(loginObject))
       .then(unwrapResult)
-      .then(originalPromiseResult => {
-      })
-      .catch(err => {
-        console.log('login err :', err);
-        if (err.Message.includes('Invalid Credentials')) {
+      .then((originalPromiseResult) => {})
+      .catch((err) => {
+        console.log("login err :", err);
+        if (err.Message.includes("Invalid Credentials")) {
           toast(
             <CustomToast
               type="error"
               title="Lỗi"
-              message="Mật khẩu không chính xác" />
+              message="Mật khẩu không chính xác"
+            />
           );
         }
 
-        if(err.Message.includes('No Accounts Registered')){
+        if (err.Message.includes("No Accounts Registered")) {
           toast(
             <CustomToast
               type="error"
               title="Lỗi"
-              message="Tài khoản không tồn tại" />
+              message="Tài khoản không tồn tại"
+            />
           );
         }
       });
-  }
+  };
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -73,8 +76,7 @@ function MyLogin(props) {
       ...loginObject,
       [name]: value,
     });
-  }
-
+  };
 
   const loginFacebook = async () => {
     const res = await socialMediaAuth(facebookProvider);
@@ -142,83 +144,108 @@ function MyLogin(props) {
     }
   };
 
-
   return (
     <div>
-      <div className="login-page-container">
-        <CRow className="row-header">
-          <div xl="2" md="1" sm="0"></div>
-          <CCol className="col-image1" sm="12" md="5" xl="4">
-            <img alt="" src="../images/login/chat.svg" />
-          </CCol>
-          <CCol className="col-image2" sm="12" md="6" xl="6">
-            <img alt="" src="../images/login/task.svg" />
-          </CCol>
-        </CRow>
-        <CRow className="row-content">
-          <CCol className="col1" sm="12" lg="7" xl="8">
-            <div className="title">
-              Trải nghiệm
-              <div>
-                <label className="title-teamwork">Teamwork</label>{" "}
-                <label>hiệu quả</label> và <label>nhanh chóng với</label>
+      <div className="new-login-page-container">
+        <CRow>
+          <div className="col-login">
+            <div className="login-content">
+              <img alt="" src="../images/app/logoteam.png" />
+              <div className="title-login">Đăng nhập</div>
+              <div className="sign-up-group">
+                Bạn chưa có tài khoản?
+                <div className="label-sign-up" onClick={onCreateAccount}>
+                  Đăng ký
+                </div>
               </div>
-              <div className="app-name">
-                <strong>ezTeam</strong>
-              </div>
-            </div>
-            <img alt="" src="../images/login/teamwork.svg" />
-          </CCol>
-          <CCol className="col2" xs="12" sm="10" lg="5" xl="4">
-            <CInput className="input-email" name="email" onChange={onChange} placeholder="Email tài khoản" />
-            <div className="password-group">
-              <CInput
-                className="input-password"
-                placeholder="Mật khẩu"
-                name="password"
-                onChange={onChange}
-                type={showPassword ? "text" : "password"}
-              />
-              {showPassword && (
-                <BsEye
-                  onClick={() => setShowPassword(false)}
-                  className="icon-password icon-showpassword"
-                />
-              )}
-              {!showPassword && (
-                <BsEyeSlash
-                  onClick={() => setShowPassword(true)}
-                  className=" icon-password icon-hidepassword"
-                />
-              )}
-            </div>
+              <div className="email-group">
+                <div className="label">
+                  <div className="required-icon">*</div> Email
+                </div>
+                <div className="email-input-group">
+                  <FiMail className="icon-email input-icon" />
 
-            <div onClick={onForgotPassword} className="label-forgot">
-              <label>Quên mật khẩu?</label>
+                  <CInput
+                    className="input-email"
+                    name="email"
+                    onChange={onChange}
+                    placeholder="Email tài khoản"
+                  />
+                </div>
+              </div>
+              <div className="password-group">
+                <div className="label">
+                  <div className="required-icon">*</div> Mật khẩu
+                </div>
+                <div className="password-input-group">
+                  <FiLock className="icon-password input-icon" />
+                  <CInput
+                    className="input-password"
+                    placeholder="Mật khẩu"
+                    name="password"
+                    onChange={onChange}
+                    type={showPassword ? "text" : "password"}
+                  />
+                  {showPassword && (
+                    <AiFillEye
+                      onClick={() => setShowPassword(false)}
+                      className="icon-eye-password icon-showpassword"
+                    />
+                  )}
+                  {!showPassword && (
+                    <AiFillEyeInvisible
+                      onClick={() => setShowPassword(true)}
+                      className=" icon-eye-password icon-hidepassword"
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="sub-actions">
+                <div className="remember-account">
+                  <CInputCheckbox id="checkbox1" name="checkbox1" />
+                  Ghi nhớ tài khoản
+                </div>
+                <div onClick={onForgotPassword} className="forgot-password">
+                  Quên mật khẩu?
+                </div>
+              </div>
+              <div className="btn-login" onClick={onLoginClick}>
+                Đăng nhập
+              </div>
+              <div className="label-other-media">
+                <div className="line"></div>
+                <div className="label">Hoặc đăng nhập với</div>
+                <div className="line"></div>
+              </div>
+              <div className="social-btn-group">
+                <div className="gg-btn" onClick={() => loginSocial("gg")}>
+                  <FcGoogle className="icon-gg" />
+                  Google
+                </div>
+                <div className="fb-btn" onClick={() => loginSocial("fb")}>
+                  <FaFacebook className="icon-fb" />
+                  Facebook
+                </div>
+              </div>
             </div>
-            <div className="login-btn" onClick={onLoginClick}>Đăng nhập</div>
-            <div className="label-social">
-              <div className="line1 line"></div>
-              <div className="label"> Đăng nhập nhanh với</div>
-              <div className="line2 line"></div>
+          </div>
+          <div className="col-welcome">
+            <img alt="" src="../images/login/teamworklogin.svg" />
+            <div className="title">
+              Chào mừng đến với <strong>EzTeam</strong>
             </div>
-            <div className="social-group">
-              {/*<FcGoogle className="google-icon social-icon" />
-          <SiFacebook className="fb-icon social-icon" />*/}
-              <CButton onClick={() => loginSocial("fb")}>Facebook</CButton>
-              <CButton onClick={() => loginSocial("gg")}>Google</CButton>
+            <div className="description">
+              Hãy cùng tham gia môi trường làm việc nhóm hiện đại, sáng tạo và
+              thân thiện. EzTeam cam kết mang đến cho bạn một trải nghiệm hiệu
+              quả và tuyệt vời nhất.
             </div>
-            <div className="register-group">
-              Bạn chưa có tài khoản? Hãy <strong onClick={onCreateAccount}>
-                Tạo mới
-              </strong> tại đây!
-            </div>
-          </CCol>
+          </div>
         </CRow>
       </div>
       <ToastContainer
         position="bottom-right"
         autoClose={2000}
+        hideProgressBar
       />
     </div>
   );

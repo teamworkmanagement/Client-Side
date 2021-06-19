@@ -8,6 +8,7 @@ import TeamTabsSideBar from "./TeamTabsSideBar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SettingOptionsSidebar from "./SettingOptionsSidebar";
+import NewLogin from "../views/pages/login/NewLogin/NewLogin";
 
 const TheLayout = () => {
   return (
@@ -27,6 +28,7 @@ const TheLayout = () => {
         autoClose={2000}
         progressClassName="toastProgress"
       />
+
       {/* <ForgotPassword /> */}
     </div>
   );
