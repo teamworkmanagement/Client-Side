@@ -47,6 +47,9 @@ import axiosClient from "src/api/axiosClient";
 import userApi from "src/api/userApi";
 import { BsArrowsMove } from "react-icons/bs";
 import { GrDocumentTime } from "react-icons/gr";
+import TaskCommentInput from "./TaskCommentInput";
+import { convertToRaw } from "draft-js";
+import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 
 TaskEditModal.propTypes = {};
 
@@ -186,6 +189,14 @@ function TaskEditModal(props) {
   const [current, setCurrent] = useState(null);
   const [isFocused, setFocus] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
+
+
+  /**section modal history */
+  const [showTaskHistoryModal, setShowTaskHistoryModal] = useState(false);
+  const [details, setDetails] = useState([]);
+  function onCloseTaskHistoryModal() {
+    setShowTaskHistoryModal(false);
+  }
 
   function refactorKanbanListWithActive() {
     //set active cho list mà task này đang nằm trong đó, list đang dc chọn (active) sẽ có dấu check
@@ -336,8 +347,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
@@ -375,8 +386,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -654,7 +665,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -702,7 +713,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -743,10 +754,10 @@ function TaskEditModal(props) {
                 setAttachments(attachmentsClone);
                 dispatchUpdateTask();
               })
-              .catch((err) => {});
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -773,8 +784,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -912,7 +923,7 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -930,9 +941,10 @@ function TaskEditModal(props) {
             boardId: currentBoard,
             keyword: inputValue,
           };
+          console.log(currentBoard)
           const res = await userApi.searchUsersKanban({ params });
 
-          const listUsers = res.data.map((x) => {
+          const listUsers = res.data?.map((x) => {
             return {
               value: x.userId,
               label: x.userFullname,
@@ -945,9 +957,95 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [props.data]);
+
+  String.prototype.replaceBetween = function (start, end, what) {
+    return this.substring(0, start) + what + this.substring(end);
+  };
+
+  const saveContent = (editorState) => {
+    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+    if (blocks.length === 1) {
+      if (blocks[0].text === "") return;
+    }
+    const cloneBlocks = [...blocks];
+
+    //tags
+    const obj = convertToRaw(editorState.getCurrentContent());
+
+    const mentions = [];
+    const entityMap = obj.entityMap;
+
+    //console.log(entityMap);
+    console.log(obj);
+    for (const property in entityMap) {
+      if (entityMap[property].type === "mention")
+        mentions.push(entityMap[property].data.mention);
+    }
+
+    //console.log(cloneBlocks);
+
+    cloneBlocks.forEach((block, index) => {
+      if (block.entityRanges.length > 0) {
+        block.entityRanges.forEach((entity) => {
+          var nameTag = block.text.substring(
+            entity.offset,
+            entity.offset + entity.length
+          );
+          block.text = block.text.replaceBetween(
+            entity.offset,
+            entity.offset + entity.length,
+            `<strong>@${nameTag}</strong>`
+          );
+          console.log(block.text);
+        });
+      }
+    });
+
+    console.log(cloneBlocks);
+
+    let value = cloneBlocks
+      .map((block) => (!block.text.trim() && "\n") || block.text)
+      .join("<br>");
+
+    let userIds = [];
+    if (mentions.length > 0) {
+      userIds = mentions.map((m) => m.id);
+    }
+
+    commentApi
+      .addComment({
+        commentTaskId: task.taskId,
+        commentUserId: user.id,
+        commentUserAvatar: user.userAvatar,
+        commentUserName: user.fullName,
+        commentContent: value,
+        commentCreatedAt: new Date().toISOString(),
+        commentIsDeleted: false,
+        commentUserTagIds: userIds,
+      })
+      .then(res => {
+
+      })
+      .catch(err => {
+
+      })
+    console.log(value);
+  };
+
+
+  const viewHistory = () => {
+    taskApi.getVersion(task.taskId)
+      .then(res => {
+        console.log(res.data);
+        setDetails(res.data);
+        setShowTaskHistoryModal(true)
+      }).catch(err => {
+
+      });
+  }
 
   return (
     <div>
@@ -1422,13 +1520,14 @@ function TaskEditModal(props) {
                       <img alt="" src="../avatars/6.jpg" />
                     </div>
                     <div className="input-container">
-                      <CInput
+                      {/*<CInput
                         type="text"
                         placeholder="Viết bình luận..."
                         onKeyDown={onAddComment}
                         onChange={(e) => setCommentContent(e.target.value)}
                         value={commentContent}
-                      />
+                      />*/}
+                      <TaskCommentInput saveContent={saveContent} boardId={currentBoard} />
                     </div>
                   </div>
                   <div className="comment-list">
@@ -1497,7 +1596,7 @@ function TaskEditModal(props) {
                     </Popover>
                   )}
                   <CTooltip content="Xem lịch sử chỉnh sửa" placement="left">
-                    <div className="action-item">
+                    <div className="action-item" onClick={viewHistory}>
                       <GrDocumentTime className="icon-version" />
                       <div className="action-name">Lịch sử chỉnh sửa</div>
                     </div>
@@ -1518,6 +1617,11 @@ function TaskEditModal(props) {
             </div>
           )}
         </CModalBody>
+        <TaskHistoryModal
+          details={details}
+          show={showTaskHistoryModal}
+          onClose={onCloseTaskHistoryModal}
+        />
       </CModal>
     </div>
   );

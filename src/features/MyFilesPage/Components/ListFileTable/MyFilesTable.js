@@ -129,13 +129,13 @@ function MyFilesTable(props) {
       try {
         const params = {
           OwnerId: user.id,
-          PageNumber: page,
-          PageSize: pageSize,
           OwnerType: "user",
         };
-        const outPut = await fileApi.getFile({ params });
+        //const outPut = await fileApi.getFile({ params });
 
-        const dts = outPut.data.items.map((f) => {
+        const outPut = await fileApi.getAll({ params });
+
+        const dts = outPut.data.map((f) => {
           return {
             id: f.fileId,
             name: f.fileName,
@@ -150,9 +150,9 @@ function MyFilesTable(props) {
         });
 
         setDatas(dts);
-        setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
-        console.log(outPut.data.items);
-      } catch (err) {}
+        //setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
+        //console.log(outPut.data.items);
+      } catch (err) { }
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -175,11 +175,13 @@ function MyFilesTable(props) {
           </div>
 
           <div className="noti-infor">Chưa có tệp nào trong nhóm</div>
-          <div className="create-btn">Tải tệp mới lên</div>
+          {/*<div className="create-btn">Tải tệp mới lên</div>*/}
         </div>
       </div>
     );
   }
+
+
 
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
@@ -203,6 +205,7 @@ function MyFilesTable(props) {
         //tableFilter
         //itemsPerPageSelect
         noItemsViewSlot={NoItemView()}
+        pagination
         itemsPerPage={5}
         hover
         sorter
@@ -274,7 +277,7 @@ function MyFilesTable(props) {
           },
         }}
       />
-      {totals !== 0 ? (
+      {/*totals !== 0 ? (
         <CPagination
           className="pagination-my-files"
           activePage={page}
@@ -284,7 +287,7 @@ function MyFilesTable(props) {
           doubleArrows={false}
           onActivePageChange={(i) => setActivePage(i)}
         />
-      ) : null}
+      ) : null*/}
 
       {upload ? <UploadItem progress={progress} name={cfile.name} /> : null}
       <Prompt when={upload} message="Cancel uploading file?" />

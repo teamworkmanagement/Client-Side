@@ -21,6 +21,10 @@ const chatApi = {
     addMembers(payload) {
         const url = 'groupchat/add-members';
         return axiosClient.post(url, payload);
+    },
+    changeGroupChatImageUrl(payload) {
+        const url = 'groupchat/image';
+        return axiosClient.patch(url, payload);
     }
 };
 

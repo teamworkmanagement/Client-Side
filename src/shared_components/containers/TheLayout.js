@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
 import ForgotPassword from "../views/pages/forgotpassword/ForgotPassword";
 import MyLogin from "../views/pages/login/MyLogin/MyLogin";
@@ -8,9 +8,26 @@ import TeamTabsSideBar from "./TeamTabsSideBar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SettingOptionsSidebar from "./SettingOptionsSidebar";
+
 import NewLogin from "../views/pages/login/NewLogin/NewLogin";
 
+import CustomToast from "../MySharedComponents/CustomToast/CustomToast";
+import { useSelector } from "react-redux";
+
 const TheLayout = () => {
+  const newNoti = useSelector((state) => state.app.newNotfication);
+  useEffect(() => {
+    if (!newNoti) return;
+
+    toast(
+      <CustomToast
+        type="success"
+        title="Thông báo"
+        message="Bạn có thông báo mới"
+      />
+    );
+    //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
+  }, [newNoti]);
   return (
     <div className="c-app c-default-layout">
       <TheSidebar />

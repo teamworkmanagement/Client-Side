@@ -47,6 +47,10 @@ const taskApi = {
     reAssignTask(params) {
         const url = '/handletask/reassign-task';
         return axiosClient.post(url, params);
+    },
+    getVersion(taskId) {
+        const url = `/taskver/bytaskid/${taskId}`;
+        return axiosClient.get(url);
     }
 };
 

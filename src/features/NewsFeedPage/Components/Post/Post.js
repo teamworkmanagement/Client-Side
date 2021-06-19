@@ -20,6 +20,7 @@ import PostEditor from "../PostEditor/PostEditor";
 import CustomInput from "../CustomInput/CustomInput";
 import { convertToRaw } from "draft-js";
 import GridImages from "./Components/GridImages/GridImages";
+import { useHistory } from "react-router-dom";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -60,13 +61,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-          .deleteReactPost({ params })
-          .then((res) => {})
-          .catch((err) => {})
+        .deleteReactPost({ params })
+        .then((res) => { })
+        .catch((err) => { })
       : postApi
-          .reactPost(params)
-          .then((res) => {})
-          .catch((err) => {});
+        .reactPost(params)
+        .then((res) => { })
+        .catch((err) => { });
 
     setPost({
       ...post,
@@ -108,7 +109,7 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -199,7 +200,7 @@ function Post(props) {
 
         setComments(newArrr);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -247,6 +248,12 @@ function Post(props) {
     }
   }, [newComment]);
 
+  const history = useHistory();
+  
+  const navigateToTeam = (post) => {
+    history.push(`/team/${post.postTeamId}`);
+  };
+
   return (
     <div className="post-container">
       <div className="post-header">
@@ -260,13 +267,13 @@ function Post(props) {
             />
           </div>
           <div className="poster-infor">
-            <div className="name-and-group">
+            <div className="name-and-group" onClick={() => navigateToTeam(post)}>
               <strong>
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
               {!props.isInTeam && `đã đăng trong nhóm `}
               {!props.isInTeam && (
-                <strong dangerouslySetInnerHTML={{ __html: post.teamName }} />
+                <strong >{post.teamName}</strong>
               )}
             </div>
             <div className="post-date">

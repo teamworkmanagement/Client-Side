@@ -15,28 +15,57 @@ import {
 import CIcon from "@coreui/icons-react";
 import CreateCardModal from "../CreateCardModal/CreateCardModal";
 import { AiOutlineDelete } from "react-icons/ai";
+import kanbanApi from "src/api/kanbanApi";
 
 KanbanListHeader.propTypes = {};
 
 function KanbanListHeader(props) {
+  const clone = { ...props };
   const [showForm, setShowForm] = useState(false);
-  const [headerName, setHeaderName] = useState(props.title);
+  const [headerName, setHeaderName] = useState(clone.title);
+  const [value, setValue] = useState(clone.title)
   const [showAddCard, setShowAddCard] = useState(false);
   function HandleEditHeader() {
     setShowForm(true);
   }
   function HandleCloseEditHeader() {
     setShowForm(false);
+    setValue(props.title);
   }
+
+  const onKeyUp = (e) => {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+      console.log(value);
+      if (value) {
+        kanbanApi.renameKanbanList({
+          kanbanListId: props.kanbanListId,
+          kanbanListName: value
+        }).then(res => {
+          setShowForm(false);
+          setValue(value);
+        }).catch(err => {
+          setShowForm(false);
+          setValue(props.title);
+        })
+      }
+      else {
+        console.log(props.headerName)
+        //setHeaderName(props.headerName);
+      }
+    }
+  }
+
   return (
     <div className="kanbanlist-header-container" {...props.dragHandleProps}>
       {showForm ? (
         <div className="form-header">
           <CInput
             autoFocus
-            defaultValue={headerName}
+            value={value}
             class="input-field"
             type="text"
+            onChange={(e) => setValue(e.target.value)}
+            onKeyUp={onKeyUp}
           />
           <div className="input-actions-group" onClick={HandleCloseEditHeader}>
             <CIcon name="cil-x" />
@@ -45,7 +74,7 @@ function KanbanListHeader(props) {
       ) : (
         <div className="normal-header">
           <div className="lane-title">
-            <div className="title">{headerName}</div>
+            <div className="title">{props.title}</div>
           </div>
           <div className="cards-count">{props.cardCount}</div>
           <div className="header-actions-dropdown">

@@ -1,37 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./AvatarList.scss";
 import { CTooltip } from "@coreui/react";
+import { useSelector } from "react-redux";
 
 AvatarList.propTypes = {};
 
 function AvatarList(props) {
-  const [users, setUsers] = useState(props.users);
-  const [usersRefactor, setUsersRefactor] = useState(getUsers);
+  const team = useSelector(state => state.team.teams.find(x => x.teamId === props.teamId));
 
-  function getUsers() {
-    const limitAvatar = 6;
-    var cloneUsers = [];
+  useEffect(() => {
+    console.log(team)
+  }, [team])
 
-    if (users.length <= limitAvatar) return users;
-    for (let i = 0; i < limitAvatar - 1; i++) {
-      cloneUsers.push(users[i]);
-    }
-    const more = users.length - limitAvatar + 1;
-    cloneUsers.push({
-      count: more,
-    });
-    return cloneUsers;
+  const renderMore = () => {
+
   }
-
   return (
     <div className="avatar-list-container">
-      {usersRefactor.map((user) => {
-        return user.count ? (
-          <div className="count-more-container">
-            <div className="count-more">+{user.count}</div>
-          </div>
-        ) : (
+      {team && team.teamUsers.map((user) => {
+        return (
           <CTooltip placement="top" content={user.userFullName}>
             <div className="avatar-list-item">
               <img alt="" src={user.userImageUrl} />
@@ -39,6 +27,11 @@ function AvatarList(props) {
           </CTooltip>
         );
       })}
+
+
+      {team && team.teamMemberCount - team.teamUsers.length > 0 && (<div className="count-more-container">
+        <div className="count-more">+{team.teamMemberCount - team.teamUsers.length}</div>
+      </div>)}
     </div>
   );
 }

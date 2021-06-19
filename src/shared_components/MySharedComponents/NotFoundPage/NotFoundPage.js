@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./NotFoundPage.scss";
 import NotiPopup from "../NotiPopup/NotiPopup";
+import { useHistory } from "react-router-dom";
 
 NotFoundPage.propTypes = {};
 
 function NotFoundPage(props) {
   const [showNotiPopup, setShowNotiPopup] = useState(false);
+  const history = useHistory();
   function goBackHome() {
-    //routing to dashboard
+    history.push({
+      pathname: '/dashboard',
+      search: null,
+    })
   }
   function testNotiPopup() {
     setShowNotiPopup(true);
@@ -27,8 +32,7 @@ function NotFoundPage(props) {
       <div className="content">Nội dung này không tồn tại!</div>
       <div
         className="back-home-btn"
-        //onClick={goBackHome}
-        onClick={testNotiPopup}
+        onClick={goBackHome}
       >
         Quay về trang chủ
       </div>

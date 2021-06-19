@@ -59,14 +59,30 @@ function MyBoards(props) {
     setBoards([...boards, boardRes.data]);
   };
 
+  const searchBoards = (e) => {
+    const params = {
+      isOfTeam: false,
+      userId: user.id,
+      keyWord: e.target.value,
+    };
+    
+    kanbanApi.searchKanbanBoards({ params })
+      .then(res => {
+        setBoards(res.data);
+      }).catch(err => {
+
+      })
+  }
+
   return (
     <div className="my-list-boards-container">
       <div className="list-boards-header">
         <div className="lookup-input">
           <CInput
             type="text"
-            name="teamName"
+            name="boardName"
             placeholder="Tìm bảng công việc..."
+            onChange={searchBoards}
           />
           <BsSearch className="icon-search" />
         </div>

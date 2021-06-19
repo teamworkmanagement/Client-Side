@@ -35,7 +35,6 @@ function ChatList(props) {
       {groupChatList.map(function (item, index) {
         return (
           <ChatListItem
-            image={props.chatImages[index]}
             key={index}
             data={item}
             index={index}

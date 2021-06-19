@@ -89,6 +89,11 @@ const chatSlice = createSlice({
 
     addNewGroupChat(state, action) {
       state.groupChat.splice(0, 0, action.payload);
+    },
+
+    updateGroupChatImage(state, action) {
+      const grChat = state.groupChat.find(x => x.groupChatId === action.payload.groupChatId);
+      grChat.groupAvatar = action.payload.imageUrl;
     }
   },
   extraReducers: {
@@ -119,6 +124,7 @@ export const {
   setNewMessage,
   changeGroupPosition,
   addNewGroupChat,
-  setTriggerAddConversation
+  setTriggerAddConversation,
+  updateGroupChatImage
 } = actions;
 export default reducer; // default export
