@@ -18,19 +18,25 @@ import CardLoading from "./Components/KanbanList/Components/KanbanCard/Component
 import { RiTableLine } from "react-icons/ri";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
-import queryString from 'query-string';
+import queryString from "query-string";
 import { unwrapResult } from "@reduxjs/toolkit";
 import TaskEditModal from "./Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
-import { FindNextRank, FindPreRank, FindRankBetween, genNewRank } from "src/utils/lexorank/lexorank";
+import {
+  FindNextRank,
+  FindPreRank,
+  FindRankBetween,
+  genNewRank,
+} from "src/utils/lexorank/lexorank";
 import { connection } from "src/utils/signalr/kanbanService";
 import { dragListLocal, dragTaskLocal, setCurrentBoard } from "./kanbanSlice";
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 KanbanBoard.propTypes = {};
 
 function KanbanBoard(props) {
   const dispatch = useDispatch();
-  const isLoading = useSelector(state => state.app.teamLoading);
+  const isLoading = useSelector((state) => state.app.teamLoading);
 
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
@@ -80,13 +86,20 @@ function KanbanBoard(props) {
           pos = FindPreRank(listTasksSource[0].taskRankInList);
         } else {
           if (destination.index === listTasksSource.length - 1) {
-            pos = FindNextRank(listTasksSource[listTasksSource.length - 1].taskRankInList);
+            pos = FindNextRank(
+              listTasksSource[listTasksSource.length - 1].taskRankInList
+            );
           } else {
             if (source.index < destination.index)
-              pos = FindRankBetween(listTasksSource[destination.index].taskRankInList, listTasksSource[destination.index + 1].taskRankInList);
-
+              pos = FindRankBetween(
+                listTasksSource[destination.index].taskRankInList,
+                listTasksSource[destination.index + 1].taskRankInList
+              );
             else
-              pos = FindRankBetween(listTasksSource[destination.index - 1].taskRankInList, listTasksSource[destination.index].taskRankInList);
+              pos = FindRankBetween(
+                listTasksSource[destination.index - 1].taskRankInList,
+                listTasksSource[destination.index].taskRankInList
+              );
           }
         }
       }
@@ -95,28 +108,31 @@ function KanbanBoard(props) {
         if (destination.index === 0) {
           if (listTaskDestination.length === 0) {
             pos = genNewRank();
-          }
-          else {
+          } else {
             pos = FindPreRank(listTaskDestination[0].taskRankInList);
           }
-        }
-        else {
+        } else {
           if (destination.index === listTaskDestination.length) {
-            pos = FindNextRank(listTaskDestination[listTaskDestination.length - 1].taskRankInList)
-
+            pos = FindNextRank(
+              listTaskDestination[listTaskDestination.length - 1].taskRankInList
+            );
           } else {
-            pos = FindRankBetween(listTaskDestination[destination.index - 1].taskRankInList,
-              listTaskDestination[destination.index].taskRankInList);
+            pos = FindRankBetween(
+              listTaskDestination[destination.index - 1].taskRankInList,
+              listTaskDestination[destination.index].taskRankInList
+            );
           }
         }
       }
 
-      dispatch(dragTaskLocal({
-        taskId: listTasksSource[source.index].taskId,
-        position: pos,
-        oldList: source.droppableId,
-        newList: destination.droppableId,
-      }));
+      dispatch(
+        dragTaskLocal({
+          taskId: listTasksSource[source.index].taskId,
+          position: pos,
+          oldList: source.droppableId,
+          newList: destination.droppableId,
+        })
+      );
 
       taskApi
         .dragTask({
@@ -127,30 +143,36 @@ function KanbanBoard(props) {
           boardId: currentBoard,
           connectionId: connection.connectionId,
         })
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
     } else {
       if (destination.index === 0) {
         pos = FindPreRank(cloneKbLists[0].kanbanListRankInBoard);
       } else {
         if (destination.index === cloneKbLists.length - 1) {
-          pos = FindNextRank(cloneKbLists[cloneKbLists.length - 1].kanbanListRankInBoard)
+          pos = FindNextRank(
+            cloneKbLists[cloneKbLists.length - 1].kanbanListRankInBoard
+          );
         } else {
           if (source.index < destination.index)
-            pos = FindRankBetween(cloneKbLists[destination.index].kanbanListRankInBoard,
-              cloneKbLists[destination.index + 1].kanbanListRankInBoard);
+            pos = FindRankBetween(
+              cloneKbLists[destination.index].kanbanListRankInBoard,
+              cloneKbLists[destination.index + 1].kanbanListRankInBoard
+            );
           else
-            pos = FindRankBetween(cloneKbLists[destination.index - 1].kanbanListRankInBoard,
-              cloneKbLists[destination.index].kanbanListRankInBoard);
+            pos = FindRankBetween(
+              cloneKbLists[destination.index - 1].kanbanListRankInBoard,
+              cloneKbLists[destination.index].kanbanListRankInBoard
+            );
         }
       }
 
-      dispatch(dragListLocal(
-        {
+      dispatch(
+        dragListLocal({
           position: pos,
           kanbanListId: draggableId,
-        }
-      ));
+        })
+      );
 
       kanbanApi
         .swapList({
@@ -159,8 +181,8 @@ function KanbanBoard(props) {
           kanbanListId: draggableId,
           connectionId: connection.connectionId,
         })
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
     }
   }
 
@@ -171,7 +193,6 @@ function KanbanBoard(props) {
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
   const [modalTaskObj, setModaTaskObj] = useState(null);
 
-
   const tasks = [];
   kanbanLists.map((kl) => {
     kl.taskUIKanbans.map((task) => {
@@ -179,8 +200,10 @@ function KanbanBoard(props) {
     });
   });
 
-  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
-  const user = useSelector(state => state.auth.currentUser);
+  const updateTask = useSelector(
+    (state) => state.kanban.signalrData.updateTask
+  );
+  const user = useSelector((state) => state.auth.currentUser);
 
   useEffect(() => {
     console.log("realtime", updateTask);
@@ -188,7 +211,6 @@ function KanbanBoard(props) {
     if (!queryObj.t) return;
 
     if (updateTask && updateTask.taskId === queryObj.t) {
-
       console.log("realtime");
 
       let params = {};
@@ -199,26 +221,28 @@ function KanbanBoard(props) {
           boardId: queryObj.b,
           taskId: updateTask.taskId,
           userRequest: user.id,
-        }
-      }
-      else {
+        };
+      } else {
         params = {
           isOfTeam: false,
           ownerId: user.id,
           boardId: queryObj.b,
           taskId: updateTask.taskId,
           userRequest: user.id,
-        }
+        };
       }
-      taskApi.getTaskByBoard({ params }).then(res => {
-        setModaTaskObj(res.data);
-      }).catch(err => {
-
-      })
+      taskApi
+        .getTaskByBoard({ params })
+        .then((res) => {
+          setModaTaskObj(res.data);
+        })
+        .catch((err) => {});
     }
-  }, [updateTask])
+  }, [updateTask]);
 
-  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
+  const assignUser = useSelector(
+    (state) => state.kanban.signalrData.reAssignUser
+  );
 
   /*useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
@@ -259,20 +283,20 @@ function KanbanBoard(props) {
 
     if (!queryObj.t) return;
 
-    if(!modalTaskObj) return;
+    if (!modalTaskObj) return;
 
     if (assignUser && assignUser.taskId === queryObj.t) {
-      if (assignUser.userId === modalTaskObj.userId)
-        return;
+      if (assignUser.userId === modalTaskObj.userId) return;
       else {
         setModaTaskObj({
           ...modalTaskObj,
           userId: assignUser.userId === "" ? null : assignUser.userId,
-          userAvatar: assignUser.userAvatar === "" ? null : assignUser.userAvatar,
+          userAvatar:
+            assignUser.userAvatar === "" ? null : assignUser.userAvatar,
         });
       }
     }
-  }, [assignUser])
+  }, [assignUser]);
 
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
@@ -282,15 +306,12 @@ function KanbanBoard(props) {
 
     if (queryObj.t && queryObj.b && !isShowEditPopup) {
       console.log(history.location.search);
-      console.log(isShowEditPopup)
+      console.log(isShowEditPopup);
       openEditPopup(queryObj.t);
-      console.log('call api');
+      console.log("call api");
       return;
     }
-
-  }, [history.location.search])
-
-
+  }, [history.location.search]);
 
   const openEditPopup = (taskId) => {
     setIsShowEditPopup(true);
@@ -303,56 +324,58 @@ function KanbanBoard(props) {
         boardId: queryObj.b,
         taskId: taskId,
         userRequest: user.id,
-      }
-    }
-    else {
+      };
+    } else {
       params = {
         isOfTeam: false,
         ownerId: user.id,
         boardId: queryObj.b,
         taskId: taskId,
         userRequest: user.id,
-      }
+      };
     }
 
-    taskApi.getTaskByBoard({ params }).then(res => {
-      setModaTaskObj(res.data);
-      console.log(res.data);
-    }).catch(err => {
-      history.push({
-        pathname: history.location.pathname,
-        search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
-      });
-      setIsShowEditPopup(false);
+    taskApi
+      .getTaskByBoard({ params })
+      .then((res) => {
+        setModaTaskObj(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        history.push({
+          pathname: history.location.pathname,
+          search: history.location.search.substring(
+            0,
+            history.location.search.lastIndexOf("&")
+          ),
+        });
+        setIsShowEditPopup(false);
 
-      if (err.Message && err.Message.includes('Not found permission')) {
-        dispatch(setCurrentBoard(null));
-      }
-    })
-  }
+        if (err.Message && err.Message.includes("Not found permission")) {
+          dispatch(setCurrentBoard(null));
+        }
+      });
+  };
 
   useEffect(() => {
-    if (!boardId)
-      return;
+    if (!boardId) return;
     try {
       dispatch(setTeamLoading(true));
 
-      const pathname = history.location.pathname.split('/');
+      const pathname = history.location.pathname.split("/");
       let params = {};
       if (pathname.length === 3) {
         params = {
           isOfTeam: props.isOfTeam,
           ownerId: props.isOfTeam ? pathname[2] : user.id,
-          boardId: boardId
-        }
-      }
-
-      else {
+          boardId: boardId,
+        };
+      } else {
         params = {
           isOfTeam: props.isOfTeam,
           ownerId: user.id,
-          boardId: boardId
-        }
+          boardId: boardId,
+        };
       }
       /*dispatch(getBoardDataForUI({ params }))
         .then(unwrapResult)
@@ -374,64 +397,63 @@ function KanbanBoard(props) {
   }, [boardId]);
 
   const renderNormal = () => {
-    return <>
-      {kanbanLists.length > 0 && currentBoard && (
-        <div className="kanban-board-container">
-          {/* <CardLoading isLoading={isLoading} /> */}
+    return (
+      <>
+        {kanbanLists.length > 0 && currentBoard && (
+          <div className="kanban-board-container">
+            {/* <CardLoading isLoading={isLoading} /> */}
 
-          <DragDropContext
-            style={{ display: isLoading ? "none" : "flex" }}
-            onDragEnd={onDragEnd}
-          >
-            <Droppable
-              droppableId={currentBoard}
-              direction="horizontal"
-              type="list"
+            <DragDropContext
+              style={{ display: isLoading ? "none" : "flex" }}
+              onDragEnd={onDragEnd}
             >
-              {(provided) => (
-                <div
-                  className="board"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  {kanbanLists.map((item, index) => {
-                    return (
-                      <KanbanList
-                        ownerId={props.ownerId}
-                        isOfTeam={props.isOfTeam}
-                        key={item.kanbanListId}
-                        data={item}
-                        index={index}
-                      />
-                    );
-                  })}
+              <Droppable
+                droppableId={currentBoard}
+                direction="horizontal"
+                type="list"
+              >
+                {(provided) => (
+                  <div
+                    className="board"
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {kanbanLists.map((item, index) => {
+                      return (
+                        <KanbanList
+                          ownerId={props.ownerId}
+                          isOfTeam={props.isOfTeam}
+                          key={item.kanbanListId}
+                          data={item}
+                          index={index}
+                        />
+                      );
+                    })}
 
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-
-
-        </div>
-      )}
-
-      {kanbanLists.length === 0 && currentBoard && (
-        <div className="nodata-image">
-          <div className="icon-group">
-            <RiTableLine className="icon-task" />
-            <VscSearchStop className="icon-search" />
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </div>
+        )}
 
-          <div className="noti-infor">
-            Chưa có danh sách công việc nào trong bảng này
+        {kanbanLists.length === 0 && currentBoard && (
+          <div className="nodata-image">
+            <div className="icon-group">
+              <RiTableLine className="icon-task" />
+              <VscSearchStop className="icon-search" />
+            </div>
+
+            <div className="noti-infor">
+              Chưa có danh sách công việc nào trong bảng này
+            </div>
+            <div className="create-btn">Tạo danh sách mới</div>
           </div>
-          <div className="create-btn">Tạo danh sách mới</div>
-
-        </div>
-      )}
-    </>
-  }
+        )}
+      </>
+    );
+  };
 
   function onEditModalClose() {
     setIsShowEditPopup(false);
@@ -439,15 +461,16 @@ function KanbanBoard(props) {
 
     history.push({
       pathname: history.location.pathname,
-      search: history.location.search.substring(0, history.location.search.lastIndexOf('&')),
+      search: history.location.search.substring(
+        0,
+        history.location.search.lastIndexOf("&")
+      ),
     });
   }
 
   return (
-    <div>
-      {isLoading ? <div>
-        <CardLoading isLoading={isLoading} />
-      </div> : renderNormal()}
+    <div className="kanban-board-page">
+      {isLoading ? <Loading /> : renderNormal()}
 
       {!currentBoard && !isLoading && <NotFoundPage />}
       <TaskEditModal

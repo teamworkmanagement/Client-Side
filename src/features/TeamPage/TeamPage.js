@@ -18,7 +18,6 @@ import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
 import KanbanBoard from "../KanbanBoard/KanbanBoard";
 import TeamTasks from "./Components/TeamTasks/TeamTasks";
 import { useDispatch, useSelector } from "react-redux";
-import TeamLoading from "./TeamLoading/TeamLoading";
 import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
 import BoardsPage from "./Components/BoardsPage/BoardsPage";
 import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
@@ -150,7 +149,6 @@ function TeamPage(props) {
         ) : (
           <BoardsPage openBoard={openBoard} />
         )}
-        {false && <BoardsPage openBoard={openBoard} />}
       </div>
     );
   };
@@ -170,7 +168,7 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => { })
+        .then((res) => {})
         .catch((err) => {
           if (err.data?.ErrorCode === "404") setNotfound(true);
         });
@@ -263,7 +261,6 @@ function TeamPage(props) {
   return (
     <div className="team-container">
       {notfound ? <NotFoundPage /> : renderNormal()}
-      <TeamLoading isLoading={teamLoading} />
     </div>
   );
 }

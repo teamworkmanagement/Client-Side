@@ -1,3 +1,9 @@
+.modal-body {
+    .loading-container {
+        display: flex;
+        justify-content: center;
+    }
+}
 .modal-content {
     background-color: white;
     .modal-header {
@@ -816,26 +822,29 @@
 
 .css-1n7v3ny-option,
 .css-yt9ioa-option,
-.css-9gakcf-option {
-    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
-    border-radius: 0.625rem;
-    cursor: pointer;
-    width: auto !important;
-    div {
+.task-modal {
+    .css-9gakcf-option {
+        margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+        border-radius: 0.625rem;
         cursor: pointer;
-        justify-content: flex-start !important;
-        align-items: center !important;
-        img {
-            margin: 0 !important;
-            margin-right: 0.5rem !important;
+        width: auto !important;
+        div {
             cursor: pointer;
-        }
-        label {
-            margin: 0;
-            cursor: pointer;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            img {
+                margin: 0 !important;
+                margin-right: 0.5rem !important;
+                cursor: pointer;
+            }
+            label {
+                margin: 0;
+                cursor: pointer;
+            }
         }
     }
 }
+
 .css-1uccc91-singleValue {
     div {
         img {

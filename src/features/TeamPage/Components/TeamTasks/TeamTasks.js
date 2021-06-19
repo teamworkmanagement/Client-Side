@@ -15,6 +15,8 @@ import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
 import { setTeamLoading } from "src/appSlice";
+import { BiFilterAlt } from "react-icons/bi";
+import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
 
 TeamTasks.propTypes = {};
 
@@ -22,6 +24,22 @@ function TeamTasks(props) {
   const history = useHistory();
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
   const [showAddKBList, setShowAddKBList] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [applyingFilter, setApplyingFilter] = useState(false);
+  function openFilterModal() {
+    setShowFilterModal(true);
+  }
+
+  function closeFilterModal() {
+    setShowFilterModal(false);
+  }
+
+  function applyFilter() {
+    setApplyingFilter(true);
+  }
+  function removeFilter() {
+    setApplyingFilter(false);
+  }
 
   function switchShowMode(index) {
     //debugger;
@@ -95,7 +113,22 @@ function TeamTasks(props) {
                 <BsSearch className="icon-search" />
               </div>
             )}
-
+            <div
+              className={`filter-btn ${applyingFilter ? "" : "no-filtering"}`}
+            >
+              <div className="filter-content" onClick={openFilterModal}>
+                <BiFilterAlt className="icon-filter" />
+                Lọc công việc
+              </div>
+              <CTooltip content="Xóa bộ lọc" placement="top">
+                <div
+                  className="remove-filter-btn"
+                  onClick={() => setApplyingFilter(false)}
+                >
+                  <CIcon name="cil-x" />
+                </div>
+              </CTooltip>
+            </div>
             {showMode === 1 && (
               <div className="add-btn add-list-btn" onClick={addKBList}>
                 <CIcon name="cil-plus" />
@@ -150,9 +183,27 @@ function TeamTasks(props) {
             boardId={props.boardId}
           />
         )}
-        {showMode === 2 && <TaskList ownerId={props.ownerId} isOfTeam={true} boardId={props.boardId} />}
-        {showMode === 3 && <GanttChart ownerId={props.ownerId} isOfTeam={true} boardId={props.boardId} />}
-
+        {showMode === 2 && (
+          <TaskList
+            ownerId={props.ownerId}
+            isOfTeam={true}
+            boardId={props.boardId}
+          />
+        )}
+        {showMode === 3 && (
+          <GanttChart
+            ownerId={props.ownerId}
+            isOfTeam={true}
+            boardId={props.boardId}
+          />
+        )}
+        <FilterTaskModal
+          show={showFilterModal}
+          applyFilter={applyFilter}
+          onClose={closeFilterModal}
+          removeFilter={removeFilter}
+          applyingFilter={applyingFilter}
+        />
         <CreateKBListModal
           boardId={props.boardId}
           showAddKBList={showAddKBList}
