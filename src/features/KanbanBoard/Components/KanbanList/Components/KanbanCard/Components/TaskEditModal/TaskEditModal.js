@@ -50,6 +50,7 @@ import { GrDocumentTime } from "react-icons/gr";
 import TaskCommentInput from "./TaskCommentInput";
 import { convertToRaw } from "draft-js";
 import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHistoryModal/TaskHistoryModal";
+import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
 TaskEditModal.propTypes = {};
 
@@ -190,7 +191,6 @@ function TaskEditModal(props) {
   const [isFocused, setFocus] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
 
-
   /**section modal history */
   const [showTaskHistoryModal, setShowTaskHistoryModal] = useState(false);
   const [details, setDetails] = useState([]);
@@ -265,6 +265,8 @@ function TaskEditModal(props) {
   useEffect(() => {
     if (props.data) {
       if (props.data.userId) {
+        console.log("set current 2:");
+        console.log(props.data.userName);
         setCurrent({
           value: props.data.userId,
           label: props.data.userName,
@@ -334,11 +336,11 @@ function TaskEditModal(props) {
 
   const onChange = (e) => {
     setCurrent(e);
+    console.log("set current 1:");
     console.log(e);
   };
 
   useEffect(() => {
-    console.log(current);
     if (JSON.stringify(task) === JSON.stringify({})) return;
 
     let payload = {};
@@ -356,8 +358,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
@@ -395,8 +397,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -674,7 +676,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -722,7 +724,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
@@ -763,10 +765,10 @@ function TaskEditModal(props) {
               .then((res) => {
 
               })
-              .catch((err) => { });
+              .catch((err) => {});
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -793,8 +795,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
@@ -932,7 +934,7 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -950,7 +952,7 @@ function TaskEditModal(props) {
             boardId: currentBoard,
             keyword: inputValue,
           };
-          console.log(currentBoard)
+          console.log(currentBoard);
           const res = await userApi.searchUsersKanban({ params });
 
           const listUsers = res.data?.map((x) => {
@@ -966,7 +968,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) { }
+      } catch (e) {}
     }
   }, [props.data]);
 
@@ -1035,26 +1037,21 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then(res => {
-
-      })
-      .catch(err => {
-
-      })
+      .then((res) => {})
+      .catch((err) => {});
     console.log(value);
   };
 
-
   const viewHistory = () => {
-    taskApi.getVersion(task.taskId)
-      .then(res => {
+    taskApi
+      .getVersion(task.taskId)
+      .then((res) => {
         console.log(res.data);
         setDetails(res.data);
-        setShowTaskHistoryModal(true)
-      }).catch(err => {
-
-      });
-  }
+        setShowTaskHistoryModal(true);
+      })
+      .catch((err) => {});
+  };
 
   return (
     <div>
@@ -1074,7 +1071,12 @@ function TaskEditModal(props) {
           </CToaster>
         ))}
       </div>
-      <CModal show={props.isShowEditPopup} onClose={handleClose} size="lg">
+      <CModal
+        className="task-modal"
+        show={props.isShowEditPopup}
+        onClose={handleClose}
+        size="lg"
+      >
         <CModalHeader closeButton>
           {props.data ? (
             <div className="card-labels">
@@ -1536,7 +1538,10 @@ function TaskEditModal(props) {
                         onChange={(e) => setCommentContent(e.target.value)}
                         value={commentContent}
                       />*/}
-                      <TaskCommentInput saveContent={saveContent} boardId={currentBoard} />
+                      <TaskCommentInput
+                        saveContent={saveContent}
+                        boardId={currentBoard}
+                      />
                     </div>
                   </div>
                   <div className="comment-list">
@@ -1621,9 +1626,7 @@ function TaskEditModal(props) {
               </CCol>
             </CRow>
           ) : (
-            <div>
-              <CardLoading isLoading={true} />
-            </div>
+            <Loading />
           )}
         </CModalBody>
         <TaskHistoryModal

@@ -2,6 +2,7 @@
     height: 100%;
     .DraftEditor-root {
         border-radius: 0.625rem;
+        height: 2.3rem;
         .public-DraftEditorPlaceholder-root {
             padding: 0rem 0.5rem !important;
             display: flex;
@@ -19,7 +20,7 @@
     }
 }
 .public-DraftStyleDefault-block.public-DraftStyleDefault-ltr {
-    padding-left: 0.1rem;
+    padding-left: 0.01rem;
 }
 .editor {
     box-sizing: border-box;
@@ -31,6 +32,11 @@
     box-shadow: inset 0px 1px 8px -3px #ababab;
     background: #fefefe;
     max-height: 30px;
+}
+
+.mnw6qvm {
+    border-radius: 0.625rem;
+    z-index: 10;
 }
 
 .editor :global(.public-DraftEditor-content) {

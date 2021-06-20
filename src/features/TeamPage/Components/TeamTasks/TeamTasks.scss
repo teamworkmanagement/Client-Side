@@ -66,6 +66,7 @@ $baseTransition: all 0.3s;
 }
 
 @mixin CardStyle {
+    box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 15%);
     background-color: white;
     padding: 1rem;
     border-radius: $borderRadius;
@@ -307,11 +308,74 @@ $baseTransition: all 0.3s;
             flex-grow: 1;
             padding: 1px;
             padding-right: 2px;
+            .filter-btn {
+                display: flex;
+                align-items: center;
+                transition: $baseTransition;
+                margin-bottom: 0.5rem;
+                margin-left: 1rem;
+                .filter-content {
+                    display: flex;
+                    align-items: center;
+                    padding: 0.5rem 1rem;
+                    padding-right: 0.5rem;
+                    background-color: $lighterBaseColor;
+                    color: $baseColor;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    border-top-left-radius: $borderRadius;
+                    border-bottom-left-radius: $borderRadius;
+                    border: $borderStyle;
+                    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+                    border-right: none;
+                    &:hover {
+                        background-color: rgba($baseColor, 0.2);
+                    }
+                    .icon-filter {
+                        margin-right: 0.5rem;
+                    }
+                }
+
+                .remove-filter-btn {
+                    //margin-left: 0.5rem;
+                    background-color: #fbeaea;
+                    height: 2.4rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 0.2rem;
+                    border-top-right-radius: $borderRadius;
+                    border-bottom-right-radius: $borderRadius;
+                    cursor: pointer;
+                    transition: $baseTransition;
+                    border: $borderStyle;
+                    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+                    border-left: none;
+                    .c-icon {
+                        color: #ff5454;
+                        width: 0.9rem;
+                        height: 0.9rem;
+                    }
+                    &:hover {
+                        background-color: rgba(#ff5454, 0.2);
+                    }
+                }
+                &.no-filtering {
+                    .filter-content {
+                        padding-right: 1rem;
+                        border-top-right-radius: $borderRadius;
+                        border-bottom-right-radius: $borderRadius;
+                        border: $borderStyle;
+                    }
+                    .remove-filter-btn {
+                        display: none;
+                    }
+                }
+            }
             .lookup-input {
                 display: flex;
                 align-items: center;
                 margin-bottom: 0.5rem;
-
                 input {
                     border-radius: $borderRadius;
                     padding-right: 1.8rem;

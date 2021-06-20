@@ -1,4 +1,4 @@
-//@import "../../shared_components/scss/style.scss";
+//@import "../../../../shared_components/scss/style.scss";
 //========================================
 //border
 $borderStyle: 1px solid #e6ebf1;
@@ -260,88 +260,68 @@ $baseTransition: all 0.3s;
 }
 
 //========================================
-.kanban-board-page {
-    .loading-container {
-        display: flex;
-        justify-content: center;
-    }
+.divide {
+    margin: 1rem;
 }
-
-.kanban-board-container {
-    flex-grow: 1;
-    background-color: #ced2d8;
-    padding: 1.5rem;
-    overflow-y: hidden;
-    //position: absolute;
-    // height: 100%;
-    // width: 100%;
+.filter-btn {
     display: flex;
-    margin-bottom: 1rem;
-    .board {
-        background-color: #fafafb;
-        border-radius: 0.625rem;
-        height: 100%;
-        width: 100%;
-        overflow-y: hidden;
-        display: flex;
-    }
-}
-.nodata-image {
-    margin-top: 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    .icon-group {
+    transition: $baseTransition;
+    .filter-content {
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        .icon-task {
-            width: 5rem;
-            height: 5rem;
-            color: $subTextColor;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        padding-right: 0.5rem;
+        background-color: $lighterBaseColor;
+        color: $baseColor;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-top-left-radius: $borderRadius;
+        border-bottom-left-radius: $borderRadius;
+        border: $borderStyle;
+        box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+        border-right: none;
+        &:hover {
+            background-color: rgba($baseColor, 0.2);
         }
-        .icon-search {
-            width: 2.5rem;
-            height: 2.5rem;
-            color: $subTextColor;
-            margin-top: -1.5rem;
-            margin-right: -1.5rem;
+        .icon-filter {
+            margin-right: 0.5rem;
         }
     }
-    .noti-infor {
-        font-size: 130%;
-        text-align: center;
-        font-weight: bold;
-        color: $subTextColor;
+
+    .remove-filter-btn {
+        //margin-left: 0.5rem;
+        background-color: #fbeaea;
+        height: 2.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.2rem;
+        border-top-right-radius: $borderRadius;
+        border-bottom-right-radius: $borderRadius;
+        cursor: pointer;
+        transition: $baseTransition;
+        border: $borderStyle;
+        box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+        border-left: none;
+        .c-icon {
+            color: #ff5454;
+            width: 0.9rem;
+            height: 0.9rem;
+        }
+        &:hover {
+            background-color: rgba(#ff5454, 0.2);
+        }
     }
-    .create-btn {
-        @include NormalButtonStyle;
-        font-size: 120%;
-        padding: 0.5rem 1.2rem;
-        margin-top: 0.5rem;
-        font-weight: bold;
+    &.no-filtering {
+        .filter-content {
+            padding-right: 1rem;
+            border-top-right-radius: $borderRadius;
+            border-bottom-right-radius: $borderRadius;
+            border: $borderStyle;
+        }
+        .remove-filter-btn {
+            display: none;
+        }
     }
-}
-
-.board::-webkit-scrollbar {
-    width: 0.3rem;
-    height: 0.5rem;
-}
-
-/* Track */
-.board::-webkit-scrollbar-track {
-    //box-shadow: inset 0 0 5px grey;
-    border-radius: 10px;
-}
-
-/* Handle */
-.board::-webkit-scrollbar-thumb {
-    background: #cdcdcd;
-    border-radius: 10px;
-}
-
-/* Handle on hover */
-.board::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
 }
