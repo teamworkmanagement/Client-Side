@@ -32,6 +32,9 @@ import { FaFacebookSquare } from "react-icons/fa";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import uuid from "src/utils/file/uuid";
 import userApi from "src/api/userApi";
+import { validateEmail, validatePhone } from "src/utils/common";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 AccountSettingsPage.propTypes = {};
 
@@ -85,38 +88,67 @@ function AccountSettingsPage(props) {
     });
   };
 
-  function validateEmail(email) {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  }
 
-  function validatePhone(phone) {
-    const re = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
-    return re.test(phone);
-  }
   const updateUserInfo = () => {
     if (!userInfo.fullName || !userInfo.email) {
-      alert("error empty");
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Vui lòng nhập đầy đủ thông tin"
+        />
+      );
       return;
     }
 
     if (!validateEmail(userInfo.email)) {
-      alert("error email");
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Email không hợp lệ"
+        />
+      );
       return;
     }
 
-    if (!validatePhone(userInfo.userPhoneNumber)) {
-      alert("error phone");
+    if (!validatePhone(userInfo.userPhoneNumber) && userInfo.userPhoneNumber) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Số điện thoại không hợp lệ"
+        />
+      );
       return;
     }
     console.log(userInfo);
+
+    let dob = "";
+    console.log(userInfo);
+    if (userInfo.userDob == "") {
+      dob = null;
+    }
+    else {
+      dob = new Date(userInfo.userDob)
+    }
+
+    console.log(dob)
+    const userInfoClone = { ...userInfo, userDob: dob, }
     authApi
-      .updateUserInfo(userInfo)
+      .updateUserInfo(userInfoClone)
       .then((res) => {
-        dispatch(setCurrentUser(userInfo));
+        dispatch(setCurrentUser(userInfoClone));
       })
-      .catch((err) => {});
+      .catch((err) => {
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Có lỗi xảy ra"
+          />
+        );
+      });
   };
 
   const changePasswordClick = () => {
@@ -157,7 +189,7 @@ function AccountSettingsPage(props) {
               userAvatar: url,
             });
           })
-          .catch((err) => {});
+          .catch((err) => { });
       });
     });
   };
@@ -175,7 +207,7 @@ function AccountSettingsPage(props) {
           userAvatar: `https://ui-avatars.com/api/?name=${userInfo.fullName}`,
         });
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
   return (
     <div className="account-page-container">
@@ -190,18 +222,16 @@ function AccountSettingsPage(props) {
       <div className="account-page-content">
         <div className="setting-options d-sm-down-none">
           <div
-            className={`tab-setting tab-1 tab-infor ${
-              selectedOptions === 0 ? "active" : ""
-            }`}
+            className={`tab-setting tab-1 tab-infor ${selectedOptions === 0 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(0)}
           >
             <BsInfoCircle className="icon-info icon" />
             Thông tin của bạn
           </div>
           <div
-            className={`tab-setting tab-2 tab-passowrd ${
-              selectedOptions === 1 ? "active" : ""
-            }`}
+            className={`tab-setting tab-2 tab-passowrd ${selectedOptions === 1 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(1)}
           >
             <AiOutlineLock className="icon-password icon" />
@@ -335,9 +365,9 @@ function AccountSettingsPage(props) {
                       value={userInfo.userAddress}
                       onChange={handleInputChange}
                       name="userAddress"
-                      //value={userInfo.email}
-                      //onChange={handleInputChange}
-                      //invalid={userInfo.email === "" || userInfo.email === null}
+                    //value={userInfo.email}
+                    //onChange={handleInputChange}
+                    //invalid={userInfo.email === "" || userInfo.email === null}
                     />
                   </CFormGroup>
                 </CCol>
@@ -360,9 +390,9 @@ function AccountSettingsPage(props) {
                         value={userInfo.userGithubLink}
                         name="userGithubLink"
                         onChange={handleInputChange}
-                        //value={userInfo.email}
-                        //onChange={handleInputChange}
-                        //invalid={userInfo.email === "" || userInfo.email === null}
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                     <div className="social-group">
@@ -377,9 +407,9 @@ function AccountSettingsPage(props) {
                         name="userFacebookLink"
                         value={userInfo.userFacebookLink}
                         onChange={handleInputChange}
-                        //value={userInfo.email}
-                        //onChange={handleInputChange}
-                        //invalid={userInfo.email === "" || userInfo.email === null}
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                   </CFormGroup>
@@ -447,12 +477,12 @@ function AccountSettingsPage(props) {
                     (changePWObject.confirmPassword === "" ||
                       changePWObject.confirmPassword === null ||
                       changePWObject.confirmPassword !==
-                        changePWObject.newPassword)
+                      changePWObject.newPassword)
                   }
                   valid={
                     confirmDirty &&
                     changePWObject.confirmPassword ===
-                      changePWObject.newPassword
+                    changePWObject.newPassword
                   }
                   name="confirmPassword"
                 />

@@ -20,6 +20,7 @@ import { startNotiService } from "src/utils/signalr/notiService";
 import { FiLock, FiMail } from "react-icons/fi";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
+import { validateEmail } from "src/utils/common";
 
 MyLogin.propTypes = {};
 
@@ -43,9 +44,31 @@ function MyLogin(props) {
   };
 
   const onLoginClick = () => {
+
+    if (!loginObject.email || !loginObject.password) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Vui lòng nhập thông tin"
+        />
+      );
+      return;
+    }
+
+    if (!validateEmail(loginObject.email) || loginObject.password.length < 6) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Vui lòng xem lại thông tin"
+        />
+      );
+      return;
+    }
     dispatch(login(loginObject))
       .then(unwrapResult)
-      .then((originalPromiseResult) => {})
+      .then((originalPromiseResult) => { })
       .catch((err) => {
         console.log("login err :", err);
         if (err.Message.includes("Invalid Credentials")) {
@@ -202,8 +225,7 @@ function MyLogin(props) {
               </div>
               <div className="sub-actions">
                 <div className="remember-account">
-                  <CInputCheckbox id="checkbox1" name="checkbox1" />
-                  Ghi nhớ tài khoản
+
                 </div>
                 <div onClick={onForgotPassword} className="forgot-password">
                   Quên mật khẩu?

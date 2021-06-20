@@ -143,8 +143,8 @@ function KanbanBoard(props) {
           boardId: currentBoard,
           connectionId: connection.connectionId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     } else {
       if (destination.index === 0) {
         pos = FindPreRank(cloneKbLists[0].kanbanListRankInBoard);
@@ -181,8 +181,8 @@ function KanbanBoard(props) {
           kanbanListId: draggableId,
           connectionId: connection.connectionId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     }
   }
 
@@ -236,7 +236,7 @@ function KanbanBoard(props) {
         .then((res) => {
           setModaTaskObj(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [updateTask]);
 
@@ -293,6 +293,8 @@ function KanbanBoard(props) {
           userId: assignUser.userId === "" ? null : assignUser.userId,
           userAvatar:
             assignUser.userAvatar === "" ? null : assignUser.userAvatar,
+          userName:
+            assignUser.userFullName === "" ? null : assignUser.userFullName,
         });
       }
     }

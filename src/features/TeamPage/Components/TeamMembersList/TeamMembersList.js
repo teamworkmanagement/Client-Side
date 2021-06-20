@@ -78,7 +78,7 @@ function TeamMembersList(props) {
   const user = useSelector((state) => state.auth.currentUser);
   const [loadingMembers, setLoadingMembers] = useState(false);
   const { teamId } = useParams();
-  const [triggerLoad, setTriggerLoad] = useState(0);
+  const [filterObj, setFilterObj] = useState(null);
 
   const imgPickerRef = useRef(null);
 
@@ -99,10 +99,13 @@ function TeamMembersList(props) {
     const params = {
       teamId: teamId,
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 1,
+      keyWord: null
     };
 
-    teamApi
+    setFilterObj(params);
+
+    /*teamApi
       .getUsersPagingByTeam({ params })
       .then((res) => {
         console.log(res.data.items);
@@ -112,7 +115,7 @@ function TeamMembersList(props) {
       })
       .catch((err) => {
         setLoadingMembers(false);
-      });
+      });*/
 
     teamApi
       .getTeam(teamId)
@@ -120,7 +123,7 @@ function TeamMembersList(props) {
         setTeam(res.data);
       })
       .catch((err) => { });
-  }, [teamId, triggerLoad]);
+  }, [teamId]);
 
   const currentPageChange = (index) => {
     if (index === 0) return;
@@ -132,9 +135,11 @@ function TeamMembersList(props) {
       teamId: teamId,
       pageSize: 1,
       pageNumber: index,
+      keyWord: null
     };
 
-    teamApi
+    setFilterObj(params);
+    /*teamApi
       .getUsersPagingByTeam({ params })
       .then((res) => {
         console.log(res.data.items);
@@ -144,7 +149,7 @@ function TeamMembersList(props) {
       })
       .catch((err) => {
         setLoadingMembers(false);
-      });
+      });*/
   };
 
   const onClose = (e) => {
@@ -217,8 +222,7 @@ function TeamMembersList(props) {
             <VscSearchStop className="icon-search" />
           </div>
 
-          <div className="noti-infor">Chưa có thành viên nào trong nhóm</div>
-          <div className="create-btn">Mời thành viên</div>
+          <div className="noti-infor">Không tìm thấy thành viên</div>
         </div>
       </div>
     );
@@ -290,7 +294,8 @@ function TeamMembersList(props) {
         pageSize: 10,
       };
 
-      teamApi
+      setFilterObj(params);
+      /*teamApi
         .getUsersPagingByTeam({ params })
         .then((res) => {
           console.log(res.data.items);
@@ -299,7 +304,7 @@ function TeamMembersList(props) {
 
         })
         .catch((err) => {
-        });
+        });*/
 
       teamApi
         .getTeam(teamId)
@@ -329,21 +334,37 @@ function TeamMembersList(props) {
           pageNumber: 1,
           pageSize: 10,
         };
-  
-        teamApi
-          .getUsersPagingByTeam({ params })
-          .then((res) => {
-            console.log(res.data.items);
-            setMembers(res.data.items);
-            setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));  
-          })
-          .catch((err) => {
-          });
+
+        setFilterObj(params);
       })
       .catch(err => {
 
       });
   }
+
+  useEffect(() => {
+    if (filterObj) {
+      const clone = {
+        ...filterObj,
+        pageSize: 1,
+      }
+      teamApi
+        .getUsersPagingByTeam({ params: clone })
+        .then((res) => {
+          console.log(res.data.items);
+          setMembers(res.data.items);
+          setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+        })
+        .catch((err) => {
+        })
+        .finally(() => {
+          setLoadingMembers(false);
+        });
+
+      console.log(filterObj);
+    }
+  }, [filterObj])
+
 
   return (
     <div className="team-members-container">
@@ -534,6 +555,7 @@ function TeamMembersList(props) {
                   type="text"
                   name="teamName"
                   placeholder="Tìm thành viên"
+                  onChange={(e) => setFilterObj({ ...filterObj, keyWord: e.target.value, pageNumber: 1 })}
                 />
                 <BsSearch className="icon-search" />
               </div>
@@ -549,6 +571,7 @@ function TeamMembersList(props) {
             </div>
             <div className="label">Thành viên</div>
             {loadingMembers && members.length === 0 && <Loading />}
+            {members.length == 0 && NoItemView()}
             {members.length > 0 && (
               <CDataTable
                 items={members}
