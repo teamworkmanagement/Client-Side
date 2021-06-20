@@ -64,10 +64,6 @@ function TeamMembersList(props) {
     },
   ];
 
-  const navigateToProfile = (user) => {
-    history.push(`/userprofile`);
-  };
-
   const [admin, setAdmin] = useState({});
   const [members, setMembers] = useState([]);
   const [team, setTeam] = useState({});
@@ -82,20 +78,14 @@ function TeamMembersList(props) {
   const user = useSelector((state) => state.auth.currentUser);
   const [loadingMembers, setLoadingMembers] = useState(false);
   const { teamId } = useParams();
+  const [triggerLoad, setTriggerLoad] = useState(0);
 
   const imgPickerRef = useRef(null);
 
   const [redirect, setRedirect] = useState(null);
 
-  const toasters = (() => {
-    return toasts.reduce((toasters, toast) => {
-      toasters[toast.position] = toasters[toast.position] || [];
-      toasters[toast.position].push(toast);
-      return toasters;
-    }, {});
-  })();
-
   useEffect(() => {
+    console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzz: ', teamId);
     if (!teamId) return;
     setLoadingMembers(true);
     teamApi
@@ -104,7 +94,7 @@ function TeamMembersList(props) {
         console.log(res);
         setAdmin(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     const params = {
       teamId: teamId,
@@ -129,8 +119,8 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => {});
-  }, [teamId]);
+      .catch((err) => { });
+  }, [teamId, triggerLoad]);
 
   const currentPageChange = (index) => {
     if (index === 0) return;
@@ -159,7 +149,7 @@ function TeamMembersList(props) {
 
   const onClose = (e) => {
     setShowInvite(false);
-    if (!e) return;
+    /*if (!e) return;
     setToastContent(e);
     setToasts([
       ...toasts,
@@ -170,7 +160,7 @@ function TeamMembersList(props) {
         fade: true,
         color: "info",
       },
-    ]);
+    ]);*/
     //setShowInvite(false); //ở đây chương trình ko chạy tới dc
   };
 
@@ -211,7 +201,7 @@ function TeamMembersList(props) {
           ]);
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const onStartChatClose = () => {
@@ -254,7 +244,7 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(newTeam);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const onPickImage = (e) => {
@@ -276,6 +266,85 @@ function TeamMembersList(props) {
   const openPickImage = () => {
     imgPickerRef.current.click();
   };
+
+  const changeLeader = (item) => {
+    teamApi.changeLeader({
+      teamId: team.teamId,
+      leaderId: item.userId,
+
+    }).then(res => {
+
+      if (!teamId) return;
+
+      teamApi
+        .getAdmin(teamId)
+        .then((res) => {
+          console.log(res);
+          setAdmin(res.data);
+        })
+        .catch((err) => { });
+
+      const params = {
+        teamId: teamId,
+        pageNumber: 1,
+        pageSize: 10,
+      };
+
+      teamApi
+        .getUsersPagingByTeam({ params })
+        .then((res) => {
+          console.log(res.data.items);
+          setMembers(res.data.items);
+          setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
+
+        })
+        .catch((err) => {
+        });
+
+      teamApi
+        .getTeam(teamId)
+        .then((res) => {
+          setTeam(res.data);
+        })
+        .catch((err) => { });
+
+    }).catch(err => {
+
+    })
+  }
+
+
+  const quitTeam = (item) => {
+    console.log('quitteam: ', item);
+
+    const params = {
+      "teamId": teamId,
+      "userId": item.userId,
+    };
+
+    teamApi.leaveTeam({ params })
+      .then(res => {
+        const params = {
+          teamId: teamId,
+          pageNumber: 1,
+          pageSize: 10,
+        };
+  
+        teamApi
+          .getUsersPagingByTeam({ params })
+          .then((res) => {
+            console.log(res.data.items);
+            setMembers(res.data.items);
+            setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));  
+          })
+          .catch((err) => {
+          });
+      })
+      .catch(err => {
+
+      });
+  }
+
   return (
     <div className="team-members-container">
       {redirect ? <Redirect from="/team" to={redirect} /> : null}
@@ -286,7 +355,7 @@ function TeamMembersList(props) {
             <CInput
               type="text"
               name="teamName"
-              placeholder="Tìm công việc..."
+              placeholder="Tìm thành viên"
             />
             <BsSearch className="icon-search" />
           </div>
@@ -390,7 +459,7 @@ function TeamMembersList(props) {
               scopedSlots={{
                 infor: (item) => {
                   return (
-                    <td onClick={() => navigateToProfile(item)}>
+                    <td>
                       <div className="member-infor-container">
                         <img
                           className="member-avatar"
@@ -439,14 +508,14 @@ function TeamMembersList(props) {
                               <CIcon name="cil-send" />
                               Nhắn tin
                             </CDropdownItem>
-                            <CDropdownItem className="normal">
+                            {/*<CDropdownItem className="normal">
                               <CIcon name="cil-find-in-page" />
-                              Xem thông tin
+                              Trao quyền admin
                             </CDropdownItem>
                             <CDropdownItem className="last">
                               <CIcon name="cil-account-logout" />
                               Mời rời nhóm
-                            </CDropdownItem>
+                  </CDropdownItem>*/}
                           </CDropdownMenu>
                         </CDropdown>
                       </div>
@@ -464,7 +533,7 @@ function TeamMembersList(props) {
                 <CInput
                   type="text"
                   name="teamName"
-                  placeholder="Tìm công việc..."
+                  placeholder="Tìm thành viên"
                 />
                 <BsSearch className="icon-search" />
               </div>
@@ -488,7 +557,7 @@ function TeamMembersList(props) {
                 scopedSlots={{
                   infor: (item) => {
                     return (
-                      <td onClick={() => navigateToProfile(item)}>
+                      <td>
                         <div className="member-infor-container">
                           <img
                             className="member-avatar"
@@ -508,7 +577,7 @@ function TeamMembersList(props) {
                   },
                   role: (item) => {
                     return (
-                      <td onClick={() => navigateToProfile(item)}>
+                      <td>
                         <div className="member-role">
                           <div className={`role-color`}></div>
                           Thành viên
@@ -540,14 +609,16 @@ function TeamMembersList(props) {
                                 <CIcon name="cil-send" />
                                 Nhắn tin
                               </CDropdownItem>
-                              <CDropdownItem className="normal">
+                              {team.teamLeaderId == user.id && <CDropdownItem className="normal" onClick={() => changeLeader(item)}>
                                 <CIcon name="cil-find-in-page" />
-                                Xem thông tin
-                              </CDropdownItem>
-                              <CDropdownItem className="last">
-                                <CIcon name="cil-account-logout" />
-                                Mời rời nhóm
-                              </CDropdownItem>
+                                Trao quyền leader
+                              </CDropdownItem>}
+                              {
+                                team.teamLeaderId == user.id && <CDropdownItem className="last" onClick={() => quitTeam(item)}>
+                                  <CIcon name="cil-account-logout" />
+                                  Mời rời nhóm
+                                </CDropdownItem>
+                              }
                             </CDropdownMenu>
                           </CDropdown>
                         </div>
@@ -571,23 +642,7 @@ function TeamMembersList(props) {
           </div>
         </CCol>
       </CRow>
-      <div>
-        {Object.keys(toasters).map((toasterKey) => (
-          <CToaster
-            color="bg-info"
-            position={toasterKey}
-            key={"toaster" + toasterKey}
-          >
-            {toasters[toasterKey].map((toast, key) => {
-              return (
-                <CToast show={true} autohide={2000} fade={true}>
-                  <CToastBody>{toastContent}</CToastBody>
-                </CToast>
-              );
-            })}
-          </CToaster>
-        ))}
-      </div>
+
       <InviteMemberModal showAddInvite={showInvite} onClose={onClose} />
       <EditTeamNameModal
         teamName={team.teamName}
