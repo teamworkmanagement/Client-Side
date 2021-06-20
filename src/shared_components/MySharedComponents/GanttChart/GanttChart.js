@@ -34,10 +34,10 @@ function GanttChart(props) {
     });
   });
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!props.boardId) return;
     dispatch(getBoardDataForUI(props.boardId));
-  }, [props.boardId]);
+  }, [props.boardId]);*/
 
   var initData = {
     data: refactorTasksForGantt(),

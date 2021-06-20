@@ -68,13 +68,13 @@ function TeamTasks(props) {
       .catch((err) => {
         console.log(err);
 
-        if (err.data?.ErrorCode === "404") {
+        if (err.ErrorCode === "404") {
           setNotFound(true);
         }
 
         dispatch(setTeamLoading(false));
       });
-  }, []);
+  }, [showMode]);
 
   const renderNormal = () => {
     return (
@@ -84,7 +84,7 @@ function TeamTasks(props) {
             <AiOutlineLeft className="icon-goback" />
             <div className="label-text">Trở lại danh sách bảng công việc</div>
           </div>
-          <div className="other-actions">
+          {!notfound && <div className="other-actions">
             {(showMode === 2 || showMode === 3) && (
               <div className="lookup-input">
                 <CInput
@@ -140,7 +140,7 @@ function TeamTasks(props) {
                 </CButton>
               </CTooltip>
             </CButtonGroup>
-          </div>
+          </div>}
         </div>
 
         {showMode === 1 && (

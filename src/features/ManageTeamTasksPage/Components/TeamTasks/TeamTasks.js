@@ -70,7 +70,7 @@ function TeamTasks(props) {
         return;
 
       });
-  }, [])
+  }, [showMode])
 
   const onClose = () => {
     setShowAddKBList(false);

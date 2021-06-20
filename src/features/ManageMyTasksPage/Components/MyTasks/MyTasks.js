@@ -64,12 +64,12 @@ function MyTasks(props) {
       .catch(err => {
         console.log(err);
 
-        if (err.data?.ErrorCode === "404") {
+        if (err.ErrorCode === "404") {
           setNotFound(true);
-          dispatch(setTeamLoading(false))
         }
+        dispatch(setTeamLoading(false))
       });
-  }, [])
+  }, [showMode])
 
   return (
     <div className="my-tasks-container">
@@ -78,7 +78,7 @@ function MyTasks(props) {
           <AiOutlineLeft className="icon-goback" />
           <div className="label-text">Trở lại danh sách bảng công việc</div>
         </div>
-        <div className="other-actions">
+        {!notfound && <div className="other-actions">
           <div className="lookup-input">
             <CInput
               type="text"
@@ -131,7 +131,7 @@ function MyTasks(props) {
               </CButton>
             </CTooltip>
           </CButtonGroup>
-        </div>
+        </div>}
       </div>
 
       <CreateKBListModal
