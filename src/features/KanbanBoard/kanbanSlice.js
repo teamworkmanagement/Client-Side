@@ -36,7 +36,8 @@ const kanbanSlice = createSlice({
             moveList: null,
             updateTask: null,
             updateList: null,
-            reAssignUser: null
+            reAssignUser: null,
+            addNewFile: null,
         }
     },
     reducers: {
@@ -131,6 +132,7 @@ const kanbanSlice = createSlice({
                 obj.taskCompletedPercent = action.payload.taskCompletedPercent;
 
                 obj.taskThemeColor = action.payload.taskThemeColor;
+                obj.commentsCount = action.payload.commentsCount;
             }
         },
         signalRUpdateList(state, action) {
@@ -179,6 +181,14 @@ const kanbanSlice = createSlice({
         signalRChangeNameList(state, action) {
             const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
             obj.kanbanListTitle = action.payload.kanbanListName;
+        },
+        signalRAddFile(state, action) {
+            const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
+            if (list) {
+                state.signalrData.addNewFile = action.payload;
+                const task = list.taskUIKanbans.find(x => x.taskId === action.payload.fileTaskOwnerId);
+                task.filesCount++;
+            }
         }
     },
     extraReducers: {
@@ -205,6 +215,7 @@ export const {
     dragListLocal,
     dragTaskLocal,
     reAssignUser,
-    signalRChangeNameList
+    signalRChangeNameList,
+    signalRAddFile
 } = actions;
 export default reducer;

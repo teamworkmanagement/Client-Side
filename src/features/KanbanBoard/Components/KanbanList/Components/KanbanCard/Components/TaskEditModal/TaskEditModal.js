@@ -252,6 +252,15 @@ function TaskEditModal(props) {
 
   const imageRef = useRef(null);
   const fileRef = useRef(null);
+  const signalRAddFile = useSelector(state => state.kanban.signalrData.addNewFile);
+
+  useEffect(() => {
+    if (signalRAddFile && signalRAddFile.fileTaskOwnerId == task.taskId) {
+      const cloneAttachs = [...attachments];
+      cloneAttachs.splice(0, 0, { ...signalRAddFile });
+      setAttachments(cloneAttachs);
+    }
+  }, [signalRAddFile])
 
   useEffect(() => {
     if (props.data) {
@@ -740,19 +749,19 @@ function TaskEditModal(props) {
               filesCount: task.filesCount + 1,
             });
 
+            const body = {
+              fileName: file.name,
+              fileUrl: fileUrl,
+              fileType: GetTypeFromExt(file.name),
+              fileUserUploadId: curUser.id,
+              fileTaskOwnerId: task.taskId,
+              fileSize: file.size,
+            };
+
             fileApi
-              .addFile({
-                fileName: file.name,
-                fileUrl: fileUrl,
-                fileType: GetTypeFromExt(file.name),
-                userId: curUser.id,
-                fileBelongedId: task.taskId,
-              })
+              .addFile(body)
               .then((res) => {
-                const attachmentsClone = [...attachments];
-                attachmentsClone.splice(0, 0, res.data);
-                setAttachments(attachmentsClone);
-                dispatchUpdateTask();
+
               })
               .catch((err) => { });
           }
