@@ -44,25 +44,27 @@ axiosClient.interceptors.response.use(
       if (err.response.status === 401) store.dispatch(setValueAuth(false));
 
       if (err.response.status === 500) {
-        return refreshTokenFunc()
-          .then((data) => {
-            return new Promise((resolve, reject) => {
-              axiosClient
-                .request(err.config)
-                .then((res) => {
-                  delete_cookie("TokenExpired");
-                  resolve(res);
-                })
-                .catch((err) => {
-                  delete_cookie("TokenExpired");
-                  reject(err);
-                });
+        if (getCookie("TokenExpired") === "true") {
+          return refreshTokenFunc()
+            .then((data) => {
+              return new Promise((resolve, reject) => {
+                axiosClient
+                  .request(err.config)
+                  .then((res) => {
+                    delete_cookie("TokenExpired");
+                    resolve(res);
+                  })
+                  .catch((err) => {
+                    delete_cookie("TokenExpired");
+                    reject(err);
+                  });
+              });
+            })
+            .catch((error) => {
+              store.dispatch(setValueAuth(false));
+              return Promise.reject(error);
             });
-          })
-          .catch((error) => {
-            store.dispatch(setValueAuth(false));
-            return Promise.reject(error);
-          });
+        }
       }
 
       return Promise.reject(err.response.data);
