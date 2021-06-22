@@ -1,6 +1,7 @@
 import axiosClient from "src/api/axiosClient";
-const TOKEN_KEY = 'access_token';
 import { DOMAIN } from "../../env";
+const TOKEN_KEY = 'access_token';
+
 
 
 export const login = () => {
