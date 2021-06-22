@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "src/env";
 import { setValueAuth } from "src/shared_components/views/pages/login/authSlice";
 import { delete_cookie, getCookie, refreshTokenFunc } from "src/utils/auth";
 import store from "../app/store";
@@ -6,7 +7,7 @@ import store from "../app/store";
 axios.defaults.withCredentials = true;
 
 const axiosClient = axios.create({
-  baseURL: "https://localhost:9001/api/",
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },

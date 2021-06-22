@@ -1,5 +1,6 @@
 import axiosClient from "src/api/axiosClient";
 const TOKEN_KEY = 'access_token';
+import { DOMAIN } from "../../env";
 
 
 export const login = () => {
@@ -28,5 +29,5 @@ export const getCookie = (name) => {
 }
 
 export const delete_cookie = (name) => {
-    document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    document.cookie = name + `=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;Domain=${DOMAIN};`;
 }

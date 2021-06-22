@@ -1,8 +1,9 @@
 import { setupSignalRConnection, startSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
 import { setNewAddReact, setNewComment, setRemoveReact } from "./signalrSlice";
+import {SIGNALR_URL} from "../../env";
 
-const connection = setupSignalRConnection('https://localhost:9001/hubpost');
+const connection = setupSignalRConnection(`${SIGNALR_URL}/hubpost`);
 
 connection.on('NewAddReact', payload => {
     console.log("addreact");

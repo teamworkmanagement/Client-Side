@@ -1,10 +1,10 @@
 import { setupSignalRConnection, startSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
 import { setNewNoti } from "src/appSlice";
+import {SIGNALR_URL} from "../../env";
 
 
-
-const connection = setupSignalRConnection('https://localhost:9001/hubnoti');
+const connection = setupSignalRConnection(`${SIGNALR_URL}/hubnoti`);
 connection.on('SendNoti', payload => {
     store.dispatch(setNewNoti(payload));
 })
