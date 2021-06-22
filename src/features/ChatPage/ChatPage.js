@@ -77,6 +77,7 @@ function ChatPage(props) {
 
   }, [currentGroup]);
 
+  
   useEffect(() => {
     const params = {
       userId: userId,
