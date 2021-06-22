@@ -1,9 +1,9 @@
 import { setupSignalRConnection, startSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
 import { addNewGroupChat, setNewMessage, updateGroupChatImage } from "src/features/ChatPage/chatSlice";
+import {SIGNALR_URL} from "../../env";
 
-
-const connection = setupSignalRConnection('https://localhost:9001/hubchat');
+const connection = setupSignalRConnection(`${SIGNALR_URL}/hubchat`);
 
 connection.on('NhanMessage', message => {
     console.log('nhan tin nhan: ', message);
