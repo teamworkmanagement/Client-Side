@@ -5,9 +5,9 @@ name: React CI/CD
 
 on:
   push:
-    branches: [ new_lastest ]
+    branches: [ main ]
   pull_request:
-    branches: [ new_lastest ]
+    branches: [ main ]
 
 jobs:
   build:
