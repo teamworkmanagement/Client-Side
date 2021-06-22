@@ -6,7 +6,7 @@ import { addNewGroupChat, setNewMessage, updateGroupChatImage } from "src/featur
 const connection = setupSignalRConnection('https://localhost:9001/hubchat');
 
 connection.on('NhanMessage', message => {
-    //console.log('nhan tin nhan: ', message);
+    console.log('nhan tin nhan: ', message);
     store.dispatch(setNewMessage(message));
 });
 
