@@ -23,7 +23,7 @@ import { Redirect, useHistory, useParams } from "react-router";
 import teamApi from "src/api/teamApi";
 import InviteMemberModal from "./InviteMemberModal/InviteMemberModal";
 import chatApi from "src/api/chatApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import uuid from "src/utils/file/uuid";
 import StartChatMembers from "../StartChatMembers/StartChatMembers";
 import { BsSearch } from "react-icons/bs";
@@ -35,6 +35,7 @@ import EditTeamNameModal from "./EditTeamNameModal/EditTeamNameModal";
 import EditTeamDescriptionModal from "./EditTeamDescriptionModal/EditTeamDescriptionModal";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
+import { setIsSelected } from "src/features/ChatPage/chatSlice";
 
 TeamMembersList.propTypes = {};
 
@@ -209,8 +210,12 @@ function TeamMembersList(props) {
       .catch((err) => { });
   };
 
-  const onStartChatClose = () => {
+  const dispatch = useDispatch();
+  const onStartChatClose = (grChatId) => {
     setShowStartChat(false);
+    if (grChatId) {
+      setRedirect(`/chat?g=${grChatId}`);
+    }
   };
 
   function NoItemView() {

@@ -22,6 +22,8 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { BiMessageDetail } from "react-icons/bi";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import "./MessageList.scss";
+import queryString from 'query-string';
+import { useHistory } from "react-router-dom";
 MessageList.propTypes = {};
 
 function MessageList(props) {
@@ -47,6 +49,7 @@ function MessageList(props) {
     }
   };
 
+  const history = useHistory();
   //load tin nhan
   useEffect(() => {
     setIsLoading(true);
@@ -59,7 +62,7 @@ function MessageList(props) {
       }
       //debugger;
       console.log("1st time: ", props.reachTop);
-
+      
       if (isSelected) {
         dispatch(setIsSelected(false));
         setListMes([]);
@@ -283,11 +286,7 @@ function MessageList(props) {
     };
 
     const messageObj = { ...newMessage };
-    if (newMessage.groupId !== currentGroup) {
-      messageObj.newMessage = true;
-      dispatch(setReceiveMes(messageObj));
-      return;
-    }
+    dispatch(setReceiveMes(messageObj));
 
     const cloneList = [...latestChat.current];
     setListMes(cloneList.concat(newMes));
@@ -334,8 +333,8 @@ function MessageList(props) {
 
     chatApi
       .sendMes(props.sendMes.mesObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [props.sendMes]);
 
   const render = () => {

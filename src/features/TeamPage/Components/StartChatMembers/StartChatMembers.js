@@ -60,7 +60,7 @@ function StartChatMembers(props) {
     }
   }
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   const [inputValue, setInputValue] = useState("");
 
@@ -86,7 +86,7 @@ function StartChatMembers(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -102,12 +102,42 @@ function StartChatMembers(props) {
 
     setGrChatName("");
     setOptions([]);
-    //props.onCLoseModal();
+
+    if (!grChatName && members.length > 2) {
+      alert("name empty");
+      return;
+    }
+
+    try {
+      const res = await chatApi.addChatWithMembers({
+        members: members,
+        groupChatName: grChatName,
+      });
+
+      props.onModalClose(res.data);
+    } catch (err) {
+      props.onModalClose();
+    }
   };
 
-  const onChange = (e) => {
+  /*const onChange = (e) => {
+    setOptions(e);
+  };*/
+
+  const onChange = (e, { action, removedValue }) => {
+
+    switch (action) {
+      case 'remove-value':
+      case 'pop-value':
+        if (removedValue.isFixed) {
+          return;
+        }
+        break;
+    }
+
     setOptions(e);
   };
+
   const onInputGrChatName = (e) => {
     setGrChatName(e.target.value);
   };
@@ -124,10 +154,12 @@ function StartChatMembers(props) {
       return state.data.isFixed ? { ...base } : base;
     },
     multiValueLabel: (base, state) => {
-      return state.data.isFixed ? { ...base } : base;
+      return state.data.isFixed
+        ? { ...base }
+        : base;
     },
     multiValueRemove: (base, state) => {
-      return state.data.isFixed ? { ...base } : base;
+      return state.data.isFixed ? { ...base, display: 'none' } : base;
     },
   };
 
@@ -161,6 +193,7 @@ function StartChatMembers(props) {
               Option: CustomOption,
               MultiValue: ValueOption,
             }}
+            styles={styles}
           />
           <div onClick={onCreateGroupChat} className="create-chat-btn">
             Tạo nhóm Chat
