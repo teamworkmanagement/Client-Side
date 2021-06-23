@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   CHeader,
@@ -33,7 +33,7 @@ import {
 } from "src/appSlice";
 import "./TheHeader.scss";
 import { BsSearch } from "react-icons/bs";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Breadcrumbs from "../MySharedComponents/Breadcrumbs/Breadcrumbs";
 
 const TheHeader = () => {
@@ -79,6 +79,33 @@ const TheHeader = () => {
     dispatch(setDarkMode());
   };
 
+  const teams = useSelector(state => state.team.teams);
+  const [team, setTeam] = useState({});
+  const [showBadge, setShowBadge] = useState(false);
+
+  useEffect(() => {
+    if (history.location.pathname.includes('/team/')) {
+      const arr = history.location.pathname.split('/');
+      const teamId = arr[2];
+
+      const tcurrent = teams.find(t => t.teamId == teamId);
+      console.log(tcurrent);
+
+      if (tcurrent) {
+        setTeam(tcurrent);
+        setShowBadge(true);
+      }
+      else {
+        setTeam({});
+        setShowBadge(false);
+      }
+    }
+    else {
+      setTeam({});
+      setShowBadge(false);
+    }
+  }, [history.location.pathname]);
+
   return (
     <CHeader withSubheader>
       <CToggler
@@ -111,13 +138,13 @@ const TheHeader = () => {
 
       <CSubheader className="px-3 justify-content-between">
         <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />
-        <div className="team-info-header">
+        {showBadge && <div className="team-info-header">
           <img
             alt=""
-            src="https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png"
+            src={team.teamImageUrl}
           />
-          <div className="team-name">Anh văn toeic 2</div>
-        </div>
+          <div className="team-name">{team.teamName}</div>
+        </div>}
       </CSubheader>
     </CHeader>
   );
