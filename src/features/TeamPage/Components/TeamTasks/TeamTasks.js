@@ -17,6 +17,7 @@ import { useHistory } from "react-router";
 import { setTeamLoading } from "src/appSlice";
 import { BiFilterAlt } from "react-icons/bi";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
+import FilteredTasks from "./Components/FilteredTasks/FilteredTasks";
 
 TeamTasks.propTypes = {};
 
@@ -175,22 +176,22 @@ function TeamTasks(props) {
             </CButtonGroup>
           </div>
         </div>
-
-        {showMode === 1 && (
+        {applyingFilter && <FilteredTasks />}
+        {showMode === 1 && !applyingFilter && (
           <KanbanBoard
             ownerId={props.ownerId}
             isOfTeam={true}
             boardId={props.boardId}
           />
         )}
-        {showMode === 2 && (
+        {showMode === 2 && !applyingFilter && (
           <TaskList
             ownerId={props.ownerId}
             isOfTeam={true}
             boardId={props.boardId}
           />
         )}
-        {showMode === 3 && (
+        {showMode === 3 && !applyingFilter && (
           <GanttChart
             ownerId={props.ownerId}
             isOfTeam={true}

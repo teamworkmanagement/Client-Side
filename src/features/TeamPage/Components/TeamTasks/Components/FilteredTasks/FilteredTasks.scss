@@ -1,0 +1,270 @@
+//@import "../../shared_components/scss/style.scss";
+//========================================
+//border
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+
+// Here you can add other styles
+@mixin background-color-theme {
+    background: #3e79f7;
+}
+@mixin PaddingForLeftPanel {
+    padding: 2rem 1rem 2rem 2rem;
+    @media (max-width: 992px) {
+        padding: 1rem 0.5rem 1rem 1rem;
+    }
+}
+@mixin PaddingForRightPanel {
+    padding: 2rem 2rem 2rem 1rem;
+    @media (max-width: 992px) {
+        padding: 1rem 1rem 1rem 0.5rem;
+    }
+}
+
+@mixin SideBarItemNormal {
+    background-color: white;
+    color: #3c4b64;
+    font-weight: 500;
+    border: none;
+    .c-sidebar-nav-icon {
+        color: #3c4b64;
+    }
+}
+@mixin SideBarItemSelected {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe;
+    border-right: 3px solid #3e79f7 !important;
+    .c-sidebar-nav-icon {
+        color: #3e79f7;
+    }
+}
+@mixin SideBarItemHover {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe !important;
+
+    .c-sidebar-nav-icon {
+        color: #3e79f7 !important;
+    }
+}
+
+@mixin CardStyle {
+    box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 15%);
+    background-color: white;
+    padding: 1rem;
+    border-radius: $borderRadius;
+    border: $borderStyle;
+}
+
+//text
+
+@mixin TitleStyle {
+    font-weight: bold;
+    font-size: 110%;
+}
+@mixin SubTextStyle {
+    font-size: 90%;
+    color: $subTextColor;
+}
+@mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+@keyframes showInTableRow {
+    0% {
+        opacity: 0;
+        transform: translateY(-60px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@mixin TableRowAppear {
+    transition: all 0.3s ease-out;
+    transform: scale(0);
+    animation-name: showInTableRow;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+    transform-origin: left;
+}
+.no-task-view-table {
+    .nodata-image {
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            .icon-task {
+                width: 5rem;
+                height: 5rem;
+                color: $subTextColor;
+            }
+            .icon-search {
+                width: 2.5rem;
+                height: 2.5rem;
+                color: $subTextColor;
+                margin-top: -1.5rem;
+                margin-right: -1.5rem;
+            }
+        }
+        .noti-infor {
+            font-size: 130%;
+            text-align: center;
+            font-weight: bold;
+            color: $subTextColor;
+        }
+        .create-btn {
+            @include NormalButtonStyle;
+            font-size: 120%;
+            padding: 0.5rem 1.2rem;
+            margin-top: 0.5rem;
+            font-weight: bold;
+        }
+    }
+}
+$animation-offset: 0s;
+.filtered-tasks-container {
+    padding-bottom: 1.5rem;
+    .table {
+        border-collapse: separate;
+        border-spacing: 0rem 0.3rem;
+
+        border: none;
+        thead {
+            tr {
+                th {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    border: none;
+                    input.form-control {
+                        border-color: $subTextColor;
+                    }
+                }
+            }
+        }
+        tbody {
+            border: none;
+
+            tr:nth-child(1) {
+                animation-delay: $animation-offset + 0.2s;
+            }
+            tr:nth-child(2) {
+                animation-delay: $animation-offset + 0.3s;
+            }
+            tr:nth-child(3) {
+                animation-delay: $animation-offset + 0.4s;
+            }
+            tr:nth-child(4) {
+                animation-delay: $animation-offset + 0.5s;
+            }
+            tr:nth-child(5) {
+                animation-delay: $animation-offset + 0.6s;
+            }
+            tr.p-0 {
+                display: none;
+            }
+            td {
+                vertical-align: middle;
+                padding: 0.5rem 1rem;
+                border: 1px solid $textColor;
+                border: 1px solid $subTextColor;
+                border-left: none;
+                border-right: none;
+                border-bottom: 2px solid rgba(0, 0, 0, 0.5) !important;
+                background-color: white;
+                &:first-child {
+                    border-left: 1px solid $textColor;
+                    border-left: 1px solid $subTextColor;
+                    //border-top-left-radius: 50px;
+                    //border-bottom-left-radius: 50px;
+                    border-top-left-radius: $borderRadius;
+                    border-bottom-left-radius: $borderRadius;
+                }
+                &:last-child {
+                    border-right: 1px solid black;
+                    border-right: 1px solid $subTextColor;
+                    border-top-right-radius: $borderRadius;
+                    border-bottom-right-radius: $borderRadius;
+                }
+                &.info-td {
+                    .task-name {
+                        font-weight: bold;
+                    }
+                    .task-desc {
+                        font-weight: normal;
+                        color: $subTextColor;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+                &.status-td {
+                    .card-status {
+                        background-color: #61bd4f;
+                        color: white;
+                        padding: 0.4rem 0.7rem;
+                        border-radius: 50px;
+                        font-size: 90%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: pre;
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                }
+            }
+            tr {
+                @include TableRowAppear;
+                &:hover {
+                    td {
+                        .download-btn-container {
+                            .download-btn {
+                                .overlay-div {
+                                    background-color: #ececee !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

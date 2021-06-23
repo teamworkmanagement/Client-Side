@@ -13,8 +13,13 @@ function AvatarComponent(props) {
         userName={props.userName}
         userImage={props.userImage}
         userId={props.userId}
+        disable={props.disable}
       />
-      <AvatarName userName={props.userName} userId={props.userId} />
+      <AvatarName
+        userName={props.userName}
+        userId={props.userId}
+        disable={props.disable}
+      />
     </div>
   );
 }
