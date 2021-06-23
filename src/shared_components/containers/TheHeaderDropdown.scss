@@ -4,6 +4,9 @@ $lighterBaseColor: #ebf1fe;
 $darkeBaseColor: #3363ca;
 
 .c-header-nav-items {
+    .c-avatar-img {
+        height: 100%;
+    }
     .dropdown-menu {
         box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
         border-radius: $borderRadius;

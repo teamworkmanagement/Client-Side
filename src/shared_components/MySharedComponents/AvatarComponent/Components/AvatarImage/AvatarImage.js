@@ -33,8 +33,18 @@ function AvatarImage(props) {
       ) : (
         <div className="image-name">{getImageName()}</div>
       )}
-      <div className="avatar-mask" onClick={() => setShowInfoModal(true)}></div>
-      <UserInfoModal userId={props.userId} show={showInfoModal} onClose={onCloseModal} />
+      <div
+        className="avatar-mask"
+        onClick={() => {
+          if (props.disable) return;
+          setShowInfoModal(true);
+        }}
+      ></div>
+      <UserInfoModal
+        userId={props.userId}
+        show={showInfoModal}
+        onClose={onCloseModal}
+      />
     </div>
   );
 }

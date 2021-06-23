@@ -114,6 +114,7 @@ const appSlice = createSlice({
     settingOptionsSidebarShow: "false",
     currentPostPage: 1,
     darkMode: true,
+    collapseHeader: false,
     filterChanged: false,
     //data from api
 
@@ -156,6 +157,9 @@ const appSlice = createSlice({
     },
     setDarkMode(state, action) {
       state.darkMode = !state.darkMode;
+    },
+    setCollapseHeader(state, action) {
+      state.collapseHeader = action.payload;
     },
     setTeamLoading(state, action) {
       state.teamLoading = action.payload;
@@ -353,6 +357,7 @@ export const {
   changeState,
   setCurrentPostPage,
   setDarkMode,
+  setCollapseHeader,
   setFilterChange,
   refactorTasks,
   setKanbanLists,

@@ -16,12 +16,17 @@ function AvatarName(props) {
       <div
         className="user-name"
         onClick={() => {
+          if (props.disable) return;
           setShowInfoModal(true);
         }}
       >
-        Dũng Nguyễn
+        {props.userName}
       </div>
-      <UserInfoModal userId={props.userId} show={showInfoModal} onClose={onCloseModal} />
+      <UserInfoModal
+        userId={props.userId}
+        show={showInfoModal}
+        onClose={onCloseModal}
+      />
     </div>
   );
 }
