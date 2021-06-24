@@ -41,6 +41,7 @@ import {
   HiOutlineChevronDoubleDown,
   HiOutlineChevronDoubleUp,
 } from "react-icons/hi";
+import teamApi from "src/api/teamApi";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
@@ -87,7 +88,6 @@ const TheHeader = () => {
   };
 
 
-  const teams = useSelector(state => state.team.teams);
   const [team, setTeam] = useState({});
   const [showBadge, setShowBadge] = useState(false);
 
@@ -96,18 +96,21 @@ const TheHeader = () => {
       const arr = history.location.pathname.split('/');
       const teamId = arr[2];
 
-      const tcurrent = teams.find(t => t.teamId == teamId);
-      console.log(tcurrent);
-
-      console.log('teamid: ', teamId);
-      if (tcurrent) {
-        setTeam(tcurrent);
-        setShowBadge(true);
-      }
-      else {
-        setTeam({});
-        setShowBadge(false);
-      }
+      teamApi.getTeam(teamId)
+        .then(res => {
+          if (res.data) {
+            setTeam(res.data);
+            setShowBadge(true);
+          }
+          else {
+            setTeam({});
+            setShowBadge(false);
+          }
+        })
+        .catch(err => {
+          setTeam({});
+          setShowBadge(false);
+        });
     }
     else {
       setTeam({});
@@ -137,14 +140,14 @@ const TheHeader = () => {
         <img alt="logo" src="../images/app/logoteam.png" />
       </CHeaderBrand>
       <CHeaderNav style={{ paddingRight: "0.5rem" }} className="">
-        <div className="lookup-input-header">
+        {/*<div className="lookup-input-header">
           <CInput
             className="input-field"
             placeholder="Tìm kiếm..."
             type="text"
           />
           <BsSearch className="icon-search" />
-        </div>
+  </div>*/}
 
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />

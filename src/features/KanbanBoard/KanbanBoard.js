@@ -475,12 +475,6 @@ function KanbanBoard(props) {
       {isLoading ? <Loading /> : renderNormal()}
 
       {!currentBoard && !isLoading && <NotFoundPage />}
-      <TaskEditModal
-        isOfTeam={props.isOfTeam}
-        closePopup={onEditModalClose}
-        isShowEditPopup={isShowEditPopup}
-        data={modalTaskObj}
-      />
     </div>
   );
 }
