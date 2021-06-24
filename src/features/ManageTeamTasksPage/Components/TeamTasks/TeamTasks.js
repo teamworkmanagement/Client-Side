@@ -89,14 +89,6 @@ function TeamTasks(props) {
           <div className="label-text">Trở lại danh sách bảng công việc</div>
         </div>
         <div className="other-actions">
-          <div className="lookup-input">
-            <CInput
-              type="text"
-              name="teamName"
-              placeholder="Tìm công việc..."
-            />
-            <BsSearch className="icon-search" />
-          </div>
           {showMode === 1 && (
             <div className="add-btn add-list-btn" onClick={onCreateKanbanList}>
               <CIcon name="cil-plus" />

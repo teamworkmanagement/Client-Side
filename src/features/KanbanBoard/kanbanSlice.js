@@ -50,13 +50,14 @@ const kanbanSlice = createSlice({
         signalRAddNewTask(state, action) {
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
+                state.signalrData.addNewTask = action.payload;
                 list.taskUIKanbans.push(action.payload);
             }
         },
         signalRAddNewList(state, action) {
-            state.addNewList = action.payload;
             if (action.payload.kanbanListBoardBelongedId === state.kanbanBoard.currentBoard) {
                 console.log("trùng");
+                state.signalrData.addNewList = action.payload;
                 state.kanbanBoard.kanbanLists.push(action.payload);
             }
 
@@ -64,6 +65,7 @@ const kanbanSlice = createSlice({
         signalRRemoveTask(state, action) {
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
+                state.signalrData.removeTask = action.payload;
                 const index = list.taskUIKanbans.findIndex(x => x.taskId === action.payload.taskId);
                 list.taskUIKanbans.splice(index, 1);
             }
@@ -71,6 +73,7 @@ const kanbanSlice = createSlice({
         signalRRemoveList(state, action) {
             state.removeList = action.payload;
             if (action.payload.kanbanListBoardBelongedId === state.kanbanBoard.currentBoard) {
+                state.signalrData.removeList = action.payload;
                 const index = state.kanbanBoard.kanbanLists.findIndex(e => e.kanbanListId === action.payload.kanbanListId);
                 state.kanbanBoard.kanbanLists.splice(index, 1);
             }

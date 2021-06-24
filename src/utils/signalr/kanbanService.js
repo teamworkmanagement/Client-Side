@@ -66,7 +66,9 @@ connection.on("AddFile", payload => {
 })
 
 export const startKanbanService = () => {
-    startSignalRConnection(connection);
+    if (connection.state == 'Disconnected') {
+        startSignalRConnection(connection);
+    }
 }
 
 

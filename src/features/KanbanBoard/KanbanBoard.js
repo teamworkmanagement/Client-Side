@@ -205,7 +205,7 @@ function KanbanBoard(props) {
   );
   const user = useSelector((state) => state.auth.currentUser);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("realtime", updateTask);
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
@@ -238,7 +238,7 @@ function KanbanBoard(props) {
         })
         .catch((err) => { });
     }
-  }, [updateTask]);
+  }, [updateTask]);*/
 
   const assignUser = useSelector(
     (state) => state.kanban.signalrData.reAssignUser
@@ -277,7 +277,7 @@ function KanbanBoard(props) {
     }
   }, [assignUser])*/
 
-  useEffect(() => {
+  /***useEffect(() => {
     console.log(assignUser);
     const queryObj = queryString.parse(history.location.search);
 
@@ -298,9 +298,9 @@ function KanbanBoard(props) {
         });
       }
     }
-  }, [assignUser]);
+  }, [assignUser]);***/
 
-  useEffect(() => {
+  /*useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t && isShowEditPopup) {
       setIsShowEditPopup(false);
@@ -313,7 +313,7 @@ function KanbanBoard(props) {
       console.log("call api");
       return;
     }
-  }, [history.location.search]);
+  }, [history.location.search]);*/
 
   const openEditPopup = (taskId) => {
     setIsShowEditPopup(true);
