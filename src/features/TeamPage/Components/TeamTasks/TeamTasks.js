@@ -33,10 +33,13 @@ function TeamTasks(props) {
   const [filter, setFilter] = useState(null);
   const [modalTaskObj, setModaTaskObj] = useState(null);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
-
+  const [notfound, setNotFound] = useState(false);
+  
   const user = useSelector(state => state.auth.currentUser);
   const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
   const assignUser = useSelector((state) => state.kanban.signalrData.reAssignUser);
+
+  const dispatch = useDispatch();
 
   function openFilterModal() {
     setShowFilterModal(true);
@@ -75,12 +78,11 @@ function TeamTasks(props) {
     setShowAddKBList(false);
   };
 
-  const [notfound, setNotFound] = useState(false);
   const notFound = (value) => {
     setNotFound(value);
   };
 
-  const dispatch = useDispatch();
+  
   useEffect(() => {
     const pathname = history.location.pathname.split("/");
     const params = {
