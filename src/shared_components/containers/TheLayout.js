@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SettingOptionsSidebar from "./SettingOptionsSidebar";
 
-import NewLogin from "../views/pages/login/NewLogin/NewLogin";
+
 
 import CustomToast from "../MySharedComponents/CustomToast/CustomToast";
 import { useSelector } from "react-redux";

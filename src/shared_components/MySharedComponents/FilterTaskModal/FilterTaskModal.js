@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Select, { components } from "react-select";
 import "./FilterTaskModal.scss";
@@ -16,6 +16,8 @@ import {
   CRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { useSelector } from "react-redux";
+import userApi from "src/api/userApi";
 
 FilterTaskModal.propTypes = {};
 
@@ -105,9 +107,42 @@ function FilterTaskModal(props) {
     },
   ]);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
+
+  const [filterObj, setFilterObj] = useState({});
+
+  useEffect(() => {
+    if (currentBoard) {
+      console.log("current board: ", currentBoard);
+      const params = {
+        boardId: currentBoard,
+      };
+      userApi.searchUsersKanban({ params })
+        .then(res => {
+          const listUsers = res.data?.map((x) => {
+            return {
+              value: x.userId,
+              label: x.userFullname,
+              img: x.userImageUrl,
+              selected: false,
+            };
+          });
+          setMemberList(listUsers);
+        })
+        .catch(err => {
+
+        });
+
+    }
+  }, [currentBoard])
   const onChange = (e) => {
     setSelectedUser(e);
+    setFilterObj({ ...filterObj, userId: e?.value ? e.value : null });
     console.log(e);
+
+    if (!e)
+      return;
 
     const clonedMembers = [...memberList];
     for (let i = 0; i < memberList.length; i++) {
@@ -117,7 +152,7 @@ function FilterTaskModal(props) {
           selected: false,
         };
       } else {
-        if (clonedMembers[i].id === e.id) {
+        if (clonedMembers[i].value === e.value) {
           clonedMembers[i] = {
             ...memberList[i],
             selected: true,
@@ -198,20 +233,81 @@ function FilterTaskModal(props) {
     setTaskStatus(status);
   }
 
+  useEffect(() => {
+    setFilterObj({
+      ...filterObj,
+      taskStatus: taskStatus,
+    })
+  }, [taskStatus])
+
   function handleClose() {
     if (props.onClose) {
       props.onClose();
     }
   }
   function onFilter() {
-    if (props.applyFilter) {
-      props.applyFilter();
+    const cloneFilter = {
+      ...filterObj,
+      taskName: !filterObj.taskName ? null : filterObj.taskName,
+      taskDescription: !filterObj.taskDescription ? null : filterObj.taskDescription,
+      startRange: !filterObj.startRange ? null : filterObj.startRange,
+      endRange: !filterObj.endRange ? null : filterObj.endRange,
+      userId: !filterObj.userId ? null : filterObj.userId,
+    };
+
+    if (!chooseName)
+      cloneFilter.taskName = null;
+
+    if (!chooseDescription)
+      cloneFilter.taskDescription = null;
+
+    if (!chooseStatus)
+      cloneFilter.taskStatus = null;
+
+    if (!chooseDate) {
+      cloneFilter.startRange = null;
+      cloneFilter.endRange = null;
     }
-    handleClose();
+    else {
+      if (!cloneFilter.startRange)
+        cloneFilter.startRange = null;
+      else cloneFilter.startRange = new Date(cloneFilter.startRange);
+
+      if (!cloneFilter.endRange)
+        cloneFilter.endRange = null;
+      else cloneFilter.endRange = new Date(cloneFilter.endRange);
+    }
+
+    if (!chooseAssignedUser) {
+      cloneFilter.userId = null;
+    }
+
+    console.log(cloneFilter);
+    if (props.applyFilter) {
+      props.applyFilter(cloneFilter);
+    }
+    //handleClose();
   }
   function removeFiltering() {
     if (props.removeFilter) {
       props.removeFilter();
+      setFilterObj({
+        taskStatus: "todo",
+        startRange: "",
+        endRange: "",
+        taskName: "",
+        taskDescription: "",
+        userId: "",
+      });
+
+      setSelectedUser(null);
+      setTaskStatus("todo");
+
+      setChooseName(false);
+      setChooseDescription(false);
+      setChooseStatus(false);
+      setChooseDate(false);
+      setChooseAssignedUser(false);
     }
   }
   return (
@@ -241,6 +337,8 @@ function FilterTaskModal(props) {
             disabled={!chooseName}
             type="text"
             placeholder="Nhập tên..."
+            value={filterObj.taskName}
+            onChange={(e) => setFilterObj({ ...filterObj, taskName: e.target.value })}
           />
         </div>
         <div className="filter-option-group">
@@ -255,6 +353,8 @@ function FilterTaskModal(props) {
             disabled={!chooseDescription}
             type="text"
             placeholder="Nhập mô tả..."
+            onChange={(e) => setFilterObj({ ...filterObj, taskDescription: e.target.value })}
+            value={filterObj.taskDescription}
           />
         </div>
         <div className="filter-option-group">
@@ -340,6 +440,8 @@ function FilterTaskModal(props) {
                 name="date-input"
                 placeholder="date"
                 disabled={!chooseDate}
+                onChange={(e) => setFilterObj({ ...filterObj, startRange: e.target.value })}
+                value={filterObj.startRange}
               />
             </div>
             <div className="to-date date-item">
@@ -350,6 +452,8 @@ function FilterTaskModal(props) {
                 name="date-input"
                 placeholder="date"
                 disabled={!chooseDate}
+                onChange={(e) => setFilterObj({ ...filterObj, endRange: e.target.value })}
+                value={filterObj.endRange}
               />
             </div>
           </div>

@@ -27,11 +27,6 @@ function TaskList(props) {
     });
   });
 
-  useEffect(() => {
-    if (!props.boardId) return;
-    dispatch(setCurrentBoard(props.boardId));
-    dispatch(getBoardDataForUI(props.boardId));
-  }, [props.boardId]);
   return (
     <div className="task-list-container">
       {tasks.map((item, index) => {

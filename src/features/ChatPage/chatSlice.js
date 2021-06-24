@@ -55,9 +55,10 @@ const chatSlice = createSlice({
       const gr = state.groupChat.find(
         (x) => x.groupChatId === action.payload.groupId
       );
-      gr.lastestMes = action.payload.message;
+      gr.lastestMes = action.payload.messageType === 'image' ? '[Hình ảnh]' :
+        action.payload.messageType === 'file' ? '[Tệp tin]' : action.payload.message;
       gr.groupChatUpdatedAt = Date.now();
-      gr.newMessage = action.payload.newMessage ? true : false;
+
     },
     setNewMessage(state, action) {
       state.newMessage = action.payload;

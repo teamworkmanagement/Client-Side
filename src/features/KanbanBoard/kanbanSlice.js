@@ -36,7 +36,8 @@ const kanbanSlice = createSlice({
             moveList: null,
             updateTask: null,
             updateList: null,
-            reAssignUser: null
+            reAssignUser: null,
+            addNewFile: null,
         }
     },
     reducers: {
@@ -49,13 +50,14 @@ const kanbanSlice = createSlice({
         signalRAddNewTask(state, action) {
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
+                state.signalrData.addNewTask = action.payload;
                 list.taskUIKanbans.push(action.payload);
             }
         },
         signalRAddNewList(state, action) {
-            state.addNewList = action.payload;
             if (action.payload.kanbanListBoardBelongedId === state.kanbanBoard.currentBoard) {
                 console.log("trùng");
+                state.signalrData.addNewList = action.payload;
                 state.kanbanBoard.kanbanLists.push(action.payload);
             }
 
@@ -63,6 +65,7 @@ const kanbanSlice = createSlice({
         signalRRemoveTask(state, action) {
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
+                state.signalrData.removeTask = action.payload;
                 const index = list.taskUIKanbans.findIndex(x => x.taskId === action.payload.taskId);
                 list.taskUIKanbans.splice(index, 1);
             }
@@ -70,6 +73,7 @@ const kanbanSlice = createSlice({
         signalRRemoveList(state, action) {
             state.removeList = action.payload;
             if (action.payload.kanbanListBoardBelongedId === state.kanbanBoard.currentBoard) {
+                state.signalrData.removeList = action.payload;
                 const index = state.kanbanBoard.kanbanLists.findIndex(e => e.kanbanListId === action.payload.kanbanListId);
                 state.kanbanBoard.kanbanLists.splice(index, 1);
             }
@@ -131,6 +135,7 @@ const kanbanSlice = createSlice({
                 obj.taskCompletedPercent = action.payload.taskCompletedPercent;
 
                 obj.taskThemeColor = action.payload.taskThemeColor;
+                obj.commentsCount = action.payload.commentsCount;
             }
         },
         signalRUpdateList(state, action) {
@@ -179,6 +184,14 @@ const kanbanSlice = createSlice({
         signalRChangeNameList(state, action) {
             const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
             obj.kanbanListTitle = action.payload.kanbanListName;
+        },
+        signalRAddFile(state, action) {
+            const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
+            if (list) {
+                state.signalrData.addNewFile = action.payload;
+                const task = list.taskUIKanbans.find(x => x.taskId === action.payload.fileTaskOwnerId);
+                task.filesCount++;
+            }
         }
     },
     extraReducers: {
@@ -205,6 +218,7 @@ export const {
     dragListLocal,
     dragTaskLocal,
     reAssignUser,
-    signalRChangeNameList
+    signalRChangeNameList,
+    signalRAddFile
 } = actions;
 export default reducer;

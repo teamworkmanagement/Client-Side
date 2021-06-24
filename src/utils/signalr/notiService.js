@@ -1,7 +1,7 @@
 import { setupSignalRConnection, startSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
 import { setNewNoti } from "src/appSlice";
-import {SIGNALR_URL} from "../../env";
+import { SIGNALR_URL } from "../../env";
 
 
 const connection = setupSignalRConnection(`${SIGNALR_URL}/hubnoti`);
@@ -9,8 +9,9 @@ connection.on('SendNoti', payload => {
     store.dispatch(setNewNoti(payload));
 })
 export const startNotiService = () => {
-
-    startSignalRConnection(connection);
+    if (connection.state == 'Disconnected') {
+        startSignalRConnection(connection);
+    }
 }
 
 export const disconnectNoti = () => {

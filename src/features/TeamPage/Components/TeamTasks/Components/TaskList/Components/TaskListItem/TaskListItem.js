@@ -141,102 +141,17 @@ function TaskListItem(props) {
     return "Trễ " + -spaceTime + " ngày";
   }
 
-  const user = useSelector((state) => state.auth.currentUser);
 
   const openEditPoup = async () => {
-    setModaTask(null);
-    setIsShowEditPopup(true);
-
     history.push({
       pathname: history.location.pathname,
       search: history.location.search + `&t=${props.data.taskId}`,
     });
-
-    const queryObj = queryString.parse(history.location.search);
-
-    let params = {};
-    if (props.isOfTeam) {
-      params = {
-        isOfTeam: true,
-        ownerId: props.ownerId,
-        boardId: queryObj.b,
-        taskId: props.data.taskId,
-        userRequest: user.id,
-      };
-    } else {
-      params = {
-        isOfTeam: false,
-        ownerId: user.id,
-        boardId: queryObj.b,
-        taskId: props.data.taskId,
-        userRequest: user.id,
-      };
-    }
-
-    taskApi
-      .getTaskByBoard({ params })
-      .then((res) => {
-        setModaTask({
-          ...res.data,
-          filesCount: props.data.filesCount,
-          commentsCount: props.data.commentsCount,
-        });
-        console.log(res.data);
-      })
-      .catch((err) => {
-        history.push({
-          pathname: history.location.pathname,
-          search: history.location.search.substring(
-            0,
-            history.location.search.lastIndexOf("&")
-          ),
-        });
-        setIsShowEditPopup(false);
-      });
   };
 
   const updateTask = useSelector(
     (state) => state.kanban.signalrData.updateTask
   );
-
-  useEffect(() => {
-    console.log("realtime", updateTask);
-    const queryObj = queryString.parse(history.location.search);
-    if (!queryObj.t) return;
-
-    if (
-      updateTask &&
-      updateTask.taskId === queryObj.t &&
-      updateTask.taskId === props.data.taskId
-    ) {
-      console.log("realtime");
-
-      let params = {};
-      if (props.isOfTeam) {
-        params = {
-          isOfTeam: true,
-          ownerId: props.ownerId,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      } else {
-        params = {
-          isOfTeam: false,
-          ownerId: user.id,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      }
-      taskApi
-        .getTaskByBoard({ params })
-        .then((res) => {
-          setModaTask(res.data);
-        })
-        .catch((err) => {});
-    }
-  }, [updateTask]);
 
   const onRemoveTask = () => {
     if (props.closePopup) {
@@ -260,7 +175,7 @@ function TaskListItem(props) {
             <div
               className="attachment infor"
               style={{ display: props.data.filesCount === 0 ? "none" : "flex" }}
-              // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+            // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
             >
               <CIcon name="cil-paperclip" className=""></CIcon>
               <div className="">{props.data.filesCount} </div>
@@ -337,12 +252,6 @@ function TaskListItem(props) {
           </div>
         </div>
       </div>
-      <TaskEditModal
-        isOfTeam={props.isOfTeam}
-        closePopup={onEditModalClose}
-        isShowEditPopup={isShowEditPopup}
-        data={modalTask}
-      />
     </div>
   );
 }

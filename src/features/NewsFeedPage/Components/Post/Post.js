@@ -249,7 +249,7 @@ function Post(props) {
   }, [newComment]);
 
   const history = useHistory();
-  
+
   const navigateToTeam = (post) => {
     history.push(`/team/${post.postTeamId}`);
   };
@@ -282,7 +282,7 @@ function Post(props) {
             </div>
           </div>
         </div>
-        <div className="post-actions">
+        {/*<div className="post-actions">
           <div className="post-header-actions-dropdown">
             <CDropdown>
               <CDropdownToggle id="dropdownMenuButton" caret>
@@ -309,7 +309,7 @@ function Post(props) {
               </CDropdownMenu>
             </CDropdown>
           </div>
-        </div>
+              </div>*/}
       </div>
       <div
         className="post-content"

@@ -13,14 +13,32 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
+import { getBoardDataForUI, setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
 import { setTeamLoading } from "src/appSlice";
+import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
+import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
+import queryString from "query-string";
+import taskApi from "src/api/taskApi";
+import { BiFilterAlt } from "react-icons/bi";
+import FilteredTasks from "src/features/TeamPage/Components/TeamTasks/Components/FilteredTasks/FilteredTasks";
 
 MyTasks.propTypes = {};
 
 function MyTasks(props) {
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
   const [showAddKBList, setShowAddKBList] = useState(false);
+
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [applyingFilter, setApplyingFilter] = useState(false);
+  const [filter, setFilter] = useState(null);
+  const [modalTaskObj, setModaTaskObj] = useState(null);
+  const [isShowEditPopup, setIsShowEditPopup] = useState(false);
+
+  const user = useSelector(state => state.auth.currentUser);
+  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+  const assignUser = useSelector((state) => state.kanban.signalrData.reAssignUser);
+  const [notfound, setNotFound] = useState(false);
+  const dispatch = useDispatch();
   const history = useHistory();
 
   function switchShowMode(index) {
@@ -35,6 +53,10 @@ function MyTasks(props) {
     }
   }
 
+  function openFilterModal() {
+    setShowFilterModal(true);
+  }
+
   const onClose = () => {
     setShowAddKBList(false);
   };
@@ -42,10 +64,6 @@ function MyTasks(props) {
   const onCreateKBList = () => {
     setShowAddKBList(true);
   };
-
-  const [notfound, setNotFound] = useState(false);
-  const user = useSelector(state => state.auth.currentUser);
-  const dispatch = useDispatch();
 
   useEffect(() => {
 
@@ -64,12 +82,156 @@ function MyTasks(props) {
       .catch(err => {
         console.log(err);
 
-        if (err.data?.ErrorCode === "404") {
+        if (err.ErrorCode === "404") {
           setNotFound(true);
-          dispatch(setTeamLoading(false))
+        }
+        dispatch(setTeamLoading(false))
+      });
+  }, [showMode])
+
+
+  useEffect(() => {
+    console.log("realtime", updateTask);
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.t) return;
+
+    if (updateTask && updateTask.taskId === queryObj.t) {
+      console.log("realtime");
+
+      let params = {};
+      if (props.isOfTeam) {
+        params = {
+          isOfTeam: true,
+          ownerId: props.ownerId,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId,
+          userRequest: user.id,
+        };
+      } else {
+        params = {
+          isOfTeam: false,
+          ownerId: user.id,
+          boardId: queryObj.b,
+          taskId: updateTask.taskId,
+          userRequest: user.id,
+        };
+      }
+      taskApi
+        .getTaskByBoard({ params })
+        .then((res) => {
+          setModaTaskObj(res.data);
+        })
+        .catch((err) => { });
+    }
+  }, [updateTask]);
+
+  useEffect(() => {
+    console.log(assignUser);
+    const queryObj = queryString.parse(history.location.search);
+
+    if (!queryObj.t) return;
+
+    if (!modalTaskObj) return;
+
+    if (assignUser && assignUser.taskId === queryObj.t) {
+      if (assignUser.userId === modalTaskObj.userId) return;
+      else {
+        setModaTaskObj({
+          ...modalTaskObj,
+          userId: assignUser.userId === "" ? null : assignUser.userId,
+          userAvatar:
+            assignUser.userAvatar === "" ? null : assignUser.userAvatar,
+          userName:
+            assignUser.userFullName === "" ? null : assignUser.userFullName,
+        });
+      }
+    }
+  }, [assignUser]);
+
+  const openEditPopup = (taskId) => {
+    setIsShowEditPopup(true);
+    const queryObj = queryString.parse(history.location.search);
+    let params = {};
+    if (props.isOfTeam) {
+      params = {
+        isOfTeam: true,
+        ownerId: props.ownerId,
+        boardId: queryObj.b,
+        taskId: taskId,
+        userRequest: user.id,
+      };
+    } else {
+      params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryObj.b,
+        taskId: taskId,
+        userRequest: user.id,
+      };
+    }
+
+    taskApi
+      .getTaskByBoard({ params })
+      .then((res) => {
+        setModaTaskObj(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        history.push({
+          pathname: history.location.pathname,
+          search: history.location.search.substring(
+            0,
+            history.location.search.lastIndexOf("&")
+          ),
+        });
+        setIsShowEditPopup(false);
+
+        if (err.Message && err.Message.includes("Not found permission")) {
+          dispatch(setCurrentBoard(null));
         }
       });
-  }, [])
+  };
+
+  useEffect(() => {
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.t && isShowEditPopup) {
+      setIsShowEditPopup(false);
+    }
+
+    if (queryObj.t && queryObj.b && !isShowEditPopup) {
+      console.log(history.location.search);
+      console.log(isShowEditPopup);
+      openEditPopup(queryObj.t);
+      console.log("call api");
+      return;
+    }
+  }, [history.location.search]);
+
+  function applyFilter(obj) {
+    setFilter(obj);
+    setApplyingFilter(true);
+  }
+
+  function closeFilterModal() {
+    setShowFilterModal(false);
+  }
+
+  function removeFilter() {
+    setApplyingFilter(false);
+  }
+
+  function onEditModalClose() {
+    setIsShowEditPopup(false);
+    console.log("ok");
+
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search.substring(
+        0,
+        history.location.search.lastIndexOf("&")
+      ),
+    });
+  }
 
   return (
     <div className="my-tasks-container">
@@ -78,14 +240,22 @@ function MyTasks(props) {
           <AiOutlineLeft className="icon-goback" />
           <div className="label-text">Trở lại danh sách bảng công việc</div>
         </div>
-        <div className="other-actions">
-          <div className="lookup-input">
-            <CInput
-              type="text"
-              name="teamName"
-              placeholder="Tìm công việc..."
-            />
-            <BsSearch className="icon-search" />
+        {!notfound && <div className="other-actions">
+          <div
+            className={`filter-btn ${applyingFilter ? "" : "no-filtering"}`}
+          >
+            <div className="filter-content" onClick={openFilterModal}>
+              <BiFilterAlt className="icon-filter" />
+              Lọc công việc
+            </div>
+            <CTooltip content="Xóa bộ lọc" placement="top">
+              <div
+                className="remove-filter-btn"
+                onClick={() => setApplyingFilter(false)}
+              >
+                <CIcon name="cil-x" />
+              </div>
+            </CTooltip>
           </div>
           {showMode === 1 && (
             <div onClick={onCreateKBList} className="add-btn add-list-btn">
@@ -131,8 +301,17 @@ function MyTasks(props) {
               </CButton>
             </CTooltip>
           </CButtonGroup>
-        </div>
+        </div>}
       </div>
+
+      {applyingFilter && <FilteredTasks filter={filter} />}
+      <FilterTaskModal
+        show={showFilterModal}
+        applyFilter={applyFilter}
+        onClose={closeFilterModal}
+        removeFilter={removeFilter}
+        applyingFilter={applyingFilter}
+      />
 
       <CreateKBListModal
         boardId={props.boardId}
@@ -140,9 +319,16 @@ function MyTasks(props) {
         onClose={onClose}
       />
 
-      {showMode === 1 && <KanbanBoard isOfTeam={false} boardId={props.boardId} />}
-      {showMode === 2 && <TaskList isOfTeam={false} boardId={props.boardId} />}
-      {showMode === 3 && <GanttChart isOfTeam={false} boardId={props.boardId} />}
+      <TaskEditModal
+        isOfTeam={false}
+        closePopup={onEditModalClose}
+        isShowEditPopup={isShowEditPopup}
+        data={modalTaskObj}
+      />
+
+      {showMode === 1 && !applyingFilter && <KanbanBoard isOfTeam={false} boardId={props.boardId} />}
+      {showMode === 2 && !applyingFilter && <TaskList isOfTeam={false} boardId={props.boardId} />}
+      {showMode === 3 && !applyingFilter && <GanttChart isOfTeam={false} boardId={props.boardId} />}
     </div>
   );
 }

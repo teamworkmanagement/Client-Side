@@ -49,6 +49,10 @@ const teamApi = {
     leaveTeam(payload) {
         const url = '/participation';
         return axiosClient.delete(url, payload);
+    },
+    changeLeader(payload) {
+        const url = '/team/change-leader';
+        return axiosClient.post(url, payload);
     }
 };
 

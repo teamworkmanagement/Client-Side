@@ -34,6 +34,7 @@ import { changeStateChatListSidebar } from "src/appSlice";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import chatApi from "src/api/chatApi";
 import uuid from "src/utils/file/uuid";
+import { useParams } from "react-router-dom";
 
 ChatPage.propTypes = {};
 
@@ -77,10 +78,11 @@ function ChatPage(props) {
 
   }, [currentGroup]);
 
+  const { teamId } = useParams();
   useEffect(() => {
     const params = {
       userId: userId,
-      currentGroup: queryParams?.g ? queryParams.g : null,
+      currentGroup: queryParams?.g ? queryParams.g : teamId ? teamId : null,
     };
     dispatch(getGroupChatForUser({ params }));
     return function release() {
@@ -274,7 +276,7 @@ function ChatPage(props) {
     imgAvatarPickerRef.current.click()
   }
 
-  const onAddMembers = ()=>{
+  const onAddMembers = () => {
     setShowAddMembers(true);
   }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   CHeader,
@@ -35,12 +35,13 @@ import {
 } from "src/appSlice";
 import "./TheHeader.scss";
 import { BsSearch } from "react-icons/bs";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Breadcrumbs from "../MySharedComponents/Breadcrumbs/Breadcrumbs";
 import {
   HiOutlineChevronDoubleDown,
   HiOutlineChevronDoubleUp,
 } from "react-icons/hi";
+import teamApi from "src/api/teamApi";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,37 @@ const TheHeader = () => {
     dispatch(setDarkMode());
   };
 
+
+  const [team, setTeam] = useState({});
+  const [showBadge, setShowBadge] = useState(false);
+
+  useEffect(() => {
+    if (history.location.pathname.includes('/team/')) {
+      const arr = history.location.pathname.split('/');
+      const teamId = arr[2];
+
+      teamApi.getTeam(teamId)
+        .then(res => {
+          if (res.data) {
+            setTeam(res.data);
+            setShowBadge(true);
+          }
+          else {
+            setTeam({});
+            setShowBadge(false);
+          }
+        })
+        .catch(err => {
+          setTeam({});
+          setShowBadge(false);
+        });
+    }
+    else {
+      setTeam({});
+      setShowBadge(false);
+    }
+  }, [history.location.pathname]);
+
   function setCollapse(isCollapse) {
     dispatch(setCollapseHeader(isCollapse));
     console.log(collapseHeader ? "true" : "false");
@@ -108,14 +140,14 @@ const TheHeader = () => {
         <img alt="logo" src="../images/app/logoteam.png" />
       </CHeaderBrand>
       <CHeaderNav style={{ paddingRight: "0.5rem" }} className="">
-        <div className="lookup-input-header">
+        {/*<div className="lookup-input-header">
           <CInput
             className="input-field"
             placeholder="Tìm kiếm..."
             type="text"
           />
           <BsSearch className="icon-search" />
-        </div>
+  </div>*/}
 
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />
@@ -132,21 +164,20 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CSubheader
-        className={`px-3 justify-content-between ${
-          collapseHeader ? "collapsed" : "expand"
-        }`}
+        className={`px-3 justify-content-between ${collapseHeader ? "collapsed" : "expand"
+          }`}
       >
         <div className="sub-header-content">
           <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />
         </div>
         <div className="sub-info-header">
-          <div className="team-info-header">
+          {showBadge && <div className="team-info-header">
             <img
               alt=""
-              src="https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png"
+              src={team.teamImageUrl}
             />
-            <div className="team-name">Anh văn toeic 2</div>
-          </div>
+            <div className="team-name">{team.teamName}</div>
+          </div>}
           <CTooltip content="Thu gọn thanh tiêu đề">
             <div
               className="collapse-header-btn"

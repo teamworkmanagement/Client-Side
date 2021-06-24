@@ -445,7 +445,7 @@ function DashBoardPage(props) {
                       />
                     </td>
                     <td className="text-center">
-                      <AvatarList users={members} />
+                      <AvatarList teamId={team.teamId} />
                     </td>
                   </tr>
                 );
