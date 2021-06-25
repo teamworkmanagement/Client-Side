@@ -140,13 +140,13 @@ const TheHeader = () => {
           <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />
         </div>
         <div className="sub-info-header">
-          <div className="team-info-header">
+          {/* <div className="team-info-header">
             <img
               alt=""
               src="https://chengming.co.th/wp-content/uploads/2020/08/pwqsf11b8adbA3KaVQ7B-o.png"
             />
             <div className="team-name">Anh văn toeic 2</div>
-          </div>
+          </div> */}
           <CTooltip content="Thu gọn thanh tiêu đề">
             <div
               className="collapse-header-btn"
