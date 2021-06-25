@@ -36,6 +36,7 @@ import EditTeamDescriptionModal from "./EditTeamDescriptionModal/EditTeamDescrip
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { setIsSelected } from "src/features/ChatPage/chatSlice";
+import UserInfoModal from "src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal";
 
 TeamMembersList.propTypes = {};
 
@@ -80,6 +81,7 @@ function TeamMembersList(props) {
   const [loadingMembers, setLoadingMembers] = useState(false);
   const { teamId } = useParams();
   const [filterObj, setFilterObj] = useState(null);
+  const [showUserInfo, setShowUserInfo] = useState(false);
 
   const imgPickerRef = useRef(null);
 
@@ -371,6 +373,11 @@ function TeamMembersList(props) {
   }, [filterObj])
 
 
+  const [userId, setUserId] = useState(null);
+  const xemThongTin = (item) => {
+    setUserId(item.userId);
+    setShowUserInfo(true);
+  }
   return (
     <div className="team-members-container">
       {redirect ? <Redirect from="/team" to={redirect} /> : null}
@@ -534,6 +541,13 @@ function TeamMembersList(props) {
                               <CIcon name="cil-send" />
                               Nhắn tin
                             </CDropdownItem>
+                            <CDropdownItem
+                              className="last"
+                              onClick={() => xemThongTin(admin)}
+                            >
+                              <CIcon name="cil-info" />
+                              Xem thông tin
+                            </CDropdownItem>
                             {/*<CDropdownItem className="normal">
                               <CIcon name="cil-find-in-page" />
                               Trao quyền admin
@@ -637,6 +651,13 @@ function TeamMembersList(props) {
                                 <CIcon name="cil-send" />
                                 Nhắn tin
                               </CDropdownItem>
+                              <CDropdownItem
+                                className="normal"
+                                onClick={() => xemThongTin(item)}
+                              >
+                                <CIcon name="cil-info" />
+                                Xem thông tin
+                              </CDropdownItem>
                               {team.teamLeaderId == user.id && <CDropdownItem className="normal" onClick={() => changeLeader(item)}>
                                 <CIcon name="cil-find-in-page" />
                                 Trao quyền leader
@@ -689,6 +710,11 @@ function TeamMembersList(props) {
         fixedMembers={fixedMembers}
         onModalClose={onStartChatClose}
       />
+
+      <UserInfoModal
+        show={showUserInfo}
+        onModalClose={() => setShowUserInfo(false)}
+        userId={userId} />
     </div>
   );
 }

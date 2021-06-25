@@ -9,8 +9,8 @@ import { FaFacebook } from "react-icons/fa";
 import userApi from "src/api/userApi";
 import TaskInfoModal from "../TaskInfoModal/TaskInfoModal";
 import moment from "moment";
-//import "moment/locale/vi";
-//moment.locale("vi");
+import "moment/locale/vi";
+moment.locale("vi");
 
 TaskHistoryModal.propTypes = {};
 
