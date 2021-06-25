@@ -61,13 +61,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-        .deleteReactPost({ params })
-        .then((res) => { })
-        .catch((err) => { })
+          .deleteReactPost({ params })
+          .then((res) => {})
+          .catch((err) => {})
       : postApi
-        .reactPost(params)
-        .then((res) => { })
-        .catch((err) => { });
+          .reactPost(params)
+          .then((res) => {})
+          .catch((err) => {});
 
     setPost({
       ...post,
@@ -109,7 +109,7 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
@@ -200,7 +200,7 @@ function Post(props) {
 
         setComments(newArrr);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -255,7 +255,7 @@ function Post(props) {
   };
 
   return (
-    <div className="post-container">
+    <div className="post-container" style={{ zIndex: props.index }}>
       <div className="post-header">
         <div className="post-infor">
           <div className="poster-avatar">
@@ -267,14 +267,15 @@ function Post(props) {
             />
           </div>
           <div className="poster-infor">
-            <div className="name-and-group" onClick={() => navigateToTeam(post)}>
+            <div
+              className="name-and-group"
+              onClick={() => navigateToTeam(post)}
+            >
               <strong>
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
               {!props.isInTeam && `đã đăng trong nhóm `}
-              {!props.isInTeam && (
-                <strong >{post.teamName}</strong>
-              )}
+              {!props.isInTeam && <strong>{post.teamName}</strong>}
             </div>
             <div className="post-date">
               {moment(post.postCreatedAt).format("HH:MM, DD/MM/YYYY")}

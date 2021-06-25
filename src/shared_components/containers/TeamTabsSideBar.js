@@ -19,6 +19,7 @@ import { GrGroup } from "react-icons/gr";
 const TeamTabsSideBar = (props) => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.app.teamTabsSidebarShow);
+  const activeTab = useSelector((state) => state.team.activeTab);
 
   const onChange = (val) => {
     const param = { type: "teamtabssidebar", teamTabsSidebarShow: val };
@@ -42,38 +43,56 @@ const TeamTabsSideBar = (props) => {
       onShowChange={onChange}
     >
       <CSidebarNav>
-        <CNavItem onClick={() => onClick(0)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => onClick(0)}
+          className={`nav-tab-item ${activeTab === 0 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
             <GrGroup className="icon-group" />
             <div className="tab-name">Thông tin nhóm</div>
           </CNavLink>
         </CNavItem>
-        <CNavItem onClick={() => onClick(1)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => onClick(1)}
+          className={`nav-tab-item ${activeTab === 1 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
             <CIcon className="nav-link-icon" name="cil-newspaper" />
             <div className="tab-name">Bản tin nhóm</div>
           </CNavLink>
         </CNavItem>
-        <CNavItem onClick={() => onClick(2)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => onClick(2)}
+          className={`nav-tab-item ${activeTab === 2 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
             <CIcon className="nav-link-icon" name="cil-storage" />
             <div className="tab-name">Công việc</div>
           </CNavLink>
         </CNavItem>
-        <CNavItem onClick={() => onClick(3)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => onClick(3)}
+          className={`nav-tab-item ${activeTab === 3 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
             <CIcon className="nav-link-icon" name="cil-send" />
             <div className="tab-name">Tin nhắn nhóm</div>
           </CNavLink>
         </CNavItem>
-        <CNavItem onClick={() => onClick(4)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => onClick(4)}
+          className={`nav-tab-item ${activeTab === 4 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
             <CIcon className="nav-link-icon" name="cil-description" />
             <div className="tab-name">Tài liệu</div>
           </CNavLink>
         </CNavItem>
 
-        <CNavItem onClick={() => onClick(5)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => onClick(5)}
+          className={`nav-tab-item ${activeTab === 5 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
             <CIcon className="nav-link-icon" name="cil-chart-line" />
             <div className="tab-name">Thống kê</div>

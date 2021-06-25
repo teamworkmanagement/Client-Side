@@ -613,7 +613,7 @@ $baseTransition: all 0.3s;
                 tr {
                     //@include MemberAppear;
                     background-color: white;
-               
+
                     &:hover {
                         background-color: #fafafb;
                     }
@@ -677,6 +677,12 @@ $baseTransition: all 0.3s;
                             margin-left: -0.5rem !important;
                         }
                     }
+                }
+                .icon-exchange {
+                    width: 1.1rem !important;
+                    height: 1.1rem !important;
+                    margin-left: -0.15rem;
+                    margin-right: 0.3rem !important;
                 }
             }
             // .member-actions-dropdown {
