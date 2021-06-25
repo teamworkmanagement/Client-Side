@@ -221,7 +221,7 @@ function TaskEditModal(props) {
     if (kanbanLists.length == 0) return;
     var cloneLists = [...kanbanLists];
 
-    console.log(cloneLists);
+    //console.log(cloneLists);
     for (let i = 0; i < cloneLists.length; i++) {
       cloneLists[i] = {
         ...cloneLists[i],

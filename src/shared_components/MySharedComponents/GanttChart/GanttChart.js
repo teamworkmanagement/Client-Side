@@ -97,15 +97,25 @@ function GanttChart(props) {
         });
       }
     }
-    console.log(ganttTasks);
     return ganttTasks;
   }
 
-  useEffect(() => {   
-      setData({
-        data: refactorTasksForGantt()
-      })
+  useEffect(() => {
+    const newData = refactorTasksForGantt();
+    setData({
+      data: newData
+    })
+
+
   }, [addNewTask, removeTask, removeList])
+
+
+  /*useEffect(() => {
+    if (data) {
+      console.log('task là: ', data);
+      gantt.parse({ data: data });
+    }
+  }, [data])*/
   function calculateDaysDistance(dateAfter, dateBefore) {
     //const before=new Date(dateBefore);
     //const after=new Date(dateAfter);
@@ -207,6 +217,8 @@ function GanttChart(props) {
   };
 
   useEffect(() => {
+    const myData = { data: refactorTasksForGantt() }
+    gantt.clearAll();
     gantt.config.scale_height = 54;
     gantt.config.date_format = "%Y-%m-%d %H:%i";
     gantt.config.row_height = 55;
@@ -292,7 +304,8 @@ function GanttChart(props) {
 
     gantt.init(input.current);
 
-    gantt.parse(data);
+    gantt.parse(myData);
+    //console.log(data);
 
     gantt.attachEvent("onAfterTaskAdd", function (id, item) {
       //any custom logic here
@@ -353,7 +366,7 @@ function GanttChart(props) {
         .then((res) => { })
         .catch((err) => { });
     });
-  }, []);
+  }, [addNewTask, removeTask, removeList]);
 
   const openEditPoup = async (taskId, task) => {
     history.push({
@@ -387,8 +400,6 @@ function GanttChart(props) {
   const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
   useEffect(() => {
     console.log(assignUser);
-
-
 
     if (assignUser && tasks.find(t => t.taskId == assignUser.taskId)) {
       gantt.getTask(assignUser.taskId).userId = assignUser.userId;
