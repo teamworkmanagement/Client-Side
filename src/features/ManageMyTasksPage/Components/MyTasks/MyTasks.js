@@ -21,6 +21,7 @@ import queryString from "query-string";
 import taskApi from "src/api/taskApi";
 import { BiFilterAlt } from "react-icons/bi";
 import FilteredTasks from "src/features/TeamPage/Components/TeamTasks/Components/FilteredTasks/FilteredTasks";
+import CreateCardModal from "src/features/KanbanBoard/Components/KanbanList/Components/CreateCardModal/CreateCardModal";
 
 MyTasks.propTypes = {};
 
@@ -33,6 +34,8 @@ function MyTasks(props) {
   const [filter, setFilter] = useState(null);
   const [modalTaskObj, setModaTaskObj] = useState(null);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
+
+  const [showAddCard, setShowAddCard] = useState(false);
 
   const user = useSelector(state => state.auth.currentUser);
   const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
@@ -233,6 +236,11 @@ function MyTasks(props) {
     });
   }
 
+  const onCreateCard = () => {
+    console.log('default list');
+    setShowAddCard(true);
+  }
+
   return (
     <div className="my-tasks-container">
       <div className="tasks-header">
@@ -264,7 +272,7 @@ function MyTasks(props) {
             </div>
           )}
           {(showMode === 2 || showMode === 3) && (
-            <div className="add-btn add-task-btn">
+            <div className="add-btn add-task-btn" onClick={onCreateCard}>
               <CIcon name="cil-plus" />
               Tạo công việc
             </div>
@@ -325,6 +333,11 @@ function MyTasks(props) {
         isShowEditPopup={isShowEditPopup}
         data={modalTaskObj}
       />
+
+      <CreateCardModal
+        showAddCard={showAddCard}
+        setShowAddCard={setShowAddCard}
+        defaultList={true} />
 
       {showMode === 1 && !applyingFilter && <KanbanBoard isOfTeam={false} boardId={props.boardId} />}
       {showMode === 2 && !applyingFilter && <TaskList isOfTeam={false} boardId={props.boardId} />}

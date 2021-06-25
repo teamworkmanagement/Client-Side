@@ -32,6 +32,7 @@ function TeamTasks(props) {
   const [filter, setFilter] = useState(null);
   const [modalTaskObj, setModaTaskObj] = useState(null);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
+  const [showAddCard, setShowAddCard] = useState(false);
 
   const user = useSelector(state => state.auth.currentUser);
   const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
@@ -41,7 +42,6 @@ function TeamTasks(props) {
   const [showAddKBList, setShowAddKBList] = useState(false);
   const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
 
-  const [showAddCard, setShowAddCard] = useState(false);
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -145,7 +145,7 @@ function TeamTasks(props) {
             </div>
           )}
           {(showMode === 2 || showMode === 3) && (
-            <div className="add-btn add-task-btn">
+            <div className="add-btn add-task-btn" onClick={onCreateCard}>
               <CIcon name="cil-plus" />
               Tạo công việc
             </div>
@@ -196,6 +196,11 @@ function TeamTasks(props) {
       {showMode === 1 && !applyingFilter && <KanbanBoard ownerId={queryO.gr} isOfTeam={true} boardId={props.boardId} />}
       {showMode === 2 && !applyingFilter && <TaskList ownerId={queryO.gr} boardId={props.boardId} isOfTeam={true} />}
       {showMode === 3 && !applyingFilter && <GanttChart ownerId={queryO.gr} boardId={props.boardId} isOfTeam={true} />}
+
+      <CreateCardModal
+        showAddCard={showAddCard}
+        setShowAddCard={setShowAddCard}
+        defaultList={true} />
     </>
   }
 
@@ -314,6 +319,11 @@ function TeamTasks(props) {
     });
   }
 
+  const onCreateCard = () => {
+    console.log('default list');
+    setShowAddCard(true);
+  }
+
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t && isShowEditPopup) {
@@ -353,10 +363,6 @@ function TeamTasks(props) {
         isShowEditPopup={isShowEditPopup}
         data={modalTaskObj}
       />
-
-      <CreateCardModal
-        showAddCard={showAddCard}
-        setShowAddCard={setShowAddCard} />
     </div>
   );
 }
