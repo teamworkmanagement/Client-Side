@@ -21,6 +21,7 @@ import FilteredTasks from "./Components/FilteredTasks/FilteredTasks";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import queryString from "query-string";
 import taskApi from "src/api/taskApi";
+import CreateCardModal from "src/features/KanbanBoard/Components/KanbanList/Components/CreateCardModal/CreateCardModal";
 
 TeamTasks.propTypes = {};
 
@@ -34,7 +35,8 @@ function TeamTasks(props) {
   const [modalTaskObj, setModaTaskObj] = useState(null);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
   const [notfound, setNotFound] = useState(false);
-  
+  const [showAddCard, setShowAddCard] = useState(false);
+
   const user = useSelector(state => state.auth.currentUser);
   const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
   const assignUser = useSelector((state) => state.kanban.signalrData.reAssignUser);
@@ -82,7 +84,7 @@ function TeamTasks(props) {
     setNotFound(value);
   };
 
-  
+
   useEffect(() => {
     const pathname = history.location.pathname.split("/");
     const params = {
@@ -240,6 +242,11 @@ function TeamTasks(props) {
     }
   }, [history.location.search]);
 
+  const onCreateCard = () => {
+    console.log('default list');
+    setShowAddCard(true);
+  }
+
   const renderNormal = () => {
     return (
       <>
@@ -273,7 +280,7 @@ function TeamTasks(props) {
               </div>
             )}
             {(showMode === 2 || showMode === 3) && (
-              <div className="add-btn add-task-btn">
+              <div className="add-btn add-task-btn" onClick={onCreateCard}>
                 <CIcon name="cil-plus" />
                 Tạo công việc
               </div>
@@ -353,6 +360,12 @@ function TeamTasks(props) {
           isShowEditPopup={isShowEditPopup}
           data={modalTaskObj}
         />
+
+        <CreateCardModal
+          showAddCard={showAddCard}
+          setShowAddCard={setShowAddCard}
+          defaultList={true} />
+          
       </>
     );
   };

@@ -21,6 +21,7 @@ import FilteredTasks from "src/features/TeamPage/Components/TeamTasks/Components
 import taskApi from "src/api/taskApi";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
+import CreateCardModal from "src/features/KanbanBoard/Components/KanbanList/Components/CreateCardModal/CreateCardModal";
 
 TeamTasks.propTypes = {};
 
@@ -40,6 +41,7 @@ function TeamTasks(props) {
   const [showAddKBList, setShowAddKBList] = useState(false);
   const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
 
+  const [showAddCard, setShowAddCard] = useState(false);
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -332,12 +334,12 @@ function TeamTasks(props) {
       {notfound ? <NotFoundPage /> : renderNormal()}
 
       <FilterTaskModal
-          show={showFilterModal}
-          applyFilter={applyFilter}
-          onClose={closeFilterModal}
-          removeFilter={removeFilter}
-          applyingFilter={applyingFilter}
-        />
+        show={showFilterModal}
+        applyFilter={applyFilter}
+        onClose={closeFilterModal}
+        removeFilter={removeFilter}
+        applyingFilter={applyingFilter}
+      />
 
       <CreateKBListModal
         boardId={props.boardId}
@@ -346,11 +348,15 @@ function TeamTasks(props) {
       />
 
       <TaskEditModal
-          isOfTeam={true}
-          closePopup={onEditModalClose}
-          isShowEditPopup={isShowEditPopup}
-          data={modalTaskObj}
-        />
+        isOfTeam={true}
+        closePopup={onEditModalClose}
+        isShowEditPopup={isShowEditPopup}
+        data={modalTaskObj}
+      />
+
+      <CreateCardModal
+        showAddCard={showAddCard}
+        setShowAddCard={setShowAddCard} />
     </div>
   );
 }

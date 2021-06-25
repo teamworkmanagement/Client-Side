@@ -450,7 +450,6 @@ function KanbanBoard(props) {
             <div className="noti-infor">
               Chưa có danh sách công việc nào trong bảng này
             </div>
-            <div className="create-btn">Tạo danh sách mới</div>
           </div>
         )}
       </>
