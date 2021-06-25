@@ -62,10 +62,6 @@ function NewLogin(props) {
               </div>
             </div>
             <div className="sub-actions">
-              <div className="remember-account">
-                <CInputCheckbox id="checkbox1" name="checkbox1" />
-                Ghi nhớ tài khoản
-              </div>
               <div className="forgot-password">Quên mật khẩu?</div>
             </div>
             <div className="btn-login">Đăng nhập</div>

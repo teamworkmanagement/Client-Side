@@ -34,10 +34,10 @@ function GanttChart(props) {
     });
   });
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!props.boardId) return;
     dispatch(getBoardDataForUI(props.boardId));
-  }, [props.boardId]);
+  }, [props.boardId]);*/
 
   var initData = {
     data: refactorTasksForGantt(),
@@ -49,6 +49,10 @@ function GanttChart(props) {
   var dataBackup = refactorTasksForGantt();
   var durationDate = 0; //số ngày của task, tính từ start_date
   var isMoving = false; //flag cho trạng thái moving
+
+  const addNewTask = useSelector(state => state.kanban.signalrData.addNewTask);
+  const removeTask = useSelector(state => state.kanban.signalrData.removeTask);
+  const removeList = useSelector(state => state.kanban.signalrData.removeList);
 
   function refactorTasksForGantt() {
     var ganttTasks = [];
@@ -97,6 +101,11 @@ function GanttChart(props) {
     return ganttTasks;
   }
 
+  useEffect(() => {   
+      setData({
+        data: refactorTasksForGantt()
+      })
+  }, [addNewTask, removeTask, removeList])
   function calculateDaysDistance(dateAfter, dateBefore) {
     //const before=new Date(dateBefore);
     //const after=new Date(dateAfter);
@@ -341,74 +350,18 @@ function GanttChart(props) {
           taskImageUrl: newTaskData.taskImageUrl,
           userActionId: user.id,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     });
   }, []);
 
   const openEditPoup = async (taskId, task) => {
-    setModalTask(null);
-    setIsShowEditPopup(true);
-
     history.push({
       pathname: history.location.pathname,
       search: history.location.search + `&t=${taskId}`,
     });
-
-    const queryObj = queryString.parse(history.location.search);
-
-    let params = {};
-    if (props.isOfTeam) {
-      params = {
-        isOfTeam: true,
-        ownerId: props.ownerId,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    } else {
-      params = {
-        isOfTeam: false,
-        ownerId: user.id,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    }
-
-    taskApi
-      .getTaskByBoard({ params })
-      .then((res) => {
-        setModalTask({
-          ...res.data,
-          filesCount: task.filesCount,
-          commentsCount: task.commentsCount,
-        });
-        console.log(res.data);
-      })
-      .catch((err) => {
-        history.push({
-          pathname: history.location.pathname,
-          search: history.location.search.substring(
-            0,
-            history.location.search.lastIndexOf("&")
-          ),
-        });
-        setIsShowEditPopup(false);
-      });
   };
 
-  function closeForm() {
-    gantt.hideLightbox();
-
-    history.push({
-      pathname: history.location.pathname,
-      search: history.location.search.substring(
-        0,
-        history.location.search.lastIndexOf("&")
-      ),
-    });
-  }
 
   function updateGanttTask(task) {
     console.log("update gantt task", task);
@@ -430,6 +383,23 @@ function GanttChart(props) {
   const updateTask = useSelector(
     (state) => state.kanban.signalrData.updateTask
   );
+
+  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
+  useEffect(() => {
+    console.log(assignUser);
+
+
+
+    if (assignUser && tasks.find(t => t.taskId == assignUser.taskId)) {
+      gantt.getTask(assignUser.taskId).userId = assignUser.userId;
+      gantt.getTask(assignUser.taskId).userAvatar = assignUser.userAvatar;
+      gantt.getTask(assignUser.taskId).userFullName = assignUser.userFullName;
+
+      gantt.updateTask(assignUser.taskId); //renders the updated task
+    }
+
+  }, [assignUser]);
+
 
   useEffect(() => {
     console.log("realtime", updateTask);
@@ -460,13 +430,6 @@ function GanttChart(props) {
           <div className="create-btn">Tạo công việc mới</div>
         </div>
       )}
-      <TaskEditModal
-        isOfTeam={props.isOfTeam}
-        closePopup={closeForm}
-        isShowEditPopup={isShowEditPopup}
-        data={modalTask}
-        updateGanttTask={updateGanttTask}
-      />
     </div>
   );
 }

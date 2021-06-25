@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./FilteredTasks.scss";
 import { CDataTable, CTooltip } from "@coreui/react";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import AvatarComponent from "src/shared_components/MySharedComponents/AvatarComponent/AvatarComponent";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 FilteredTasks.propTypes = {};
 
@@ -59,6 +61,41 @@ function FilteredTasks(props) {
     { key: "assigned", label: "Thành viên đảm nhận", _style: { width: "25%" } },
   ];
 
+  const [tasksFilter, setTasksFilter] = useState([]);
+  const kanbanLists = useSelector(
+    (state) => state.kanban.kanbanBoard.kanbanLists
+  );
+  const tasks = [];
+  kanbanLists.map((kl) => {
+    kl.taskUIKanbans.map((task) => {
+      tasks.push(task);
+    });
+  });
+
+  useEffect(() => {
+    if (props.filter) {
+      let mytasks = tasks;
+      console.log('filter laf: ', props.filter);
+      console.log('danh sach task la: ', tasks);
+      if (props.filter.taskDescription) {
+        mytasks = mytasks.filter(t => t.taskDescription.includes(props.filter.taskDescription));
+      }
+
+      if (props.filter.taskStatus) {
+        mytasks = mytasks.filter(t => t.taskStatus == props.filter.taskStatus);
+      }
+
+      if (props.filter.taskName) {
+        mytasks = mytasks.filter(t => t.taskName.includes(props.filter.taskName));
+      }
+
+      if (props.filter.userId) {
+        mytasks = mytasks.filter(t => t.userId == props.filter.userId);
+      }
+
+      setTasksFilter(mytasks);
+    }
+  }, [props.filter])
   function NoItemView() {
     return (
       <div className="no-task-view-table">
@@ -69,7 +106,6 @@ function FilteredTasks(props) {
           </div>
 
           <div className="noti-infor">Chưa có công việc nào trong bảng này</div>
-          <div className="create-btn">Tạo công việc mới</div>
         </div>
       </div>
     );
@@ -113,10 +149,20 @@ function FilteredTasks(props) {
     }
   }
 
+  const history = useHistory();
+  const onRowClick = (e) => {
+    console.log('click: ');
+    console.log(history.location.pathname);
+    console.log(history.location.search);
+    history.push({
+      pathname: history.location.pathname,
+      search: history.location.search + e.link
+    })
+  }
   return (
     <div className="filtered-tasks-container">
       <CDataTable
-        items={filterTasks}
+        items={tasksFilter}
         fields={fields}
         //columnFilter
         //tableFilter
@@ -125,6 +171,10 @@ function FilteredTasks(props) {
         pagination
         itemsPerPage={5}
         hover
+        onRowClick={onRowClick}
+        style={{
+          cursor: "pointer"
+        }}
         //sorter
         scopedSlots={{
           info: (task) => {
@@ -153,11 +203,11 @@ function FilteredTasks(props) {
           assigned: (task) => {
             return (
               <td className="assigned-td">
-                {!(task.taskUserId === "" || !task.taskUserId) && (
+                {!(task.userId === "" || !task.userId) && (
                   <AvatarComponent
-                    userName={task.taskUserName}
-                    userImage={task.taskUserAvatar}
-                    userId={task.taskUserId}
+                    userName={task.userFullName}
+                    userImage={task.userAvatar}
+                    userId={task.userId}
                     disable={true}
                   />
                 )}

@@ -613,7 +613,7 @@ $baseTransition: all 0.3s;
                 tr {
                     //@include MemberAppear;
                     background-color: white;
-                    cursor: pointer;
+               
                     &:hover {
                         background-color: #fafafb;
                     }

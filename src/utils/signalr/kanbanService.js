@@ -1,7 +1,10 @@
 import { setupSignalRConnection, startSignalRConnection } from "./signalrConfig";
 import store from '../../app/store';
-import { reAssignUser, signalRAddNewList, signalRAddNewTask, signalRChangeNameList, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
+
+import { reAssignUser, signalRAddFile, signalRAddNewList, signalRAddNewTask, signalRChangeNameList, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
+
 import {SIGNALR_URL} from "../../env";
+
 
 
 
@@ -57,8 +60,15 @@ connection.on("RenameList", payload => {
     store.dispatch(signalRChangeNameList(payload));
 })
 
+connection.on("AddFile", payload => {
+    console.log("Add file: ", payload);
+    store.dispatch(signalRAddFile(payload));
+})
+
 export const startKanbanService = () => {
-    startSignalRConnection(connection);
+    if (connection.state == 'Disconnected') {
+        startSignalRConnection(connection);
+    }
 }
 
 

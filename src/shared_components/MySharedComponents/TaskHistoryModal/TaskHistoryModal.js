@@ -192,8 +192,8 @@ function TaskHistoryModal(props) {
       new Date(taskBefore.taskVersionTaskDeadline).toDateString() !== new Date(taskAfter.taskVersionTaskDeadline).toDateString()
     ) {
       changedField = "Hạn hoàn thành";
-      contentBefore = formatInfo(moment(taskBefore.taskVersionTaskDeadline).format("DD/MM/YYYY, HH:mm:ss"));
-      contentAfter = formatInfo(moment(taskAfter.taskVersionTaskDeadline).format("DD/MM/YYYY, HH:mm:ss"));
+      contentBefore = formatInfo(moment(taskBefore.taskVersionTaskDeadline).format("DD/MM/YYYY"));
+      contentAfter = formatInfo(moment(taskAfter.taskVersionTaskDeadline).format("DD/MM/YYYY"));
     }
     if (taskBefore.taskVersionTaskStatus !== taskAfter.taskVersionTaskStatus) {
       changedField = "Trạng thái công việc";

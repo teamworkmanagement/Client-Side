@@ -143,8 +143,8 @@ function KanbanBoard(props) {
           boardId: currentBoard,
           connectionId: connection.connectionId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     } else {
       if (destination.index === 0) {
         pos = FindPreRank(cloneKbLists[0].kanbanListRankInBoard);
@@ -181,8 +181,8 @@ function KanbanBoard(props) {
           kanbanListId: draggableId,
           connectionId: connection.connectionId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     }
   }
 
@@ -205,7 +205,7 @@ function KanbanBoard(props) {
   );
   const user = useSelector((state) => state.auth.currentUser);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("realtime", updateTask);
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
@@ -236,9 +236,9 @@ function KanbanBoard(props) {
         .then((res) => {
           setModaTaskObj(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
-  }, [updateTask]);
+  }, [updateTask]);*/
 
   const assignUser = useSelector(
     (state) => state.kanban.signalrData.reAssignUser
@@ -277,7 +277,7 @@ function KanbanBoard(props) {
     }
   }, [assignUser])*/
 
-  useEffect(() => {
+  /***useEffect(() => {
     console.log(assignUser);
     const queryObj = queryString.parse(history.location.search);
 
@@ -293,12 +293,14 @@ function KanbanBoard(props) {
           userId: assignUser.userId === "" ? null : assignUser.userId,
           userAvatar:
             assignUser.userAvatar === "" ? null : assignUser.userAvatar,
+          userName:
+            assignUser.userFullName === "" ? null : assignUser.userFullName,
         });
       }
     }
-  }, [assignUser]);
+  }, [assignUser]);***/
 
-  useEffect(() => {
+  /*useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t && isShowEditPopup) {
       setIsShowEditPopup(false);
@@ -311,7 +313,7 @@ function KanbanBoard(props) {
       console.log("call api");
       return;
     }
-  }, [history.location.search]);
+  }, [history.location.search]);*/
 
   const openEditPopup = (taskId) => {
     setIsShowEditPopup(true);
@@ -473,12 +475,6 @@ function KanbanBoard(props) {
       {isLoading ? <Loading /> : renderNormal()}
 
       {!currentBoard && !isLoading && <NotFoundPage />}
-      <TaskEditModal
-        isOfTeam={props.isOfTeam}
-        closePopup={onEditModalClose}
-        isShowEditPopup={isShowEditPopup}
-        data={modalTaskObj}
-      />
     </div>
   );
 }

@@ -170,7 +170,7 @@ function TeamPage(props) {
         .getAdmin(teamId)
         .then((res) => {})
         .catch((err) => {
-          if (err.data?.ErrorCode === "404") setNotfound(true);
+          if (err.ErrorCode === "404") setNotfound(true);
         });
     }
   }, [teamId]);

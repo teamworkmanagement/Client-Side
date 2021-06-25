@@ -26,6 +26,7 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { IoIosArrowBack } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
+import { validateEmail } from "src/utils/common";
 
 const ForgotPassword = () => {
   const history = useHistory();
@@ -36,6 +37,16 @@ const ForgotPassword = () => {
   const [resetObj, setResetObj] = useState({});
 
   function SendCode() {
+    if (!validateEmail(email)) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Email không hợp lệ"
+        />
+      )
+      return;
+    }
     authApi.forgotPassword({
       email
     }).then(res => {
@@ -51,8 +62,7 @@ const ForgotPassword = () => {
             title="Lỗi"
             message="Email không tồn tại trong hệ thống"
           />
-        )
-
+        );
     })
   }
   function GoBackSendCode() {

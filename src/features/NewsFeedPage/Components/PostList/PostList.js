@@ -150,7 +150,6 @@ function PostList(props) {
           <div className="noti-infor">
             Chưa có bài viết nào trong các nhóm của bạn
           </div>
-          <div className="create-post-btn">Tạo bài viết mới</div>
         </div>
       ) : (
         renderListPost
