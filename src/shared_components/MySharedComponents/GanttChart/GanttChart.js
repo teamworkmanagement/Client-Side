@@ -53,6 +53,8 @@ function GanttChart(props) {
   const addNewTask = useSelector(state => state.kanban.signalrData.addNewTask);
   const removeTask = useSelector(state => state.kanban.signalrData.removeTask);
   const removeList = useSelector(state => state.kanban.signalrData.removeList);
+  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
 
   function refactorTasksForGantt() {
     var ganttTasks = [];
@@ -218,6 +220,7 @@ function GanttChart(props) {
 
   useEffect(() => {
     const myData = { data: refactorTasksForGantt() }
+    console.log('zzzzzzz: ', myData);
     gantt.clearAll();
     gantt.config.scale_height = 54;
     gantt.config.date_format = "%Y-%m-%d %H:%i";
@@ -366,7 +369,7 @@ function GanttChart(props) {
         .then((res) => { })
         .catch((err) => { });
     });
-  }, [addNewTask, removeTask, removeList]);
+  }, [addNewTask, removeTask, removeList, updateTask, assignUser]);
 
   const openEditPoup = async (taskId, task) => {
     history.push({
@@ -376,7 +379,7 @@ function GanttChart(props) {
   };
 
 
-  function updateGanttTask(task) {
+  /*function updateGanttTask(task) {
     console.log("update gantt task", task);
 
     //changes task's data
@@ -393,11 +396,6 @@ function GanttChart(props) {
     gantt.updateTask(task.taskId); //renders the updated task
   }
 
-  const updateTask = useSelector(
-    (state) => state.kanban.signalrData.updateTask
-  );
-
-  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
   useEffect(() => {
     console.log(assignUser);
 
@@ -422,7 +420,7 @@ function GanttChart(props) {
       taskClone.realtime = true;
       updateGanttTask(taskClone);
     }
-  }, [updateTask]);
+  }, [updateTask]);*/
 
   return (
     <div className="gantt-container">
