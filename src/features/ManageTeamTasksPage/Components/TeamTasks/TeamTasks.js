@@ -212,24 +212,14 @@ function TeamTasks(props) {
     if (updateTask && updateTask.taskId === queryObj.t) {
       console.log("realtime");
 
-      let params = {};
-      if (props.isOfTeam) {
-        params = {
-          isOfTeam: true,
-          ownerId: props.ownerId,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      } else {
-        params = {
-          isOfTeam: false,
-          ownerId: user.id,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      }
+      const params = {
+        isOfTeam: true,
+        ownerId: queryObj.gr,
+        boardId: queryObj.b,
+        taskId: updateTask.taskId,
+        userRequest: user.id,
+      };
+
       taskApi
         .getTaskByBoard({ params })
         .then((res) => {
@@ -265,24 +255,14 @@ function TeamTasks(props) {
   const openEditPopup = (taskId) => {
     setIsShowEditPopup(true);
     const queryObj = queryString.parse(history.location.search);
-    let params = {};
-    if (props.isOfTeam) {
-      params = {
-        isOfTeam: true,
-        ownerId: props.ownerId,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    } else {
-      params = {
-        isOfTeam: false,
-        ownerId: user.id,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    }
+
+    const params = {
+      isOfTeam: true,
+      ownerId: queryObj.gr,
+      boardId: queryObj.b,
+      taskId: taskId,
+      userRequest: user.id,
+    };
 
     taskApi
       .getTaskByBoard({ params })
