@@ -66,6 +66,7 @@ function PostEditor(props) {
                 })
                 console.log(myDatas);
                 setMentions(myDatas);
+                setSuggestions(myDatas);
             }).catch(err => {
 
             })
