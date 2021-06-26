@@ -46,11 +46,16 @@ function UserInfoModal(props) {
           console.log(res.data);
           setUser(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [props.userId]);
 
-  console.log(user);
+  useEffect(() => {
+    if (props.userInfo) {
+      setUser(props.userInfo);
+    }
+  }, [props.userInfo])
+
   return (
     <CModal
       className="user-info-modal"

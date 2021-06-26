@@ -203,10 +203,14 @@ function NewsFeedPage(props) {
             entity.offset,
             entity.offset + entity.length
           );
+
+          let indexData = entity.key;
+          const userTagId = entityMap[indexData].data.mention.id;
+
           block.text = block.text.replaceBetween(
             entity.offset,
             entity.offset + entity.length,
-            `<strong>@${nameTag}</strong>`
+            `<@tag>${userTagId}<@tag>`
           );
           console.log(block.text);
         });

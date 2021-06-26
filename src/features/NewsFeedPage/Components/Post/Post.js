@@ -21,6 +21,7 @@ import CustomInput from "../CustomInput/CustomInput";
 import { convertToRaw } from "draft-js";
 import GridImages from "./Components/GridImages/GridImages";
 import { useHistory } from "react-router-dom";
+import Tag from "./Components/Tag/Tag";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -119,6 +120,18 @@ function Post(props) {
     return this.substring(0, start) + what + this.substring(end);
   };
 
+  const mapStringToJsx = (str) => {
+    const myArr = str.split('<@tag>');
+    return myArr.map((ele, index) => {
+      if (index % 2 === 0) {
+        return <div dangerouslySetInnerHTML={{ __html: ele }}></div>
+      }
+      else {
+        return <Tag userId={ele} />
+      }
+
+    })
+  }
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
@@ -148,10 +161,14 @@ function Post(props) {
             entity.offset,
             entity.offset + entity.length
           );
+
+          let indexData = entity.key;
+          const userTagId = entityMap[indexData].data.mention.id;
+          
           block.text = block.text.replaceBetween(
             entity.offset,
             entity.offset + entity.length,
-            `<strong>@${nameTag}</strong>`
+            `<@tag>${userTagId}<@tag>`
           );
           console.log(block.text);
         });
@@ -168,6 +185,8 @@ function Post(props) {
     }
 
     console.log(value);
+
+    //return;
     commentApi
       .addComment({
         commentPostId: post.postId,
@@ -254,6 +273,7 @@ function Post(props) {
     history.push(`/team/${post.postTeamId}`);
   };
 
+
   return (
     <div className="post-container">
       <div className="post-header">
@@ -312,9 +332,8 @@ function Post(props) {
               </div>*/}
       </div>
       <div
-        className="post-content"
-        dangerouslySetInnerHTML={{ __html: post.postContent }}
-      ></div>
+        className="post-content">
+        {mapStringToJsx(post.postContent)}</div>
       <div className="post-images-list-container">
         <GridImages countFrom={5} images={post.postImages} />
       </div>
