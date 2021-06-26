@@ -4,6 +4,7 @@ import "./CommentItem.scss";
 import moment from "moment";
 import 'moment/locale/vi';
 import Tag from "../Tag/Tag";
+import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
 
 moment.locale('vi');
 
@@ -25,7 +26,13 @@ function CommentItem({ comment }) {
   return (
     <div className="comment-item-container">
       <div className="commenter-avatar">
-        <img alt="" src={comment.userAvatar} />
+        {/*<img alt="" src={comment.userAvatar} />*/}
+        <AvatarImage
+          userName={comment.userName}
+          userImage={comment.userAvatar}
+          userId={comment.commentUserId}
+          disable={false}
+        />
       </div>
       <div className="comment-infor">
         <div className="comment-header">
