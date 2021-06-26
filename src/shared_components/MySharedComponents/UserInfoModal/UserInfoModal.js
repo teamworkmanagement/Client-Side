@@ -7,6 +7,9 @@ import { HiOutlineHome, HiOutlineMail } from "react-icons/hi";
 import { AiFillGithub } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
 import userApi from "src/api/userApi";
+import moment from "moment";
+import "moment/locale/vi";
+moment.locale("vi");
 
 UserInfoModal.propTypes = {};
 
@@ -43,11 +46,16 @@ function UserInfoModal(props) {
           console.log(res.data);
           setUser(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [props.userId]);
 
-  console.log(user);
+  useEffect(() => {
+    if (props.userInfo) {
+      setUser(props.userInfo);
+    }
+  }, [props.userInfo])
+
   return (
     <CModal
       className="user-info-modal"
@@ -71,7 +79,7 @@ function UserInfoModal(props) {
           </div>
           <div className="user-birthdate-item info-item">
             <FiCalendar className="info-item-icon" />
-            {user.userDateOfBirth ? user.userDateOfBirth : "..."}
+            {user.userDateOfBirth ? moment(user.userDateOfBirth).format("DD-MM-YYYY") : "..."}
           </div>
         </div>
         <div className="divider notshow"></div>

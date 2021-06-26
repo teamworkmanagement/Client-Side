@@ -221,7 +221,7 @@ function TaskEditModal(props) {
     if (kanbanLists.length == 0) return;
     var cloneLists = [...kanbanLists];
 
-    console.log(cloneLists);
+    //console.log(cloneLists);
     for (let i = 0; i < cloneLists.length; i++) {
       cloneLists[i] = {
         ...cloneLists[i],
@@ -1005,10 +1005,14 @@ function TaskEditModal(props) {
             entity.offset,
             entity.offset + entity.length
           );
+
+          let indexData = entity.key;
+          const userTagId = entityMap[indexData].data.mention.id;
+
           block.text = block.text.replaceBetween(
             entity.offset,
             entity.offset + entity.length,
-            `<strong>@${nameTag}</strong>`
+            `<@tag>${userTagId}<@tag>`
           );
           console.log(block.text);
         });
@@ -1531,7 +1535,7 @@ function TaskEditModal(props) {
                   </div>
                   <div className="my-comment">
                     <div className="my-avatar">
-                      <img alt="" src="../avatars/6.jpg" />
+                      <img alt="" src={curUser.userAvatar} />
                     </div>
                     <div className="input-container">
                       {/*<CInput

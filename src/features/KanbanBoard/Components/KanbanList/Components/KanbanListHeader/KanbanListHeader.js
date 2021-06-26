@@ -77,7 +77,7 @@ function KanbanListHeader(props) {
             <div className="title">{props.title}</div>
           </div>
           <div className="cards-count">{props.cardCount}</div>
-          <div className="header-actions-dropdown">
+          {!props.defaultList && <div className="header-actions-dropdown">
             <CDropdown>
               <CDropdownToggle id="dropdownMenuButton" caret>
                 <div className="lane-actions">
@@ -109,7 +109,7 @@ function KanbanListHeader(props) {
                 </CDropdownItem>
               </CDropdownMenu>
             </CDropdown>
-          </div>
+          </div>}
         </div>
       )}
       {/*<CreateCardModal

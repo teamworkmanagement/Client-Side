@@ -21,6 +21,7 @@ import FilteredTasks from "src/features/TeamPage/Components/TeamTasks/Components
 import taskApi from "src/api/taskApi";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
+import CreateCardModal from "src/features/KanbanBoard/Components/KanbanList/Components/CreateCardModal/CreateCardModal";
 
 TeamTasks.propTypes = {};
 
@@ -31,6 +32,7 @@ function TeamTasks(props) {
   const [filter, setFilter] = useState(null);
   const [modalTaskObj, setModaTaskObj] = useState(null);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
+  const [showAddCard, setShowAddCard] = useState(false);
 
   const user = useSelector(state => state.auth.currentUser);
   const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
@@ -143,7 +145,7 @@ function TeamTasks(props) {
             </div>
           )}
           {(showMode === 2 || showMode === 3) && (
-            <div className="add-btn add-task-btn">
+            <div className="add-btn add-task-btn" onClick={onCreateCard}>
               <CIcon name="cil-plus" />
               Tạo công việc
             </div>
@@ -194,6 +196,11 @@ function TeamTasks(props) {
       {showMode === 1 && !applyingFilter && <KanbanBoard ownerId={queryO.gr} isOfTeam={true} boardId={props.boardId} />}
       {showMode === 2 && !applyingFilter && <TaskList ownerId={queryO.gr} boardId={props.boardId} isOfTeam={true} />}
       {showMode === 3 && !applyingFilter && <GanttChart ownerId={queryO.gr} boardId={props.boardId} isOfTeam={true} />}
+
+      <CreateCardModal
+        showAddCard={showAddCard}
+        setShowAddCard={setShowAddCard}
+        defaultList={true} />
     </>
   }
 
@@ -205,24 +212,14 @@ function TeamTasks(props) {
     if (updateTask && updateTask.taskId === queryObj.t) {
       console.log("realtime");
 
-      let params = {};
-      if (props.isOfTeam) {
-        params = {
-          isOfTeam: true,
-          ownerId: props.ownerId,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      } else {
-        params = {
-          isOfTeam: false,
-          ownerId: user.id,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      }
+      const params = {
+        isOfTeam: true,
+        ownerId: queryObj.gr,
+        boardId: queryObj.b,
+        taskId: updateTask.taskId,
+        userRequest: user.id,
+      };
+
       taskApi
         .getTaskByBoard({ params })
         .then((res) => {
@@ -258,24 +255,14 @@ function TeamTasks(props) {
   const openEditPopup = (taskId) => {
     setIsShowEditPopup(true);
     const queryObj = queryString.parse(history.location.search);
-    let params = {};
-    if (props.isOfTeam) {
-      params = {
-        isOfTeam: true,
-        ownerId: props.ownerId,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    } else {
-      params = {
-        isOfTeam: false,
-        ownerId: user.id,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    }
+
+    const params = {
+      isOfTeam: true,
+      ownerId: queryObj.gr,
+      boardId: queryObj.b,
+      taskId: taskId,
+      userRequest: user.id,
+    };
 
     taskApi
       .getTaskByBoard({ params })
@@ -312,6 +299,11 @@ function TeamTasks(props) {
     });
   }
 
+  const onCreateCard = () => {
+    console.log('default list');
+    setShowAddCard(true);
+  }
+
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t && isShowEditPopup) {
@@ -332,12 +324,12 @@ function TeamTasks(props) {
       {notfound ? <NotFoundPage /> : renderNormal()}
 
       <FilterTaskModal
-          show={showFilterModal}
-          applyFilter={applyFilter}
-          onClose={closeFilterModal}
-          removeFilter={removeFilter}
-          applyingFilter={applyingFilter}
-        />
+        show={showFilterModal}
+        applyFilter={applyFilter}
+        onClose={closeFilterModal}
+        removeFilter={removeFilter}
+        applyingFilter={applyingFilter}
+      />
 
       <CreateKBListModal
         boardId={props.boardId}
@@ -346,11 +338,11 @@ function TeamTasks(props) {
       />
 
       <TaskEditModal
-          isOfTeam={true}
-          closePopup={onEditModalClose}
-          isShowEditPopup={isShowEditPopup}
-          data={modalTaskObj}
-        />
+        isOfTeam={true}
+        closePopup={onEditModalClose}
+        isShowEditPopup={isShowEditPopup}
+        data={modalTaskObj}
+      />
     </div>
   );
 }

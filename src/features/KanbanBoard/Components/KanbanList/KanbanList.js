@@ -101,6 +101,7 @@ function KanbanList(props) {
             title={props.data.kanbanListTitle}
             kanbanListId={props.data.kanbanListId}
             dragHandleProps={{ ...provided.dragHandleProps }}
+            defaultList={props.data.kanbanListDefault}
           />
           <Droppable droppableId={props.data.kanbanListId} type="task">
             {(provided, snapshot) => (

@@ -53,6 +53,8 @@ function GanttChart(props) {
   const addNewTask = useSelector(state => state.kanban.signalrData.addNewTask);
   const removeTask = useSelector(state => state.kanban.signalrData.removeTask);
   const removeList = useSelector(state => state.kanban.signalrData.removeList);
+  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
+  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
 
   function refactorTasksForGantt() {
     var ganttTasks = [];
@@ -97,15 +99,25 @@ function GanttChart(props) {
         });
       }
     }
-    console.log(ganttTasks);
     return ganttTasks;
   }
 
-  useEffect(() => {   
-      setData({
-        data: refactorTasksForGantt()
-      })
+  useEffect(() => {
+    const newData = refactorTasksForGantt();
+    setData({
+      data: newData
+    })
+
+
   }, [addNewTask, removeTask, removeList])
+
+
+  /*useEffect(() => {
+    if (data) {
+      console.log('task là: ', data);
+      gantt.parse({ data: data });
+    }
+  }, [data])*/
   function calculateDaysDistance(dateAfter, dateBefore) {
     //const before=new Date(dateBefore);
     //const after=new Date(dateAfter);
@@ -207,6 +219,9 @@ function GanttChart(props) {
   };
 
   useEffect(() => {
+    const myData = { data: refactorTasksForGantt() }
+    console.log('zzzzzzz: ', myData);
+    gantt.clearAll();
     gantt.config.scale_height = 54;
     gantt.config.date_format = "%Y-%m-%d %H:%i";
     gantt.config.row_height = 55;
@@ -292,7 +307,8 @@ function GanttChart(props) {
 
     gantt.init(input.current);
 
-    gantt.parse(data);
+    gantt.parse(myData);
+    //console.log(data);
 
     gantt.attachEvent("onAfterTaskAdd", function (id, item) {
       //any custom logic here
@@ -353,7 +369,7 @@ function GanttChart(props) {
         .then((res) => { })
         .catch((err) => { });
     });
-  }, []);
+  }, [addNewTask, removeTask, removeList, updateTask, assignUser]);
 
   const openEditPoup = async (taskId, task) => {
     history.push({
@@ -363,7 +379,7 @@ function GanttChart(props) {
   };
 
 
-  function updateGanttTask(task) {
+  /*function updateGanttTask(task) {
     console.log("update gantt task", task);
 
     //changes task's data
@@ -380,15 +396,8 @@ function GanttChart(props) {
     gantt.updateTask(task.taskId); //renders the updated task
   }
 
-  const updateTask = useSelector(
-    (state) => state.kanban.signalrData.updateTask
-  );
-
-  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
   useEffect(() => {
     console.log(assignUser);
-
-
 
     if (assignUser && tasks.find(t => t.taskId == assignUser.taskId)) {
       gantt.getTask(assignUser.taskId).userId = assignUser.userId;
@@ -411,7 +420,7 @@ function GanttChart(props) {
       taskClone.realtime = true;
       updateGanttTask(taskClone);
     }
-  }, [updateTask]);
+  }, [updateTask]);*/
 
   return (
     <div className="gantt-container">

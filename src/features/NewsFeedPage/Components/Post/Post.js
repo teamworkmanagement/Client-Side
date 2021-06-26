@@ -21,6 +21,9 @@ import CustomInput from "../CustomInput/CustomInput";
 import { convertToRaw } from "draft-js";
 import GridImages from "./Components/GridImages/GridImages";
 import { useHistory } from "react-router-dom";
+import Tag from "./Components/Tag/Tag";
+import AvatarComponent from "src/shared_components/MySharedComponents/AvatarComponent/AvatarComponent";
+import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
 
 moment.locale("vi");
 Post.propTypes = {};
@@ -61,13 +64,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-          .deleteReactPost({ params })
-          .then((res) => {})
-          .catch((err) => {})
+        .deleteReactPost({ params })
+        .then((res) => { })
+        .catch((err) => { })
       : postApi
-          .reactPost(params)
-          .then((res) => {})
-          .catch((err) => {});
+        .reactPost(params)
+        .then((res) => { })
+        .catch((err) => { });
 
     setPost({
       ...post,
@@ -109,7 +112,7 @@ function Post(props) {
 
             setComments(newArrr);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -119,6 +122,17 @@ function Post(props) {
     return this.substring(0, start) + what + this.substring(end);
   };
 
+  const mapStringToJsx = (str) => {
+    const myArr = str.split('<@tag>');
+    return myArr.map((ele, index) => {
+      if (index % 2 === 0) {
+        return <div dangerouslySetInnerHTML={{ __html: ele }}></div>
+      }
+      else {
+        return <Tag userId={ele} />
+      }
+    })
+  }
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
@@ -148,10 +162,14 @@ function Post(props) {
             entity.offset,
             entity.offset + entity.length
           );
+
+          let indexData = entity.key;
+          const userTagId = entityMap[indexData].data.mention.id;
+
           block.text = block.text.replaceBetween(
             entity.offset,
             entity.offset + entity.length,
-            `<strong>@${nameTag}</strong>`
+            `<@tag>${userTagId}<@tag>`
           );
           console.log(block.text);
         });
@@ -168,6 +186,8 @@ function Post(props) {
     }
 
     console.log(value);
+
+    //return;
     commentApi
       .addComment({
         commentPostId: post.postId,
@@ -200,7 +220,7 @@ function Post(props) {
 
         setComments(newArrr);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -224,17 +244,6 @@ function Post(props) {
       });
     }
   }, [removeReact]);
-  const listImages = [
-    "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
-
-    "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
-
-    "https://cdn.yeudulich.com/940x630/media/attraction/attraction/9c/91/5a99-5766-4a6e-ac6b-fbd54edbc450.jpg",
-
-    "https://cdn3.yame.vn/pimg/ao-thun-co-tron-y-original-ver1-0020237/3f339682-7f04-1000-a86f-0017ebe78d1d.jpg?w=540&h=756&c=true",
-
-    "https://cdn3.yame.vn/pimg/giay-casual-anubis-ver1-0019901/a1f616a6-ea76-0200-c9c5-00176e430b9f.jpg?w=540&h=540&c=true",
-  ];
 
   useEffect(() => {
     if (!newComment) return;
@@ -254,28 +263,38 @@ function Post(props) {
     history.push(`/team/${post.postTeamId}`);
   };
 
+
   return (
     <div className="post-container" style={{ zIndex: props.index }}>
       <div className="post-header">
         <div className="post-infor">
           <div className="poster-avatar">
-            <img
+            {/*<img
               alt="avatar"
               src={
                 user.id === post.postUserId ? user.userAvatar : post.userAvatar
               }
+            />*/}
+
+            <AvatarImage
+              userName={user.id === post.postUserId ? user.fullName : post.userName}
+              userImage={user.id === post.postUserId ? user.userAvatar : post.userAvatar}
+              userId={post.postUserId}
+              disable={false}
             />
           </div>
           <div className="poster-infor">
             <div
               className="name-and-group"
-              onClick={() => navigateToTeam(post)}
             >
               <strong>
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
               {!props.isInTeam && `đã đăng trong nhóm `}
-              {!props.isInTeam && <strong>{post.teamName}</strong>}
+
+              {!props.isInTeam && (
+                <strong onClick={() => navigateToTeam(post)}>{post.teamName}</strong>
+              )}
             </div>
             <div className="post-date">
               {moment(post.postCreatedAt).format("HH:MM, DD/MM/YYYY")}
@@ -313,9 +332,8 @@ function Post(props) {
               </div>*/}
       </div>
       <div
-        className="post-content"
-        dangerouslySetInnerHTML={{ __html: post.postContent }}
-      ></div>
+        className="post-content">
+        {mapStringToJsx(post.postContent)}</div>
       <div className="post-images-list-container">
         <GridImages countFrom={5} images={post.postImages} />
       </div>

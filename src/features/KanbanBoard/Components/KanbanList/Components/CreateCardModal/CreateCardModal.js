@@ -39,30 +39,62 @@ function CreateCardModal(props) {
       console.log(taskName, props.kblistId);
       if (!taskName) alert("Tên task rỗng");
 
-      var date = new Date();
-      const obj = kbLists.find(x => x.kanbanListId === props.kblistId);
-      let pos = -9999;
-      if (obj.taskUIKanbans.length === 0)
-        pos = genNewRank();
-      else pos = FindNextRank(obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList);
-      taskApi
-        .addNewTask({
-          taskName: taskName,
-          taskCreatedAt: new Date().toISOString(),
-          taskCompletedPercent: 0,
-          taskBelongedId: props.kblistId,
-          taskRankInList: pos,
-          taskStartDate: date,
-          taskStatus: 'todo',
-          taskDeadline: date.addDays(1),
-          userActionId: user.id
-        })
-        .then((res) => {
+      console.log(props.defaultList);
 
-        })
-        .catch((err) => { });
+      if (!props.defaultList) {
+        var date = new Date();
+        const obj = kbLists.find(x => x.kanbanListId === props.kblistId);
+        let pos = -9999;
+        if (obj.taskUIKanbans.length === 0)
+          pos = genNewRank();
+        else pos = FindNextRank(obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList);
+        taskApi
+          .addNewTask({
+            taskName: taskName,
+            taskCreatedAt: new Date().toISOString(),
+            taskCompletedPercent: 0,
+            taskBelongedId: props.kblistId,
+            taskRankInList: pos,
+            taskStartDate: date,
+            taskStatus: 'todo',
+            taskDeadline: date.addDays(1),
+            userActionId: user.id
+          })
+          .then((res) => {
 
-      setTaskName("");
+          })
+          .catch((err) => { });
+
+        setTaskName("");
+      }
+      else {
+        var date = new Date();
+        const obj = kbLists.find(x => x.kanbanListDefault);
+        if (obj) {
+          let pos = -9999;
+          if (obj.taskUIKanbans.length === 0)
+            pos = genNewRank();
+          else pos = FindNextRank(obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList);
+          taskApi
+            .addNewTask({
+              taskName: taskName,
+              taskCreatedAt: new Date().toISOString(),
+              taskCompletedPercent: 0,
+              taskBelongedId: obj.kanbanListId,
+              taskRankInList: pos,
+              taskStartDate: date,
+              taskStatus: 'todo',
+              taskDeadline: date.addDays(1),
+              userActionId: user.id
+            })
+            .then((res) => {
+
+            })
+            .catch((err) => { });
+        }
+
+        setTaskName("");
+      }
       props.setShowAddCard(false);
     }
   }
