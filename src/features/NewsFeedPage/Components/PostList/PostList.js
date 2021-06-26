@@ -131,8 +131,15 @@ function PostList(props) {
     }, 2);
   };
 
-  const renderListPost = listPosts.map((item) => {
-    return <Post isInTeam={props.isInTeam} post={item} key={item.postId} />;
+  const renderListPost = listPosts.map((item, index) => {
+    return (
+      <Post
+        index={listPosts.length - index}
+        isInTeam={props.isInTeam}
+        post={item}
+        key={item.postId}
+      />
+    );
   });
 
   const onScroll = (e) => {

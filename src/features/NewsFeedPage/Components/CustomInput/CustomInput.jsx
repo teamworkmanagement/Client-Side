@@ -115,7 +115,7 @@ function CustomInput(props) {
             />
 
             <MentionSuggestions
-                open={true}
+                open={open}
                 onOpenChange={onOpenChange}
                 suggestions={suggestions}
                 onSearchChange={onSearchChange}

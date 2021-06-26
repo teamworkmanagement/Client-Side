@@ -131,7 +131,6 @@ function Post(props) {
       else {
         return <Tag userId={ele} />
       }
-
     })
   }
   const saveContent = (editorState) => {
@@ -266,7 +265,7 @@ function Post(props) {
 
 
   return (
-    <div className="post-container">
+    <div className="post-container" style={{ zIndex: props.index }}>
       <div className="post-header">
         <div className="post-infor">
           <div className="poster-avatar">
@@ -285,11 +284,14 @@ function Post(props) {
             />
           </div>
           <div className="poster-infor">
-            <div className="name-and-group">
+            <div
+              className="name-and-group"
+            >
               <strong>
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
               {!props.isInTeam && `đã đăng trong nhóm `}
+
               {!props.isInTeam && (
                 <strong onClick={() => navigateToTeam(post)}>{post.teamName}</strong>
               )}

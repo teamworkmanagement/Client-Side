@@ -37,6 +37,7 @@ import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { setIsSelected } from "src/features/ChatPage/chatSlice";
 import UserInfoModal from "src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal";
+import { CgArrowsExchange } from "react-icons/cg";
 
 TeamMembersList.propTypes = {};
 
@@ -88,7 +89,7 @@ function TeamMembersList(props) {
   const [redirect, setRedirect] = useState(null);
 
   useEffect(() => {
-    console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzz: ', teamId);
+    console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzz: ", teamId);
     if (!teamId) return;
     setLoadingMembers(true);
     teamApi
@@ -102,8 +103,8 @@ function TeamMembersList(props) {
     const params = {
       teamId: teamId,
       pageNumber: 1,
-      pageSize: 1,
-      keyWord: null
+      pageSize: 5,
+      keyWord: null,
     };
 
     setFilterObj(params);
@@ -136,9 +137,9 @@ function TeamMembersList(props) {
 
     const params = {
       teamId: teamId,
-      pageSize: 1,
+      pageSize: 5,
       pageNumber: index,
-      keyWord: null
+      keyWord: null,
     };
 
     setFilterObj(params);
@@ -279,30 +280,30 @@ function TeamMembersList(props) {
   };
 
   const changeLeader = (item) => {
-    teamApi.changeLeader({
-      teamId: team.teamId,
-      leaderId: item.userId,
+    teamApi
+      .changeLeader({
+        teamId: team.teamId,
+        leaderId: item.userId,
+      })
+      .then((res) => {
+        if (!teamId) return;
 
-    }).then(res => {
+        teamApi
+          .getAdmin(teamId)
+          .then((res) => {
+            console.log(res);
+            setAdmin(res.data);
+          })
+          .catch((err) => { });
 
-      if (!teamId) return;
+        const params = {
+          teamId: teamId,
+          pageNumber: 1,
+          pageSize: 10,
+        };
 
-      teamApi
-        .getAdmin(teamId)
-        .then((res) => {
-          console.log(res);
-          setAdmin(res.data);
-        })
-        .catch((err) => { });
-
-      const params = {
-        teamId: teamId,
-        pageNumber: 1,
-        pageSize: 10,
-      };
-
-      setFilterObj(params);
-      /*teamApi
+        setFilterObj(params);
+        /*teamApi
         .getUsersPagingByTeam({ params })
         .then((res) => {
           console.log(res.data.items);
@@ -313,29 +314,27 @@ function TeamMembersList(props) {
         .catch((err) => {
         });*/
 
-      teamApi
-        .getTeam(teamId)
-        .then((res) => {
-          setTeam(res.data);
-        })
-        .catch((err) => { });
-
-    }).catch(err => {
-
-    })
-  }
-
+        teamApi
+          .getTeam(teamId)
+          .then((res) => {
+            setTeam(res.data);
+          })
+          .catch((err) => { });
+      })
+      .catch((err) => { });
+  };
 
   const quitTeam = (item) => {
-    console.log('quitteam: ', item);
+    console.log("quitteam: ", item);
 
     const params = {
-      "teamId": teamId,
-      "userId": item.userId,
+      teamId: teamId,
+      userId: item.userId,
     };
 
-    teamApi.leaveTeam({ params })
-      .then(res => {
+    teamApi
+      .leaveTeam({ params })
+      .then((res) => {
         const params = {
           teamId: teamId,
           pageNumber: 1,
@@ -344,17 +343,15 @@ function TeamMembersList(props) {
 
         setFilterObj(params);
       })
-      .catch(err => {
-
-      });
-  }
+      .catch((err) => { });
+  };
 
   useEffect(() => {
     if (filterObj) {
       const clone = {
         ...filterObj,
-        pageSize: 1,
-      }
+        pageSize: 10,
+      };
       teamApi
         .getUsersPagingByTeam({ params: clone })
         .then((res) => {
@@ -362,16 +359,14 @@ function TeamMembersList(props) {
           setMembers(res.data.items);
           setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
         })
-        .catch((err) => {
-        })
+        .catch((err) => { })
         .finally(() => {
           setLoadingMembers(false);
         });
 
       console.log(filterObj);
     }
-  }, [filterObj])
-
+  }, [filterObj]);
 
   const [userId, setUserId] = useState(null);
   const xemThongTin = (item) => {
@@ -385,11 +380,7 @@ function TeamMembersList(props) {
       <div className="members-list-header">
         <div className="other-actions">
           <div className="lookup-input">
-            <CInput
-              type="text"
-              name="teamName"
-              placeholder="Tìm thành viên"
-            />
+            <CInput type="text" name="teamName" placeholder="Tìm thành viên" />
             <BsSearch className="icon-search" />
           </div>
           <div
@@ -574,7 +565,13 @@ function TeamMembersList(props) {
                   type="text"
                   name="teamName"
                   placeholder="Tìm thành viên"
-                  onChange={(e) => setFilterObj({ ...filterObj, keyWord: e.target.value, pageNumber: 1 })}
+                  onChange={(e) =>
+                    setFilterObj({
+                      ...filterObj,
+                      keyWord: e.target.value,
+                      pageNumber: 1,
+                    })
+                  }
                 />
                 <BsSearch className="icon-search" />
               </div>
@@ -651,6 +648,7 @@ function TeamMembersList(props) {
                                 <CIcon name="cil-send" />
                                 Nhắn tin
                               </CDropdownItem>
+
                               <CDropdownItem
                                 className="normal"
                                 onClick={() => xemThongTin(item)}
@@ -658,16 +656,27 @@ function TeamMembersList(props) {
                                 <CIcon name="cil-info" />
                                 Xem thông tin
                               </CDropdownItem>
-                              {team.teamLeaderId == user.id && <CDropdownItem className="normal" onClick={() => changeLeader(item)}>
-                                <CIcon name="cil-find-in-page" />
-                                Trao quyền leader
-                              </CDropdownItem>}
-                              {
-                                team.teamLeaderId == user.id && <CDropdownItem className="last" onClick={() => quitTeam(item)}>
+
+
+                              {team.teamLeaderId === user.id && (
+                                <CDropdownItem
+                                  className="normal"
+                                  onClick={() => changeLeader(item)}
+                                >
+                                  {/* <CIcon name="cil-find-in-page" /> */}
+                                  <CgArrowsExchange className="c-icon icon-exchange" />
+                                  Trao quyền Trưởng nhóm
+                                </CDropdownItem>
+                              )}
+                              {team.teamLeaderId == user.id && (
+                                <CDropdownItem
+                                  className="last"
+                                  onClick={() => quitTeam(item)}
+                                >
                                   <CIcon name="cil-account-logout" />
                                   Mời rời nhóm
                                 </CDropdownItem>
-                              }
+                              )}
                             </CDropdownMenu>
                           </CDropdown>
                         </div>

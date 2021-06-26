@@ -141,7 +141,6 @@ function TaskListItem(props) {
     return "Trễ " + -spaceTime + " ngày";
   }
 
-
   const openEditPoup = async () => {
     history.push({
       pathname: history.location.pathname,
@@ -164,6 +163,7 @@ function TaskListItem(props) {
         className="task-list-item-container"
         style={{
           animationDelay: `${props.index / 10}s`,
+          zIndex: props.zindex,
         }}
       >
         <div className="task-infor-container">
@@ -175,7 +175,7 @@ function TaskListItem(props) {
             <div
               className="attachment infor"
               style={{ display: props.data.filesCount === 0 ? "none" : "flex" }}
-            // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+              // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
             >
               <CIcon name="cil-paperclip" className=""></CIcon>
               <div className="">{props.data.filesCount} </div>

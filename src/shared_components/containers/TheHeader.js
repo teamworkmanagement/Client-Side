@@ -87,32 +87,30 @@ const TheHeader = () => {
     dispatch(setDarkMode());
   };
 
-
   const [team, setTeam] = useState({});
   const [showBadge, setShowBadge] = useState(false);
 
   useEffect(() => {
-    if (history.location.pathname.includes('/team/')) {
-      const arr = history.location.pathname.split('/');
+    if (history.location.pathname.includes("/team/")) {
+      const arr = history.location.pathname.split("/");
       const teamId = arr[2];
 
-      teamApi.getTeam(teamId)
-        .then(res => {
+      teamApi
+        .getTeam(teamId)
+        .then((res) => {
           if (res.data) {
             setTeam(res.data);
             setShowBadge(true);
-          }
-          else {
+          } else {
             setTeam({});
             setShowBadge(false);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           setTeam({});
           setShowBadge(false);
         });
-    }
-    else {
+    } else {
       setTeam({});
       setShowBadge(false);
     }
@@ -164,20 +162,22 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CSubheader
-        className={`px-3 justify-content-between ${collapseHeader ? "collapsed" : "expand"
-          }`}
+        className={`px-3 justify-content-between ${
+          collapseHeader ? "collapsed" : "expand"
+        }`}
       >
         <div className="sub-header-content">
           <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />
         </div>
         <div className="sub-info-header">
-          {showBadge && <div className="team-info-header">
-            <img
-              alt=""
-              src={team.teamImageUrl}
-            />
-            <div className="team-name">{team.teamName}</div>
-          </div>}
+          {showBadge && (
+            <div className="team-info-header">
+              <img alt="" src={team.teamImageUrl} />
+
+              <div className="team-name">{team.teamName}</div>
+            </div>
+          )}
+
           <CTooltip content="Thu gọn thanh tiêu đề">
             <div
               className="collapse-header-btn"

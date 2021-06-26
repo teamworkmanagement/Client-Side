@@ -252,7 +252,9 @@ function TaskEditModal(props) {
 
   const imageRef = useRef(null);
   const fileRef = useRef(null);
-  const signalRAddFile = useSelector(state => state.kanban.signalrData.addNewFile);
+  const signalRAddFile = useSelector(
+    (state) => state.kanban.signalrData.addNewFile
+  );
 
   useEffect(() => {
     if (signalRAddFile && signalRAddFile.fileTaskOwnerId == task.taskId) {
@@ -260,7 +262,7 @@ function TaskEditModal(props) {
       cloneAttachs.splice(0, 0, { ...signalRAddFile });
       setAttachments(cloneAttachs);
     }
-  }, [signalRAddFile])
+  }, [signalRAddFile]);
 
   useEffect(() => {
     if (props.data) {
@@ -762,9 +764,7 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => {
-
-              })
+              .then((res) => {})
               .catch((err) => {});
           }
         })
@@ -1056,6 +1056,9 @@ function TaskEditModal(props) {
       })
       .catch((err) => {});
   };
+
+  const pop1 = useRef();
+  const pop2 = useRef();
 
   return (
     <div>
@@ -1573,44 +1576,46 @@ function TaskEditModal(props) {
                     className="lists-select-popover"
                     isOpen={openPopoverLists}
                     align="start"
-                    position={["left"]} // preferred positions by priority
+                    positions={["left"]} // preferred positions by priority
                     onClickOutside={() => setOpenPopoverLists(false)}
                     content={renderContentList()}
+                    ref={pop1}
                   >
-                    <CTooltip
+                    {/* <CTooltip
                       content="Chuyển công việc đến danh sách khác"
-                      placement="left"
+                      placement="top"
                     >
-                      <div
-                        className="action-item"
-                        onClick={() => setOpenPopoverLists(!openPopoverLists)}
-                      >
-                        <BsArrowsMove className="icon-move" />
-                        <div className="action-name">Chuyển đến...</div>
-                      </div>
-                    </CTooltip>
+                     
+                    </CTooltip> */}
+                    <div
+                      className="action-item"
+                      onClick={() => setOpenPopoverLists(!openPopoverLists)}
+                    >
+                      <BsArrowsMove className="icon-move" />
+                      <div className="action-name">Chuyển đến...</div>
+                    </div>
                   </Popover>
 
                   {props.data.showPoint && (
                     <Popover
+                      ref={pop2}
                       className="lists-select-popover"
                       isOpen={openPopoverScores}
                       align="start"
-                      position={["left"]} // preferred positions by priority
+                      positions={["left"]} // preferred positions by priority
                       onClickOutside={() => setOpenPopoverScores(false)}
                       content={renderContentScore()}
                     >
-                      <CTooltip content="Cho điểm công việc" placement="left">
-                        <div
-                          className="action-item"
-                          onClick={() =>
-                            setOpenPopoverScores(!openPopoverScores)
-                          }
-                        >
-                          <CIcon name="cil-sort-numeric-up" />
-                          <div className="action-name">Cho điểm</div>
-                        </div>
-                      </CTooltip>
+                      {/* <CTooltip content="Cho điểm công việc" placement="top">
+                        
+                      </CTooltip> */}
+                      <div
+                        className="action-item"
+                        onClick={() => setOpenPopoverScores(!openPopoverScores)}
+                      >
+                        <CIcon name="cil-sort-numeric-up" />
+                        <div className="action-name">Cho điểm</div>
+                      </div>
                     </Popover>
                   )}
                   <CTooltip content="Xem lịch sử chỉnh sửa" placement="left">

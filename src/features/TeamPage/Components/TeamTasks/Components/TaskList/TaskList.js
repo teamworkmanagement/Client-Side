@@ -30,7 +30,16 @@ function TaskList(props) {
   return (
     <div className="task-list-container">
       {tasks.map((item, index) => {
-        return <TaskListItem isOfTeam={props.isOfTeam} ownerId={props.ownerId} index={index} key={item.taskId} data={item} />;
+        return (
+          <TaskListItem
+            isOfTeam={props.isOfTeam}
+            ownerId={props.ownerId}
+            index={index}
+            zindex={tasks.length - index}
+            key={item.taskId}
+            data={item}
+          />
+        );
       })}
       {tasks.length === 0 && (
         <div className="nodata-image">
