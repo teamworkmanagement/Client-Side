@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import "./AvatarImage.scss";
 import UserInfoModal from "src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal";
 import userApi from "src/api/userApi";
+import { useDispatch } from "react-redux";
+import { setUserModal } from "src/appSlice";
 
 AvatarImage.propTypes = {};
 
@@ -26,6 +28,7 @@ function AvatarImage(props) {
     }
   }
 
+  const dispatch = useDispatch();
   return (
     <div className="avatar-image">
       {props.userImage ? (
@@ -38,13 +41,17 @@ function AvatarImage(props) {
         onClick={() => {
           if (props.disable) return;
           setShowInfoModal(true);
+          dispatch(setUserModal({
+            show: true,
+            userId: props.userId
+          }));
         }}
       ></div>
-      <UserInfoModal
+      {/*<UserInfoModal
         userId={props.userId}
         show={showInfoModal}
         onClose={onCloseModal}
-      />
+      />*/}
     </div>
   );
 }

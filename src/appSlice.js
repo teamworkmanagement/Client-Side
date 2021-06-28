@@ -123,8 +123,15 @@ const appSlice = createSlice({
     newNotfication: null,
 
     userSetting: null,
+    userModal: {
+      show: false,
+      userId: null,
+    }
   },
   reducers: {
+    setUserModal(state, action) {
+      state.userModal = action.payload;
+    },
     changeUserSetting(state, action) {
       state.userSetting = action.payload;
     },
@@ -369,5 +376,6 @@ export const {
   changeStateChatListSidebar,
   changeStateSettingOptionsSidebar,
   changeUserSetting,
+  setUserModal
 } = actions; // named export
 export default reducer; // default export

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import userApi from 'src/api/userApi';
 import UserInfoModal from 'src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal';
 import './Tag.scss';
+import { useDispatch } from 'react-redux';
+import { setUserModal } from 'src/appSlice';
 
 Tag.propTypes = {
 
@@ -24,8 +26,19 @@ function Tag(props) {
         }
     }, [props.userId])
 
+    const dispatch = useDispatch();
     const showInfoClick = () => {
-        setShowModal(true);
+        
+        if(props.postId){
+            dispatch(setUserModal({
+                show: true,
+                userId: user.userId
+            }));
+        }
+        else{
+            setShowModal(true);
+        }
+        
     }
 
     const onCloseModal = () => {

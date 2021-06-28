@@ -11,14 +11,14 @@ moment.locale('vi');
 CommentItem.propTypes = {};
 
 function CommentItem({ comment }) {
-  const mapStringToJsx = (str) => {
+  const mapStringToJsx = (str,comment) => {
     const myArr = str.split('<@tag>');
     return myArr.map((ele, index) => {
       if (index % 2 === 0) {
         return <div dangerouslySetInnerHTML={{ __html: ele }}></div>
       }
       else {
-        return <Tag userId={ele} />
+        return <Tag userId={ele} taskId={comment.commentTaskId} postId={comment.commentPostId}/>
       }
 
     })
@@ -40,7 +40,7 @@ function CommentItem({ comment }) {
           <div className="comment-date">{moment(comment.commentCreatedAt).format('l')}</div>
         </div>
         <div className="comment-content" >
-          {mapStringToJsx(comment.commentContent)}
+          {mapStringToJsx(comment.commentContent,comment)}
         </div>
       </div>
     </div>
