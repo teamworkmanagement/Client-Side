@@ -294,6 +294,8 @@ function TeamMembersList(props) {
           .then((res) => {
             console.log(res);
             setAdmin(res.data);
+
+            props.changeLeader();
           })
           .catch((err) => { });
 

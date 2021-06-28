@@ -162,18 +162,40 @@ function TeamPage(props) {
   };
 
   const [notfound, setNotfound] = useState(false);
+  const [team, setTeam] = useState({});
+
   const { teamId } = useParams();
+  const user = useSelector(state => state.auth.currentUser);
 
   useEffect(() => {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => {})
+        .then((res) => {
+          teamApi.getTeam(teamId)
+            .then(res => {
+              setTeam(res.data);
+            })
+            .catch(err => {
+
+            });
+        })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
         });
+
     }
   }, [teamId]);
+
+  const changeLeader = () => {
+    teamApi.getTeam(teamId)
+      .then(res => {
+        setTeam(res.data);
+      })
+      .catch(err => {
+
+      });
+  }
 
   const renderNormal = () => {
     return (
@@ -221,14 +243,14 @@ function TeamPage(props) {
               </CTooltip>
             </CNavItem>
 
-            <CNavItem>
+            {team.teamLeaderId === user.id && <CNavItem>
               <CTooltip content="Thống kê" placement="right">
                 <CNavLink>
                   <CIcon name="cil-chart-line" />
                   <div className="tab-name">Thống kê</div>
                 </CNavLink>
               </CTooltip>
-            </CNavItem>
+            </CNavItem>}
           </CNav>
           <div className="tab-content-container">
             <div className="toggle-team-tabs-sidebar-btn">
@@ -239,7 +261,7 @@ function TeamPage(props) {
               />
             </div>
             <CTabContent>
-              <CTabPane>{active === 0 ? <TeamMembersList /> : null}</CTabPane>
+              <CTabPane>{active === 0 ? <TeamMembersList changeLeader={changeLeader} /> : null}</CTabPane>
               <CTabPane>
                 {active === 1 ? <NewsFeedPage isInTeam={true} /> : null}
               </CTabPane>
@@ -251,7 +273,7 @@ function TeamPage(props) {
               </CTabPane>
               <CTabPane>{active === 4 ? <ListFileTable /> : null}</CTabPane>
 
-              <CTabPane>{active === 5 ? <TeamStatistics /> : null}</CTabPane>
+              <CTabPane>{active === 5 && team.teamLeaderId === user.id ? <TeamStatistics /> : null}</CTabPane>
             </CTabContent>
           </div>
         </CTabs>

@@ -360,8 +360,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
@@ -399,8 +399,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -678,7 +678,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -726,7 +726,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -764,11 +764,11 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => {})
-              .catch((err) => {});
+              .then((res) => { })
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -795,8 +795,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -934,7 +934,7 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -968,7 +968,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [props.data]);
 
@@ -1041,8 +1041,8 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     console.log(value);
   };
 
@@ -1054,7 +1054,7 @@ function TaskEditModal(props) {
         setDetails(res.data);
         setShowTaskHistoryModal(true);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const pop1 = useRef();
@@ -1625,12 +1625,13 @@ function TaskEditModal(props) {
                     </div>
                   </CTooltip>
 
-                  <CTooltip content="Xóa công việc" placement="left">
+                  {props.data.showPoint && <CTooltip content="Xóa công việc" placement="left">
                     <div className="action-item" onClick={onRemoveTask}>
                       <CIcon name="cil-trash" />
                       <div className="action-name">Xóa công việc</div>
                     </div>
-                  </CTooltip>
+                  </CTooltip>}
+
                 </div>
               </CCol>
             </CRow>
