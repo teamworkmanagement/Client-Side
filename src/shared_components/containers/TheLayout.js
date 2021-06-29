@@ -13,6 +13,7 @@ import SettingOptionsSidebar from "./SettingOptionsSidebar";
 
 import CustomToast from "../MySharedComponents/CustomToast/CustomToast";
 import { useSelector } from "react-redux";
+import UserInfoModal from "../MySharedComponents/UserInfoModal/UserInfoModal";
 
 const TheLayout = () => {
   const newNoti = useSelector((state) => state.app.newNotfication);
@@ -28,6 +29,9 @@ const TheLayout = () => {
     );
     //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
   }, [newNoti]);
+
+  const userModal = useSelector(state => state.app.userModal);
+
   return (
     <div className="c-app c-default-layout">
       <TheSidebar />
@@ -47,6 +51,9 @@ const TheLayout = () => {
       />
 
       {/* <ForgotPassword /> */}
+      <UserInfoModal
+        userId={userModal.userId}
+        show={userModal.show} />
     </div>
   );
 };

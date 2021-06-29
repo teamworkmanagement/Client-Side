@@ -38,6 +38,7 @@ import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { setIsSelected } from "src/features/ChatPage/chatSlice";
 import UserInfoModal from "src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal";
 import { CgArrowsExchange } from "react-icons/cg";
+import { setUserModal } from "src/appSlice";
 
 TeamMembersList.propTypes = {};
 
@@ -293,6 +294,8 @@ function TeamMembersList(props) {
           .then((res) => {
             console.log(res);
             setAdmin(res.data);
+
+            props.changeLeader();
           })
           .catch((err) => { });
 
@@ -371,7 +374,10 @@ function TeamMembersList(props) {
   const [userId, setUserId] = useState(null);
   const xemThongTin = (item) => {
     setUserId(item.userId);
-    setShowUserInfo(true);
+    dispatch(setUserModal({
+      show: true,
+      userId: item.userId,
+    }));
   }
   return (
     <div className="team-members-container">
@@ -720,10 +726,6 @@ function TeamMembersList(props) {
         onModalClose={onStartChatClose}
       />
 
-      <UserInfoModal
-        show={showUserInfo}
-        onModalClose={() => setShowUserInfo(false)}
-        userId={userId} />
     </div>
   );
 }

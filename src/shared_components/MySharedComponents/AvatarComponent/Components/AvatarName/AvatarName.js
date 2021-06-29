@@ -22,11 +22,11 @@ function AvatarName(props) {
       >
         {props.userName}
       </div>
-      <UserInfoModal
+      {/*<UserInfoModal
         userId={props.userId}
         show={showInfoModal}
         onClose={onCloseModal}
-      />
+      />*/}
     </div>
   );
 }

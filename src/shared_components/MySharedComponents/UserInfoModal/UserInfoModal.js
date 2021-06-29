@@ -9,6 +9,8 @@ import { FaFacebook } from "react-icons/fa";
 import userApi from "src/api/userApi";
 import moment from "moment";
 import "moment/locale/vi";
+import { useDispatch } from "react-redux";
+import { setUserModal } from "src/appSlice";
 moment.locale("vi");
 
 UserInfoModal.propTypes = {};
@@ -31,7 +33,12 @@ function UserInfoModal(props) {
   //const user = props.user;
 
   const [user, setUser] = useState({});
+  const dispatch = useDispatch();
   function handleOnClose() {
+    dispatch(setUserModal({
+      show: false,
+      userId: null
+    }));
     if (props.onClose) {
       props.onClose();
     }

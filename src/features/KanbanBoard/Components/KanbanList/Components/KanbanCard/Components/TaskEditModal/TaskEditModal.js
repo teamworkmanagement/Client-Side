@@ -120,8 +120,7 @@ function TaskEditModal(props) {
   const [task, setTask] = useState({});
   const [showDetail, setShowDetail] = useState(false);
 
-  const handleTasks = useSelector((state) => state.app.handleTasks);
-  const users = useSelector((state) => state.app.users);
+  const adminAction = useSelector(state => state.kanban.adminAction);
   const [value, setValue] = useState(null);
   const [renderedValue, setRenderedValue] = useState([0]);
 
@@ -360,8 +359,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [current]);
 
   const dispatchUpdateTask = (obj) => {
@@ -399,8 +398,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -678,7 +677,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -726,7 +725,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => {});
+          .catch((err) => { });
       }
       setCommentContent("");
     }
@@ -764,11 +763,11 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => {})
-              .catch((err) => {});
+              .then((res) => { })
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -795,8 +794,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -934,7 +933,7 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -968,7 +967,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [props.data]);
 
@@ -1041,8 +1040,8 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
     console.log(value);
   };
 
@@ -1054,7 +1053,7 @@ function TaskEditModal(props) {
         setDetails(res.data);
         setShowTaskHistoryModal(true);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const pop1 = useRef();
@@ -1062,22 +1061,6 @@ function TaskEditModal(props) {
 
   return (
     <div>
-      <div>
-        {Object.keys(toasters).map((toasterKey) => (
-          <CToaster position={toasterKey} key={"toaster" + toasterKey}>
-            {toasters[toasterKey].map((toast, key) => {
-              return (
-                <CToast show={true} autohide={2000} fade={true}>
-                  <CToastBody>
-                    <CIcon name="cil-warning" />
-                    Tên Công việc không được rỗng!
-                  </CToastBody>
-                </CToast>
-              );
-            })}
-          </CToaster>
-        ))}
-      </div>
       <CModal
         className="task-modal"
         show={props.isShowEditPopup}
@@ -1123,6 +1106,7 @@ function TaskEditModal(props) {
                   </div>
                   <div className="name-input-container">
                     <CInput
+                      disabled={!adminAction}
                       id="name"
                       placeholder="Tên công việc..."
                       required
@@ -1146,6 +1130,7 @@ function TaskEditModal(props) {
                   </div>
                   <div className="description-input-container">
                     <TextareaAutosize
+                      disabled={!adminAction}
                       className="input-post"
                       minRows={1}
                       maxRows={20}
@@ -1192,6 +1177,7 @@ function TaskEditModal(props) {
 
                               <div style={{ width: "15rem" }}>
                                 <Select
+                                  isDisabled={!adminAction}
                                   className="basic-single"
                                   value={current}
                                   isClearable="true"
@@ -1238,6 +1224,7 @@ function TaskEditModal(props) {
                               </div>
                               <div className="start-date">
                                 <CInput
+                                  disabled={!adminAction}
                                   type="date"
                                   id="date-from"
                                   name="date-input"
@@ -1258,6 +1245,7 @@ function TaskEditModal(props) {
                               </div>
                               <div className=" due-date">
                                 <CInput
+                                  disabled={!adminAction}
                                   type="date"
                                   id="date-from"
                                   name="date-input"
@@ -1625,12 +1613,13 @@ function TaskEditModal(props) {
                     </div>
                   </CTooltip>
 
-                  <CTooltip content="Xóa công việc" placement="left">
+                  {props.data.showPoint && <CTooltip content="Xóa công việc" placement="left">
                     <div className="action-item" onClick={onRemoveTask}>
                       <CIcon name="cil-trash" />
                       <div className="action-name">Xóa công việc</div>
                     </div>
-                  </CTooltip>
+                  </CTooltip>}
+
                 </div>
               </CCol>
             </CRow>
