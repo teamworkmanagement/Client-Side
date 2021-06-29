@@ -25,6 +25,10 @@ const userApi = {
     updateImageUrl(payload) {
         const url = '/user/image';
         return axiosClient.patch(url, payload);
+    },
+    feedback(payload) {
+        const url = '/feedback';
+        return axiosClient.post(url, payload);
     }
 };
 
