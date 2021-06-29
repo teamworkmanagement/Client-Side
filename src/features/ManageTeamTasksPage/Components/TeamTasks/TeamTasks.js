@@ -38,6 +38,8 @@ function TeamTasks(props) {
   const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
   const assignUser = useSelector((state) => state.kanban.signalrData.reAssignUser);
 
+  const adminAction = useSelector(state => state.kanban.adminAction);
+
   const [notfound, setNotFound] = useState(false);
   const [showAddKBList, setShowAddKBList] = useState(false);
   const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
@@ -138,13 +140,13 @@ function TeamTasks(props) {
               </div>
             </CTooltip>
           </div>
-          {showMode === 1 && (
+          {showMode === 1 && adminAction && (
             <div className="add-btn add-list-btn" onClick={onCreateKanbanList}>
               <CIcon name="cil-plus" />
               Tạo danh sách
             </div>
           )}
-          {(showMode === 2 || showMode === 3) && (
+          {(showMode === 2 || showMode === 3) && adminAction && (
             <div className="add-btn add-task-btn" onClick={onCreateCard}>
               <CIcon name="cil-plus" />
               Tạo công việc

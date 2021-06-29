@@ -47,12 +47,13 @@ function KanbanList(props) {
       .removeKanbanList({
         params,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   const history = useHistory();
   const user = useSelector((state) => state.auth.currentUser);
+  const adminAction = useSelector(state => state.kanban.adminAction);
   useEffect(() => {
     /*const queryObj = queryString.parse(history.location.search);
 
@@ -128,7 +129,7 @@ function KanbanList(props) {
               </div>
             )}
           </Droppable>
-          <div
+          {adminAction && <div
             className="kanbanlist-footer-container"
             onClick={() => setShowAddCard(true)}
           >
@@ -136,7 +137,7 @@ function KanbanList(props) {
               <BsPlusSquare className="icon-plus" />
               Thêm thẻ
             </div>
-          </div>
+          </div>}
           <CreateCardModal
             showAddCard={showAddCard}
             setShowAddCard={setShowAddCard}

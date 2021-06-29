@@ -16,6 +16,7 @@ import CIcon from "@coreui/icons-react";
 import CreateCardModal from "../CreateCardModal/CreateCardModal";
 import { AiOutlineDelete } from "react-icons/ai";
 import kanbanApi from "src/api/kanbanApi";
+import { useSelector } from "react-redux";
 
 KanbanListHeader.propTypes = {};
 
@@ -25,6 +26,8 @@ function KanbanListHeader(props) {
   const [headerName, setHeaderName] = useState(clone.title);
   const [value, setValue] = useState(clone.title)
   const [showAddCard, setShowAddCard] = useState(false);
+  const adminAction = useSelector(state => state.kanban.adminAction);
+
   function HandleEditHeader() {
     setShowForm(true);
   }
@@ -77,7 +80,7 @@ function KanbanListHeader(props) {
             <div className="title">{props.title}</div>
           </div>
           <div className="cards-count">{props.cardCount}</div>
-          {!props.defaultList && <div className="header-actions-dropdown">
+          {!props.defaultList && adminAction && <div className="header-actions-dropdown">
             <CDropdown>
               <CDropdownToggle id="dropdownMenuButton" caret>
                 <div className="lane-actions">

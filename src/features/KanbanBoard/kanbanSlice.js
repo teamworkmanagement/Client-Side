@@ -26,6 +26,7 @@ const kanbanSlice = createSlice({
             kanbanLists: [],
             currentBoard: null,
             taskSelected: null,
+            adminAction: false,
         },
         signalrData: {
             addNewTask: null,
@@ -196,8 +197,10 @@ const kanbanSlice = createSlice({
     },
     extraReducers: {
         [getBoardDataForUI.fulfilled]: (state, action) => {
+            console.log(action.payload);
             state.kanbanBoard.kanbanLists = action.payload ? action.payload.kanbanListUIs : [];
             state.kanbanBoard.currentBoard = action.payload ? action.payload.kanbanBoardId : null;
+            state.adminAction = action.payload ? action.payload.adminAction : false;
         }
     }
 },
