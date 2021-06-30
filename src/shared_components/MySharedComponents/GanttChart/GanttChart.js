@@ -72,8 +72,8 @@ function GanttChart(props) {
           ...task,
           id: task.taskId,
           text: task.taskName,
-          start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
-          end_date: moment(task.taskDeadline).format("YYYY-MM-DD"),
+          start_date: new Date(task.taskStartDate),
+          end_date: new Date(task.taskDeadline),
           owner: "no one",
           progress: task.taskCompletedPercent / 100,
           filesCount: task.filesCount,
@@ -87,8 +87,8 @@ function GanttChart(props) {
           ...task,
           id: task.taskId,
           text: task.taskName,
-          start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
-          end_date: moment(task.taskDeadline).format("YYYY-MM-DD"),
+          start_date: new Date(task.taskStartDate),
+          end_date: new Date(task.taskDeadline),
           owner: "no one",
           progress: task.taskCompletedPercent / 100,
           filesCount: task.filesCount,
@@ -107,8 +107,6 @@ function GanttChart(props) {
     setData({
       data: newData
     })
-
-
   }, [addNewTask, removeTask, removeList])
 
 

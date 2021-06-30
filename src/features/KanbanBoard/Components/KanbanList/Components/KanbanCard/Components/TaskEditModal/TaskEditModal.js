@@ -455,7 +455,9 @@ function TaskEditModal(props) {
 
   function onChangeDeadline(e) {
     const dateParts = e.target.value.split("-");
-    const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    //const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+    const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
 
     setTask({
       ...task,
@@ -468,8 +470,14 @@ function TaskEditModal(props) {
   }
   function onChangeStartDate(e) {
     const dateParts = e.target.value.split("-");
-    const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    //const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 
+    const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
+
+    console.log(e.target.value);
+    console.log(new Date(e.target.value));
+    console.log(new Date(Date.UTC(e.target.value)));
+    //return;
     setTask({
       ...task,
       taskStartDate: newDate,
