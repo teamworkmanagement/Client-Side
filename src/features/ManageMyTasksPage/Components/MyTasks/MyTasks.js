@@ -95,7 +95,7 @@ function MyTasks(props) {
   }, [showMode])
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("realtime", updateTask);
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
@@ -185,7 +185,7 @@ function MyTasks(props) {
           dispatch(setCurrentBoard(null));
         }
       });
-  };
+  };*/
 
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
@@ -221,7 +221,7 @@ function MyTasks(props) {
     setApplyingFilter(false);
   }
 
-  function onEditModalClose() {
+  /*function onEditModalClose() {
     setIsShowEditPopup(false);
     console.log("ok");
 
@@ -232,7 +232,7 @@ function MyTasks(props) {
         history.location.search.lastIndexOf("&")
       ),
     });
-  }
+  }*/
 
   const onCreateCard = () => {
     console.log('default list');

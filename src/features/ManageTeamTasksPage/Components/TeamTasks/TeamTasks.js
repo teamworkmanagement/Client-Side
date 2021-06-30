@@ -207,7 +207,7 @@ function TeamTasks(props) {
     </>
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("realtime", updateTask);
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
@@ -299,7 +299,7 @@ function TeamTasks(props) {
         history.location.search.lastIndexOf("&")
       ),
     });
-  }
+  }*/
 
   const onCreateCard = () => {
     console.log('default list');
@@ -345,12 +345,12 @@ function TeamTasks(props) {
         onClose={onClose}
       />
 
-      <TaskEditModal
+      {/*<TaskEditModal
         isOfTeam={true}
         closePopup={onEditModalClose}
         isShowEditPopup={isShowEditPopup}
         data={modalTaskObj}
-      />
+      />*/}
     </div>
   );
 }
