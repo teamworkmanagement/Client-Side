@@ -127,8 +127,9 @@ const TheLayout = () => {
 
         if (err.Message && err.Message.includes("Not found permission")) {
           dispatch(setCurrentBoard(null));
-          dispatch(setTaskEditModal(null));
         }
+
+        dispatch(setTaskEditModal(null));
       });
   };
 
