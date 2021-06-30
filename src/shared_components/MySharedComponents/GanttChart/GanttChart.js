@@ -14,6 +14,9 @@ import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
 import queryString from "query-string";
+import "moment/locale/vi";
+
+moment.locale("vi");
 
 function GanttChart(props) {
   const input = useRef(null);
@@ -72,8 +75,8 @@ function GanttChart(props) {
           ...task,
           id: task.taskId,
           text: task.taskName,
-          start_date: new Date(task.taskStartDate),
-          end_date: new Date(task.taskDeadline),
+          start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
+          end_date: moment(task.taskDeadline).format("YYYY-MM-DD"),
           owner: "no one",
           progress: task.taskCompletedPercent / 100,
           filesCount: task.filesCount,
@@ -87,8 +90,8 @@ function GanttChart(props) {
           ...task,
           id: task.taskId,
           text: task.taskName,
-          start_date: new Date(task.taskStartDate),
-          end_date: new Date(task.taskDeadline),
+          start_date: moment(task.taskStartDate).format("YYYY-MM-DD"),
+          end_date: moment(task.taskDeadline).format("YYYY-MM-DD"),
           owner: "no one",
           progress: task.taskCompletedPercent / 100,
           filesCount: task.filesCount,
