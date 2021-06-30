@@ -32,7 +32,7 @@ connection.on("RemoveList", payload => {
 })
 
 connection.on("MoveTask", payload => {
-    //console.log("move task ", payload);
+    console.log("move task ", payload);
     store.dispatch(signalRMoveTask(payload));
 })
 

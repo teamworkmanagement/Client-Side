@@ -126,9 +126,17 @@ const appSlice = createSlice({
     userModal: {
       show: false,
       userId: null,
-    }
+    },
+    taskEditModal: null,
+    viewHistory: null
   },
   reducers: {
+    setViewHistory(state, action) {
+      state.viewHistory = action.payload;
+    },
+    setTaskEditModal(state, action) {
+      state.taskEditModal = action.payload;
+    },
     setUserModal(state, action) {
       state.userModal = action.payload;
     },
@@ -376,6 +384,8 @@ export const {
   changeStateChatListSidebar,
   changeStateSettingOptionsSidebar,
   changeUserSetting,
-  setUserModal
+  setUserModal,
+  setTaskEditModal,
+  setViewHistory
 } = actions; // named export
 export default reducer; // default export

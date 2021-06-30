@@ -29,6 +29,12 @@ const TheSidebar = (props) => {
     const action = changeState(param);
     dispatch(action);
   };
+
+  const onClick = () => {
+    const param = { type: "set", sidebarShow: false };
+    const action = changeState(param);
+    dispatch(action);
+  }
   return (
     <CSidebar show={show} onShowChange={onChange}>
       <CSidebarBrand className="d-md-down-none" to="/">
@@ -39,7 +45,7 @@ const TheSidebar = (props) => {
           </div>
         )}
       </CSidebarBrand>
-      <CSidebarNav>
+      <CSidebarNav onClick={onClick}>
         <CCreateElement
           items={navigation}
           components={{

@@ -2,6 +2,7 @@ $borderStyle: 1px solid #e6ebf1;
 $borderRadius: 0.625rem;
 
 .task-version-list-modal {
+    background-color: rgba(0, 0, 0, 0.5);
     .modal-body {
         .task-version-info {
             padding: 1rem;
@@ -9,7 +10,6 @@ $borderRadius: 0.625rem;
             border: $borderStyle;
             border-radius: $borderRadius;
             margin-bottom: 1.5rem;
-            cursor: pointer;
             transition: all 0.2s;
             .version-header {
                 display: flex;

@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBoardDataForUI, setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
-import { setTeamLoading } from "src/appSlice";
+import { setTaskEditModal, setTeamLoading } from "src/appSlice";
 import { BiFilterAlt } from "react-icons/bi";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
 import FilteredTasks from "./Components/FilteredTasks/FilteredTasks";
@@ -235,11 +235,17 @@ function TeamTasks(props) {
     }
 
     if (queryObj.t && queryObj.b && !isShowEditPopup) {
-      console.log(history.location.search);
+      /*console.log(history.location.search);
       console.log(isShowEditPopup);
       openEditPopup(queryObj.t);
       console.log("call api");
-      return;
+      return;*/
+
+      dispatch(setTaskEditModal({
+        show: true,
+        ownerId: props.ownerId,
+        isOfTeam: true
+      }));
     }
   }, [history.location.search]);
 
