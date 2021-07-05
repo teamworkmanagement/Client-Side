@@ -257,11 +257,6 @@ function TaskHistoryModal(props) {
             </div>
           );
         })}
-        <TaskInfoModal
-          taskInfo={taskVersion}
-          onClose={onCloseTaskInfo}
-          show={showTaskInfo}
-        />
       </CModalBody>
     </CModal>
   );

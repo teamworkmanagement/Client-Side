@@ -29,15 +29,15 @@ function Tag(props) {
     const dispatch = useDispatch();
     const showInfoClick = () => {
         
-        if(props.postId){
+       // if(props.postId){
             dispatch(setUserModal({
                 show: true,
                 userId: user.userId
             }));
-        }
-        else{
-            setShowModal(true);
-        }
+        //}
+        //else{
+          //  setShowModal(true);
+        //}
         
     }
 

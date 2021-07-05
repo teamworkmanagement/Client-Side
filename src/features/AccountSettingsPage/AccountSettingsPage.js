@@ -305,6 +305,7 @@ function AccountSettingsPage(props) {
                       <div className="require-item">*</div>Email
                     </CLabel>
                     <CInput
+                      disabled
                       type="email"
                       id="email-input"
                       placeholder="Nhập email..."

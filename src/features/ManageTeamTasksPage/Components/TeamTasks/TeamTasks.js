@@ -22,6 +22,7 @@ import taskApi from "src/api/taskApi";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
 import CreateCardModal from "src/features/KanbanBoard/Components/KanbanList/Components/CreateCardModal/CreateCardModal";
+import {setTaskEditModal} from "src/appSlice";
 
 TeamTasks.propTypes = {};
 
@@ -206,7 +207,7 @@ function TeamTasks(props) {
     </>
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("realtime", updateTask);
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
@@ -291,7 +292,6 @@ function TeamTasks(props) {
   function onEditModalClose() {
     setIsShowEditPopup(false);
     console.log("ok");
-
     history.push({
       pathname: history.location.pathname,
       search: history.location.search.substring(
@@ -299,7 +299,7 @@ function TeamTasks(props) {
         history.location.search.lastIndexOf("&")
       ),
     });
-  }
+  }*/
 
   const onCreateCard = () => {
     console.log('default list');
@@ -313,11 +313,17 @@ function TeamTasks(props) {
     }
 
     if (queryObj.t && queryObj.b && !isShowEditPopup) {
-      console.log(history.location.search);
+      /*console.log(history.location.search);
       console.log(isShowEditPopup);
       openEditPopup(queryObj.t);
       console.log("call api");
-      return;
+      return;*/
+
+      dispatch(setTaskEditModal({
+        show: true,
+        ownerId: queryObj.gr,
+        isOfTeam: true
+      }));
     }
   }, [history.location.search]);
 
@@ -339,12 +345,12 @@ function TeamTasks(props) {
         onClose={onClose}
       />
 
-      <TaskEditModal
+      {/*<TaskEditModal
         isOfTeam={true}
         closePopup={onEditModalClose}
         isShowEditPopup={isShowEditPopup}
         data={modalTaskObj}
-      />
+      />*/}
     </div>
   );
 }

@@ -30,7 +30,7 @@ import {
 import { CirclePicker } from "react-color";
 import ProgressSlider from "src/shared_components/MySharedComponents/ProgressSlider/ProgressSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { updateTask } from "src/appSlice";
+import { setViewHistory, updateTask } from "src/appSlice";
 import moment from "moment";
 import TextareaAutosize from "react-textarea-autosize";
 import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/CommentItem/CommentItem";
@@ -51,6 +51,7 @@ import TaskCommentInput from "./TaskCommentInput";
 import { convertToRaw } from "draft-js";
 import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
+import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 
 TaskEditModal.propTypes = {};
 
@@ -220,34 +221,16 @@ function TaskEditModal(props) {
     if (kanbanLists.length == 0) return;
     var cloneLists = [...kanbanLists];
 
-    //console.log(cloneLists);
+    console.log(cloneLists);
+    console.log(task);
     for (let i = 0; i < cloneLists.length; i++) {
       cloneLists[i] = {
         ...cloneLists[i],
         active: false,
       };
     }
-
     setKanbanLocal(cloneLists);
   }, [kanbanLists]);
-  const addToast = () => {
-    setToasts([
-      ...toasts,
-      {
-        position: "top-right",
-        autohide: 1000,
-        closeButton: false,
-        fade: true,
-      },
-    ]);
-  };
-  const toasters = (() => {
-    return toasts.reduce((toasters, toast) => {
-      toasters[toast.position] = toasters[toast.position] || [];
-      toasters[toast.position].push(toast);
-      return toasters;
-    }, {});
-  })();
 
   const imageRef = useRef(null);
   const fileRef = useRef(null);
@@ -448,7 +431,6 @@ function TaskEditModal(props) {
       task.taskName === undefined ||
       task.taskName === null
     ) {
-      addToast();
       return;
     }
 
@@ -461,7 +443,6 @@ function TaskEditModal(props) {
 
   function onSaveTaskDescription() {
     if (task.taskDescription === "") {
-      addToast();
       return;
     }
 
@@ -474,7 +455,9 @@ function TaskEditModal(props) {
 
   function onChangeDeadline(e) {
     const dateParts = e.target.value.split("-");
-    const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    //const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+    const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
 
     setTask({
       ...task,
@@ -487,8 +470,14 @@ function TaskEditModal(props) {
   }
   function onChangeStartDate(e) {
     const dateParts = e.target.value.split("-");
-    const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+    //const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 
+    const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
+
+    console.log(e.target.value);
+    console.log(new Date(e.target.value));
+    console.log(new Date(Date.UTC(e.target.value)));
+    //return;
     setTask({
       ...task,
       taskStartDate: newDate,
@@ -831,8 +820,42 @@ function TaskEditModal(props) {
   }
 
   const changeListClick = (index) => {
+    console.log(kanbanLists);
+    console.log(kanbanLocal);
+    const localObjIndex = kanbanLocal.findIndex(kl => kl.active);
+
+    if (localObjIndex == index) {
+      alert('errror');
+      return;
+    }
+
+    const newList = kanbanLocal[index]
+    console.log(newList.kanbanListId);
+
+    let pos = -9999;
+    if (newList.taskUIKanbans.length === 0) {
+      pos = genNewRank();
+    } else {
+      pos = FindNextRank(
+        newList.taskUIKanbans[newList.taskUIKanbans.length - 1].taskRankInList
+      );
+    };
+
+    taskApi
+      .dragTask({
+        taskId: task.taskId,
+        position: pos,
+        oldList: kanbanLocal[localObjIndex].kanbanListId,
+        newList: newList.kanbanListId,
+        boardId: currentBoard,
+
+      })
+      .then((res) => { })
+      .catch((err) => { });
+
+    console.log("zzzzz: ", index);
     selectList(index);
-    console.log("zzzzz");
+
   };
 
   function renderContentList() {
@@ -1046,14 +1069,10 @@ function TaskEditModal(props) {
   };
 
   const viewHistory = () => {
-    taskApi
-      .getVersion(task.taskId)
-      .then((res) => {
-        console.log(res.data);
-        setDetails(res.data);
-        setShowTaskHistoryModal(true);
-      })
-      .catch((err) => { });
+    dispatch(setViewHistory({
+      show: true,
+      taskId: task.taskId,
+    }));
   };
 
   const pop1 = useRef();
@@ -1627,11 +1646,7 @@ function TaskEditModal(props) {
             <Loading />
           )}
         </CModalBody>
-        <TaskHistoryModal
-          details={details}
-          show={showTaskHistoryModal}
-          onClose={onCloseTaskHistoryModal}
-        />
+
       </CModal>
     </div>
   );

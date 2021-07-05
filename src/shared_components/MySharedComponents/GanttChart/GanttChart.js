@@ -14,6 +14,9 @@ import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
 import queryString from "query-string";
+import "moment/locale/vi";
+
+moment.locale("vi");
 
 function GanttChart(props) {
   const input = useRef(null);
@@ -107,8 +110,6 @@ function GanttChart(props) {
     setData({
       data: newData
     })
-
-
   }, [addNewTask, removeTask, removeList])
 
 

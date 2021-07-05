@@ -14,7 +14,7 @@ import { BsSearch } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { getBoardDataForUI, setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
-import { setTeamLoading } from "src/appSlice";
+import { setTaskEditModal, setTeamLoading } from "src/appSlice";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
 import queryString from "query-string";
@@ -95,7 +95,7 @@ function MyTasks(props) {
   }, [showMode])
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("realtime", updateTask);
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
@@ -103,24 +103,14 @@ function MyTasks(props) {
     if (updateTask && updateTask.taskId === queryObj.t) {
       console.log("realtime");
 
-      let params = {};
-      if (props.isOfTeam) {
-        params = {
-          isOfTeam: true,
-          ownerId: props.ownerId,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      } else {
-        params = {
-          isOfTeam: false,
-          ownerId: user.id,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      }
+      const params = {
+        isOfTeam: false,
+        ownerId: user.id,
+        boardId: queryObj.b,
+        taskId: updateTask.taskId,
+        userRequest: user.id,
+      };
+
       taskApi
         .getTaskByBoard({ params })
         .then((res) => {
@@ -195,7 +185,7 @@ function MyTasks(props) {
           dispatch(setCurrentBoard(null));
         }
       });
-  };
+  };*/
 
   useEffect(() => {
     const queryObj = queryString.parse(history.location.search);
@@ -204,11 +194,17 @@ function MyTasks(props) {
     }
 
     if (queryObj.t && queryObj.b && !isShowEditPopup) {
-      console.log(history.location.search);
+      /*console.log(history.location.search);
       console.log(isShowEditPopup);
       openEditPopup(queryObj.t);
       console.log("call api");
-      return;
+      return;*/
+
+      dispatch(setTaskEditModal({
+        show: true,
+        ownerId: user.id,
+        isOfTeam: false
+      }));
     }
   }, [history.location.search]);
 
@@ -225,7 +221,7 @@ function MyTasks(props) {
     setApplyingFilter(false);
   }
 
-  function onEditModalClose() {
+  /*function onEditModalClose() {
     setIsShowEditPopup(false);
     console.log("ok");
 
@@ -236,7 +232,7 @@ function MyTasks(props) {
         history.location.search.lastIndexOf("&")
       ),
     });
-  }
+  }*/
 
   const onCreateCard = () => {
     console.log('default list');
@@ -329,12 +325,12 @@ function MyTasks(props) {
         onClose={onClose}
       />
 
-      <TaskEditModal
+      {/*<TaskEditModal
         isOfTeam={false}
         closePopup={onEditModalClose}
         isShowEditPopup={isShowEditPopup}
         data={modalTaskObj}
-      />
+          />*/}
 
       <CreateCardModal
         showAddCard={showAddCard}

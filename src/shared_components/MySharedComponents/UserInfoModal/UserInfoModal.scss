@@ -1,10 +1,12 @@
 $subTextColor: #768192;
 .user-info-modal {
+    background-color: rgba(0, 0, 0, 0.5);
     .modal-content {
         margin-top: 0 !important;
         min-width: 15rem;
     }
     .modal-body {
+        
         padding-left: 2rem;
         padding-right: 2rem;
         display: flex;
