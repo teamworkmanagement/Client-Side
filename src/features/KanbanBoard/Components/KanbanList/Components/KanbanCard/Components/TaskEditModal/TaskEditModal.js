@@ -316,6 +316,9 @@ function TaskEditModal(props) {
         setListScores(scoreClone);
       }
     }
+    else{
+      setTask({});
+    }
   }, [props.data]);
 
   const onChange = (e) => {

@@ -33,7 +33,7 @@ const TheSidebar = (props) => {
   const onClick = () => {
     const param = { type: "set", sidebarShow: false };
     const action = changeState(param);
-    dispatch(action);
+    //dispatch(action);
   }
   return (
     <CSidebar show={show} onShowChange={onChange}>

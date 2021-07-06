@@ -152,6 +152,8 @@ const TheLayout = () => {
 
 
   const onEditModalClose = () => {
+    console.log('on close');
+    setModaTaskObj(null);
     dispatch(setTaskEditModal(null));
     history.push({
       pathname: history.location.pathname,

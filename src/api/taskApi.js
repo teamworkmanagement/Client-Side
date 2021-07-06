@@ -51,6 +51,10 @@ const taskApi = {
     getVersion(taskId) {
         const url = `/taskver/bytaskid/${taskId}`;
         return axiosClient.get(url);
+    },
+    searchTasks(params) {
+        const url = 'kanbanboard/search-tasklist-inboards';
+        return axiosClient.get(url, params);
     }
 };
 

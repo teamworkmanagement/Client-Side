@@ -137,7 +137,7 @@ function BoardsPage(props) {
           <div className="noti-infor">
             Chưa có bảng công việc nào trong nhóm này
           </div>
-          <div className="create-btn">Tạo bảng công việc mới</div>
+          {/*<div className="create-btn">Tạo bảng công việc mới</div>*/}
         </div>
       )}
     </div>
