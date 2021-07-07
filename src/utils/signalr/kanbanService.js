@@ -3,7 +3,7 @@ import store from '../../app/store';
 
 import { reAssignUser, signalRAddFile, signalRAddNewList, signalRAddNewTask, signalRChangeNameList, signalRMoveList, signalRMoveTask, signalRRemoveList, signalRRemoveTask, signalRUpdateList, signalRUpdateTask } from "src/features/KanbanBoard/kanbanSlice";
 
-import {SIGNALR_URL} from "../../env";
+import { SIGNALR_URL } from "../../env";
 
 
 
@@ -66,7 +66,7 @@ connection.on("AddFile", payload => {
 })
 
 export const startKanbanService = () => {
-    if (connection.state == 'Disconnected') {
+    if (connection.state == 'Disconnected' || connection.state != 'Connected') {
         startSignalRConnection(connection);
     }
 }
