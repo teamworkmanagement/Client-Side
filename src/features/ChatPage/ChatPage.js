@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import "./ChatPage.scss";
 import {
   CButton,
@@ -23,11 +22,10 @@ import {
 } from "./chatSlice";
 import { myBucket } from "src/utils/aws/config";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
-import { useHistory, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import queryString from "query-string";
 import AddMembers from "./Components/AddMembers/CreateNewConversation/AddMembers";
 import { BsSearch } from "react-icons/bs";
-import { IoInformationCircleOutline } from "react-icons/io";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import CreateChatInChatPage from "./Components/CreateNewConversation/CreateChatInChatPage";
 import { changeStateChatListSidebar } from "src/appSlice";
@@ -35,8 +33,6 @@ import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import chatApi from "src/api/chatApi";
 import uuid from "src/utils/file/uuid";
 import { useParams } from "react-router-dom";
-
-ChatPage.propTypes = {};
 
 function ChatPage(props) {
   const dispatch = useDispatch();
@@ -61,7 +57,9 @@ function ChatPage(props) {
   const imgPickerRef = useRef(null);
   const filePickerRef = useRef(null);
 
-  const group = useSelector(state => state.chat.groupChat.find(x => x.groupChatId === currentGroup))
+  const group = useSelector((state) =>
+    state.chat.groupChat.find((x) => x.groupChatId === currentGroup)
+  );
 
   useEffect(() => {
     if (loadDone) {
@@ -74,9 +72,7 @@ function ChatPage(props) {
     }
   }, [loadDone]);
 
-  useEffect(() => {
-
-  }, [currentGroup]);
+  useEffect(() => {}, [currentGroup]);
 
   const { teamId } = useParams();
   useEffect(() => {
@@ -217,7 +213,6 @@ function ChatPage(props) {
     });
   };
 
-
   const onSearchChange = (e) => {
     console.log(e.target.value);
     const params = {
@@ -261,24 +256,24 @@ function ChatPage(props) {
           imageUrl: url,
         };
 
-        chatApi.changeGroupChatImageUrl(payload)
-          .then(res => {
+        chatApi
+          .changeGroupChatImageUrl(payload)
+          .then((res) => {
             //dispatch(updateGroupChatImage(payload));
-          }).catch(err => {
-
           })
+          .catch((err) => {});
       });
     });
-  }
+  };
 
   const onOpenPickAvatarImage = () => {
-    console.log('update')
-    imgAvatarPickerRef.current.click()
-  }
+    console.log("update");
+    imgAvatarPickerRef.current.click();
+  };
 
   const onAddMembers = () => {
     setShowAddMembers(true);
-  }
+  };
 
   return (
     <div className="chat-page-container">
@@ -349,19 +344,27 @@ function ChatPage(props) {
                         aria-labelledby="dropdownMenuButton"
                         placement="bottom-end"
                       >
-                        <CDropdownItem className="first" onClick={() => onOpenPickAvatarImage()}>
+                        <CDropdownItem
+                          className="first"
+                          onClick={() => onOpenPickAvatarImage()}
+                        >
                           <div className="info-icon-group">
                             <AiOutlineInfoCircle className="icon-info-chat" />
                           </div>
                           Đổi avatar
                         </CDropdownItem>
-                        {!group.isOfTeam && <CDropdownItem onClick={onAddMembers} className="last">
-                          <CIcon
-                            name="cil-user-follow"
-                            className="icon-delete"
-                          />
-                          Thêm thành viên
-                        </CDropdownItem>}
+                        {!group.isOfTeam && (
+                          <CDropdownItem
+                            onClick={onAddMembers}
+                            className="last"
+                          >
+                            <CIcon
+                              name="cil-user-follow"
+                              className="icon-delete"
+                            />
+                            Thêm thành viên
+                          </CDropdownItem>
+                        )}
                       </CDropdownMenu>
                     </CDropdown>
                   </div>

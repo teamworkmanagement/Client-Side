@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./InviteMemberModal.scss";
 import {
   CButton,
@@ -7,22 +6,16 @@ import {
   CModal,
   CModalBody,
   CModalHeader,
-  CToast,
-  CToastBody,
-  CToaster,
 } from "@coreui/react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import teamApi from "src/api/teamApi";
 import { useParams } from "react-router";
-import MyToaster from "src/features/ToastTest/ToastTest";
-
-InviteMemberModal.propTypes = {};
 
 function InviteMemberModal(props) {
   const { teamId } = useParams();
   const [email, setEmail] = useState("");
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   function handleOnClose() {
     if (props.onClose) {
@@ -50,7 +43,7 @@ function InviteMemberModal(props) {
     }
   }
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   return (
     <CModal

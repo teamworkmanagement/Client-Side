@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   CCreateElement,
@@ -12,8 +12,6 @@ import {
   CSidebarNavItem,
 } from "@coreui/react";
 import "./TheSidebar.scss";
-
-import CIcon from "@coreui/icons-react";
 
 // sidebar nav config
 import navigation from "./_nav";
@@ -31,10 +29,10 @@ const TheSidebar = (props) => {
   };
 
   const onClick = () => {
-    const param = { type: "set", sidebarShow: false };
-    const action = changeState(param);
-    //dispatch(action);
-  }
+    // const param = { type: "set", sidebarShow: false };
+    // const action = changeState(param);
+    // dispatch(action);
+  };
   return (
     <CSidebar show={show} onShowChange={onChange}>
       <CSidebarBrand className="d-md-down-none" to="/">

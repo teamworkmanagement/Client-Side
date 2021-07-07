@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import "./TaskListItem.scss";
 import CIcon from "@coreui/icons-react";
 import {
@@ -10,26 +9,12 @@ import {
   CProgress,
 } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
-import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
-import taskApi from "src/api/taskApi";
 import { useHistory } from "react-router";
-import queryString from "query-string";
 import { AiOutlineDelete } from "react-icons/ai";
 
-TaskListItem.propTypes = {};
-
 function TaskListItem(props) {
-  //const files = useSelector((state) => state.app.files);
-  //const handleTasks = useSelector((state) => state.app.handleTasks);
-  //const users = useSelector((state) => state.app.users);
-  const dispatch = useDispatch();
   const history = useHistory();
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
-  const [modalTask, setModaTask] = useState(null);
-  //const attachmentsCount = getAttachmentsCount();
-  const daysLeftCount = countDaysLeft();
-  //const assignedUserImage = getAssignedUserImage();
 
   function onEditModalClose() {
     setIsShowEditPopup(false);

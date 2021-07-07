@@ -1,15 +1,14 @@
 import CIcon from "@coreui/icons-react";
-import { CDataTable, CPagination, CTooltip } from "@coreui/react";
+import { CDataTable, CTooltip } from "@coreui/react";
 import { setTimeout } from "core-js";
 import moment from "moment";
 import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
 import React, { useEffect, useRef, useState } from "react";
-import { BsUpload } from "react-icons/bs";
 import { CgSoftwareUpload } from "react-icons/cg";
 import { VscSearchStop, VscSymbolFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
-import { Prompt, useHistory, useParams } from "react-router";
+import { Prompt, useParams } from "react-router";
 import { toast } from "react-toastify";
 import fileApi from "src/api/fileApi";
 import { myBucket } from "src/utils/aws/config";
@@ -21,299 +20,8 @@ import "./ListFileTable.scss";
 import UploadItem from "./ProgressBottom/UploadItem";
 
 moment.locale("vi");
-ListFileTable.propTypes = {};
 
 function ListFileTable(props) {
-  const usersData = [
-    {
-      id: 0,
-      name: "John Doe",
-      registered: "2018/01/01",
-      role: "Guest",
-      status: "Pending",
-    },
-    {
-      id: 1,
-      name: "Samppa Nori",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Estavan Lykos",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 3,
-      name: "Chetan Mohamed",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      name: "Derick Maximinus",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 5,
-      name: "Friderik Dávid",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 6,
-      name: "Yiorgos Avraamu",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 7,
-      name: "Avram Tarasios",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 8,
-      name: "Quintin Ed",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 9,
-      name: "Enéas Kwadwo",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 10,
-      name: "Agapetus Tadeáš",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 11,
-      name: "Carwyn Fachtna",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 12,
-      name: "Nehemiah Tatius",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 13,
-      name: "Ebbe Gemariah",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 14,
-      name: "Eustorgios Amulius",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 15,
-      name: "Leopold Gáspár",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 16,
-      name: "Pompeius René",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 17,
-      name: "Paĉjo Jadon",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 18,
-      name: "Micheal Mercurius",
-      registered: "2018/02/01",
-      role: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 19,
-      name: "Ganesha Dubhghall",
-      registered: "2018/03/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 20,
-      name: "Hiroto Šimun",
-      registered: "2018/01/21",
-      role: "Staff",
-      status: "Active",
-    },
-    {
-      id: 21,
-      name: "Vishnu Serghei",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Active",
-    },
-    {
-      id: 22,
-      name: "Zbyněk Phoibos",
-      registered: "2018/02/01",
-      role: "Staff",
-      status: "Banned",
-    },
-    {
-      id: 23,
-      name: "Aulus Agmundr",
-      registered: "2018/01/01",
-      role: "Member",
-      status: "Pending",
-    },
-    {
-      id: 42,
-      name: "Ford Prefect",
-      registered: "2001/05/25",
-      role: "Alien",
-      status: "Don't panic!",
-    },
-  ];
-
-  const FilesData = [
-    {
-      id: 51,
-      name: "Notes.rar",
-      createdAt: "20/12/2020",
-      size: "1MB",
-      owner: "Nguyễn Thanh",
-      type: "png",
-      ownerImageURL: "avatars/6.jpg",
-      downloadIcon: "images/download.png",
-    },
-    {
-      id: 542,
-      name: "Báo cáo.docx",
-      createdAt: "18/12/2021",
-      size: "10MB",
-      owner: "Nguyễn Thanh",
-      type: "Word",
-      ownerImageURL: "avatars/5.jpg",
-    },
-    {
-      id: 83,
-      name: "Thuyết trình .ptpx",
-      createdAt: "21/01/2020",
-      size: "107KB",
-      owner: "Nguyễn Khoa",
-      type: "PowerPoint",
-      ownerImageURL: "avatars/4.jpg",
-    },
-    {
-      id: 44,
-      name: "Khóa luận.txt",
-      createdAt: "20/21/2021",
-      size: "2MB",
-      owner: "Nguyễn Dũng",
-      type: "Text",
-      ownerImageURL: "avatars/3.jpg",
-    },
-    {
-      id: 35,
-      name: "Hello.zip",
-      createdAt: "14/03/2021",
-      size: "15GB",
-      owner: "Khoa Ng",
-      type: "Zip",
-      ownerImageURL: "avatars/2.jpg",
-    },
-    {
-      id: 96,
-      name: "Musics.rar",
-      createdAt: "12/04/2020",
-      size: "1.1GB",
-      owner: "Khoa Ng",
-      type: "Exe",
-      ownerImageURL: "avatars/1.jpg",
-    },
-    {
-      id: 351,
-      name: "Notes.rar",
-      createdAt: "20/12/2020",
-      size: "1MB",
-      owner: "Nguyễn Thanh",
-      type: "png",
-      ownerImageURL: "avatars/6.jpg",
-      downloadIcon: "images/download.png",
-    },
-    {
-      id: 3542,
-      name: "Báo cáo.docx",
-      createdAt: "18/12/2021",
-      size: "10MB",
-      owner: "Nguyễn Thanh",
-      type: "Word",
-      ownerImageURL: "avatars/5.jpg",
-    },
-    {
-      id: 383,
-      name: "Thuyết trình .ptpx",
-      createdAt: "21/01/2020",
-      size: "107KB",
-      owner: "Nguyễn Khoa",
-      type: "PowerPoint",
-      ownerImageURL: "avatars/4.jpg",
-    },
-    {
-      id: 344,
-      name: "Khóa luận.txt",
-      createdAt: "20/21/2021",
-      size: "2MB",
-      owner: "Nguyễn Dũng",
-      type: "Text",
-      ownerImageURL: "avatars/3.jpg",
-    },
-    {
-      id: 335,
-      name: "Hello.zip",
-      createdAt: "14/03/2021",
-      size: "15GB",
-      owner: "Khoa Ng",
-      type: "Zip",
-      ownerImageURL: "avatars/2.jpg",
-    },
-    {
-      id: 396,
-      name: "Musics.rar",
-      createdAt: "12/04/2020",
-      size: "1.1GB",
-      owner: "Khoa Ng",
-      type: "Exe",
-      ownerImageURL: "avatars/1.jpg",
-    },
-  ];
   const tableContainerRef = useRef(null);
   // useEffect(() => {
   //   tableContainerRef.current.children[1].children[0].children[0].children[0].innerHTML =
@@ -322,12 +30,9 @@ function ListFileTable(props) {
   //     "Số dòng:";
   // });
 
-  const [details, setDetails] = useState([]);
-  const [fail, setFail] = useState(false);
   const [upload, setUpload] = useState(false);
   const [progress, setProgress] = useState(0);
   const [datas, setDatas] = useState([]);
-  const [totals, setTotals] = useState(0);
   const [page, setPage] = useState(1);
   const [cfile, setCfile] = useState(null); //current file
   const [showExitPrompt, setShowExitPrompt] = useExitPrompt(false);
@@ -335,16 +40,9 @@ function ListFileTable(props) {
   const [showError, setShowError] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
   const pickerRef = useRef(null);
-  const history = useHistory();
-  const pageSize = 5;
   const maxSize = 30; //MB
 
   const { teamId } = useParams();
-
-  const handleDownload = (index) => {
-    console.log("action in table");
-    //setDetails();
-  };
 
   const fields = [
     { key: "name", label: "Tên tệp", _style: { width: "30%" } },
@@ -451,7 +149,7 @@ function ListFileTable(props) {
         setDatas(dts);
         //setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         //console.log(outPut.data.items);
-      } catch (err) { }
+      } catch (err) {}
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -459,10 +157,6 @@ function ListFileTable(props) {
   useEffect(() => {
     setShowExitPrompt(upload);
   }, [upload]);
-
-  const setActivePage = (i) => {
-    if (i !== 0) setPage(i);
-  };
 
   function NoItemView() {
     return (
@@ -482,18 +176,18 @@ function ListFileTable(props) {
 
   const copyFile = (item) => {
     console.log(item);
-    fileApi.copyFile({
-      userId: user.id,
-      fileId: item.id,
-    }).then(res => {
-      toast(<CustomToast
-        type="success"
-        title="Thông báo"
-        message="Thành công!" />)
-    }).catch(err => {
-
-    })
-  }
+    fileApi
+      .copyFile({
+        userId: user.id,
+        fileId: item.id,
+      })
+      .then((res) => {
+        toast(
+          <CustomToast type="success" title="Thông báo" message="Thành công!" />
+        );
+      })
+      .catch((err) => {});
+  };
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
       <div onClick={onClick} className="upload-container">
@@ -595,8 +289,11 @@ function ListFileTable(props) {
                     </div>
                   </CTooltip>
 
-                  <CTooltip placement="top" content="Lưu vào tệp của tôi" >
-                    <div className="share-btn-container" onClick={() => copyFile(item)}>
+                  <CTooltip placement="top" content="Lưu vào tệp của tôi">
+                    <div
+                      className="share-btn-container"
+                      onClick={() => copyFile(item)}
+                    >
                       <CIcon name="cil-share-all" />
                     </div>
                   </CTooltip>

@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import Select, { components } from "react-select";
 import axiosClient from "src/api/axiosClient";
 import CIcon from "@coreui/icons-react";
 import { useSelector } from "react-redux";
 import "./GroupFilter.scss";
-
-GroupFilter.propTypes = {};
 
 const CustomControl = ({ children, ...props }) => {
   return (

@@ -1,26 +1,16 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./KanbanBoard.scss";
 import { useDispatch, useSelector } from "react-redux";
 import KanbanList from "./Components/KanbanList/KanbanList";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import {
-  setKanbanBoardData,
-  setKanbanLists,
-  setTeamLoading,
-} from "src/appSlice";
-import { CButton, CButtonGroup } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+import { setTeamLoading } from "src/appSlice";
 
 import taskApi from "src/api/taskApi";
 import kanbanApi from "src/api/kanbanApi";
-import CardLoading from "./Components/KanbanList/Components/KanbanCard/Components/CardLoading/CardLoading";
 import { RiTableLine } from "react-icons/ri";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
 import queryString from "query-string";
-import { unwrapResult } from "@reduxjs/toolkit";
-import TaskEditModal from "./Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import {
   FindNextRank,
   FindPreRank,
@@ -31,8 +21,6 @@ import { connection } from "src/utils/signalr/kanbanService";
 import { dragListLocal, dragTaskLocal, setCurrentBoard } from "./kanbanSlice";
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
-
-KanbanBoard.propTypes = {};
 
 function KanbanBoard(props) {
   const dispatch = useDispatch();
@@ -143,8 +131,8 @@ function KanbanBoard(props) {
           boardId: currentBoard,
           connectionId: connection.connectionId,
         })
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
     } else {
       if (destination.index === 0) {
         pos = FindPreRank(cloneKbLists[0].kanbanListRankInBoard);
@@ -181,13 +169,12 @@ function KanbanBoard(props) {
           kanbanListId: draggableId,
           connectionId: connection.connectionId,
         })
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
     }
   }
 
   const history = useHistory();
-  const [notask, setNoTask] = useState(false);
 
   const [boardId, setBoardId] = useState(null);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);

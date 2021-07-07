@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import "./TeamMembersList.scss";
 import {
   CButton,
@@ -14,12 +13,9 @@ import {
   CPagination,
   CRow,
   CTooltip,
-  CToast,
-  CToastBody,
-  CToaster,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { Redirect, useHistory, useParams } from "react-router";
+import { Redirect, useParams } from "react-router";
 import teamApi from "src/api/teamApi";
 import InviteMemberModal from "./InviteMemberModal/InviteMemberModal";
 import chatApi from "src/api/chatApi";
@@ -35,19 +31,12 @@ import EditTeamNameModal from "./EditTeamNameModal/EditTeamNameModal";
 import EditTeamDescriptionModal from "./EditTeamDescriptionModal/EditTeamDescriptionModal";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
-import { setIsSelected } from "src/features/ChatPage/chatSlice";
-import UserInfoModal from "src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal";
 import { CgArrowsExchange } from "react-icons/cg";
 import { setUserModal } from "src/appSlice";
 
-TeamMembersList.propTypes = {};
-
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
-  const history = useHistory();
-  const teamName = "Nhóm ôn thi TOEIC";
-  const teamDescription =
-    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.";
+
   const [currentPage, setCurrentPage] = useState(1);
   function switchShowMode(index) {
     if (index === showMode) return;
@@ -75,15 +64,12 @@ function TeamMembersList(props) {
   const [showEditName, setShowEditName] = useState(false);
   const [showEditDescription, setShowEditDescription] = useState(false);
   const [showStartChat, setShowStartChat] = useState(false);
-  const [toasts, setToasts] = useState([]);
-  const [toastContent, setToastContent] = useState("");
   const [pages, setPages] = useState(1);
   const [fixedMembers, setFixedMembers] = useState([]);
   const user = useSelector((state) => state.auth.currentUser);
   const [loadingMembers, setLoadingMembers] = useState(false);
   const { teamId } = useParams();
   const [filterObj, setFilterObj] = useState(null);
-  const [showUserInfo, setShowUserInfo] = useState(false);
 
   const imgPickerRef = useRef(null);
 
@@ -99,7 +85,7 @@ function TeamMembersList(props) {
         console.log(res);
         setAdmin(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
 
     const params = {
       teamId: teamId,
@@ -127,7 +113,7 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [teamId]);
 
   const currentPageChange = (index) => {
@@ -211,7 +197,7 @@ function TeamMembersList(props) {
           ]);
         }
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const dispatch = useDispatch();
@@ -257,7 +243,7 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(newTeam);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const onPickImage = (e) => {
@@ -297,7 +283,7 @@ function TeamMembersList(props) {
 
             props.changeLeader();
           })
-          .catch((err) => { });
+          .catch((err) => {});
 
         const params = {
           teamId: teamId,
@@ -322,9 +308,9 @@ function TeamMembersList(props) {
           .then((res) => {
             setTeam(res.data);
           })
-          .catch((err) => { });
+          .catch((err) => {});
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const quitTeam = (item) => {
@@ -346,7 +332,7 @@ function TeamMembersList(props) {
 
         setFilterObj(params);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -362,7 +348,7 @@ function TeamMembersList(props) {
           setMembers(res.data.items);
           setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
         })
-        .catch((err) => { })
+        .catch((err) => {})
         .finally(() => {
           setLoadingMembers(false);
         });
@@ -374,11 +360,13 @@ function TeamMembersList(props) {
   const [userId, setUserId] = useState(null);
   const xemThongTin = (item) => {
     setUserId(item.userId);
-    dispatch(setUserModal({
-      show: true,
-      userId: item.userId,
-    }));
-  }
+    dispatch(
+      setUserModal({
+        show: true,
+        userId: item.userId,
+      })
+    );
+  };
   return (
     <div className="team-members-container">
       {redirect ? <Redirect from="/team" to={redirect} /> : null}
@@ -663,7 +651,6 @@ function TeamMembersList(props) {
                                 Xem thông tin
                               </CDropdownItem>
 
-
                               {team.teamLeaderId === user.id && (
                                 <CDropdownItem
                                   className="normal"
@@ -725,7 +712,6 @@ function TeamMembersList(props) {
         fixedMembers={fixedMembers}
         onModalClose={onStartChatClose}
       />
-
     </div>
   );
 }

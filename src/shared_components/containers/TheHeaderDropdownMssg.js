@@ -5,24 +5,15 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-  CImg,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import notiApi from "src/api/notiApi";
 
-import TimeAgo from "timeago-react";
-import * as timeago from "timeago.js";
-import vi from "timeago.js/lib/lang/vi";
-
-import classNames from "classnames";
 import { useSelector } from "react-redux";
-import uuid from "src/utils/file/uuid";
 import "./notification.scss";
 import { useHistory } from "react-router";
 import "./TheHeaderDropdownMssg.scss";
-import { AiOutlineNotification } from "react-icons/ai";
 import { HiOutlineBan } from "react-icons/hi";
-import { VscArrowUp } from "react-icons/vsc";
 import moment from "moment";
 import "moment/locale/vi";
 
@@ -52,7 +43,7 @@ const TheHeaderDropdownMssg = () => {
           [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [triggerLoad]);
 
   useEffect(() => {
@@ -76,7 +67,10 @@ const TheHeaderDropdownMssg = () => {
         userId: user.id,
       };
 
-      notiApi.readNoti(payload).then(res => { }).catch(err => { });
+      notiApi
+        .readNoti(payload)
+        .then((res) => {})
+        .catch((err) => {});
       const cloneNotis = [...notis];
 
       cloneNotis[index].notificationStatus = true;
@@ -110,7 +104,6 @@ const TheHeaderDropdownMssg = () => {
       default:
         return "";
     }
-    return noti.notiType;
   }
 
   const bellRef = useRef(null);
@@ -136,12 +129,11 @@ const TheHeaderDropdownMssg = () => {
     if (dateStr.length === 1) dateStr = "0" + dateStr;
     var monthStr = (date.getMonth() + 1).toString();
     if (monthStr.length === 1) monthStr = "0" + monthStr;
-    const yearStr = date.getFullYear();
 
     if (date.getFullYear() === today.getFullYear()) {
       //cùng năm khác ngày
       //return dateStr + "/" + monthStr;
-      return moment(notiDate).format("DD/MM")
+      return moment(notiDate).format("DD/MM");
     } else {
       //khác năm
       //return dateStr + "/" + monthStr + "/" + yearStr;
@@ -189,8 +181,9 @@ const TheHeaderDropdownMssg = () => {
                 return (
                   <div
                     onClick={() => onClick(noti, index)}
-                    className={`noti-item ${noti.notificationStatus ? "seen" : ""
-                      }`}
+                    className={`noti-item ${
+                      noti.notificationStatus ? "seen" : ""
+                    }`}
                   >
                     <div className="seen-signal"></div>
                     <img alt="" src={noti.notificationActionAvatar} />

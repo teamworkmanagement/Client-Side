@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./MyBoards.scss";
-import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
+import { CCol, CInput, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import kanbanApi from "src/api/kanbanApi";
 import { useSelector } from "react-redux";
@@ -9,26 +8,7 @@ import CreateMyBoardModal from "../CreateMyBoardModal/CreateMyBoardModal";
 import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 
-MyBoards.propTypes = {};
-
 function MyBoards(props) {
-  const listBoards = [
-    {
-      boardId: 1,
-      name: "Tasks Khóa luận",
-      tasksCount: 21,
-    },
-    { boardId: 2, name: "Reactjs Road map", tasksCount: 54 },
-    { boardId: 3, name: "Anh văn đề thi", tasksCount: 5 },
-    { boardId: 4, name: "Trello redesign", tasksCount: 12 },
-    { boardId: 5, name: "Hoạt động team building", tasksCount: 19 },
-    { boardId: 6, name: "Ngữ pháp Korean", tasksCount: 16 },
-    { boardId: 7, name: "Báo cáo luật", tasksCount: 28 },
-    { boardId: 8, name: "Chuyển môn học", tasksCount: 6 },
-    { boardId: 9, name: "Relax planing", tasksCount: 7 },
-    { boardId: 10, name: "Tasks Khóa luận", tasksCount: 21 },
-  ];
-
   function goToBoard(boardId) {
     if (props.goToBoard) {
       props.goToBoard(boardId);
@@ -46,7 +26,7 @@ function MyBoards(props) {
       .then((res) => {
         setBoards(res.data);
       })
-      .catch((err) => { })
+      .catch((err) => {})
       .finally(() => {
         setLoadDone(true);
       });
@@ -65,14 +45,14 @@ function MyBoards(props) {
       userId: user.id,
       keyWord: e.target.value,
     };
-    
-    kanbanApi.searchKanbanBoards({ params })
-      .then(res => {
-        setBoards(res.data);
-      }).catch(err => {
 
+    kanbanApi
+      .searchKanbanBoards({ params })
+      .then((res) => {
+        setBoards(res.data);
       })
-  }
+      .catch((err) => {});
+  };
 
   return (
     <div className="my-list-boards-container">
@@ -133,9 +113,7 @@ function MyBoards(props) {
             <VscSearchStop className="icon-search" />
           </div>
 
-          <div className="noti-infor">
-            Chưa có bảng công việc nào
-          </div>
+          <div className="noti-infor">Chưa có bảng công việc nào</div>
         </div>
       )}
     </div>

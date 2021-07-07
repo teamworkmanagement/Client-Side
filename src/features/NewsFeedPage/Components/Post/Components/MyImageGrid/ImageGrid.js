@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import "./ImageGrid.scss";
-import { CCol, CModal, CRow } from "@coreui/react";
-
-ImageGrid.propTypes = {};
+import { CCol, CRow } from "@coreui/react";
 
 function ImageGrid(props) {
   const images = props.images;
@@ -12,9 +9,7 @@ function ImageGrid(props) {
   const hideOverlay = false;
   //const renderOverlay = () => "Preview Image";
   const overlayBackgroundColor = "#222222";
-  const onClickEach = null;
   const countFrom = 5;
-  const conditionalRender = false;
   const [modal, setModal] = useState(false);
 
   if (images.length > countFrom) {

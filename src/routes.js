@@ -3,7 +3,6 @@ import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import ChatPage from "./features/ChatPage/ChatPage";
 import TeamPage from "./features/TeamPage/TeamPage";
 import NewsFeedPage from "./features/NewsFeedPage/NewsFeedPage";
-import KanbanBoard from "./features/KanbanBoard/KanbanBoard";
 import MyToaster from "./features/ToastTest/ToastTest";
 import ListTeamPage from "./features/ListTeamPage/ListTeamPage";
 import UserProfilePage from "./shared_components/MySharedComponents/UserProfilePage/UserProfilePage";
@@ -11,112 +10,9 @@ import MyFilesPage from "./features/MyFilesPage/MyFilesPage";
 import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
 import ManageTeamTasksPage from "./features/ManageTeamTasksPage/ManageTeamTasksPage";
 import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsPage";
-import ForgotPassword from "./shared_components/views/pages/forgotpassword/ForgotPassword";
 import NotFoundPage from "./shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import NoInternetPage from "./shared_components/MySharedComponents/NoInternetPage/NoInternetPage";
 import FeedbackPage from "./features/FeedbackPage/FeedbackPage";
-
-const Toaster = React.lazy(() =>
-  import("./shared_components/views/notifications/toaster/Toaster")
-);
-const Tables = React.lazy(() =>
-  import("./shared_components/views/base/tables/Tables")
-);
-
-const Breadcrumbs = React.lazy(() =>
-  import("./shared_components/views/base/breadcrumbs/Breadcrumbs")
-);
-const Cards = React.lazy(() =>
-  import("./shared_components/views/base/cards/Cards")
-);
-const Carousels = React.lazy(() =>
-  import("./shared_components/views/base/carousels/Carousels")
-);
-const Collapses = React.lazy(() =>
-  import("./shared_components/views/base/collapses/Collapses")
-);
-const BasicForms = React.lazy(() =>
-  import("./shared_components/views/base/forms/BasicForms")
-);
-
-const Jumbotrons = React.lazy(() =>
-  import("./shared_components/views/base/jumbotrons/Jumbotrons")
-);
-const ListGroups = React.lazy(() =>
-  import("./shared_components/views/base/list-groups/ListGroups")
-);
-const Navbars = React.lazy(() =>
-  import("./shared_components/views/base/navbars/Navbars")
-);
-const Navs = React.lazy(() =>
-  import("./shared_components/views/base/navs/Navs")
-);
-const Paginations = React.lazy(() =>
-  import("./shared_components/views/base/paginations/Pagnations")
-);
-const Popovers = React.lazy(() =>
-  import("./shared_components/views/base/popovers/Popovers")
-);
-const ProgressBar = React.lazy(() =>
-  import("./shared_components/views/base/progress-bar/ProgressBar")
-);
-const Switches = React.lazy(() =>
-  import("./shared_components/views/base/switches/Switches")
-);
-
-const Tabs = React.lazy(() =>
-  import("./shared_components/views/base/tabs/Tabs")
-);
-const Tooltips = React.lazy(() =>
-  import("./shared_components/views/base/tooltips/Tooltips")
-);
-const BrandButtons = React.lazy(() =>
-  import("./shared_components/views/buttons/brand-buttons/BrandButtons")
-);
-const ButtonDropdowns = React.lazy(() =>
-  import("./shared_components/views/buttons/button-dropdowns/ButtonDropdowns")
-);
-const ButtonGroups = React.lazy(() =>
-  import("./shared_components/views/buttons/button-groups/ButtonGroups")
-);
-const Buttons = React.lazy(() =>
-  import("./shared_components/views/buttons/buttons/Buttons")
-);
-const Charts = React.lazy(() =>
-  import("./shared_components/views/charts/Charts")
-);
-const Dashboard = React.lazy(() =>
-  import("./shared_components/views/dashboard/Dashboard")
-);
-const CoreUIIcons = React.lazy(() =>
-  import("./shared_components/views/icons/coreui-icons/CoreUIIcons")
-);
-const Flags = React.lazy(() =>
-  import("./shared_components/views/icons/flags/Flags")
-);
-const Brands = React.lazy(() =>
-  import("./shared_components/views/icons/brands/Brands")
-);
-const Alerts = React.lazy(() =>
-  import("./shared_components/views/notifications/alerts/Alerts")
-);
-const Badges = React.lazy(() =>
-  import("./shared_components/views/notifications/badges/Badges")
-);
-const Modals = React.lazy(() =>
-  import("./shared_components/views/notifications/modals/Modals")
-);
-const Colors = React.lazy(() =>
-  import("./shared_components/views/theme/colors/Colors")
-);
-const Typography = React.lazy(() =>
-  import("./shared_components/views/theme/typography/Typography")
-);
-const Widgets = React.lazy(() =>
-  import("./shared_components/views/widgets/Widgets")
-);
-const Users = React.lazy(() => import("./shared_components/views/users/Users"));
-const User = React.lazy(() => import("./shared_components/views/users/User"));
 
 const routes = [
   // { path: '/', exact: true, name: 'Home' },

@@ -1,10 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./PostForm.scss";
-import { CTextarea } from "@coreui/react";
 import TextareaAutosize from "react-textarea-autosize";
-
-PostForm.propTypes = {};
 
 function PostForm(props) {
   return (

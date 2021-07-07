@@ -105,6 +105,12 @@
                 }
             }
         }
+        &.default-list {
+            margin: 0.6rem 0rem;
+            .cards-count {
+                margin-right: 0.5rem;
+            }
+        }
     }
     .form-header {
         position: relative;

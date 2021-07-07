@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  CBadge,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
@@ -15,7 +14,7 @@ import { MdHelpOutline } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import "./TheHeaderDropdown.scss";
 import { useHistory } from "react-router";
-import { delete_cookie, logout } from "src/utils/auth";
+import { delete_cookie } from "src/utils/auth";
 import { setAuthF } from "../views/pages/login/authSlice";
 
 const TheHeaderDropdown = () => {
@@ -25,22 +24,22 @@ const TheHeaderDropdown = () => {
   const dispatch = useDispatch();
   const goToAccountSetting = () => {
     history.push({
-      pathname: '/myaccount',
+      pathname: "/myaccount",
       search: null,
     });
-  }
+  };
 
   const goToFeedbacks = () => {
     history.push({
-      pathname: '/feedbacks',
+      pathname: "/feedbacks",
       search: null,
     });
-  }
+  };
 
   const onLogout = () => {
     dispatch(setAuthF());
-    delete_cookie('backup');
-  }
+    delete_cookie("backup");
+  };
   return (
     <CDropdown inNav className="c-header-nav-items mx-2" direction="down">
       <CDropdownToggle className="c-header-nav-link" caret={false}>

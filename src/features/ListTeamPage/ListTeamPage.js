@@ -1,38 +1,30 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./ListTeamPage.scss";
 import {
   CButton,
   CButtonGroup,
   CCol,
-  CDataTable,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-  CProgress,
   CRow,
   CTooltip,
-  CWidgetDropdown,
 } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import CIcon from "@coreui/icons-react";
-import ChartLineSimple from "src/shared_components/views/charts/ChartLineSimple";
 import { useHistory } from "react-router";
 import { getTeamByUserId } from "./teamSlice";
 import CreateTeamModal from "./CreateTeam/CreateTeamModal";
-import TeamLoading from "../TeamPage/TeamLoading/TeamLoading";
 import JoinTeamModal from "./JoinTeam/JoinTeamModal";
 import { CgLogIn } from "react-icons/cg";
 import { AiOutlineTeam } from "react-icons/ai";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { BsClipboardData, BsSearch } from "react-icons/bs";
+import { BsClipboardData } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import teamApi from "src/api/teamApi";
-
-ListTeamPage.propTypes = {};
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
@@ -249,18 +241,17 @@ function ListTeamPage(props) {
   const leaveTeam = (teamId) => {
     console.log(teamId);
     const params = {
-      "teamId": teamId,
-      "userId": user.id
+      teamId: teamId,
+      userId: user.id,
     };
 
-    teamApi.leaveTeam({ params })
-      .then(res => {
-        dispatch(getTeamByUserId(user.id))
+    teamApi
+      .leaveTeam({ params })
+      .then((res) => {
+        dispatch(getTeamByUserId(user.id));
       })
-      .catch(err => {
-
-      });
-  }
+      .catch((err) => {});
+  };
 
   const renderNormal = () => {
     return (
@@ -290,11 +281,17 @@ function ListTeamPage(props) {
                               aria-labelledby="dropdownMenuButton"
                               placement="bottom-end"
                             >
-                              <CDropdownItem className="first" onClick={() => navigateToTeam(team.teamId)}>
+                              <CDropdownItem
+                                className="first"
+                                onClick={() => navigateToTeam(team.teamId)}
+                              >
                                 <CIcon name="cil-arrow-circle-right" />
                                 Vào nhóm
                               </CDropdownItem>
-                              <CDropdownItem className="last" onClick={() => leaveTeam(team.teamId)}>
+                              <CDropdownItem
+                                className="last"
+                                onClick={() => leaveTeam(team.teamId)}
+                              >
                                 <CIcon name="cil-account-logout" />
                                 Rời nhóm
                               </CDropdownItem>

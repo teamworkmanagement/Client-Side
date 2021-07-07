@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./CreateCardModal.scss";
 import {
   CButton,
@@ -9,16 +8,13 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import taskApi from "src/api/taskApi";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 
-CreateCardModal.propTypes = {};
-
 function CreateCardModal(props) {
+  const kbLists = useSelector((state) => state.kanban.kanbanBoard.kanbanLists);
 
-  const kbLists = useSelector(state => state.kanban.kanbanBoard.kanbanLists);
-  const dispatch = useDispatch();
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
   const [taskName, setTaskName] = useState("");
   function handleOnClose() {
     if (props.setShowAddCard) {
@@ -27,12 +23,11 @@ function CreateCardModal(props) {
     }
   }
 
-
   Date.prototype.addDays = function (days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
-  }
+  };
 
   function onCreateCard() {
     if (props.setShowAddCard) {
@@ -43,11 +38,13 @@ function CreateCardModal(props) {
 
       if (!props.defaultList) {
         var date = new Date();
-        const obj = kbLists.find(x => x.kanbanListId === props.kblistId);
+        const obj = kbLists.find((x) => x.kanbanListId === props.kblistId);
         let pos = -9999;
-        if (obj.taskUIKanbans.length === 0)
-          pos = genNewRank();
-        else pos = FindNextRank(obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList);
+        if (obj.taskUIKanbans.length === 0) pos = genNewRank();
+        else
+          pos = FindNextRank(
+            obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList
+          );
         taskApi
           .addNewTask({
             taskName: taskName,
@@ -56,25 +53,24 @@ function CreateCardModal(props) {
             taskBelongedId: props.kblistId,
             taskRankInList: pos,
             taskStartDate: date,
-            taskStatus: 'todo',
+            taskStatus: "todo",
             taskDeadline: date.addDays(1),
-            userActionId: user.id
+            userActionId: user.id,
           })
-          .then((res) => {
-
-          })
-          .catch((err) => { });
+          .then((res) => {})
+          .catch((err) => {});
 
         setTaskName("");
-      }
-      else {
+      } else {
         var date = new Date();
-        const obj = kbLists.find(x => x.kanbanListDefault);
+        const obj = kbLists.find((x) => x.kanbanListDefault);
         if (obj) {
           let pos = -9999;
-          if (obj.taskUIKanbans.length === 0)
-            pos = genNewRank();
-          else pos = FindNextRank(obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList);
+          if (obj.taskUIKanbans.length === 0) pos = genNewRank();
+          else
+            pos = FindNextRank(
+              obj.taskUIKanbans[obj.taskUIKanbans.length - 1].taskRankInList
+            );
           taskApi
             .addNewTask({
               taskName: taskName,
@@ -83,14 +79,12 @@ function CreateCardModal(props) {
               taskBelongedId: obj.kanbanListId,
               taskRankInList: pos,
               taskStartDate: date,
-              taskStatus: 'todo',
+              taskStatus: "todo",
               taskDeadline: date.addDays(1),
-              userActionId: user.id
+              userActionId: user.id,
             })
-            .then((res) => {
-
-            })
-            .catch((err) => { });
+            .then((res) => {})
+            .catch((err) => {});
         }
 
         setTaskName("");

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./TeamPage.scss";
 import ChatPage from "../ChatPage/ChatPage";
 import {
@@ -9,13 +8,11 @@ import {
   CTabContent,
   CTabPane,
   CTabs,
-  CToggler,
   CTooltip,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import ListFileTable from "../../shared_components/MySharedComponents/ListFileTable/ListFileTable";
 import NewsFeedPage from "../NewsFeedPage/NewsFeedPage";
-import KanbanBoard from "../KanbanBoard/KanbanBoard";
 import TeamTasks from "./Components/TeamTasks/TeamTasks";
 import { useDispatch, useSelector } from "react-redux";
 import TeamMembersList from "./Components/TeamMembersList/TeamMembersList";
@@ -30,20 +27,15 @@ import teamApi from "src/api/teamApi";
 
 import { GrGroup } from "react-icons/gr";
 
-TeamPage.propTypes = {};
-
 function TeamPage(props) {
   const dispatch = useDispatch();
   const [isOpeningBoard, setIsOpeningBoard] = useState(false);
-  const teamLoading = useSelector((state) => state.app.teamLoading);
   const activeTab = useSelector((state) => state.team.activeTab);
   const [boardId, setBoardId] = useState(null);
   const history = useHistory();
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
-  const teamTabsSidebarShow = useSelector(
-    (state) => state.app.teamTabsSidebarShow
-  );
+
   const [active, setActive] = useState(() => {
     if (queryParams != null) {
       switch (queryParams.tab) {
@@ -165,37 +157,34 @@ function TeamPage(props) {
   const [team, setTeam] = useState({});
 
   const { teamId } = useParams();
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   useEffect(() => {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
         .then((res) => {
-          teamApi.getTeam(teamId)
-            .then(res => {
+          teamApi
+            .getTeam(teamId)
+            .then((res) => {
               setTeam(res.data);
             })
-            .catch(err => {
-
-            });
+            .catch((err) => {});
         })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
         });
-
     }
   }, [teamId]);
 
   const changeLeader = () => {
-    teamApi.getTeam(teamId)
-      .then(res => {
+    teamApi
+      .getTeam(teamId)
+      .then((res) => {
         setTeam(res.data);
       })
-      .catch(err => {
-
-      });
-  }
+      .catch((err) => {});
+  };
 
   const renderNormal = () => {
     return (
@@ -243,14 +232,16 @@ function TeamPage(props) {
               </CTooltip>
             </CNavItem>
 
-            {team.teamLeaderId === user.id && <CNavItem>
-              <CTooltip content="Thống kê" placement="right">
-                <CNavLink>
-                  <CIcon name="cil-chart-line" />
-                  <div className="tab-name">Thống kê</div>
-                </CNavLink>
-              </CTooltip>
-            </CNavItem>}
+            {team.teamLeaderId === user.id && (
+              <CNavItem>
+                <CTooltip content="Thống kê" placement="right">
+                  <CNavLink>
+                    <CIcon name="cil-chart-line" />
+                    <div className="tab-name">Thống kê</div>
+                  </CNavLink>
+                </CTooltip>
+              </CNavItem>
+            )}
           </CNav>
           <div className="tab-content-container">
             <div className="toggle-team-tabs-sidebar-btn">
@@ -261,7 +252,11 @@ function TeamPage(props) {
               />
             </div>
             <CTabContent>
-              <CTabPane>{active === 0 ? <TeamMembersList changeLeader={changeLeader} /> : null}</CTabPane>
+              <CTabPane>
+                {active === 0 ? (
+                  <TeamMembersList changeLeader={changeLeader} />
+                ) : null}
+              </CTabPane>
               <CTabPane>
                 {active === 1 ? <NewsFeedPage isInTeam={true} /> : null}
               </CTabPane>
@@ -273,7 +268,11 @@ function TeamPage(props) {
               </CTabPane>
               <CTabPane>{active === 4 ? <ListFileTable /> : null}</CTabPane>
 
-              <CTabPane>{active === 5 && team.teamLeaderId === user.id ? <TeamStatistics /> : null}</CTabPane>
+              <CTabPane>
+                {active === 5 && team.teamLeaderId === user.id ? (
+                  <TeamStatistics />
+                ) : null}
+              </CTabPane>
             </CTabContent>
           </div>
         </CTabs>

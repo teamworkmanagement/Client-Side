@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import "./TaskInfoModal.scss";
-import { CDataTable, CModal, CModalBody, CModalHeader } from "@coreui/react";
-import { FiCalendar } from "react-icons/fi";
-import { HiOutlineHome, HiOutlineMail } from "react-icons/hi";
-import { AiFillGithub } from "react-icons/ai";
-import { FaFacebook } from "react-icons/fa";
-import userApi from "src/api/userApi";
-
-TaskInfoModal.propTypes = {};
+import { CModal, CModalBody, CModalHeader } from "@coreui/react";
 
 function TaskInfoModal(props) {
   const task = {
@@ -49,11 +41,7 @@ function TaskInfoModal(props) {
         return "Hoàn thành";
     }
   }
-  const fields = ["name", "data"];
-  const taskData = [
-    { name: "Tên", data: "Một vòng trái khế" },
-    { name: "Hạn hoàn thành", data: "31/05/2021" },
-  ];
+
   return (
     <CModal
       className="task-info-modal"

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./Breadcrumbs.scss";
 import { useHistory } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
 import { RiHome3Line } from "react-icons/ri";
-
-Breadcrumbs.propTypes = {};
 
 function Breadcrumbs(props) {
   const history = useHistory();

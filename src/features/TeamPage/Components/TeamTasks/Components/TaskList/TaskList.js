@@ -1,22 +1,14 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import "./TaskList.scss";
 import TaskListItem from "./Components/TaskListItem/TaskListItem";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getBoardDataForUI,
-  setCurrentBoard,
-} from "src/features/KanbanBoard/kanbanSlice";
-import CIcon from "@coreui/icons-react";
+import { useSelector } from "react-redux";
+
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
-
-TaskList.propTypes = {};
 
 function TaskList(props) {
   //const tasks = useSelector((state) => state.app.tasks);
 
-  const dispatch = useDispatch();
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );

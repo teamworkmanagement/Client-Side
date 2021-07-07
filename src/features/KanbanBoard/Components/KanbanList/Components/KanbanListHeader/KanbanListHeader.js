@@ -1,32 +1,22 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import "./KanbanListHeader.scss";
 import {
-  CButton,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
   CInput,
-  CModal,
-  CModalBody,
-  CModalHeader,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import CreateCardModal from "../CreateCardModal/CreateCardModal";
 import { AiOutlineDelete } from "react-icons/ai";
 import kanbanApi from "src/api/kanbanApi";
 import { useSelector } from "react-redux";
 
-KanbanListHeader.propTypes = {};
-
 function KanbanListHeader(props) {
   const clone = { ...props };
   const [showForm, setShowForm] = useState(false);
-  const [headerName, setHeaderName] = useState(clone.title);
-  const [value, setValue] = useState(clone.title)
-  const [showAddCard, setShowAddCard] = useState(false);
-  const adminAction = useSelector(state => state.kanban.adminAction);
+  const [value, setValue] = useState(clone.title);
+  const adminAction = useSelector((state) => state.kanban.adminAction);
 
   function HandleEditHeader() {
     setShowForm(true);
@@ -37,26 +27,28 @@ function KanbanListHeader(props) {
   }
 
   const onKeyUp = (e) => {
-    if (e.key === 'Enter' || e.keyCode === 13) {
+    if (e.key === "Enter" || e.keyCode === 13) {
       console.log(value);
       if (value) {
-        kanbanApi.renameKanbanList({
-          kanbanListId: props.kanbanListId,
-          kanbanListName: value
-        }).then(res => {
-          setShowForm(false);
-          setValue(value);
-        }).catch(err => {
-          setShowForm(false);
-          setValue(props.title);
-        })
-      }
-      else {
-        console.log(props.headerName)
+        kanbanApi
+          .renameKanbanList({
+            kanbanListId: props.kanbanListId,
+            kanbanListName: value,
+          })
+          .then((res) => {
+            setShowForm(false);
+            setValue(value);
+          })
+          .catch((err) => {
+            setShowForm(false);
+            setValue(props.title);
+          });
+      } else {
+        console.log(props.headerName);
         //setHeaderName(props.headerName);
       }
     }
-  }
+  };
 
   return (
     <div className="kanbanlist-header-container" {...props.dragHandleProps}>
@@ -75,44 +67,48 @@ function KanbanListHeader(props) {
           </div>
         </div>
       ) : (
-        <div className="normal-header">
+        <div
+          className={`normal-header ${props.defaultList ? "default-list" : ""}`}
+        >
           <div className="lane-title">
             <div className="title">{props.title}</div>
           </div>
           <div className="cards-count">{props.cardCount}</div>
-          {!props.defaultList && adminAction && <div className="header-actions-dropdown">
-            <CDropdown>
-              <CDropdownToggle id="dropdownMenuButton" caret>
-                <div className="lane-actions">
-                  <CIcon name="cil-options" />
-                </div>
-              </CDropdownToggle>
-              <CDropdownMenu
-                aria-labelledby="dropdownMenuButton"
-                placement="bottom-end"
-              >
-                <CDropdownItem className="first" onClick={HandleEditHeader}>
-                  <CIcon name="cil-pencil" />
-                  Đổi tên
-                </CDropdownItem>
-                <CDropdownItem
-                  className="last"
-                  onClick={() => props.handleShowCreateCard()}
+          {!props.defaultList && adminAction && (
+            <div className="header-actions-dropdown">
+              <CDropdown>
+                <CDropdownToggle id="dropdownMenuButton" caret>
+                  <div className="lane-actions">
+                    <CIcon name="cil-options" />
+                  </div>
+                </CDropdownToggle>
+                <CDropdownMenu
+                  aria-labelledby="dropdownMenuButton"
+                  placement="bottom-end"
                 >
-                  <CIcon name="cil-plus" />
-                  Thêm thẻ
-                </CDropdownItem>
+                  <CDropdownItem className="first" onClick={HandleEditHeader}>
+                    <CIcon name="cil-pencil" />
+                    Đổi tên
+                  </CDropdownItem>
+                  <CDropdownItem
+                    className="last"
+                    onClick={() => props.handleShowCreateCard()}
+                  >
+                    <CIcon name="cil-plus" />
+                    Thêm thẻ
+                  </CDropdownItem>
 
-                <CDropdownItem
-                  className="last"
-                  onClick={() => props.removeList()}
-                >
-                  <AiOutlineDelete className="delete-icon" />
-                  Xóa danh sách
-                </CDropdownItem>
-              </CDropdownMenu>
-            </CDropdown>
-          </div>}
+                  <CDropdownItem
+                    className="last"
+                    onClick={() => props.removeList()}
+                  >
+                    <AiOutlineDelete className="delete-icon" />
+                    Xóa danh sách
+                  </CDropdownItem>
+                </CDropdownMenu>
+              </CDropdown>
+            </div>
+          )}
         </div>
       )}
       {/*<CreateCardModal

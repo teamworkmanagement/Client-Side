@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import "./MyLogin.scss";
-import { CButton, CCol, CInput, CInputCheckbox, CRow } from "@coreui/react";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
+import { CInput, CRow } from "@coreui/react";
 import { FcGoogle } from "react-icons/fc";
-import { SiFacebook } from "react-icons/si";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, socialLogin } from "../authSlice";
 import socialMediaAuth from "src/utils/firebase/authSocial";
@@ -16,13 +13,10 @@ import {
 import { unwrapResult } from "@reduxjs/toolkit";
 import { toast, ToastContainer } from "react-toastify";
 import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
-import { startNotiService } from "src/utils/signalr/notiService";
 import { FiLock, FiMail } from "react-icons/fi";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
 import { validateEmail } from "src/utils/common";
-
-MyLogin.propTypes = {};
 
 function MyLogin(props) {
   const dispatch = useDispatch();
@@ -44,7 +38,6 @@ function MyLogin(props) {
   };
 
   const onLoginClick = () => {
-
     if (!loginObject.email || !loginObject.password) {
       toast(
         <CustomToast
@@ -68,7 +61,7 @@ function MyLogin(props) {
     }
     dispatch(login(loginObject))
       .then(unwrapResult)
-      .then((originalPromiseResult) => { })
+      .then((originalPromiseResult) => {})
       .catch((err) => {
         console.log("login err :", err);
         if (err.Message.includes("Invalid Credentials")) {
@@ -140,6 +133,7 @@ function MyLogin(props) {
         break;
       case "fb":
         outPut = await loginFacebook();
+        break;
       default:
         break;
     }
@@ -224,9 +218,7 @@ function MyLogin(props) {
                 </div>
               </div>
               <div className="sub-actions">
-                <div className="remember-account">
-
-                </div>
+                <div className="remember-account"></div>
                 <div onClick={onForgotPassword} className="forgot-password">
                   Quên mật khẩu?
                 </div>

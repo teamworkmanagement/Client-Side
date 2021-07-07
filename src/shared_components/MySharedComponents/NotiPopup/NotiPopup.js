@@ -1,12 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./NotiPopup.scss";
-import { CModal, CModalBody, CModalHeader } from "@coreui/react";
+import { CModal, CModalBody } from "@coreui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { VscError } from "react-icons/vsc";
 import { FiInfo } from "react-icons/fi";
-import { GrCircleInformation } from "react-icons/gr";
-NotiPopup.propTypes = {};
 
 function NotiPopup(props) {
   const { popupType, popupMessage, popupButtonText } = props;

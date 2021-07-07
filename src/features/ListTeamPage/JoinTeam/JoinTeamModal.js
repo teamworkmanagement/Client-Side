@@ -8,11 +8,8 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import teamApi from "src/api/teamApi";
-import MyToaster from "src/features/ToastTest/ToastTest";
 import { addTeam } from "../teamSlice";
 import "./JoinTeamModal.scss";
-
-JoinTeamModal.propTypes = {};
 
 function JoinTeamModal(props) {
   const dispatch = useDispatch();
@@ -48,7 +45,12 @@ function JoinTeamModal(props) {
   };
 
   return (
-    <CModal className="join-team-modal" show={props.showJoinTeam} onClose={handleOnClose} size="sm">
+    <CModal
+      className="join-team-modal"
+      show={props.showJoinTeam}
+      onClose={handleOnClose}
+      size="sm"
+    >
       <CModalHeader closeButton>Nhập mã code của nhóm</CModalHeader>
       <CModalBody className="modal-body">
         <CInput

@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./StartChatMembers.scss";
-import {
-  CButton,
-  CInput,
-  CModal,
-  CModalBody,
-  CModalHeader,
-} from "@coreui/react";
-import Select, { components } from "react-select";
+import { CInput, CModal, CModalBody, CModalHeader } from "@coreui/react";
+import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { useDispatch, useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
-
-StartChatMembers.propTypes = {};
 
 const ValueOption = (props) => (
   <components.MultiValue {...props}>
@@ -60,7 +51,7 @@ function StartChatMembers(props) {
     }
   }
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   const [inputValue, setInputValue] = useState("");
 
@@ -86,7 +77,7 @@ function StartChatMembers(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -125,10 +116,9 @@ function StartChatMembers(props) {
   };*/
 
   const onChange = (e, { action, removedValue }) => {
-
     switch (action) {
-      case 'remove-value':
-      case 'pop-value':
+      case "remove-value":
+      case "pop-value":
         if (removedValue.isFixed) {
           return;
         }
@@ -154,12 +144,10 @@ function StartChatMembers(props) {
       return state.data.isFixed ? { ...base } : base;
     },
     multiValueLabel: (base, state) => {
-      return state.data.isFixed
-        ? { ...base }
-        : base;
+      return state.data.isFixed ? { ...base } : base;
     },
     multiValueRemove: (base, state) => {
-      return state.data.isFixed ? { ...base, display: 'none' } : base;
+      return state.data.isFixed ? { ...base, display: "none" } : base;
     },
   };
 

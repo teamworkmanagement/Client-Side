@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { CCol, CInput, CInputCheckbox, CRow } from "@coreui/react";
+import { CInput, CRow } from "@coreui/react";
 import "./NewLogin.scss";
 import { FiLock, FiMail } from "react-icons/fi";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-
-NewLogin.propTypes = {};
 
 function NewLogin(props) {
   const [showPassword, setShowPassword] = useState(false);

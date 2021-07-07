@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./CreateKBListModal.scss";
 import {
   CButton,
@@ -9,14 +8,10 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import kanbanApi from "src/api/kanbanApi";
-import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 
-CreateKBListModal.propTypes = {};
-
 function CreateKBListModal(props) {
-  const dispatch = useDispatch();
   const listKBs = useSelector((state) => state.kanban.kanbanBoard.kanbanLists);
   const [listName, setListName] = useState("");
 

@@ -1,33 +1,16 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./KanbanList.scss";
 import KanbanCard from "./Components/KanbanCard/KanbanCard";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  CButton,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CInput,
-  CModal,
-  CModalBody,
-  CModalHeader,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
 import kanbanApi from "src/api/kanbanApi";
 import { useHistory } from "react-router";
-import taskApi from "src/api/taskApi";
-import queryString from "query-string";
 import { BsPlusSquare } from "react-icons/bs";
 
-KanbanList.propTypes = {};
-
 function KanbanList(props) {
-  const dispatch = useDispatch();
   const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const [showAddCard, setShowAddCard] = useState(false);
   const [taskObj, setTaskObj] = useState(null);
@@ -47,13 +30,12 @@ function KanbanList(props) {
       .removeKanbanList({
         params,
       })
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   const history = useHistory();
-  const user = useSelector((state) => state.auth.currentUser);
-  const adminAction = useSelector(state => state.kanban.adminAction);
+  const adminAction = useSelector((state) => state.kanban.adminAction);
   useEffect(() => {
     /*const queryObj = queryString.parse(history.location.search);
 
@@ -91,7 +73,9 @@ function KanbanList(props) {
     >
       {(provided) => (
         <div
-          className="kanbanlist-container"
+          className={`kanbanlist-container ${
+            props.data.kanbanListDefault ? "default-list" : ""
+          }`}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
@@ -129,15 +113,17 @@ function KanbanList(props) {
               </div>
             )}
           </Droppable>
-          {adminAction && <div
-            className="kanbanlist-footer-container"
-            onClick={() => setShowAddCard(true)}
-          >
-            <div className="btn-add-card">
-              <BsPlusSquare className="icon-plus" />
-              Thêm thẻ
+          {adminAction && (
+            <div
+              className="kanbanlist-footer-container"
+              onClick={() => setShowAddCard(true)}
+            >
+              <div className="btn-add-card">
+                <BsPlusSquare className="icon-plus" />
+                Thêm thẻ
+              </div>
             </div>
-          </div>}
+          )}
           <CreateCardModal
             showAddCard={showAddCard}
             setShowAddCard={setShowAddCard}

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
-import ForgotPassword from "../views/pages/forgotpassword/ForgotPassword";
-import MyLogin from "../views/pages/login/MyLogin/MyLogin";
 import ChatListSideBar from "./ChatListSideBar";
-import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
+import { TheContent, TheSidebar, TheHeader } from "./index";
 import TeamTabsSideBar from "./TeamTabsSideBar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +12,7 @@ import UserInfoModal from "../MySharedComponents/UserInfoModal/UserInfoModal";
 import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import { useHistory } from "react-router-dom";
 
-import queryString from 'query-string';
+import queryString from "query-string";
 import taskApi from "src/api/taskApi";
 import { setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
 import { setTaskEditModal, setViewHistory } from "src/appSlice";
@@ -37,17 +34,19 @@ const TheLayout = () => {
     //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
   }, [newNoti]);
 
-
   const [modalTaskObj, setModaTaskObj] = useState(null);
   const [details, setDetails] = useState([]);
 
-  const userModal = useSelector(state => state.app.userModal);
-  const taskEditModal = useSelector(state => state.app.taskEditModal);
-  const viewHistory = useSelector(state => state.app.viewHistory);
-  const user = useSelector(state => state.auth.currentUser);
-  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
-  const assignUser = useSelector((state) => state.kanban.signalrData.reAssignUser);
-
+  const userModal = useSelector((state) => state.app.userModal);
+  const taskEditModal = useSelector((state) => state.app.taskEditModal);
+  const viewHistory = useSelector((state) => state.app.viewHistory);
+  const user = useSelector((state) => state.auth.currentUser);
+  const updateTask = useSelector(
+    (state) => state.kanban.signalrData.updateTask
+  );
+  const assignUser = useSelector(
+    (state) => state.kanban.signalrData.reAssignUser
+  );
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -57,7 +56,10 @@ const TheLayout = () => {
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
 
-    if ((updateTask && updateTask.taskId === queryObj.t) || (moveTask && moveTask.taskId === queryObj.t)) {
+    if (
+      (updateTask && updateTask.taskId === queryObj.t) ||
+      (moveTask && moveTask.taskId === queryObj.t)
+    ) {
       console.log("realtime");
 
       const params = {
@@ -73,7 +75,7 @@ const TheLayout = () => {
         .then((res) => {
           setModaTaskObj(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   }, [updateTask, moveTask]);
 
@@ -134,8 +136,7 @@ const TheLayout = () => {
   };
 
   useEffect(() => {
-    if (!taskEditModal)
-      return;
+    if (!taskEditModal) return;
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t && taskEditModal.show) {
       dispatch(setTaskEditModal(null));
@@ -150,7 +151,6 @@ const TheLayout = () => {
     }
   }, [taskEditModal]);
 
-
   const onEditModalClose = () => {
     console.log('on close');
     setModaTaskObj(null);
@@ -162,8 +162,7 @@ const TheLayout = () => {
         history.location.search.lastIndexOf("&")
       ),
     });
-  }
-
+  };
 
   useEffect(() => {
     if (viewHistory) {
@@ -173,9 +172,9 @@ const TheLayout = () => {
           console.log(res.data);
           setDetails(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
-  }, [viewHistory])
+  }, [viewHistory]);
 
   return (
     <div className="c-app c-default-layout">
@@ -204,9 +203,7 @@ const TheLayout = () => {
         data={modalTaskObj}
       />
 
-      <UserInfoModal
-        userId={userModal.userId}
-        show={userModal?.show} />
+      <UserInfoModal userId={userModal.userId} show={userModal?.show} />
 
       <TaskHistoryModal
         details={details}

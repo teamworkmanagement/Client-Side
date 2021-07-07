@@ -1,5 +1,5 @@
 import CIcon from "@coreui/icons-react";
-import { CButton, CToast, CToastBody, CToaster, CTooltip } from "@coreui/react";
+import { CButton, CTooltip } from "@coreui/react";
 import React, { useState } from "react";
 import { BiFilterAlt } from "react-icons/bi";
 import AvatarComponent from "src/shared_components/MySharedComponents/AvatarComponent/AvatarComponent";
@@ -13,7 +13,6 @@ import "./ToastTest.scss";
 const MyToaster = () => {
   const [showTaskHistoryModal, setShowTaskHistoryModal] = useState(false);
   const [details, setDetails] = useState([]);
-  const [isFiltering, setIsFiltering] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [applyingFilter, setApplyingFilter] = useState(false);
   function onCloseTaskHistoryModal() {

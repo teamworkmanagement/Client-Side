@@ -1,39 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 
-import { CTooltip } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import messageApi from "src/api/messageApi";
-import {
-  changeGroupPosition,
-  setCurrentGroup,
-  setIsSelected,
-  setReceiveMes,
-} from "../../chatSlice";
+import { setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
 import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
 import "./MessageList.scss";
-import CIcon from "@coreui/icons-react";
 import Message from "./Message.js";
-import { HiOutlineChatAlt2 } from "react-icons/hi";
 import { VscSearchStop } from "react-icons/vsc";
-import { AiOutlineMessage } from "react-icons/ai";
 import { BiMessageDetail } from "react-icons/bi";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import "./MessageList.scss";
-import queryString from 'query-string';
 import { useHistory } from "react-router-dom";
-MessageList.propTypes = {};
 
 function MessageList(props) {
   const dispatch = useDispatch();
   const currentGroup = useSelector((state) => state.chat.currentGroup);
   const userId = useSelector((state) => state.auth.currentUser.id);
   const isSelected = useSelector((state) => state.chat.isSelected); //chuyeenr nhom chat
-  const toolTipOptions = {};
+
   const [listMes, setListMes] = useState([]);
-  const [test, setTest] = useState(0);
   const messagesEndRef = useRef(null);
   const latestChat = useRef(null);
   const newMessage = useSelector((state) => state.chat.newMessage);
@@ -49,7 +36,6 @@ function MessageList(props) {
     }
   };
 
-  const history = useHistory();
   //load tin nhan
   useEffect(() => {
     setIsLoading(true);
@@ -62,7 +48,7 @@ function MessageList(props) {
       }
       //debugger;
       console.log("1st time: ", props.reachTop);
-      
+
       if (isSelected) {
         dispatch(setIsSelected(false));
         setListMes([]);
@@ -275,7 +261,6 @@ function MessageList(props) {
     if (newMessage === null) return;
 
     console.log(newMessage);
-
     const newMes = {
       message: newMessage.message,
       class: "normal",
@@ -284,39 +269,45 @@ function MessageList(props) {
       isLabel: false,
       messageType: newMessage.messageType,
     };
-
     const messageObj = { ...newMessage };
     dispatch(setReceiveMes(messageObj));
-
+    if (newMessage.groupId !== currentGroup) {
+      return;
+    }
     const cloneList = [...latestChat.current];
-    setListMes(cloneList.concat(newMes));
-    if (cloneList.length > 0 && !cloneList[cloneList.length - 1].isMine) {
+
+    //add label nếu cách thời gian hơn 5 phút
+    if (cloneList.length > 0) {
       const date1 = cloneList[cloneList.length - 1].time;
       const date2 = newMes.time;
+      var newLabel = null;
       if ((new Date(date2) - new Date(date1)) / 60000 > 5) {
-        cloneList.push({
+        newLabel = {
           id: 1 + Math.random() * (10000 - 1),
           message: moment(date2).format("LLL"),
           class: "",
           isLabel: true,
-        });
-        newMes.class = "normal";
+        };
       } else {
-        if (cloneList[cloneList.length - 1].class === "end") {
-          cloneList[cloneList.length - 1].class = "middle";
-        } else {
-          cloneList[cloneList.length - 1].class = "start";
+        //chưa quá 5 phút, new mes phải được check class
+        if (cloneList[cloneList.length - 1].isMine === newMes.isMine) {
+          if (cloneList[cloneList.length - 1].class === "end") {
+            cloneList[cloneList.length - 1].class = "middle";
+          } else {
+            cloneList[cloneList.length - 1].class = "start";
+          }
+          newMes.class = "end";
         }
+      }
 
-        newMes.class = "end";
+      if (newLabel) {
+        cloneList.push(newLabel);
       }
     }
+
     cloneList.push(newMes);
     setListMes(cloneList);
 
-    // const timeOut = setTimeout(() => {
-    //   if (props.reachBot) scrollToBottom();
-    // }, 1);
     const timeOut = setTimeout(() => {
       if (props.reachBot) scrollToBottom();
     }, 0);
@@ -333,8 +324,8 @@ function MessageList(props) {
 
     chatApi
       .sendMes(props.sendMes.mesObj)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   }, [props.sendMes]);
 
   const render = () => {

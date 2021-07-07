@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./PostToolBar.scss";
-import { CRow, CCol, CCard } from "@coreui/react";
+import { CCard } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
   CButton,
@@ -10,14 +9,9 @@ import {
   CInputCheckbox,
   CInputRadio,
   CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
   CLabel,
-  CSelect,
 } from "@coreui/react";
 import UserFilter from "../Post/Components/Selector/UserFilter/UserFilter";
-
-PostToolBar.propTypes = {};
 
 function PostToolBar(props) {
   const [filter, setFilter] = useState(null);
@@ -29,7 +23,6 @@ function PostToolBar(props) {
   const [tDate, setTDate] = useState(null);*/
   const [pUser, setPuser] = useState(null);
 
-
   const [basicFilter, setBasicFilter] = useState(null);
   const [adFilter, setAdFilter] = useState(null);
 
@@ -39,65 +32,59 @@ function PostToolBar(props) {
       ...basicFilter,
       [name]: value,
     });
-  }
+  };
 
   useEffect(() => {
     props.getFilter(filter);
-  }, [filter])
+  }, [filter]);
 
   const onChangeDate = (e) => {
     const { value, name } = e.target;
 
     setAdFilter({
       ...adFilter,
-      [name]: value !== '' ? Math.round(new Date(value).getTime()) : null,
-    })
-  }
+      [name]: value !== "" ? Math.round(new Date(value).getTime()) : null,
+    });
+  };
 
   const onCheckBoxFromDate = (e) => {
     setCFrom(!cFrom);
-  }
+  };
 
   const onCheckBoxToDate = (e) => {
     setCto(!cTo);
-  }
+  };
 
   const onCheckBoxPostUser = (e) => {
     setCuser(!cUser);
-  }
+  };
 
   const pickUser = (obj) => {
-
-
     setPuser(obj);
-  }
+  };
 
   useEffect(() => {
     setAdFilter({
       ...adFilter,
       PostUser: pUser === null ? pUser : pUser.value,
-    })
+    });
   }, [pUser]);
 
   const onFilterClick = (type) => {
-    if (type == 'basic') {
+    if (type == "basic") {
       console.log(basicFilter);
       setFilter({
         ...basicFilter,
-      })
-    }
-    else {
+      });
+    } else {
       console.log(adFilter);
       const cloneAdFilter = { ...adFilter };
 
-      if (!cFrom)
-        cloneAdFilter.FromDate = null;
+      if (!cFrom) cloneAdFilter.FromDate = null;
 
-      if (!cTo)
-        cloneAdFilter.ToDate = null;
+      if (!cTo) cloneAdFilter.ToDate = null;
 
-      if (!cUser)
-        cloneAdFilter.PostUser = null;
+      if (!cUser) cloneAdFilter.PostUser = null;
 
       if (!cFrom && !cTo && !cUser) {
         setFilter(null);
@@ -105,14 +92,20 @@ function PostToolBar(props) {
       }
       setFilter({
         ...cloneAdFilter,
-      })
+      });
     }
-  }
+  };
   return (
     <CCard className="post-tool-bar">
       <div className="filter-title">
         Cơ bản
-        <CButton shape="pill" onClick={() => { onFilterClick('basic') }} color="danger">
+        <CButton
+          shape="pill"
+          onClick={() => {
+            onFilterClick("basic");
+          }}
+          color="danger"
+        >
           <CIcon name="cil-filter" />
         </CButton>
       </div>
@@ -180,13 +173,24 @@ function PostToolBar(props) {
       </div>
       <div className="filter-title">
         Nâng cao
-        <CButton shape="pill" onClick={() => { onFilterClick('advanced') }} color="danger">
+        <CButton
+          shape="pill"
+          onClick={() => {
+            onFilterClick("advanced");
+          }}
+          color="danger"
+        >
           <CIcon name="cil-filter" />
         </CButton>
       </div>
       <div>
         <CFormGroup variant="checkbox" className="checkbox">
-          <CInputCheckbox id="checkbox1" checked={cFrom} onClick={onCheckBoxFromDate} name="checkbox1" />
+          <CInputCheckbox
+            id="checkbox1"
+            checked={cFrom}
+            onClick={onCheckBoxFromDate}
+            name="checkbox1"
+          />
           <CLabel
             variant="checkbox"
             className="form-check-label"
@@ -199,12 +203,16 @@ function PostToolBar(props) {
             id="date-from"
             name="FromDate"
             placeholder="date"
-
             onChange={onChangeDate}
           />
         </CFormGroup>
         <CFormGroup variant="checkbox" className="checkbox">
-          <CInputCheckbox id="checkbox2" checked={cTo} onClick={onCheckBoxToDate} name="checkbox2" />
+          <CInputCheckbox
+            id="checkbox2"
+            checked={cTo}
+            onClick={onCheckBoxToDate}
+            name="checkbox2"
+          />
           <CLabel
             variant="checkbox"
             className="form-check-label"
@@ -217,13 +225,18 @@ function PostToolBar(props) {
             id="date-to"
             name="ToDate"
             placeholder="date"
-
             onChange={onChangeDate}
           />
         </CFormGroup>
 
         <CFormGroup variant="checkbox" className="checkbox">
-          <CInputCheckbox id="checkbox4" checked={cUser} onClick={onCheckBoxPostUser} name="checkbox4" value="option4" />
+          <CInputCheckbox
+            id="checkbox4"
+            checked={cUser}
+            onClick={onCheckBoxPostUser}
+            name="checkbox4"
+            value="option4"
+          />
           <CLabel
             variant="checkbox"
             className="form-check-label"

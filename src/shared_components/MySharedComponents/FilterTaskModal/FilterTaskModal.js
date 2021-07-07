@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import Select, { components } from "react-select";
 import "./FilterTaskModal.scss";
 import {
-  CCol,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
@@ -13,13 +11,10 @@ import {
   CModal,
   CModalBody,
   CModalHeader,
-  CRow,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useSelector } from "react-redux";
 import userApi from "src/api/userApi";
-
-FilterTaskModal.propTypes = {};
 
 const ValueOption = (props) => (
   <components.SingleValue {...props}>
@@ -108,7 +103,9 @@ function FilterTaskModal(props) {
   ]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
+  const currentBoard = useSelector(
+    (state) => state.kanban.kanbanBoard.currentBoard
+  );
 
   const [filterObj, setFilterObj] = useState({});
 
@@ -118,8 +115,9 @@ function FilterTaskModal(props) {
       const params = {
         boardId: currentBoard,
       };
-      userApi.searchUsersKanban({ params })
-        .then(res => {
+      userApi
+        .searchUsersKanban({ params })
+        .then((res) => {
           const listUsers = res.data?.map((x) => {
             return {
               value: x.userId,
@@ -130,19 +128,15 @@ function FilterTaskModal(props) {
           });
           setMemberList(listUsers);
         })
-        .catch(err => {
-
-        });
-
+        .catch((err) => {});
     }
-  }, [currentBoard])
+  }, [currentBoard]);
   const onChange = (e) => {
     setSelectedUser(e);
     setFilterObj({ ...filterObj, userId: e?.value ? e.value : null });
     console.log(e);
 
-    if (!e)
-      return;
+    if (!e) return;
 
     const clonedMembers = [...memberList];
     for (let i = 0; i < memberList.length; i++) {
@@ -237,8 +231,8 @@ function FilterTaskModal(props) {
     setFilterObj({
       ...filterObj,
       taskStatus: taskStatus,
-    })
-  }, [taskStatus])
+    });
+  }, [taskStatus]);
 
   function handleClose() {
     if (props.onClose) {
@@ -249,32 +243,28 @@ function FilterTaskModal(props) {
     const cloneFilter = {
       ...filterObj,
       taskName: !filterObj.taskName ? null : filterObj.taskName,
-      taskDescription: !filterObj.taskDescription ? null : filterObj.taskDescription,
+      taskDescription: !filterObj.taskDescription
+        ? null
+        : filterObj.taskDescription,
       startRange: !filterObj.startRange ? null : filterObj.startRange,
       endRange: !filterObj.endRange ? null : filterObj.endRange,
       userId: !filterObj.userId ? null : filterObj.userId,
     };
 
-    if (!chooseName)
-      cloneFilter.taskName = null;
+    if (!chooseName) cloneFilter.taskName = null;
 
-    if (!chooseDescription)
-      cloneFilter.taskDescription = null;
+    if (!chooseDescription) cloneFilter.taskDescription = null;
 
-    if (!chooseStatus)
-      cloneFilter.taskStatus = null;
+    if (!chooseStatus) cloneFilter.taskStatus = null;
 
     if (!chooseDate) {
       cloneFilter.startRange = null;
       cloneFilter.endRange = null;
-    }
-    else {
-      if (!cloneFilter.startRange)
-        cloneFilter.startRange = null;
+    } else {
+      if (!cloneFilter.startRange) cloneFilter.startRange = null;
       else cloneFilter.startRange = new Date(cloneFilter.startRange);
 
-      if (!cloneFilter.endRange)
-        cloneFilter.endRange = null;
+      if (!cloneFilter.endRange) cloneFilter.endRange = null;
       else cloneFilter.endRange = new Date(cloneFilter.endRange);
     }
 
@@ -338,7 +328,9 @@ function FilterTaskModal(props) {
             type="text"
             placeholder="Nhập tên..."
             value={filterObj.taskName}
-            onChange={(e) => setFilterObj({ ...filterObj, taskName: e.target.value })}
+            onChange={(e) =>
+              setFilterObj({ ...filterObj, taskName: e.target.value })
+            }
           />
         </div>
         <div className="filter-option-group">
@@ -353,7 +345,9 @@ function FilterTaskModal(props) {
             disabled={!chooseDescription}
             type="text"
             placeholder="Nhập mô tả..."
-            onChange={(e) => setFilterObj({ ...filterObj, taskDescription: e.target.value })}
+            onChange={(e) =>
+              setFilterObj({ ...filterObj, taskDescription: e.target.value })
+            }
             value={filterObj.taskDescription}
           />
         </div>
@@ -440,7 +434,9 @@ function FilterTaskModal(props) {
                 name="date-input"
                 placeholder="date"
                 disabled={!chooseDate}
-                onChange={(e) => setFilterObj({ ...filterObj, startRange: e.target.value })}
+                onChange={(e) =>
+                  setFilterObj({ ...filterObj, startRange: e.target.value })
+                }
                 value={filterObj.startRange}
               />
             </div>
@@ -452,7 +448,9 @@ function FilterTaskModal(props) {
                 name="date-input"
                 placeholder="date"
                 disabled={!chooseDate}
-                onChange={(e) => setFilterObj({ ...filterObj, endRange: e.target.value })}
+                onChange={(e) =>
+                  setFilterObj({ ...filterObj, endRange: e.target.value })
+                }
                 value={filterObj.endRange}
               />
             </div>

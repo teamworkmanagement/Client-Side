@@ -1,12 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./CustomToast.scss";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdError, MdInfo } from "react-icons/md";
 import { CgClose } from "react-icons/cg";
-import { getByTitle } from "@testing-library/dom";
-
-CustomToast.propTypes = {};
 
 function CustomToast(props) {
   const { type, title, message } = props;

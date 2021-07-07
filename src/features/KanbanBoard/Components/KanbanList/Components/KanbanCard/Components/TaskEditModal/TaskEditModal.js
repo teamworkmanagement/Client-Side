@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import "./TaskEditModal.scss";
 import CIcon from "@coreui/icons-react";
 import { Range, getTrackBackground } from "react-range";
 import { Popover, ArrowContainer, useArrowContainer } from "react-tiny-popover";
 
 import {
-  CButton,
   CCol,
   CCollapse,
   CDropdown,
@@ -17,43 +15,29 @@ import {
   CModal,
   CModalBody,
   CModalHeader,
-  CPopover,
-  CProgress,
   CRow,
-  CTextarea,
-  CToast,
-  CToastBody,
-  CToaster,
-  CToastHeader,
   CTooltip,
 } from "@coreui/react";
 import { CirclePicker } from "react-color";
-import ProgressSlider from "src/shared_components/MySharedComponents/ProgressSlider/ProgressSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setViewHistory, updateTask } from "src/appSlice";
+import { setViewHistory } from "src/appSlice";
 import moment from "moment";
 import TextareaAutosize from "react-textarea-autosize";
 import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/CommentItem/CommentItem";
 import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file/index";
-import CardLoading from "../CardLoading/CardLoading";
 import taskApi from "src/api/taskApi";
 import { myBucket } from "src/utils/aws/config";
 import { v4 as uuidv4 } from "uuid";
 import fileApi from "src/api/fileApi";
 import commentApi from "src/api/commentApi";
 import Select, { components } from "react-select";
-import AsyncSelect from "react-select/async";
-import axiosClient from "src/api/axiosClient";
 import userApi from "src/api/userApi";
 import { BsArrowsMove } from "react-icons/bs";
 import { GrDocumentTime } from "react-icons/gr";
 import TaskCommentInput from "./TaskCommentInput";
 import { convertToRaw } from "draft-js";
-import TaskHistoryModal from "src/shared_components/MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
-
-TaskEditModal.propTypes = {};
 
 const ValueOption = (props) => (
   <components.SingleValue {...props}>
@@ -121,7 +105,7 @@ function TaskEditModal(props) {
   const [task, setTask] = useState({});
   const [showDetail, setShowDetail] = useState(false);
 
-  const adminAction = useSelector(state => state.kanban.adminAction);
+  const adminAction = useSelector((state) => state.kanban.adminAction);
   const [value, setValue] = useState(null);
   const [renderedValue, setRenderedValue] = useState([0]);
 
@@ -386,8 +370,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -462,7 +446,9 @@ function TaskEditModal(props) {
     const dateParts = e.target.value.split("-");
     //const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 
-    const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
+    const newDate = new Date(
+      Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2])
+    );
 
     setTask({
       ...task,
@@ -477,7 +463,9 @@ function TaskEditModal(props) {
     const dateParts = e.target.value.split("-");
     //const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 
-    const newDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]));
+    const newDate = new Date(
+      Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2])
+    );
 
     console.log(e.target.value);
     console.log(new Date(e.target.value));
@@ -671,7 +659,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -719,7 +707,7 @@ function TaskEditModal(props) {
 
             dispatchUpdateTask();*/
           })
-          .catch((err) => { });
+          .catch((err) => {});
       }
       setCommentContent("");
     }
@@ -757,11 +745,11 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => { })
-              .catch((err) => { });
+              .then((res) => {})
+              .catch((err) => {});
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -788,8 +776,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
@@ -827,14 +815,14 @@ function TaskEditModal(props) {
   const changeListClick = (index) => {
     console.log(kanbanLists);
     console.log(kanbanLocal);
-    const localObjIndex = kanbanLocal.findIndex(kl => kl.active);
+    const localObjIndex = kanbanLocal.findIndex((kl) => kl.active);
 
     if (localObjIndex == index) {
-      alert('errror');
+      alert("errror");
       return;
     }
 
-    const newList = kanbanLocal[index]
+    const newList = kanbanLocal[index];
     console.log(newList.kanbanListId);
 
     let pos = -9999;
@@ -844,7 +832,7 @@ function TaskEditModal(props) {
       pos = FindNextRank(
         newList.taskUIKanbans[newList.taskUIKanbans.length - 1].taskRankInList
       );
-    };
+    }
 
     taskApi
       .dragTask({
@@ -853,14 +841,12 @@ function TaskEditModal(props) {
         oldList: kanbanLocal[localObjIndex].kanbanListId,
         newList: newList.kanbanListId,
         boardId: currentBoard,
-
       })
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
 
     console.log("zzzzz: ", index);
     selectList(index);
-
   };
 
   function renderContentList() {
@@ -961,7 +947,7 @@ function TaskEditModal(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -995,7 +981,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) { }
+      } catch (e) {}
     }
   }, [props.data]);
 
@@ -1068,16 +1054,18 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
     console.log(value);
   };
 
   const viewHistory = () => {
-    dispatch(setViewHistory({
-      show: true,
-      taskId: task.taskId,
-    }));
+    dispatch(
+      setViewHistory({
+        show: true,
+        taskId: task.taskId,
+      })
+    );
   };
 
   const pop1 = useRef();
@@ -1637,13 +1625,14 @@ function TaskEditModal(props) {
                     </div>
                   </CTooltip>
 
-                  {props.data.showPoint && <CTooltip content="Xóa công việc" placement="left">
-                    <div className="action-item" onClick={onRemoveTask}>
-                      <CIcon name="cil-trash" />
-                      <div className="action-name">Xóa công việc</div>
-                    </div>
-                  </CTooltip>}
-
+                  {props.data.showPoint && (
+                    <CTooltip content="Xóa công việc" placement="left">
+                      <div className="action-item" onClick={onRemoveTask}>
+                        <CIcon name="cil-trash" />
+                        <div className="action-name">Xóa công việc</div>
+                      </div>
+                    </CTooltip>
+                  )}
                 </div>
               </CCol>
             </CRow>
@@ -1651,7 +1640,6 @@ function TaskEditModal(props) {
             <Loading />
           )}
         </CModalBody>
-
       </CModal>
     </div>
   );

@@ -21,12 +21,9 @@ import {
   facebookProvider,
   googleProvider,
 } from "src/utils/firebase/authMethods";
-import authApi from "src/api/authApi";
 import { useDispatch, useSelector } from "react-redux";
 import { login, socialLogin } from "./authSlice";
-import { setCurrentPostPage } from "src/appSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { startChatService } from "src/utils/signalr/chatService";
 
 const Login = () => {
   const history = useHistory();
@@ -50,11 +47,9 @@ const Login = () => {
     e.preventDefault();
     dispatch(login(loginObject))
       .then(unwrapResult)
-      .then(originalPromiseResult => {
-
-      })
-      .catch(err => {
-        console.log('login err :', err);
+      .then((originalPromiseResult) => {})
+      .catch((err) => {
+        console.log("login err :", err);
       });
     if (authStatus) {
       history.push("/dashboard");
@@ -100,6 +95,7 @@ const Login = () => {
         break;
       case "fb":
         outPut = await loginFacebook();
+        break;
       default:
         break;
     }

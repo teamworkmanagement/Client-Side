@@ -1,36 +1,15 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./BoardsPage.scss";
-import { CButton, CCol, CInput, CRow, CTooltip } from "@coreui/react";
+import { CCol, CInput, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import kanbanApi from "src/api/kanbanApi";
 import CreateBoardModal from "./CreateBoardModal/CreateBoardModal";
 import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory, useParams } from "react-router";
-import queryString from "query-string";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
-BoardsPage.propTypes = {};
-
 function BoardsPage(props) {
-  const listBoards = [
-    {
-      boardId: 1,
-      name: "Tasks Khóa luận",
-      tasksCount: 21,
-    },
-    { boardId: 2, name: "Reactjs Road map", tasksCount: 54 },
-    { boardId: 3, name: "Anh văn đề thi", tasksCount: 5 },
-    { boardId: 4, name: "Trello redesign", tasksCount: 12 },
-    { boardId: 5, name: "Hoạt động team building", tasksCount: 19 },
-    { boardId: 6, name: "Ngữ pháp Korean", tasksCount: 16 },
-    { boardId: 7, name: "Báo cáo luật", tasksCount: 28 },
-    { boardId: 8, name: "Chuyển môn học", tasksCount: 6 },
-    { boardId: 9, name: "Relax planing", tasksCount: 7 },
-    { boardId: 10, name: "Tasks Khóa luận", tasksCount: 21 },
-  ];
-
   const history = useHistory();
   function openBoard(boardId) {
     if (props.openBoard) {

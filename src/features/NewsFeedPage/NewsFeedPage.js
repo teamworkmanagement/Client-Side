@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import "./NewsFeedPage.scss";
 import {
   CBadge,
@@ -10,16 +9,13 @@ import {
   CModalBody,
   CModalFooter,
   CModalHeader,
-  CModalTitle,
   CRow,
 } from "@coreui/react";
 import PostList from "./Components/PostList/PostList";
 import PostToolBar from "./Components/PostToolBar/PostToolBar";
 import CIcon from "@coreui/icons-react";
-import TextareaAutosize from "react-textarea-autosize";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterChange } from "src/appSlice";
-import Loading from "./Components/Post/Components/Loading/Loading";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 import postApi from "src/api/postApi";
 import { useLocation, useParams } from "react-router";
@@ -27,12 +23,9 @@ import PostEditor from "./Components/PostEditor/PostEditor";
 import { convertToRaw } from "draft-js";
 import uuid from "src/utils/file/uuid";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
-import firebase from "firebase/app";
-import queryString from 'query-string';
+import queryString from "query-string";
 import teamApi from "src/api/teamApi";
 import { useHistory } from "react-router-dom";
-
-NewsFeedPage.propTypes = {};
 
 function NewsFeedPage(props) {
   const dispatch = useDispatch();
@@ -51,7 +44,6 @@ function NewsFeedPage(props) {
 
   const [grAddPost, setGrAddPost] = useState(null);
   const [newPostContent, setNewPostContent] = useState("");
-  const [tags, setTags] = useState([]);
   const [listPictures, setListPictures] = useState([]);
   const [resetEditorText, setResetEditorText] = useState(-1);
 
@@ -68,19 +60,16 @@ function NewsFeedPage(props) {
 
   const [groupList, setGroupList] = useState([]);
 
-
   useEffect(() => {
-    teamApi.getTeamsRecommendForUser(user.id)
-      .then(res => {
+    teamApi
+      .getTeamsRecommendForUser(user.id)
+      .then((res) => {
         setGroupList(res.data);
       })
-      .catch(err => {
-
-      });
-  }, [])
+      .catch((err) => {});
+  }, []);
 
   function toggleShowFilter() {
-    const clonedShowFilter = { ...showFilter };
     setShowFilter(!showFilter);
   }
 
@@ -291,11 +280,10 @@ function NewsFeedPage(props) {
     setListPictures(cloneListPictures);
   };
 
-
   const history = useHistory();
   const navigateToTeam = (teamId) => {
     history.push(`/team/${teamId}`);
-  }
+  };
   return (
     <div className="newsfeed-page-container">
       <CRow>
@@ -318,97 +306,99 @@ function NewsFeedPage(props) {
             </CCol>
           </CRow>
         </CCol>
-        {!queryParams ? <CCol
-          xl="3"
-          lg="3"
-          md="3"
-          sm="0"
-          className="d-sm-down-none side-panel-col"
-        >
-          <div className="side-panel-container">
-            <div
-              className="create-post-btn"
-              onClick={() => setShowCreatePost(!showCreatePost)}
-            >
-              <div className="title">
-                <CIcon name="cil-pencil" />
-                Viết bài mới
+        {!queryParams ? (
+          <CCol
+            xl="3"
+            lg="3"
+            md="3"
+            sm="0"
+            className="d-sm-down-none side-panel-col"
+          >
+            <div className="side-panel-container">
+              <div
+                className="create-post-btn"
+                onClick={() => setShowCreatePost(!showCreatePost)}
+              >
+                <div className="title">
+                  <CIcon name="cil-pencil" />
+                  Viết bài mới
+                </div>
               </div>
-            </div>
-            <div
-              className="toggle-filter-btn"
-              onClick={toggleShowFilter}
-              style={
-                showFilter
-                  ? {
-                    borderBottomLeftRadius: "0",
-                    borderBottomRightRadius: "0",
-                    borderBottom: "none",
-                  }
-                  : {
-                    borderBottomLeftRadius: "10px",
-                    borderBottomRightRadius: "10px",
-                    borderBottom: "1px solid #e6ebf1",
-                  }
-              }
-            >
-              <div className="title">
-                <CIcon name="cil-list-filter" />
-                Lọc bản tin
+              <div
+                className="toggle-filter-btn"
+                onClick={toggleShowFilter}
+                style={
+                  showFilter
+                    ? {
+                        borderBottomLeftRadius: "0",
+                        borderBottomRightRadius: "0",
+                        borderBottom: "none",
+                      }
+                    : {
+                        borderBottomLeftRadius: "10px",
+                        borderBottomRightRadius: "10px",
+                        borderBottom: "1px solid #e6ebf1",
+                      }
+                }
+              >
+                <div className="title">
+                  <CIcon name="cil-list-filter" />
+                  Lọc bản tin
+                </div>
+                {showFilter ? (
+                  <img
+                    className="expand-icon"
+                    src="../images/expand_less.png"
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    className="expand-icon"
+                    src="../images/expand_more.png"
+                    alt=""
+                  />
+                )}
               </div>
-              {showFilter ? (
-                <img
-                  className="expand-icon"
-                  src="../images/expand_less.png"
-                  alt=""
-                />
-              ) : (
-                <img
-                  className="expand-icon"
-                  src="../images/expand_more.png"
-                  alt=""
-                />
-              )}
-            </div>
-            <CCollapse show={showFilter}>
-              <PostToolBar getFilter={getFilter} />
-            </CCollapse>
-            {!props.isInTeam && (
-              <div className="post-group-list-container">
-                <div className="group-list-title">Bài viết trong nhóm</div>
-                {groupList.map((item, index) => {
-                  return (
-                    <div
-                      onClick={() => navigateToTeam(item.groupId)}
-                      key={item.groupId}
-                      className="post-group-item"
-                      style={{ animationDelay: `${(index + 2) / 10}s` }}
-                    >
-                      <div className="group-avatar">
-                        <img src={item.groupAvatar} alt="" />
-                      </div>
-                      <div className="group-infor">
-                        <div className="group-name">{item.groupName}</div>
-                        <div className="group-member-count">
-                          {item.groupMemberCount} Thành viên
+              <CCollapse show={showFilter}>
+                <PostToolBar getFilter={getFilter} />
+              </CCollapse>
+              {!props.isInTeam && (
+                <div className="post-group-list-container">
+                  <div className="group-list-title">Bài viết trong nhóm</div>
+                  {groupList.map((item, index) => {
+                    return (
+                      <div
+                        onClick={() => navigateToTeam(item.groupId)}
+                        key={item.groupId}
+                        className="post-group-item"
+                        style={{ animationDelay: `${(index + 2) / 10}s` }}
+                      >
+                        <div className="group-avatar">
+                          <img src={item.groupAvatar} alt="" />
+                        </div>
+                        <div className="group-infor">
+                          <div className="group-name">{item.groupName}</div>
+                          <div className="group-member-count">
+                            {item.groupMemberCount} Thành viên
+                          </div>
+                        </div>
+                        <div className="group-new-count">
+                          <CBadge className="badge-danger">
+                            {item.groupNewPostCount}
+                          </CBadge>
                         </div>
                       </div>
-                      <div className="group-new-count">
-                        <CBadge className="badge-danger">
-                          {item.groupNewPostCount}
-                        </CBadge>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </CCol> : null}
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </CCol>
+        ) : null}
       </CRow>
 
-      {
-        !queryParams ? <CModal show={showCreatePost} onClosed={onModalClose}>
+      {!queryParams ? (
+        <CModal show={showCreatePost} onClosed={onModalClose}>
           <CModalHeader closeButton></CModalHeader>
           <CModalBody>
             {!teamId ? (
@@ -464,8 +454,8 @@ function NewsFeedPage(props) {
               Đăng bài
             </CButton>
           </CModalFooter>
-        </CModal> : null
-      }
+        </CModal>
+      ) : null}
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./ChatListItem.scss";
 import { CBadge } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,13 +10,10 @@ import {
 import TimeAgo from "timeago-react";
 import * as timeago from "timeago.js";
 import vi from "timeago.js/lib/lang/vi";
-import { useHistory } from "react-router";
 import { changeStateChatListSidebar } from "src/appSlice";
 
 // register it.
 timeago.register("vi", vi);
-
-ChatListItem.propTypes = {};
 
 function ChatListItem(props) {
   const dispatch = useDispatch();
@@ -39,8 +35,9 @@ function ChatListItem(props) {
   return (
     <div
       onClick={() => handelSelect()}
-      className={`chat-item-container ${props.data.newMessage ? "message" : ""
-        } ${props.data.groupChatId === currentGroup ? "selected" : ""}`}
+      className={`chat-item-container ${
+        props.data.newMessage ? "message" : ""
+      } ${props.data.groupChatId === currentGroup ? "selected" : ""}`}
       style={{ animationDelay: `${props.animationDelay / 10}s` }}
     >
       <div className="item-avatar">
