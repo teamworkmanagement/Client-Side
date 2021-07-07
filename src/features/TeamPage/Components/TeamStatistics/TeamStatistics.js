@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import PropTypes, { element } from "prop-types";
 import "./TeamStatistics.scss";
 import Select, { components } from "react-select";
-import { CButton, CButtonGroup, CCol, CRow } from "@coreui/react";
-import MainChartExample from "src/shared_components/views/charts/MainChartExample";
+import { CButton, CButtonGroup, CCol } from "@coreui/react";
 import { CChartBar, CChartLine } from "@coreui/react-chartjs";
 import { getStyle, hexToRgba } from "@coreui/utils";
 import CIcon from "@coreui/icons-react";
@@ -11,8 +9,6 @@ import teamApi from "src/api/teamApi";
 import { useParams } from "react-router";
 import statisticsApi from "src/api/statisticsApi";
 import { saveAs } from "file-saver";
-
-TeamStatistics.propTypes = {};
 
 const Option = (props) => {
   return (
@@ -26,13 +22,7 @@ const Option = (props) => {
   );
 };
 
-const brandSuccess = getStyle("success") || "#4dbd74";
 const brandInfo = getStyle("info") || "#20a8d8";
-const brandDanger = getStyle("danger") || "#f86c6b";
-
-const random = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
 
 function TeamStatistics(props) {
   const [selectedBoard, setSelectedBoard] = useState(null);
@@ -42,27 +32,10 @@ function TeamStatistics(props) {
 
   const [filterTeamObject, setFilterTeamObject] = useState(null);
   const [filterMembersObject, setFilterMembersObject] = useState(null);
-  const [boardId, setBoardId] = useState(null);
 
   const [boardTaskDone, setBoardTaskDone] = useState([]);
   const [requestModels, setRequestModels] = useState([]);
 
-  const listBoardszzz = [
-    {
-      value: 1,
-      label: "Tasks Khóa luận",
-      tasksCount: 21,
-    },
-    { value: 2, label: "Reactjs Road map", tasksCount: 54 },
-    { value: 3, label: "Anh văn đề thi", tasksCount: 5 },
-    { value: 4, label: "Trello redesign", tasksCount: 12 },
-    { value: 5, label: "Hoạt động team building", tasksCount: 19 },
-    { value: 6, label: "Ngữ pháp Korean", tasksCount: 16 },
-    { value: 7, label: "Báo cáo luật", tasksCount: 28 },
-    { value: 8, label: "Chuyển môn học", tasksCount: 6 },
-    { value: 9, label: "Relax planing", tasksCount: 7 },
-    { value: 10, label: "Tasks Khóa luận", tasksCount: 21 },
-  ];
   /*const defaultDatasets = (() => {
     let elements = 7;
     switch (progressTimeMode) {
@@ -218,14 +191,10 @@ function TeamStatistics(props) {
       },
     };
   })();
-  const list = ["1", "2", "13", "14", "15", "16"];
 
   const onChangeSelectedBoard = (e) => {
     setSelectedBoard(e);
   };
-
-  const progressWeekValue = [];
-  const progressWeekLabels = [];
 
   const modeProgressList = [
     {
@@ -282,15 +251,6 @@ function TeamStatistics(props) {
     }
     return labels;
   }
-  const randomColor = () => {
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      const random = Math.random();
-      const bit = (random * 16) | 0;
-      color += bit.toString(16);
-    }
-    return color;
-  };
 
   useEffect(() => {
     if (filterTeamObject) {

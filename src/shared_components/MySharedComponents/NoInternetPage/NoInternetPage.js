@@ -1,17 +1,10 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import "./NoInternetPage.scss";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomToast from "../CustomToast/CustomToast";
 
-NoInternetPage.propTypes = {};
-
 function NoInternetPage(props) {
-  function reloadPage() {
-    //reload current page content
-    //note: không load lại web, chỉ gọi lại api
-  }
   const notify = () => {
     //type: "success", "error", "info"
     toast(

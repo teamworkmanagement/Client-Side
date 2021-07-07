@@ -1,19 +1,10 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import "./AvatarImage.scss";
-import UserInfoModal from "src/shared_components/MySharedComponents/UserInfoModal/UserInfoModal";
-import userApi from "src/api/userApi";
 import { useDispatch } from "react-redux";
 import { setUserModal } from "src/appSlice";
 
-AvatarImage.propTypes = {};
-
 function AvatarImage(props) {
   const [showInfoModal, setShowInfoModal] = useState(false);
-
-  function onCloseModal() {
-    setShowInfoModal(false);
-  }
 
   function getImageName() {
     const name = props.userName;
@@ -41,10 +32,12 @@ function AvatarImage(props) {
         onClick={() => {
           if (props.disable) return;
           setShowInfoModal(true);
-          dispatch(setUserModal({
-            show: true,
-            userId: props.userId
-          }));
+          dispatch(
+            setUserModal({
+              show: true,
+              userId: props.userId,
+            })
+          );
         }}
       ></div>
       {/*<UserInfoModal

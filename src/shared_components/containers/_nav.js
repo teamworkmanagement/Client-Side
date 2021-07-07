@@ -1,6 +1,5 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
-import { CImg } from "@coreui/react";
 import { MdHelpOutline } from "react-icons/md";
 import { RiFeedbackLine } from "react-icons/ri";
 

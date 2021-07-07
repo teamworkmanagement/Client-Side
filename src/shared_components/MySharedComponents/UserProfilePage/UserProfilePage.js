@@ -1,12 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./UserProfilePage.scss";
 import { CCol, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import MainChartExample from "src/shared_components/views/charts/MainChartExample";
 import { CChartLine } from "@coreui/react-chartjs";
-
-UserProfilePage.propTypes = {};
 
 function UserProfilePage(props) {
   const recentTasks = [

@@ -3,23 +3,17 @@ import {
   CButton,
   CCard,
   CCardBody,
-  CCardFooter,
   CCol,
   CContainer,
   CForm,
   CInput,
   CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
   CRow,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
 import authApi from "src/api/authApi";
 import { useHistory } from "react-router";
 import "./ForgotPassword.scss";
 
-import { RiLockPasswordLine } from "react-icons/ri";
-import { AiOutlineUser } from "react-icons/ai";
 import { HiOutlineMail } from "react-icons/hi";
 import { BiKey } from "react-icons/bi";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
@@ -33,37 +27,36 @@ const ForgotPassword = () => {
   const [currentForm, setCurrentForm] = useState(1); //1:page send code, 2:page confirm code, 3: page reset password, 4: page success
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [resetObj, setResetObj] = useState({});
 
   function SendCode() {
     if (!validateEmail(email)) {
       toast(
-        <CustomToast
-          type="error"
-          title="Lỗi"
-          message="Email không hợp lệ"
-        />
-      )
+        <CustomToast type="error" title="Lỗi" message="Email không hợp lệ" />
+      );
       return;
     }
-    authApi.forgotPassword({
-      email
-    }).then(res => {
-      console.log(res.data);
-      setCurrentForm(2);
-    }).catch(err => {
-      console.log(err);
+    authApi
+      .forgotPassword({
+        email,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setCurrentForm(2);
+      })
+      .catch((err) => {
+        console.log(err);
 
-      if (err.ErrorCode === "404")
-        toast(
-          <CustomToast
-            type="error"
-            title="Lỗi"
-            message="Email không tồn tại trong hệ thống"
-          />
-        );
-    })
+        if (err.ErrorCode === "404")
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Email không tồn tại trong hệ thống"
+            />
+          );
+      });
   }
   function GoBackSendCode() {
     setCurrentForm(1);
@@ -73,7 +66,7 @@ const ForgotPassword = () => {
     console.log(email);
     const payload = {
       ...resetObj,
-      email
+      email,
     };
 
     console.log(resetObj);
@@ -83,7 +76,8 @@ const ForgotPassword = () => {
           type="error"
           title="Lỗi"
           message="Bạn vui lòng nhập dữ liệu"
-        />);
+        />
+      );
 
       return;
     }
@@ -94,26 +88,31 @@ const ForgotPassword = () => {
           type="error"
           title="Lỗi"
           message="Bạn vui lòng kiểm tra mật khẩu"
-        />);
+        />
+      );
       return;
     }
 
-    authApi.resetPassword(payload)
-      .then(res => {
+    authApi
+      .resetPassword(payload)
+      .then((res) => {
         console.log(res);
         setCurrentForm(4);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
-        if (err.Message?.includes('Error occured while reseting the password')) {
+        if (
+          err.Message?.includes("Error occured while reseting the password")
+        ) {
           toast(
             <CustomToast
               type="error"
               title="Lỗi"
               message="Bạn vui lòng kiểm tra lại OTP"
-            />);
+            />
+          );
         }
-      })
+      });
   }
   function GotoResetSuccess() {
     setCurrentForm(4);
@@ -125,11 +124,11 @@ const ForgotPassword = () => {
       ...resetObj,
       [name]: value,
     });
-  }
+  };
 
   const goToLogin = () => {
-    history.push('/login');
-  }
+    history.push("/login");
+  };
 
   return (
     <div className="forgot-password-container c-app c-default-layout flex-row align-items-center">
@@ -175,9 +174,19 @@ const ForgotPassword = () => {
                   <div className="go-back-label-group">
                     Trở về trang
                     <div className="actions-group">
-                      <div className="go-login-label" onClick={() => history.push("/login")}>Đăng nhập</div>
+                      <div
+                        className="go-login-label"
+                        onClick={() => history.push("/login")}
+                      >
+                        Đăng nhập
+                      </div>
                       <div className="divider"></div>
-                      <div className="go-register-label" onClick={() => history.push("/register")}>Tạo tài khoản</div>
+                      <div
+                        className="go-register-label"
+                        onClick={() => history.push("/register")}
+                      >
+                        Tạo tài khoản
+                      </div>
                     </div>
                   </div>
                 </CForm>
@@ -210,7 +219,7 @@ const ForgotPassword = () => {
                         name="token"
                         placeholder="Nhập mã xác nhận..."
                         onChange={onChange}
-                      //autoComplete="username"
+                        //autoComplete="username"
                       />
                       <BiKey className="icon-right-input" />
                     </div>
@@ -384,10 +393,7 @@ const ForgotPassword = () => {
         </CRow>
       </CContainer>
 
-      <ToastContainer
-        position="bottom-right"
-        autoClose={2000}
-      />
+      <ToastContainer position="bottom-right" autoClose={2000} />
     </div>
   );
 };

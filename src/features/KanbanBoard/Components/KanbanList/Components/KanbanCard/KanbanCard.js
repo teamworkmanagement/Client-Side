@@ -13,8 +13,6 @@ import { setTaskSelected } from "src/features/KanbanBoard/kanbanSlice";
 import { useDispatch } from "react-redux";
 import { HiOutlineChat, HiOutlinePaperClip } from "react-icons/hi";
 
-KanbanCard.propTypes = {};
-
 function KanbanCard(props) {
   const initIsShowEditPopup = false;
 

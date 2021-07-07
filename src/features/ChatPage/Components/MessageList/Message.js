@@ -1,10 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./Message.scss";
 import { CTooltip } from "@coreui/react";
 import moment from "moment";
-
-Message.propTypes = {};
 
 function Message({ item, index }) {
   const renderMes = () => {
@@ -13,7 +10,11 @@ function Message({ item, index }) {
         return <strong>{item.message.split("/").pop()}</strong>;
       case "image":
         return (
-          <img style={{ width: "30%", height: "30%" }} src={item.message}></img>
+          <img
+            alt=""
+            style={{ width: "30%", height: "30%" }}
+            src={item.message}
+          ></img>
         );
       default:
         return <div className="message-text">{item.message}</div>;

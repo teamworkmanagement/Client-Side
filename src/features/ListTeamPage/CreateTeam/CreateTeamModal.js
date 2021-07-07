@@ -11,8 +11,6 @@ import teamApi from "src/api/teamApi";
 import { addTeam } from "../teamSlice";
 import "./CreateTeamModal.scss";
 
-CreateTeamModal.propTypes = {};
-
 function CreateTeamModal(props) {
   const dispatch = useDispatch();
   const [teamObj, setTeamObj] = useState();

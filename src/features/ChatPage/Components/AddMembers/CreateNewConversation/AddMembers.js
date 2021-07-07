@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./AddMembers.scss";
-import {
-  CButton,
-  CInput,
-  CModal,
-  CModalBody,
-  CModalHeader,
-} from "@coreui/react";
-import Select, { components } from "react-select";
+import { CModal, CModalBody, CModalHeader } from "@coreui/react";
+import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -18,8 +11,6 @@ import {
   setCurrentGroup,
   setIsSelected,
 } from "src/features/ChatPage/chatSlice";
-
-AddMembers.propTypes = {};
 
 const ValueOption = (props) => (
   <components.MultiValue {...props}>

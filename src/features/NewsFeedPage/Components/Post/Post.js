@@ -1,32 +1,22 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./Post.scss";
 import CIcon from "@coreui/icons-react";
 import CommentItem from "./Components/CommentItem/CommentItem";
-import {
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CInput,
-} from "@coreui/react";
+
 import moment from "moment";
 import "moment/locale/vi";
 import commentApi from "src/api/commentApi";
 import classNames from "classnames";
 import postApi from "src/api/postApi";
 import { useSelector } from "react-redux";
-import PostEditor from "../PostEditor/PostEditor";
 import CustomInput from "../CustomInput/CustomInput";
 import { convertToRaw } from "draft-js";
 import GridImages from "./Components/GridImages/GridImages";
 import { useHistory } from "react-router-dom";
 import Tag from "./Components/Tag/Tag";
-import AvatarComponent from "src/shared_components/MySharedComponents/AvatarComponent/AvatarComponent";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
 
 moment.locale("vi");
-Post.propTypes = {};
 
 function Post(props) {
   const [cmtLists, setComments] = useState([]);
@@ -37,7 +27,6 @@ function Post(props) {
   const newAddReact = useSelector((state) => state.signalr.newAddReact);
   const removeReact = useSelector((state) => state.signalr.removeReact);
   const newComment = useSelector((state) => state.signalr.newComment);
-  const [resetEditor, setResetEditor] = useState(0);
 
   useEffect(() => {
     async function getComments() {
@@ -64,13 +53,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-        .deleteReactPost({ params })
-        .then((res) => { })
-        .catch((err) => { })
+          .deleteReactPost({ params })
+          .then((res) => {})
+          .catch((err) => {})
       : postApi
-        .reactPost(params)
-        .then((res) => { })
-        .catch((err) => { });
+          .reactPost(params)
+          .then((res) => {})
+          .catch((err) => {});
 
     setPost({
       ...post,
@@ -81,58 +70,20 @@ function Post(props) {
     });
   };
 
-  const onAddComment = (e) => {
-    if (e.key === "Enter") {
-      if (commentContent !== "") {
-        console.log(commentContent);
-        commentApi
-          .addComment({
-            commentPostId: post.postId,
-            commentUserId: user.id,
-            commentContent: commentContent,
-            commentCreatedAt: new Date().toISOString(),
-            commentIsDeleted: false,
-          })
-          .then((res) => {
-            setPost({
-              ...post,
-              postCommentCount: post.postCommentCount + 1,
-            });
-
-            const newArrr = [
-              {
-                commentId: res.data.commentId,
-                commentPostId: res.data.commentPostId,
-                commentUserId: res.data.commentUserId,
-                commentContent: res.data.commentContent,
-                userName: user.fullName,
-                commentCreatedAt: res.data.commentCreatedAt,
-              },
-            ].concat([...cmtLists]);
-
-            setComments(newArrr);
-          })
-          .catch((err) => { });
-      }
-      setCommentContent("");
-    }
-  };
-
   String.prototype.replaceBetween = function (start, end, what) {
     return this.substring(0, start) + what + this.substring(end);
   };
 
   const mapStringToJsx = (str) => {
-    const myArr = str.split('<@tag>');
+    const myArr = str.split("<@tag>");
     return myArr.map((ele, index) => {
       if (index % 2 === 0) {
-        return <div dangerouslySetInnerHTML={{ __html: ele }}></div>
+        return <div dangerouslySetInnerHTML={{ __html: ele }}></div>;
+      } else {
+        return <Tag userId={ele} />;
       }
-      else {
-        return <Tag userId={ele} />
-      }
-    })
-  }
+    });
+  };
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
@@ -220,7 +171,7 @@ function Post(props) {
 
         setComments(newArrr);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -263,7 +214,6 @@ function Post(props) {
     history.push(`/team/${post.postTeamId}`);
   };
 
-
   return (
     <div className="post-container" style={{ zIndex: props.index }}>
       <div className="post-header">
@@ -277,23 +227,26 @@ function Post(props) {
             />*/}
 
             <AvatarImage
-              userName={user.id === post.postUserId ? user.fullName : post.userName}
-              userImage={user.id === post.postUserId ? user.userAvatar : post.userAvatar}
+              userName={
+                user.id === post.postUserId ? user.fullName : post.userName
+              }
+              userImage={
+                user.id === post.postUserId ? user.userAvatar : post.userAvatar
+              }
               userId={post.postUserId}
               disable={false}
             />
           </div>
           <div className="poster-infor">
-            <div
-              className="name-and-group"
-            >
+            <div className="name-and-group">
               <strong>
                 {user.id === post.postUserId ? user.fullName : post.userName}
               </strong>{" "}
               {!props.isInTeam && `đã đăng trong nhóm `}
-
               {!props.isInTeam && (
-                <strong onClick={() => navigateToTeam(post)}>{post.teamName}</strong>
+                <strong onClick={() => navigateToTeam(post)}>
+                  {post.teamName}
+                </strong>
               )}
             </div>
             <div className="post-date">
@@ -331,9 +284,7 @@ function Post(props) {
           </div>
               </div>*/}
       </div>
-      <div
-        className="post-content">
-        {mapStringToJsx(post.postContent)}</div>
+      <div className="post-content">{mapStringToJsx(post.postContent)}</div>
       <div className="post-images-list-container">
         <GridImages countFrom={5} images={post.postImages} />
       </div>

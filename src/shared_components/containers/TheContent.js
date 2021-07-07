@@ -1,11 +1,10 @@
 import React, { Suspense } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import { CContainer, CFade } from "@coreui/react";
+import { Redirect, Switch } from "react-router-dom";
+import { CContainer } from "@coreui/react";
 
 // routes config
 import routes from "../../routes";
 import PrivateRoute from "../team_route/PrivateRoute";
-import PublicRoute from "../team_route/PublicRoute";
 
 const loading = (
   <div className="pt-3 text-center">

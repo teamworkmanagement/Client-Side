@@ -1,18 +1,14 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import "./ProgressSlider.scss";
 import { Range, getTrackBackground } from "react-range";
 import { updateTask } from "src/appSlice";
 import { useDispatch, useSelector } from "react-redux";
-
-ProgressSlider.propTypes = {};
 
 function ProgressSlider(props) {
   const dispatch = useDispatch();
   const [value, setValue] = useState(props.value);
   const [renderedValue, setRenderedValue] = useState([props.value]);
   const [task, setTask] = useState(props.task);
-  const tasks = useSelector((state) => state.app.tasks);
 
   function getColorFromValue() {
     if (renderedValue < 26) {

@@ -2,18 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { gantt } from "dhtmlx-gantt";
 import "dhtmlx-gantt/codebase/skins/dhtmlxgantt_material.css";
 import "./GanttChart.scss";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import taskApi from "src/api/taskApi";
 import moment from "moment";
-import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
-import { CModal, CModalBody, CModalHeader } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import Modals from "src/shared_components/views/notifications/modals/Modals";
-import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
-import queryString from "query-string";
 import "moment/locale/vi";
 
 moment.locale("vi");
@@ -22,11 +16,7 @@ function GanttChart(props) {
   const input = useRef(null);
   const history = useHistory();
   //const tasks = useSelector((state) => state.app.tasks);
-  const handleTasks = useSelector((state) => state.app.handleTasks);
-  const users = useSelector((state) => state.app.users);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
-  const [modalTask, setModalTask] = useState(null);
-  const dispatch = useDispatch();
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
@@ -42,10 +32,6 @@ function GanttChart(props) {
     dispatch(getBoardDataForUI(props.boardId));
   }, [props.boardId]);*/
 
-  var initData = {
-    data: refactorTasksForGantt(),
-    //links: [{ id: 1, source: 1, target: 2, type: "0" }],
-  };
   const [data, setData] = useState({
     data: refactorTasksForGantt(),
   });
@@ -53,11 +39,21 @@ function GanttChart(props) {
   var durationDate = 0; //số ngày của task, tính từ start_date
   var isMoving = false; //flag cho trạng thái moving
 
-  const addNewTask = useSelector(state => state.kanban.signalrData.addNewTask);
-  const removeTask = useSelector(state => state.kanban.signalrData.removeTask);
-  const removeList = useSelector(state => state.kanban.signalrData.removeList);
-  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
-  const assignUser = useSelector(state => state.kanban.signalrData.reAssignUser);
+  const addNewTask = useSelector(
+    (state) => state.kanban.signalrData.addNewTask
+  );
+  const removeTask = useSelector(
+    (state) => state.kanban.signalrData.removeTask
+  );
+  const removeList = useSelector(
+    (state) => state.kanban.signalrData.removeList
+  );
+  const updateTask = useSelector(
+    (state) => state.kanban.signalrData.updateTask
+  );
+  const assignUser = useSelector(
+    (state) => state.kanban.signalrData.reAssignUser
+  );
 
   function refactorTasksForGantt() {
     var ganttTasks = [];
@@ -108,10 +104,9 @@ function GanttChart(props) {
   useEffect(() => {
     const newData = refactorTasksForGantt();
     setData({
-      data: newData
-    })
-  }, [addNewTask, removeTask, removeList])
-
+      data: newData,
+    });
+  }, [addNewTask, removeTask, removeList]);
 
   /*useEffect(() => {
     if (data) {
@@ -119,12 +114,6 @@ function GanttChart(props) {
       gantt.parse({ data: data });
     }
   }, [data])*/
-  function calculateDaysDistance(dateAfter, dateBefore) {
-    //const before=new Date(dateBefore);
-    //const after=new Date(dateAfter);
-    //return Math.round((after - before) / 86400000);
-    return 3;
-  }
 
   const user = useSelector((state) => state.auth.currentUser);
   function compareEqualStrWithDate(str, date) {
@@ -220,8 +209,8 @@ function GanttChart(props) {
   };
 
   useEffect(() => {
-    const myData = { data: refactorTasksForGantt() }
-    console.log('zzzzzzz: ', myData);
+    const myData = { data: refactorTasksForGantt() };
+    console.log("zzzzzzz: ", myData);
     gantt.clearAll();
     gantt.config.scale_height = 54;
     gantt.config.date_format = "%Y-%m-%d %H:%i";
@@ -367,8 +356,8 @@ function GanttChart(props) {
           taskImageUrl: newTaskData.taskImageUrl,
           userActionId: user.id,
         })
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
     });
   }, [addNewTask, removeTask, removeList, updateTask, assignUser]);
 
@@ -378,7 +367,6 @@ function GanttChart(props) {
       search: history.location.search + `&t=${taskId}`,
     });
   };
-
 
   /*function updateGanttTask(task) {
     console.log("update gantt task", task);

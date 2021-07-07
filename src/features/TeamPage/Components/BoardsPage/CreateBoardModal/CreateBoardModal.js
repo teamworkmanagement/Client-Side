@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./CreateBoardModal.scss";
 import {
   CButton,
@@ -10,8 +9,6 @@ import {
 } from "@coreui/react";
 import kanbanApi from "src/api/kanbanApi";
 import { useParams } from "react-router";
-
-CreateBoardModal.propTypes = {};
 
 function CreateBoardModal(props) {
   const [boardName, setBoardName] = useState("");

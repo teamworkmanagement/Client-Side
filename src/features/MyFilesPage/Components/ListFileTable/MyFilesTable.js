@@ -18,17 +18,13 @@ import "./MyFilesTable.scss";
 import UploadItem from "./ProgressBottom/UploadItem";
 
 moment.locale("vi");
-MyFilesTable.propTypes = {};
 
 function MyFilesTable(props) {
   const tableContainerRef = useRef(null);
 
-  const [details, setDetails] = useState([]);
-  const [fail, setFail] = useState(false);
   const [upload, setUpload] = useState(false);
   const [progress, setProgress] = useState(0);
   const [datas, setDatas] = useState([]);
-  const [totals, setTotals] = useState(0);
   const [page, setPage] = useState(1);
   const [cfile, setCfile] = useState(null); //current file
   const [showExitPrompt, setShowExitPrompt] = useExitPrompt(false);
@@ -36,11 +32,7 @@ function MyFilesTable(props) {
   const [showError, setShowError] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
   const pickerRef = useRef(null);
-  const history = useHistory();
-  const pageSize = 5;
   const maxSize = 30; //MB
-
-  const { teamId } = useParams();
 
   const handleDownload = (index) => {
     console.log("action in table");
@@ -152,7 +144,7 @@ function MyFilesTable(props) {
         setDatas(dts);
         //setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         //console.log(outPut.data.items);
-      } catch (err) { }
+      } catch (err) {}
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -180,8 +172,6 @@ function MyFilesTable(props) {
       </div>
     );
   }
-
-
 
   return (
     <div ref={tableContainerRef} className="list-file-table-container">

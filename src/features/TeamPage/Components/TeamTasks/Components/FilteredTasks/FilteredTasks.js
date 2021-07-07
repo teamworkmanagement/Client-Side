@@ -1,60 +1,13 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./FilteredTasks.scss";
-import { CDataTable, CTooltip } from "@coreui/react";
+import { CDataTable } from "@coreui/react";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import AvatarComponent from "src/shared_components/MySharedComponents/AvatarComponent/AvatarComponent";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-FilteredTasks.propTypes = {};
-
 function FilteredTasks(props) {
-  const filterTasks = [
-    {
-      taskName: "Thu gọn header",
-      taskDescription: "Thêm button thu gọn sub-header",
-      taskStatus: "todo",
-      taskUserId: "aaaaaaaaa",
-      taskUserAvatar: "https://emilus.themenate.net/img/avatars/thumb-5.jpg",
-      taskUserName: "Dũng Nguyễn",
-    },
-    {
-      taskName: "Làm tempalte cho excel report",
-      taskDescription: "Suy nghĩ layout, nội dung và xuất chart cho report",
-      taskStatus: "doing",
-      taskUserId: "aaaaaaaaa",
-      taskUserAvatar: "https://emilus.themenate.net/img/avatars/thumb-7.jpg",
-      taskUserName: "Khoa Anh",
-    },
-    {
-      taskName: "Lỗi render table trên mobile width",
-      taskDescription:
-        "table render lỗi khi dùng mobile, làm footer bị overflow view",
-      taskStatus: "doing",
-      taskUserId: "",
-      taskUserAvatar: "https://emilus.themenate.net/img/avatars/thumb-8.jpg",
-      taskUserName: "Trí Phạm",
-    },
-    {
-      taskName: "Viết lại lexorank cho báo cáo",
-      taskDescription: "Cập nhật ảnh minh họa và nội dung thuật toán lexorank",
-      taskStatus: "done",
-      taskUserId: "i",
-      taskUserAvatar: "",
-      taskUserName: "Trí Phạm",
-    },
-    {
-      taskName: "Fix gantt chart render",
-      taskDescription: "Fix bug render height cho gantt chart",
-      taskStatus: "todo",
-      taskUserId: "d",
-      taskUserAvatar: "https://emilus.themenate.net/img/avatars/thumb-8.jpg",
-      taskUserName: "Trí Phạm",
-    },
-  ];
-
   const fields = [
     { key: "info", label: "Công việc", _style: { width: "50%" } },
     { key: "status", label: "Trạng thái", _style: { width: "15%" } },
@@ -75,27 +28,33 @@ function FilteredTasks(props) {
   useEffect(() => {
     if (props.filter) {
       let mytasks = tasks;
-      console.log('filter laf: ', props.filter);
-      console.log('danh sach task la: ', tasks);
+      console.log("filter laf: ", props.filter);
+      console.log("danh sach task la: ", tasks);
       if (props.filter.taskDescription) {
-        mytasks = mytasks.filter(t => t.taskDescription.includes(props.filter.taskDescription));
+        mytasks = mytasks.filter((t) =>
+          t.taskDescription.includes(props.filter.taskDescription)
+        );
       }
 
       if (props.filter.taskStatus) {
-        mytasks = mytasks.filter(t => t.taskStatus == props.filter.taskStatus);
+        mytasks = mytasks.filter(
+          (t) => t.taskStatus == props.filter.taskStatus
+        );
       }
 
       if (props.filter.taskName) {
-        mytasks = mytasks.filter(t => t.taskName.includes(props.filter.taskName));
+        mytasks = mytasks.filter((t) =>
+          t.taskName.includes(props.filter.taskName)
+        );
       }
 
       if (props.filter.userId) {
-        mytasks = mytasks.filter(t => t.userId == props.filter.userId);
+        mytasks = mytasks.filter((t) => t.userId == props.filter.userId);
       }
 
       setTasksFilter(mytasks);
     }
-  }, [props.filter])
+  }, [props.filter]);
   function NoItemView() {
     return (
       <div className="no-task-view-table">
@@ -151,14 +110,14 @@ function FilteredTasks(props) {
 
   const history = useHistory();
   const onRowClick = (e) => {
-    console.log('click: ');
+    console.log("click: ");
     console.log(history.location.pathname);
     console.log(history.location.search);
     history.push({
       pathname: history.location.pathname,
-      search: history.location.search + e.link
-    })
-  }
+      search: history.location.search + e.link,
+    });
+  };
   return (
     <div className="filtered-tasks-container">
       <CDataTable
@@ -173,7 +132,7 @@ function FilteredTasks(props) {
         hover
         onRowClick={onRowClick}
         style={{
-          cursor: "pointer"
+          cursor: "pointer",
         }}
         //sorter
         scopedSlots={{

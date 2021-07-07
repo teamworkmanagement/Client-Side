@@ -1,11 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   CSidebar,
-  CSidebarNav,
-  CSidebarNavItem,
-  CNavItem,
-  CNavLink,
   CInputGroup,
   CInput,
   CInputGroupAppend,
@@ -19,13 +15,15 @@ import CIcon from "@coreui/icons-react";
 import { changeStateChatListSidebar } from "src/appSlice";
 import { BsSearch } from "react-icons/bs";
 import ChatList from "src/features/ChatPage/Components/ChatList/ChatList";
-import { searchGroupChatForUser, setTriggerAddConversation } from "src/features/ChatPage/chatSlice";
+import {
+  searchGroupChatForUser,
+  setTriggerAddConversation,
+} from "src/features/ChatPage/chatSlice";
 
 const ChatListSideBar = (props) => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.app.chatListSidebarShow);
   const user = useSelector((state) => state.auth.currentUser);
-  const [showAddConversation, setShowAddConversation] = useState(false);
   const onChange = (val) => {
     const param = { type: "chatlistsidebar", chatListSidebarShow: val };
     const action = changeStateChatListSidebar(param);
@@ -62,7 +60,7 @@ const ChatListSideBar = (props) => {
         chatListSidebarShow: false,
       })
     );
-  }
+  };
 
   return (
     <CSidebar
@@ -87,10 +85,7 @@ const ChatListSideBar = (props) => {
           </CInputGroup>
         </div>
         <ChatList chatImages={chatImages} />
-        <div
-          onClick={() => onAddConversation()}
-          className="btn-add-chat"
-        >
+        <div onClick={() => onAddConversation()} className="btn-add-chat">
           <CIcon name="cil-plus" />
           Tạo nhóm Chat mới
         </div>

@@ -1,110 +1,31 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useRef, useState } from "react";
 import "./DashBoardPage.scss";
-import {
-  CRow,
-  CCol,
-  CCard,
-  CWidgetDropdown,
-  CDropdown,
-  CDropdownToggle,
-  CDropdownMenu,
-  CDropdownItem,
-  CCardBody,
-  CButton,
-  CButtonGroup,
-  CCardFooter,
-  CProgress,
-  CCardHeader,
-  CCallout,
-  CBadge,
-} from "@coreui/react";
-import { GiSandsOfTime, GiPencilRuler, GiAlarmClock } from "react-icons/gi";
+import { CRow, CCol, CButton, CButtonGroup, CProgress } from "@coreui/react";
+import { GiSandsOfTime, GiAlarmClock } from "react-icons/gi";
 import CIcon from "@coreui/icons-react";
-import ChartLineSimple from "src/shared_components/views/charts/ChartLineSimple";
-import ChartBarSimple from "src/shared_components/views/charts/ChartBarSimple";
-import MainChartExample from "src/shared_components/views/charts/MainChartExample";
-import WidgetsBrand from "src/shared_components/views/widgets/WidgetsBrand";
 import { CChartLine } from "@coreui/react-chartjs";
 import { getStyle, hexToRgba } from "@coreui/utils";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { unwrapResult } from "@reduxjs/toolkit";
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import teamApi from "src/api/teamApi";
 import statisticsApi from "src/api/statisticsApi";
-import axiosClient from "src/api/axiosClient";
 import { saveAs } from "file-saver";
-DashBoardPage.propTypes = {};
 
-const random = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
 const brandSuccess = getStyle("success") || "#4dbd74";
 const brandInfo = getStyle("info") || "#20a8d8";
-const brandDanger = getStyle("danger") || "#f86c6b";
 
 function DashBoardPage(props) {
   const [progressTimeMode, setProgressTimeMode] = useState(1); //1:week, 2:month, 3:year
   const [teams, setTeams] = useState([]);
-  const members = useSelector((state) => state.app.users);
   const history = useHistory();
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentUser);
-  const [loadone, setLoadone] = useState(false);
   const [filter, setFilter] = useState("week");
-
+  const chartref = useRef(null);
   const [userStatistics, setUserStatistics] = useState([]);
   const [teamStatistics, setTeamStatistics] = useState([]);
 
-  const myPosts = [
-    {
-      content:
-        "Ngày 26/05 Việt Nam đã có thêm 15 ca mắc bệnh, hiện nay các bệnh viện đang rất đông.",
-      groupName: "Báo thanh niên",
-      groupImage:
-        "https://tse3.mm.bing.net/th?id=OIP.MBeaaevjEVQjyE93pTQY4gHaHa&pid=Api&P=0&w=300&h=300",
-      commentCount: 5,
-      loveCount: 0,
-    },
-    {
-      content:
-        "Hôm nay sẽ có seminar môn giao tiếp người máy, các nhóm chuẩn bị đầy đủ slide thuyết trình",
-      groupName: "Giao tiếp người máy",
-      groupImage:
-        "https://tse2.mm.bing.net/th?id=OIP.uRrU36votkTU0oKOx9GIDQHaHa&pid=Api&P=0&w=300&h=300",
-      commentCount: 0,
-      loveCount: 1,
-    },
-    {
-      content: "Thầy Hoan thông báo chiều nay nghỉ, ai đi học thì nhớ về nhà.",
-      groupName: "Giao tiếp người máy",
-      groupImage:
-        "https://tse2.mm.bing.net/th?id=OIP.uRrU36votkTU0oKOx9GIDQHaHa&pid=Api&P=0&w=300&h=300",
-      commentCount: 3,
-      loveCount: 2,
-    },
-    {
-      content:
-        "Khoa phần mềm thông báo khẩn: khóa luận sẽ nộp sớm và báo cáo sớm do tình hình dịch covid-19.",
-      groupName: "SE UIT",
-      groupImage: "http://se.uit.edu.vn/templates/mimety/images/logo.png",
-      commentCount: 5,
-      loveCount: 0,
-    },
-    {
-      content:
-        "Những sinh viên không làm cccd và không bầu cử sẽ bị trừ đrl ở học kỳ 2.",
-      groupName: "UIT K12",
-      groupImage:
-        "https://scontent-xsp1-3.xx.fbcdn.net/v/t1.6435-9/s960x960/153095261_3707730942652752_5902696253193716869_n.jpg?_nc_cat=109&ccb=1-3&_nc_sid=825194&_nc_ohc=-Kiu577rPhwAX8fwpdb&_nc_ht=scontent-xsp1-3.xx&tp=7&oh=d88b0b99586fc0467d47c450f74de02b&oe=60D5FF4E",
-      commentCount: 5,
-      loveCount: 0,
-    },
-  ];
-  const currentChats = [];
   const modeProgressList = [
     {
       name: "Tuần",
@@ -192,9 +113,9 @@ function DashBoardPage(props) {
 
   const changeMode = (value) => {
     setProgressTimeMode(value);
-    if (value == 1) setFilter("week");
-    if (value == 2) setFilter("month");
-    if (value == 3) setFilter("year");
+    if (value === 1) setFilter("week");
+    if (value === 2) setFilter("month");
+    if (value === 3) setFilter("year");
   };
 
   useEffect(() => {
@@ -204,8 +125,6 @@ function DashBoardPage(props) {
         userId: user.id,
         filter,
       };
-      const data1 = [];
-      const data2 = [];
 
       const res1 = await statisticsApi.getPersonalTaskDone({ params });
       const res2 = await statisticsApi.getUserTaskDoneBoards({ params });
@@ -258,6 +177,16 @@ function DashBoardPage(props) {
   }, [defaultDatasets]);
 
   const exportExcel = () => {
+    //console.log("export");
+
+    const canvasSave = document.getElementsByClassName(
+      "chartjs-render-monitor"
+    )[0];
+    canvasSave.toBlob(function (blob) {
+      saveAs(blob, "testing.png");
+    });
+
+    return;
     /*axiosClient.get('https://localhost:9001/api/test/export-excel')
       .then(res => new Blob([res], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
       .then(blob => {
@@ -288,6 +217,7 @@ function DashBoardPage(props) {
         console.log(err);
       });
   };
+
   return (
     <div className="dash-board-container">
       <CRow className="counting-group">
@@ -374,6 +304,8 @@ function DashBoardPage(props) {
           </div>
         </div>
         <CChartLine
+          id="stackD"
+          ref={chartref}
           datasets={defaultDatasets}
           labels={getProgressChartLabels()}
           options={defaultOptions}

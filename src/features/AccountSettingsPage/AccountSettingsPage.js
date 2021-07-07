@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import "./AccountSettingsPage.scss";
 import {
   CCol,
@@ -9,16 +8,10 @@ import {
   CLabel,
   CRow,
   CTextarea,
-  CValidFeedback,
 } from "@coreui/react";
 import { BiKey } from "react-icons/bi";
 import { BsInfoCircle } from "react-icons/bs";
-import {
-  AiFillEdit,
-  AiOutlineLock,
-  AiOutlineDelete,
-  AiFillGithub,
-} from "react-icons/ai";
+import { AiOutlineLock, AiOutlineDelete, AiFillGithub } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import authApi from "src/api/authApi";
 import {
@@ -35,8 +28,6 @@ import userApi from "src/api/userApi";
 import { validateEmail, validatePhone } from "src/utils/common";
 import { toast } from "react-toastify";
 import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
-
-AccountSettingsPage.propTypes = {};
 
 function AccountSettingsPage(props) {
   const userSetting = useSelector((state) => state.app.userSetting);
@@ -88,7 +79,6 @@ function AccountSettingsPage(props) {
     });
   };
 
-
   const updateUserInfo = () => {
     if (!userInfo.fullName || !userInfo.email) {
       toast(
@@ -103,11 +93,7 @@ function AccountSettingsPage(props) {
 
     if (!validateEmail(userInfo.email)) {
       toast(
-        <CustomToast
-          type="error"
-          title="Lỗi"
-          message="Email không hợp lệ"
-        />
+        <CustomToast type="error" title="Lỗi" message="Email không hợp lệ" />
       );
       return;
     }
@@ -128,26 +114,19 @@ function AccountSettingsPage(props) {
     console.log(userInfo);
     if (userInfo.userDob == "") {
       dob = null;
-    }
-    else {
-      dob = new Date(userInfo.userDob)
+    } else {
+      dob = new Date(userInfo.userDob);
     }
 
-    console.log(dob)
-    const userInfoClone = { ...userInfo, userDob: dob, }
+    console.log(dob);
+    const userInfoClone = { ...userInfo, userDob: dob };
     authApi
       .updateUserInfo(userInfoClone)
       .then((res) => {
         dispatch(setCurrentUser(userInfoClone));
       })
       .catch((err) => {
-        toast(
-          <CustomToast
-            type="error"
-            title="Lỗi"
-            message="Có lỗi xảy ra"
-          />
-        );
+        toast(<CustomToast type="error" title="Lỗi" message="Có lỗi xảy ra" />);
       });
   };
 
@@ -189,7 +168,7 @@ function AccountSettingsPage(props) {
               userAvatar: url,
             });
           })
-          .catch((err) => { });
+          .catch((err) => {});
       });
     });
   };
@@ -207,7 +186,7 @@ function AccountSettingsPage(props) {
           userAvatar: `https://ui-avatars.com/api/?name=${userInfo.fullName}`,
         });
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
   return (
     <div className="account-page-container">
@@ -222,16 +201,18 @@ function AccountSettingsPage(props) {
       <div className="account-page-content">
         <div className="setting-options d-sm-down-none">
           <div
-            className={`tab-setting tab-1 tab-infor ${selectedOptions === 0 ? "active" : ""
-              }`}
+            className={`tab-setting tab-1 tab-infor ${
+              selectedOptions === 0 ? "active" : ""
+            }`}
             onClick={() => ChooseSettingOption(0)}
           >
             <BsInfoCircle className="icon-info icon" />
             Thông tin của bạn
           </div>
           <div
-            className={`tab-setting tab-2 tab-passowrd ${selectedOptions === 1 ? "active" : ""
-              }`}
+            className={`tab-setting tab-2 tab-passowrd ${
+              selectedOptions === 1 ? "active" : ""
+            }`}
             onClick={() => ChooseSettingOption(1)}
           >
             <AiOutlineLock className="icon-password icon" />
@@ -366,9 +347,9 @@ function AccountSettingsPage(props) {
                       value={userInfo.userAddress}
                       onChange={handleInputChange}
                       name="userAddress"
-                    //value={userInfo.email}
-                    //onChange={handleInputChange}
-                    //invalid={userInfo.email === "" || userInfo.email === null}
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
                     />
                   </CFormGroup>
                 </CCol>
@@ -391,9 +372,9 @@ function AccountSettingsPage(props) {
                         value={userInfo.userGithubLink}
                         name="userGithubLink"
                         onChange={handleInputChange}
-                      //value={userInfo.email}
-                      //onChange={handleInputChange}
-                      //invalid={userInfo.email === "" || userInfo.email === null}
+                        //value={userInfo.email}
+                        //onChange={handleInputChange}
+                        //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                     <div className="social-group">
@@ -408,9 +389,9 @@ function AccountSettingsPage(props) {
                         name="userFacebookLink"
                         value={userInfo.userFacebookLink}
                         onChange={handleInputChange}
-                      //value={userInfo.email}
-                      //onChange={handleInputChange}
-                      //invalid={userInfo.email === "" || userInfo.email === null}
+                        //value={userInfo.email}
+                        //onChange={handleInputChange}
+                        //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                   </CFormGroup>
@@ -478,12 +459,12 @@ function AccountSettingsPage(props) {
                     (changePWObject.confirmPassword === "" ||
                       changePWObject.confirmPassword === null ||
                       changePWObject.confirmPassword !==
-                      changePWObject.newPassword)
+                        changePWObject.newPassword)
                   }
                   valid={
                     confirmDirty &&
                     changePWObject.confirmPassword ===
-                    changePWObject.newPassword
+                      changePWObject.newPassword
                   }
                   name="confirmPassword"
                 />

@@ -5,37 +5,20 @@ import {
   CToggler,
   CHeaderBrand,
   CHeaderNav,
-  CHeaderNavItem,
-  CHeaderNavLink,
   CSubheader,
-  CBreadcrumbRouter,
-  CLink,
-  CSwitch,
-  CInput,
   CTooltip,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
 
-// routes config
-import routes from "../../routes";
-
-import {
-  TheHeaderDropdown,
-  TheHeaderDropdownMssg,
-  TheHeaderDropdownNotif,
-  TheHeaderDropdownTasks,
-} from "./index";
+import { TheHeaderDropdown, TheHeaderDropdownMssg } from "./index";
 import {
   changeState,
-  setDarkMode,
   changeStateTeamTabsSidebar,
   changeStateChatListSidebar,
   changeStateSettingOptionsSidebar,
   setCollapseHeader,
 } from "src/appSlice";
 import "./TheHeader.scss";
-import { BsSearch } from "react-icons/bs";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Breadcrumbs from "../MySharedComponents/Breadcrumbs/Breadcrumbs";
 import {
   HiOutlineChevronDoubleDown,
@@ -45,7 +28,6 @@ import teamApi from "src/api/teamApi";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
-  const darkMode = useSelector((state) => state.app.darkMode);
   const sidebarShow = useSelector((state) => state.app.sidebarShow);
   const collapseHeader = useSelector((state) => state.app.collapseHeader);
   const history = useHistory();
@@ -81,10 +63,6 @@ const TheHeader = () => {
       : "responsive";
 
     dispatch(changeState({ type: "set", sidebarShow: val }));
-  };
-
-  const changeDarkMode = () => {
-    dispatch(setDarkMode());
   };
 
   const [team, setTeam] = useState({});

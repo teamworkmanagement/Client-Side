@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import "./CreateMyBoardModal.scss";
 import {
   CButton,
@@ -9,11 +8,7 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import kanbanApi from "src/api/kanbanApi";
-import { useParams } from "react-router";
 import { useSelector } from "react-redux";
-import MyToaster from "src/features/ToastTest/ToastTest";
-
-CreateMyBoardModal.propTypes = {};
 
 function CreateMyBoardModal(props) {
   const [boardName, setBoardName] = useState("");

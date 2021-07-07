@@ -1,12 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  CSidebar,
-  CSidebarNav,
-  CSidebarNavItem,
-  CNavItem,
-  CNavLink,
-} from "@coreui/react";
+import { CSidebar, CSidebarNav, CNavItem, CNavLink } from "@coreui/react";
 import "./TeamTabsSideBar.scss";
 
 import CIcon from "@coreui/icons-react";

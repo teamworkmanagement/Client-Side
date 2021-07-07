@@ -1,10 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './TeamLoading.scss';
 
-TeamLoading.propTypes = {
-    
-};
+
 
 
 

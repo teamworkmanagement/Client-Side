@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./UserInfoModal.scss";
 import { CModal, CModalBody, CModalHeader } from "@coreui/react";
 import { FiCalendar } from "react-icons/fi";
@@ -13,32 +12,16 @@ import { useDispatch } from "react-redux";
 import { setUserModal } from "src/appSlice";
 moment.locale("vi");
 
-UserInfoModal.propTypes = {};
-
 function UserInfoModal(props) {
-  const userzzz = {
-    userName: "Nguyễn Dũng",
-    userImage: "https://emilus.themenate.net/img/avatars/thumb-1.jpg",
-    userDescription:
-      "Siên viên đại học UIT, đã là thực tập sinh tại ELCA và đang tham gia chương trình Momo Talents",
-    userEmail: "dungnguyen@gmail.com",
-    userBirthDate: "12/09/1996",
-    userPhoneNumber: "0376559828",
-    userAddress: "Số 23/123 đường Phạm Văn Đồng, Thủ Đức",
-    userGithubLink: "https://github.com/hkdung99",
-    userFBLink:
-      "https://www.facebook.com/nhkhoa99/jkhbgbijhgbgjeirbgeirgberigebrgeirgbsdfhgdhffdfffffffffffffffffffffffffffffffffffffffffff-fgnfn",
-  };
-
-  //const user = props.user;
-
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
   function handleOnClose() {
-    dispatch(setUserModal({
-      show: false,
-      userId: null
-    }));
+    dispatch(
+      setUserModal({
+        show: false,
+        userId: null,
+      })
+    );
     if (props.onClose) {
       props.onClose();
     }
@@ -53,7 +36,7 @@ function UserInfoModal(props) {
           console.log(res.data);
           setUser(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   }, [props.userId]);
 
@@ -61,7 +44,7 @@ function UserInfoModal(props) {
     if (props.userInfo) {
       setUser(props.userInfo);
     }
-  }, [props.userInfo])
+  }, [props.userInfo]);
 
   return (
     <CModal
@@ -86,7 +69,9 @@ function UserInfoModal(props) {
           </div>
           <div className="user-birthdate-item info-item">
             <FiCalendar className="info-item-icon" />
-            {user.userDateOfBirth ? moment(user.userDateOfBirth).format("DD-MM-YYYY") : "..."}
+            {user.userDateOfBirth
+              ? moment(user.userDateOfBirth).format("DD-MM-YYYY")
+              : "..."}
           </div>
         </div>
         <div className="divider notshow"></div>

@@ -1,10 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './UploadItem.scss';
 
-UploadItem.propTypes = {
 
-};
 
 function UploadItem({ name, progress }) {
     return (

@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./ChatList.scss";
 import ChatListItem from "./Components/ChatListItem/ChatListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentGroup } from "../../chatSlice";
 import { useHistory, useLocation } from "react-router";
-import queryString from 'query-string';
-
-ChatList.propTypes = {};
+import queryString from "query-string";
 
 function ChatList(props) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation();
-  const queryParams = queryString.parse(location.search);
   const groupChatList = useSelector((state) => state.chat.groupChat);
   const currentGroup = useSelector((state) => state.chat.currentGroup);
   const hanelSelectItem = (selectedId) => {
@@ -22,14 +17,14 @@ function ChatList(props) {
 
   useEffect(() => {
     if (currentGroup) {
-      if (!history.location.pathname.startsWith('/team/')) {
+      if (!history.location.pathname.startsWith("/team/")) {
         history.push({
           pathname: history.location.pathname,
           search: `g=${currentGroup}`,
         });
       }
-    };
-  }, [currentGroup])
+    }
+  }, [currentGroup]);
   return (
     <div className="chat-list-container">
       {groupChatList.map(function (item, index) {

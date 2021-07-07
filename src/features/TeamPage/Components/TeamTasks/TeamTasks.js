@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import "./TeamTasks.scss";
 import KanbanBoard from "src/features/KanbanBoard/KanbanBoard";
-import { CButton, CButtonGroup, CInput, CTooltip } from "@coreui/react";
+import { CButton, CButtonGroup, CTooltip } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import TaskList from "./Components/TaskList/TaskList";
 import GanttChart from "src/shared_components/MySharedComponents/GanttChart/GanttChart";
 import CreateKBListModal from "./Components/CreateKBListModal/CreateKBListModal";
 import { AiOutlineLeft } from "react-icons/ai";
-import { BsSearch } from "react-icons/bs";
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import { useDispatch, useSelector } from "react-redux";
-import { getBoardDataForUI, setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
+import { getBoardDataForUI } from "src/features/KanbanBoard/kanbanSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
 import { setTaskEditModal, setTeamLoading } from "src/appSlice";
 import { BiFilterAlt } from "react-icons/bi";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
 import FilteredTasks from "./Components/FilteredTasks/FilteredTasks";
-import TaskEditModal from "src/features/KanbanBoard/Components/KanbanList/Components/KanbanCard/Components/TaskEditModal/TaskEditModal";
 import queryString from "query-string";
-import taskApi from "src/api/taskApi";
 import CreateCardModal from "src/features/KanbanBoard/Components/KanbanList/Components/CreateCardModal/CreateCardModal";
-
-TeamTasks.propTypes = {};
 
 function TeamTasks(props) {
   const history = useHistory();
@@ -32,15 +26,11 @@ function TeamTasks(props) {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [applyingFilter, setApplyingFilter] = useState(false);
   const [filter, setFilter] = useState(null);
-  const [modalTaskObj, setModaTaskObj] = useState(null);
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
   const [notfound, setNotFound] = useState(false);
   const [showAddCard, setShowAddCard] = useState(false);
 
-  const user = useSelector(state => state.auth.currentUser);
-  const updateTask = useSelector(state => state.kanban.signalrData.updateTask);
-  const assignUser = useSelector((state) => state.kanban.signalrData.reAssignUser);
-  const adminAction = useSelector(state => state.kanban.adminAction);
+  const adminAction = useSelector((state) => state.kanban.adminAction);
 
   const dispatch = useDispatch();
 
@@ -85,7 +75,6 @@ function TeamTasks(props) {
     setNotFound(value);
   };
 
-
   useEffect(() => {
     const pathname = history.location.pathname.split("/");
     const params = {
@@ -111,7 +100,6 @@ function TeamTasks(props) {
         dispatch(setTeamLoading(false));
       });
   }, [showMode]);
-
 
   /*useEffect(() => {
     console.log("realtime", updateTask);
@@ -241,18 +229,20 @@ function TeamTasks(props) {
       console.log("call api");
       return;*/
 
-      dispatch(setTaskEditModal({
-        show: true,
-        ownerId: props.ownerId,
-        isOfTeam: true
-      }));
+      dispatch(
+        setTaskEditModal({
+          show: true,
+          ownerId: props.ownerId,
+          isOfTeam: true,
+        })
+      );
     }
   }, [history.location.search]);
 
   const onCreateCard = () => {
-    console.log('default list');
+    console.log("default list");
     setShowAddCard(true);
-  }
+  };
 
   const renderNormal = () => {
     return (
@@ -262,69 +252,70 @@ function TeamTasks(props) {
             <AiOutlineLeft className="icon-goback" />
             <div className="label-text">Trở lại danh sách bảng công việc</div>
           </div>
-          {!notfound && <div className="other-actions">
-
-            <div
-              className={`filter-btn ${applyingFilter ? "" : "no-filtering"}`}
-            >
-              <div className="filter-content" onClick={openFilterModal}>
-                <BiFilterAlt className="icon-filter" />
-                Lọc công việc
-              </div>
-              <CTooltip content="Xóa bộ lọc" placement="top">
-                <div
-                  className="remove-filter-btn"
-                  onClick={() => setApplyingFilter(false)}
-                >
-                  <CIcon name="cil-x" />
+          {!notfound && (
+            <div className="other-actions">
+              <div
+                className={`filter-btn ${applyingFilter ? "" : "no-filtering"}`}
+              >
+                <div className="filter-content" onClick={openFilterModal}>
+                  <BiFilterAlt className="icon-filter" />
+                  Lọc công việc
                 </div>
-              </CTooltip>
+                <CTooltip content="Xóa bộ lọc" placement="top">
+                  <div
+                    className="remove-filter-btn"
+                    onClick={() => setApplyingFilter(false)}
+                  >
+                    <CIcon name="cil-x" />
+                  </div>
+                </CTooltip>
+              </div>
+              {showMode === 1 && adminAction && (
+                <div className="add-btn add-list-btn" onClick={addKBList}>
+                  <CIcon name="cil-plus" />
+                  Tạo danh sách
+                </div>
+              )}
+              {(showMode === 2 || showMode === 3) && adminAction && (
+                <div className="add-btn add-task-btn" onClick={onCreateCard}>
+                  <CIcon name="cil-plus" />
+                  Tạo công việc
+                </div>
+              )}
+
+              <CButtonGroup className="show-mode">
+                <CTooltip placement="top" content="Thẻ kanban">
+                  <CButton
+                    className={`first mode-btn ${showMode === 1 && "active"}`}
+                    color="secondary"
+                    onClick={() => switchShowMode(1)}
+                    type="button"
+                  >
+                    <CIcon name="cil-columns" />
+                  </CButton>
+                </CTooltip>
+                <CTooltip placement="top" content="Danh sách">
+                  <CButton
+                    className={` mode-btn ${showMode === 2 && "active"}`}
+                    color="secondary"
+                    onClick={() => switchShowMode(2)}
+                  >
+                    <CIcon name="cil-list" />
+                  </CButton>
+                </CTooltip>
+
+                <CTooltip placement="top" content="Biểu đồ Gantt">
+                  <CButton
+                    className={`last mode-btn ${showMode === 3 && "active"}`}
+                    color="secondary"
+                    onClick={() => switchShowMode(3)}
+                  >
+                    <CIcon name="cil-chart" className="rotate-90" />
+                  </CButton>
+                </CTooltip>
+              </CButtonGroup>
             </div>
-            {showMode === 1 && adminAction && (
-              <div className="add-btn add-list-btn" onClick={addKBList}>
-                <CIcon name="cil-plus" />
-                Tạo danh sách
-              </div>
-            )}
-            {(showMode === 2 || showMode === 3) && adminAction && (
-              <div className="add-btn add-task-btn" onClick={onCreateCard}>
-                <CIcon name="cil-plus" />
-                Tạo công việc
-              </div>
-            )}
-
-            <CButtonGroup className="show-mode">
-              <CTooltip placement="top" content="Thẻ kanban">
-                <CButton
-                  className={`first mode-btn ${showMode === 1 && "active"}`}
-                  color="secondary"
-                  onClick={() => switchShowMode(1)}
-                  type="button"
-                >
-                  <CIcon name="cil-columns" />
-                </CButton>
-              </CTooltip>
-              <CTooltip placement="top" content="Danh sách">
-                <CButton
-                  className={` mode-btn ${showMode === 2 && "active"}`}
-                  color="secondary"
-                  onClick={() => switchShowMode(2)}
-                >
-                  <CIcon name="cil-list" />
-                </CButton>
-              </CTooltip>
-
-              <CTooltip placement="top" content="Biểu đồ Gantt">
-                <CButton
-                  className={`last mode-btn ${showMode === 3 && "active"}`}
-                  color="secondary"
-                  onClick={() => switchShowMode(3)}
-                >
-                  <CIcon name="cil-chart" className="rotate-90" />
-                </CButton>
-              </CTooltip>
-            </CButtonGroup>
-          </div>}
+          )}
         </div>
         {applyingFilter && <FilteredTasks filter={filter} />}
         {showMode === 1 && !applyingFilter && (
@@ -371,8 +362,8 @@ function TeamTasks(props) {
         <CreateCardModal
           showAddCard={showAddCard}
           setShowAddCard={setShowAddCard}
-          defaultList={true} />
-
+          defaultList={true}
+        />
       </>
     );
   };
