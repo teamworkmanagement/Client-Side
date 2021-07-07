@@ -185,35 +185,10 @@ function ListTeamPage(props) {
 
   ];*/
 
-  const fields = [
-    { key: "name", label: "Tên nhóm", _style: { width: "30%" }, filter: true },
-    { key: "leader", label: "Trưởng nhóm", _style: { width: "15%" } },
-    { key: "member", label: "Thành viên", _style: { width: "1%" } },
-    {
-      key: "tasks",
-      label: "Công việc",
-      _style: { width: "5%", className: "text-center" },
-    },
-    // { key: "owner", label: "Người tải lên", _style: { width: "20%" } },
-    // { key: "type", label: "Loại", _style: { width: "10%" } },
-    // {
-    //   key: "downloadAction",
-    //   label: "Tải về",
-    //   _style: { width: "10%" },
-    //   sorter: false,
-    //   filter: false,
-    // },
-  ];
-  const members = useSelector((state) => state.app.users);
   const history = useHistory();
   const dispatch = useDispatch();
   const teams = useSelector((state) => state.team.teams);
   const user = useSelector((state) => state.auth.currentUser);
-  const [loadDone, setLoadone] = useState(false);
-
-  function getMemberCount() {
-    return members.length;
-  }
 
   useEffect(() => {
     console.log("loading teams");

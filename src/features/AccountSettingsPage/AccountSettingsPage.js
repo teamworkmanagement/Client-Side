@@ -9,7 +9,6 @@ import {
   CRow,
   CTextarea,
 } from "@coreui/react";
-import { BiKey } from "react-icons/bi";
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineLock, AiOutlineDelete, AiFillGithub } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,13 +39,9 @@ function AccountSettingsPage(props) {
     newPassword: null,
     confirmPassword: null,
   });
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [currentDirty, setCurrentDirty] = useState(false);
   const [newDirty, setNewDirty] = useState(false);
   const [confirmDirty, setConfirmDirty] = useState(false);
-  const [birthDate, setBirthDate] = useState(new Date(2021, 2, 1));
 
   function ChooseSettingOption(index) {
     setSelectedOptions(index);
@@ -112,7 +107,7 @@ function AccountSettingsPage(props) {
 
     let dob = "";
     console.log(userInfo);
-    if (userInfo.userDob == "") {
+    if (userInfo.userDob === "") {
       dob = null;
     } else {
       dob = new Date(userInfo.userDob);

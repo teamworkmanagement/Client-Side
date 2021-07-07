@@ -15,23 +15,21 @@ moment.locale("vi");
 function GanttChart(props) {
   const input = useRef(null);
   const history = useHistory();
-  //const tasks = useSelector((state) => state.app.tasks);
+  //eslint-disable-next-line
   const [isShowEditPopup, setIsShowEditPopup] = useState(false);
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
   const tasks = [];
+  //eslint-disable-next-line
   kanbanLists.map((kl) => {
+    //eslint-disable-next-line
     kl.taskUIKanbans.map((task) => {
       tasks.push(task);
     });
   });
 
-  /*useEffect(() => {
-    if (!props.boardId) return;
-    dispatch(getBoardDataForUI(props.boardId));
-  }, [props.boardId]);*/
-
+  //eslint-disable-next-line
   const [data, setData] = useState({
     data: refactorTasksForGantt(),
   });

@@ -8,14 +8,8 @@ import {
   CModalHeader,
 } from "@coreui/react";
 
-import { useSelector } from "react-redux";
-import teamApi from "src/api/teamApi";
-import { useParams } from "react-router";
-
 function InviteMemberModal(props) {
-  const { teamId } = useParams();
   const [email, setEmail] = useState("");
-  const user = useSelector((state) => state.auth.currentUser);
 
   function handleOnClose() {
     if (props.onClose) {
@@ -25,16 +19,7 @@ function InviteMemberModal(props) {
   }
 
   async function onCreateCard() {
-    console.log(email);
-    const obj = {
-      isByEmail: true,
-      email: email,
-      participationTeamId: teamId,
-      actionUserId: user.id,
-    };
-
     try {
-      const response = await teamApi.inviteUser(obj);
       props.onClose(null);
     } catch (err) {
       console.log(err);

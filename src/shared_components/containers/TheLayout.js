@@ -150,7 +150,6 @@ const TheLayout = () => {
       return;
     }
   }, [taskEditModal]);
-
   const onEditModalClose = () => {
     dispatch(setTaskEditModal(null));
     history.push({

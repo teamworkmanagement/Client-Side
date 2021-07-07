@@ -12,7 +12,6 @@ import { VscSearchStop } from "react-icons/vsc";
 import { BiMessageDetail } from "react-icons/bi";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import "./MessageList.scss";
-import { useHistory } from "react-router-dom";
 
 function MessageList(props) {
   const dispatch = useDispatch();

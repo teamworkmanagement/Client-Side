@@ -209,6 +209,7 @@ function FilterTaskModal(props) {
         return DONE_COLOR;
     }
   }
+  //eslint-disable-next-line
   function onChooseStatus(e) {
     const newStatus = e.target.classList[0];
     let status = "";

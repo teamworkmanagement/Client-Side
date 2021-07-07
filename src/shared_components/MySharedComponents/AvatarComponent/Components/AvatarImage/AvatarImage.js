@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setUserModal } from "src/appSlice";
 
 function AvatarImage(props) {
+  //eslint-disable-next-line
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   function getImageName() {

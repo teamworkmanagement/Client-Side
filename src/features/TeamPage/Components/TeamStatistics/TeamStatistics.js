@@ -312,7 +312,7 @@ function TeamStatistics(props) {
           const bdColor = [];
           res.data.forEach((ele) => {
             lbls.push(ele.userFullName);
-            dataBar.push(contributeMode == 1 ? ele.taskDoneCount : ele.point);
+            dataBar.push(contributeMode === 1 ? ele.taskDoneCount : ele.point);
             bgColor.push(hexToRgba(ele.colorCode, 10));
             bdColor.push(ele.colorCode);
           });

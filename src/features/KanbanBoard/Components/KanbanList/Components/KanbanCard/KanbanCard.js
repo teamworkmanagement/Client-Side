@@ -1,47 +1,18 @@
 import CIcon from "@coreui/icons-react";
 import { CProgress } from "@coreui/react";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { useSelector } from "react-redux";
-import taskApi from "src/api/taskApi";
-import TaskEditModal from "./Components/TaskEditModal/TaskEditModal";
 import "./KanbanCard.scss";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import queryString from "query-string";
-import { setTaskSelected } from "src/features/KanbanBoard/kanbanSlice";
-import { useDispatch } from "react-redux";
 import { HiOutlineChat, HiOutlinePaperClip } from "react-icons/hi";
 
 function KanbanCard(props) {
   const initIsShowEditPopup = false;
 
+  //eslint-disable-next-line
   const [isShowEditPopup, setIsShowEditPopup] = useState(initIsShowEditPopup);
-  const [modalTask, setModaTask] = useState(null);
-
-  /*const files = useSelector((state) => state.app.files);
-  const handleTasks = useSelector((state) => state.app.handleTasks);
-  const users = useSelector((state) => state.app.users);
-  const imageCard = getCardImage();
-  const attachmentsCount = getAttachmentsCount();
-  const assignedUserImage = getAssignedUserImage();
-
-  function getAssignedUserImage() {
-    //find handleTask
-    let userHandleId = "";
-    for (let i = 0; i < handleTasks.length; i++) {
-      if (handleTasks[i].handleTaskTaskId === props.data.taskId) {
-        userHandleId = handleTasks[i].handleTaskUserId;
-        break;
-      }
-    }
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].userId === userHandleId) {
-        return users[i].userImageUrl;
-      }
-    }
-    return "";
-  }*/
 
   const TODO_COLOR = "#FF5454";
   const DOING_COLOR = "#EE8434";
@@ -52,40 +23,7 @@ function KanbanCard(props) {
 
   const history = useHistory();
 
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const queryParams = queryString.parse(location.search);
-
-  /*const firstTask = useSelector(state => state.kanban.taskSelected);
-  useEffect(() => {
-    if (firstTask)
-      if (firstTask && firstTask === props.data.taskId) {
-        openEditPopup(firstTask);
-        dispatch(setTaskSelected(null));
-        console.log('firstask: ', firstTask);
-      }
-  }, [firstTask])*/
-
-  useEffect(() => {
-    /*const queryObj = queryString.parse(history.location.search);
-    if (props.data.taskId && !queryObj.t && isShowEditPopup) {
-      setIsShowEditPopup(false);
-    }
-
-    /*if (queryObj.gr && queryObj.t && queryObj.b && !isShowEditPopup) {
-      console.log(history.location.search);
-      console.log(isShowEditPopup)
-      openEditPopup(queryObj.t);
-      console.log('call api');
-    }*/
-  }, [history.location.search]);
-
-  const user = useSelector((state) => state.auth.currentUser);
-
   async function openEditPopup(taskId) {
-    //setModaTask(null);
-    //setIsShowEditPopup(true);
-
     const queryObj = queryString.parse(history.location.search);
     console.log(queryObj);
     if (!queryObj.t) {
@@ -114,55 +52,6 @@ function KanbanCard(props) {
       default:
         return "Hoàn thành";
     }
-  }
-
-  // function getProgressColor(progress) {
-  //   if (progress < 26) {
-  //     return "danger";
-  //   }
-  //   if (progress < 51) {
-  //     return "warning";
-  //   }
-  //   if (progress < 76) {
-  //     return "info";
-  //   }
-  //   return "success";
-  // }
-
-  /*function getCardImage() {
-    //debugger;
-
-    for (let i = 0; i < files.length; i++) {
-      if (
-        files[i].fileBelongedId === props.data.taskId &&
-        files[i].fileType === "image"
-      ) {
-        return files[i].fileUrl;
-      }
-    }
-    return false;
-  }
-  function getAttachmentsCount() {
-    let count = 0;
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].fileBelongedId === props.data.taskId) {
-        count++;
-      }
-    }
-    return count;
-  }*/
-
-  function onEditModalClose() {
-    setIsShowEditPopup(false);
-    console.log("ok");
-
-    history.push({
-      pathname: history.location.pathname,
-      search: history.location.search.substring(
-        0,
-        history.location.search.lastIndexOf("&")
-      ),
-    });
   }
 
   function getStatusBackgroundColor() {

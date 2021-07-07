@@ -1,14 +1,13 @@
-import { CDataTable, CPagination } from "@coreui/react";
+import { CDataTable } from "@coreui/react";
 import { setTimeout } from "core-js";
 import moment from "moment";
 import "moment/locale/vi";
 import prettyBytes from "pretty-bytes";
 import React, { useEffect, useRef, useState } from "react";
-import { BsUpload } from "react-icons/bs";
 import { CgSoftwareUpload } from "react-icons/cg";
 import { VscSearchStop, VscSymbolFile } from "react-icons/vsc";
 import { useSelector } from "react-redux";
-import { Prompt, useHistory, useParams } from "react-router";
+import { Prompt } from "react-router";
 import fileApi from "src/api/fileApi";
 import { myBucket } from "src/utils/aws/config";
 import useExitPrompt from "src/utils/customHook/useExitPrompt";
@@ -25,8 +24,11 @@ function MyFilesTable(props) {
   const [upload, setUpload] = useState(false);
   const [progress, setProgress] = useState(0);
   const [datas, setDatas] = useState([]);
+  //eslint-disable-next-line
   const [page, setPage] = useState(1);
   const [cfile, setCfile] = useState(null); //current file
+
+  //eslint-disable-next-line
   const [showExitPrompt, setShowExitPrompt] = useExitPrompt(false);
   const [triggerLoad, setTriggerLoad] = useState(0); //call api khi thêm file...
   const [showError, setShowError] = useState(false);
@@ -153,9 +155,9 @@ function MyFilesTable(props) {
     setShowExitPrompt(upload);
   }, [upload]);
 
-  const setActivePage = (i) => {
-    if (i !== 0) setPage(i);
-  };
+  // const setActivePage = (i) => {
+  //   if (i !== 0) setPage(i);
+  // };
 
   function NoItemView() {
     return (

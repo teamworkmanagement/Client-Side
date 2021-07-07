@@ -357,6 +357,7 @@ function TeamMembersList(props) {
     }
   }, [filterObj]);
 
+  //eslint-disable-next-line
   const [userId, setUserId] = useState(null);
   const xemThongTin = (item) => {
     setUserId(item.userId);
@@ -581,7 +582,7 @@ function TeamMembersList(props) {
             </div>
             <div className="label">Thành viên</div>
             {loadingMembers && members.length === 0 && <Loading />}
-            {members.length == 0 && NoItemView()}
+            {members.length === 0 && NoItemView()}
             {members.length > 0 && (
               <CDataTable
                 items={members}
@@ -661,7 +662,7 @@ function TeamMembersList(props) {
                                   Trao quyền Trưởng nhóm
                                 </CDropdownItem>
                               )}
-                              {team.teamLeaderId == user.id && (
+                              {team.teamLeaderId === user.id && (
                                 <CDropdownItem
                                   className="last"
                                   onClick={() => quitTeam(item)}

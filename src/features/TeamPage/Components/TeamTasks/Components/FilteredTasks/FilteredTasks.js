@@ -19,7 +19,9 @@ function FilteredTasks(props) {
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
   const tasks = [];
+  //eslint-disable-next-line
   kanbanLists.map((kl) => {
+    //eslint-disable-next-line
     kl.taskUIKanbans.map((task) => {
       tasks.push(task);
     });
@@ -38,7 +40,7 @@ function FilteredTasks(props) {
 
       if (props.filter.taskStatus) {
         mytasks = mytasks.filter(
-          (t) => t.taskStatus == props.filter.taskStatus
+          (t) => t.taskStatus === props.filter.taskStatus
         );
       }
 
@@ -49,7 +51,7 @@ function FilteredTasks(props) {
       }
 
       if (props.filter.userId) {
-        mytasks = mytasks.filter((t) => t.userId == props.filter.userId);
+        mytasks = mytasks.filter((t) => t.userId === props.filter.userId);
       }
 
       setTasksFilter(mytasks);

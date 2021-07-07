@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./ChatList.scss";
 import ChatListItem from "./Components/ChatListItem/ChatListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentGroup } from "../../chatSlice";
-import { useHistory, useLocation } from "react-router";
-import queryString from "query-string";
+import { useHistory } from "react-router";
 
 function ChatList(props) {
   const dispatch = useDispatch();

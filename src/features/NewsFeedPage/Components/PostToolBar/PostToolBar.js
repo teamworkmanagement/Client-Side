@@ -71,7 +71,7 @@ function PostToolBar(props) {
   }, [pUser]);
 
   const onFilterClick = (type) => {
-    if (type == "basic") {
+    if (type === "basic") {
       console.log(basicFilter);
       setFilter({
         ...basicFilter,

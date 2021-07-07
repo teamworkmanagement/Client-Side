@@ -54,7 +54,6 @@ const TheHeaderDropdownMssg = () => {
     clone.splice(0, 0, { ...newNoti });
     setNotis(clone);
     console.log(newNoti);
-    //alert(`${newNoti.notificationGroup} --------- ${newNoti.notificationContent}`);
   }, [newNoti]);
 
   const history = useHistory();
@@ -85,26 +84,24 @@ const TheHeaderDropdownMssg = () => {
           ? noti.notificationLink.split("?")[1]
           : null,
       });
-    /*console.log(noti.notificationLink.split("?")[0]);
-    console.log(noti.notificationLink.split("?")[1]);*/
   };
 
-  function getNotiContent(noti) {
-    switch (noti.notiType) {
-      case "mention-in-post":
-        return "đã nhắc đến bạn trong một bài đăng";
-      case "mention-in-comment":
-        return "đã nhắc đến bạn trong một bình luận";
-      case "assigned-task":
-        return "đã giao một công việc mới cho bạn";
-      case "unassigned-task":
-        return "đã giao một công việc của bạn cho người khác";
-      case "invited-to-team":
-        return "đã mời bạn vào một nhóm mới";
-      default:
-        return "";
-    }
-  }
+  // function getNotiContent(noti) {
+  //   switch (noti.notiType) {
+  //     case "mention-in-post":
+  //       return "đã nhắc đến bạn trong một bài đăng";
+  //     case "mention-in-comment":
+  //       return "đã nhắc đến bạn trong một bình luận";
+  //     case "assigned-task":
+  //       return "đã giao một công việc mới cho bạn";
+  //     case "unassigned-task":
+  //       return "đã giao một công việc của bạn cho người khác";
+  //     case "invited-to-team":
+  //       return "đã mời bạn vào một nhóm mới";
+  //     default:
+  //       return "";
+  //   }
+  // }
 
   const bellRef = useRef(null);
 

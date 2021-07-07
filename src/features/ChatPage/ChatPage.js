@@ -41,7 +41,6 @@ function ChatPage(props) {
   const userId = useSelector((state) => state.auth.currentUser.id);
   const loadDone = useSelector((state) => state.chat.loadDone);
   const [reachTop, setReachTop] = useState(0);
-  const grChats = useSelector((state) => state.chat.groupChat);
   const currentGroup = useSelector((state) => state.chat.currentGroup);
 
   const user = useSelector((state) => state.auth.currentUser);

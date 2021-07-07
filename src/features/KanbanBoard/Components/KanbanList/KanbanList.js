@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./KanbanList.scss";
 import KanbanCard from "./Components/KanbanCard/KanbanCard";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import KanbanListHeader from "./Components/KanbanListHeader/KanbanListHeader";
 import CreateCardModal from "./Components/CreateCardModal/CreateCardModal";
@@ -11,9 +11,7 @@ import { useHistory } from "react-router";
 import { BsPlusSquare } from "react-icons/bs";
 
 function KanbanList(props) {
-  const [headerTitle, setHeaderTitlte] = useState(props.data.kanbanListTitle);
   const [showAddCard, setShowAddCard] = useState(false);
-  const [taskObj, setTaskObj] = useState(null);
 
   const { taskUIKanbans } = props.data;
 

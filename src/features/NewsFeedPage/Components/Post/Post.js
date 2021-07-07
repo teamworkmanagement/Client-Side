@@ -22,7 +22,6 @@ function Post(props) {
   const [cmtLists, setComments] = useState([]);
   const [loadComment, setLoadComment] = useState(0);
   const [post, setPost] = useState({ ...props.post });
-  const [commentContent, setCommentContent] = useState("");
   const user = useSelector((state) => state.auth.currentUser);
   const newAddReact = useSelector((state) => state.signalr.newAddReact);
   const removeReact = useSelector((state) => state.signalr.removeReact);
@@ -109,10 +108,10 @@ function Post(props) {
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
         block.entityRanges.forEach((entity) => {
-          var nameTag = block.text.substring(
-            entity.offset,
-            entity.offset + entity.length
-          );
+          // var nameTag = block.text.substring(
+          //   entity.offset,
+          //   entity.offset + entity.length
+          // );
 
           let indexData = entity.key;
           const userTagId = entityMap[indexData].data.mention.id;
@@ -219,13 +218,6 @@ function Post(props) {
       <div className="post-header">
         <div className="post-infor">
           <div className="poster-avatar">
-            {/*<img
-              alt="avatar"
-              src={
-                user.id === post.postUserId ? user.userAvatar : post.userAvatar
-              }
-            />*/}
-
             <AvatarImage
               userName={
                 user.id === post.postUserId ? user.fullName : post.userName
@@ -255,34 +247,6 @@ function Post(props) {
             </div>
           </div>
         </div>
-        {/*<div className="post-actions">
-          <div className="post-header-actions-dropdown">
-            <CDropdown>
-              <CDropdownToggle id="dropdownMenuButton" caret>
-                <div className="lane-actions">
-                  <CIcon name="cil-options" className="rotate-90" />
-                </div>
-              </CDropdownToggle>
-              <CDropdownMenu
-                aria-labelledby="dropdownMenuButton"
-                placement="bottom-end"
-              >
-                <CDropdownItem className="first">
-                  <CIcon name="cil-pencil" />
-                  Chỉnh sửa
-                </CDropdownItem>
-                <CDropdownItem className="first">
-                  <CIcon name="cil-pin" />
-                  Ghim bài viết
-                </CDropdownItem>
-                <CDropdownItem className="last">
-                  <CIcon name="cil-trash" className="icon-delete" />
-                  Xóa
-                </CDropdownItem>
-              </CDropdownMenu>
-            </CDropdown>
-          </div>
-              </div>*/}
       </div>
       <div className="post-content">{mapStringToJsx(post.postContent)}</div>
       <div className="post-images-list-container">
@@ -303,14 +267,6 @@ function Post(props) {
           <img alt="" src={user.userAvatar} />
         </div>
         <div className="input-container">
-          {/*<CInput
-            type="text"
-            placeholder="Viết bình luận..."
-            value={commentContent}
-            onKeyDown={() => { }}
-            onChange={(e) => setCommentContent(e.target.value)}
-          />*/}
-
           <CustomInput saveContent={saveContent} teamId={post.postTeamId} />
         </div>
       </div>

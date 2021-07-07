@@ -100,7 +100,7 @@ function PostList(props) {
 
   useEffect(() => {
     window.onscroll = function (e) {
-      const element = e.target;
+      //const element = e.target;
       // console.log(e.currentTarget);
       // console.log(
       //   element.scrollHeight - element.scrollTop + "-" + element.clientHeight
@@ -139,7 +139,7 @@ function PostList(props) {
   });
 
   const onScroll = (e) => {
-    const element = e.target;
+    //const element = e.target;
   };
 
   return (

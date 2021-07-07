@@ -31,7 +31,7 @@ export const CustomOption = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <img height={20} width={20} src={props.data.img} />
+        <img alt="" height={20} width={20} src={props.data.img} />
         <label>{props.data.label}</label>
       </div>
     </components.Option>
@@ -60,6 +60,7 @@ function CreateChatInChatPage(props) {
 
   useEffect(() => {}, []);
 
+  //eslint-disable-next-line
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
@@ -151,6 +152,8 @@ function CreateChatInChatPage(props) {
         if (removedValue.isFixed) {
           return;
         }
+        break;
+      default:
         break;
     }
 

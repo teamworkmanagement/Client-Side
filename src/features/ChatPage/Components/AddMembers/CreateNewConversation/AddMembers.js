@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./AddMembers.scss";
 import { CModal, CModalBody, CModalHeader } from "@coreui/react";
 import { components } from "react-select";
@@ -34,7 +34,7 @@ export const CustomOption = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <img height={20} width={20} src={props.data.img} />
+        <img alt="" height={20} width={20} src={props.data.img} />
         <label>{props.data.label}</label>
       </div>
     </components.Option>
@@ -52,7 +52,7 @@ function AddMembers(props) {
     setOptions([]);
     props.onCLoseModal();
   }
-
+  //eslint-disable-next-line
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
@@ -107,7 +107,7 @@ function AddMembers(props) {
   const onChange = (e) => {
     setOptions(e);
   };
-  const onInputGrChatName = (e) => {};
+
   return (
     <CModal
       className="add-member-modal"

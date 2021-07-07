@@ -62,6 +62,7 @@ function CreateCardModal(props) {
 
         setTaskName("");
       } else {
+        //eslint-disable-next-line
         var date = new Date();
         const obj = kbLists.find((x) => x.kanbanListDefault);
         if (obj) {

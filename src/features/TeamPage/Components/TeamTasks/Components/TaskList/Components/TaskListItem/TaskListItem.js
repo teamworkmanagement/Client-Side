@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./TaskListItem.scss";
 import CIcon from "@coreui/icons-react";
 import {
@@ -8,25 +8,23 @@ import {
   CDropdownToggle,
   CProgress,
 } from "@coreui/react";
-import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { AiOutlineDelete } from "react-icons/ai";
 
 function TaskListItem(props) {
   const history = useHistory();
-  const [isShowEditPopup, setIsShowEditPopup] = useState(false);
 
-  function onEditModalClose() {
-    setIsShowEditPopup(false);
+  // function onEditModalClose() {
+  //   setIsShowEditPopup(false);
 
-    history.push({
-      pathname: history.location.pathname,
-      search: history.location.search.substring(
-        0,
-        history.location.search.lastIndexOf("&")
-      ),
-    });
-  }
+  //   history.push({
+  //     pathname: history.location.pathname,
+  //     search: history.location.search.substring(
+  //       0,
+  //       history.location.search.lastIndexOf("&")
+  //     ),
+  //   });
+  // }
 
   const TODO_COLOR = "#FF5454";
   const DOING_COLOR = "#EE8434";
@@ -105,6 +103,7 @@ function TaskListItem(props) {
         return "Đang chờ";
     }
   }
+  //eslint-disable-next-line
   function getProgressColor(progress) {
     if (progress < 26) {
       return "danger";
@@ -133,9 +132,9 @@ function TaskListItem(props) {
     });
   };
 
-  const updateTask = useSelector(
-    (state) => state.kanban.signalrData.updateTask
-  );
+  // const updateTask = useSelector(
+  //   (state) => state.kanban.signalrData.updateTask
+  // );
 
   const onRemoveTask = () => {
     if (props.closePopup) {
