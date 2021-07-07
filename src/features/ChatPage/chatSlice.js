@@ -20,6 +20,7 @@ export const searchGroupChatForUser = createAsyncThunk(
 );
 
 export const sendMes = createAsyncThunk("chat/sendmes", async (payload) => {
+  //eslint-disable-next-line
   const data = await chatApi.sendMes(payload);
 });
 
@@ -40,7 +41,7 @@ const chatSlice = createSlice({
     setLoadDone: (state, action) => {
       state.loadDone = action.payload;
     },
-    editChatGroup: (state, action) => { },
+    editChatGroup: (state, action) => {},
     setCurrentGroup: (state, action) => {
       const gr = state.groupChat.find((x) => x.groupChatId === action.payload);
       if (gr) {
@@ -55,26 +56,32 @@ const chatSlice = createSlice({
       const gr = state.groupChat.find(
         (x) => x.groupChatId === action.payload.groupId
       );
-      gr.lastestMes = action.payload.messageType === 'image' ? '[Hình ảnh]' :
-        action.payload.messageType === 'file' ? '[Tệp tin]' : action.payload.message;
+      gr.lastestMes =
+        action.payload.messageType === "image"
+          ? "[Hình ảnh]"
+          : action.payload.messageType === "file"
+          ? "[Tệp tin]"
+          : action.payload.message;
       gr.groupChatUpdatedAt = Date.now();
-
     },
     setNewMessage(state, action) {
       state.newMessage = action.payload;
 
-      let grChat = state.groupChat.findIndex(x => x.groupChatId === action.payload.groupId);
+      let grChat = state.groupChat.findIndex(
+        (x) => x.groupChatId === action.payload.groupId
+      );
       if (grChat === null) {
-        state.groupChat = [{
-          groupChatId: action.payload.groupId,
-          groupChatName: 'No name',
-          groupChatUpdatedAt: Date.now(),
-          newMessage: true,
-          groupAvatar: "",
-          lastestMes: action.payload.message
-        }].concat(state.groupChat);
-      }
-      else {
+        state.groupChat = [
+          {
+            groupChatId: action.payload.groupId,
+            groupChatName: "No name",
+            groupChatUpdatedAt: Date.now(),
+            newMessage: true,
+            groupAvatar: "",
+            lastestMes: action.payload.message,
+          },
+        ].concat(state.groupChat);
+      } else {
         const backupdata = state.groupChat[grChat];
         state.groupChat.splice(grChat, 1);
         state.groupChat = [backupdata].concat(state.groupChat);
@@ -82,7 +89,9 @@ const chatSlice = createSlice({
     },
 
     changeGroupPosition(state, action) {
-      let grChat = state.groupChat.findIndex(x => x.groupChatId === action.payload);
+      let grChat = state.groupChat.findIndex(
+        (x) => x.groupChatId === action.payload
+      );
       const backupdata = state.groupChat[grChat];
       state.groupChat.splice(grChat, 1);
       state.groupChat = [backupdata].concat(state.groupChat);
@@ -93,9 +102,11 @@ const chatSlice = createSlice({
     },
 
     updateGroupChatImage(state, action) {
-      const grChat = state.groupChat.find(x => x.groupChatId === action.payload.groupChatId);
+      const grChat = state.groupChat.find(
+        (x) => x.groupChatId === action.payload.groupChatId
+      );
       grChat.groupAvatar = action.payload.imageUrl;
-    }
+    },
   },
   extraReducers: {
     [getGroupChatForUser.fulfilled]: (state, action) => {
@@ -107,11 +118,11 @@ const chatSlice = createSlice({
           ? action.payload[1].groupChatId
           : state.currentGroup;*/
     },
-    [getGroupChatForUser.rejected]: (state, action) => { },
-    [searchGroupChatForUser.rejected]: (state, action) => { },
+    [getGroupChatForUser.rejected]: (state, action) => {},
+    [searchGroupChatForUser.rejected]: (state, action) => {},
     [searchGroupChatForUser.fulfilled]: (state, action) => {
       state.groupChat = action.payload.groupChats;
-    }
+    },
   },
 });
 
@@ -126,6 +137,6 @@ export const {
   changeGroupPosition,
   addNewGroupChat,
   setTriggerAddConversation,
-  updateGroupChatImage
+  updateGroupChatImage,
 } = actions;
 export default reducer; // default export

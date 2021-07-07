@@ -23,15 +23,16 @@ const TheSidebar = (props) => {
   const darkMode = useSelector((state) => state.app.darkMode);
 
   const onChange = (val) => {
+    console.log("sidebar: " + val);
     const param = { type: "set", sidebarShow: val };
     const action = changeState(param);
     dispatch(action);
   };
 
   const onClick = () => {
-    // const param = { type: "set", sidebarShow: false };
-    // const action = changeState(param);
-    // dispatch(action);
+    const param = { type: "set", sidebarShow: "responsive" };
+    const action = changeState(param);
+    dispatch(action);
   };
   return (
     <CSidebar show={show} onShowChange={onChange}>
