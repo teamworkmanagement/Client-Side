@@ -108,8 +108,8 @@ const TheHeader = () => {
       return;
     }
 
-    dispatch(setSearchGlobalStr(searchStr));
-    history.push("/search");
+    //dispatch(setSearchGlobalStr(searchStr));
+    history.push(`/search?query=${searchStr}`);
   }
 
   const handleKeyDown = (e) => {
@@ -117,6 +117,11 @@ const TheHeader = () => {
       handleSearchGlobal();
     }
   };
+
+  useEffect(() => {
+    if (!history.location.pathname.includes('/search') && searchStr)
+      setSearchStr('');
+  }, [history.location.pathname])
 
   return (
     <CHeader withSubheader>
@@ -162,9 +167,8 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CSubheader
-        className={`px-3 justify-content-between ${
-          collapseHeader ? "collapsed" : "expand"
-        }`}
+        className={`px-3 justify-content-between ${collapseHeader ? "collapsed" : "expand"
+          }`}
       >
         <div className="sub-header-content">
           <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />

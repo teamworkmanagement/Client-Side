@@ -9,10 +9,13 @@ import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import SearchBoardItem from "./Components/SearchBoardItem/SearchBoardItem.js";
 import SearchChatItem from "./Components/SearchChatItem/SearchChatItem.js";
 import SearchTaskItem from "./Components/SearchTaskItem/SearchTaskItem.js";
 import SearchTeamItem from "./Components/SearchTeamItem/SearchTeamItem.js";
+import queryString from 'query-string';
+import searchApi from 'src/api/searchApi';
 import "./SearchResultsPage.scss";
 
 function SearchResultsPage(props) {
@@ -20,7 +23,7 @@ function SearchResultsPage(props) {
   const searchGlobalStr = useSelector((state) => state.app.searchGlobalStr); //chuỗi search trên header
   const [currentSearchStr, setCurrentSearchStr] = useState(searchGlobalStr); // chuỗi trên thanh search của trang search
 
-  const taskList = [
+  /*const taskList = [
     {
       taskName: "Lorem ipsum dolor sit amet",
       taskStatus: "todo",
@@ -163,7 +166,13 @@ function SearchResultsPage(props) {
         },
       ],
     },
-  ];
+  ];*/
+
+  const [taskList, setTaskList] = useState([]);
+  const [teamList, setTeamList] = useState([]);
+  const [boardList, setBoardList] = useState([]);
+  const [chatList, setChatList] = useState([]);
+  const [searching, setSearching] = useState(false);
 
   function getDropdownText() {
     switch (mode) {
@@ -184,11 +193,71 @@ function SearchResultsPage(props) {
     setCurrentSearchStr(searchGlobalStr);
   }, [searchGlobalStr]);
 
+
+  const history = useHistory();
+
+  useEffect(() => {
+    const obj = queryString.parse(history.location.search);
+    console.log(obj);
+
+    if (obj.query) {
+      searchApi.searchBoards({
+        params: {
+          keyWord: obj.query,
+          skipItems: 0,
+          pageSize: 10000,
+        }
+      }).then(res => {
+        setBoardList(res.data.items);
+      }).catch(err => {
+
+      })
+
+      searchApi.searchTasks({
+        params: {
+          keyWord: obj.query,
+          skipItems: 0,
+          pageSize: 10000,
+        }
+      }).then(res => {
+        setTaskList(res.data.items);
+      }).catch(err => {
+
+      })
+
+      searchApi.searchTeams({
+        params: {
+          keyWord: obj.query,
+          skipItems: 0,
+          pageSize: 10000,
+        }
+      }).then(res => {
+        setTeamList(res.data.items);
+      }).catch(err => {
+
+      })
+
+      searchApi.searchChats({
+        params: {
+          keyWord: obj.query,
+          skipItems: 0,
+          pageSize: 10000,
+        }
+      }).then(res => {
+        setChatList(res.data.items);
+      }).catch(err => {
+
+      })
+    }
+  }, [history.location.search])
+
   function handleSearchGlobal() {
     if (!currentSearchStr || currentSearchStr === "") {
       //hiển thị view vui lòng nhập nội dung tìm kiếm
       return;
     }
+
+    history.push((`/search?query=${currentSearchStr}`));
 
     //call api search theo currentSearchStr ơ đây
   }
@@ -225,6 +294,10 @@ function SearchResultsPage(props) {
     return false;
   }
 
+  const changeMode = (mode) => {
+    setMode(mode);
+    console.log(mode);
+  }
   return (
     <div className="search-results-page">
       <div className="search-page-header">
@@ -246,73 +319,68 @@ function SearchResultsPage(props) {
             <CDropdownToggle>{getDropdownText()}</CDropdownToggle>
             <CDropdownMenu placement="bottom-end">
               <CDropdownItem
-                onClick={() => setMode(0)}
-                className={`drop-item drop-item-all ${
-                  mode === 0 ? "active" : ""
-                }`}
+                onClick={() => changeMode(0)}
+                className={`drop-item drop-item-all ${mode === 0 ? "active" : ""
+                  }`}
               >
                 Tất cả
               </CDropdownItem>
               <CDropdownItem
-                onClick={() => setMode(1)}
-                className={`drop-item drop-item-team ${
-                  mode === 1 ? "active" : ""
-                }`}
+                onClick={() => changeMode(1)}
+                className={`drop-item drop-item-team ${mode === 1 ? "active" : ""
+                  }`}
               >
                 Nhóm
               </CDropdownItem>
               <CDropdownItem
-                onClick={() => setMode(2)}
-                className={`drop-item drop-item-task ${
-                  mode === 2 ? "active" : ""
-                }`}
+                onClick={() => changeMode(2)}
+                className={`drop-item drop-item-task ${mode === 2 ? "active" : ""
+                  }`}
               >
                 Công việc
               </CDropdownItem>
               <CDropdownItem
-                onClick={() => setMode(3)}
-                className={`drop-item drop-item-board ${
-                  mode === 3 ? "active" : ""
-                }`}
+                onClick={() => changeMode(3)}
+                className={`drop-item drop-item-board ${mode === 3 ? "active" : ""
+                  }`}
               >
                 Bảng công việc
               </CDropdownItem>
               <CDropdownItem
-                onClick={() => setMode(4)}
-                className={`drop-item drop-item-chat ${
-                  mode === 4 ? "active" : ""
-                }`}
+                onClick={() => changeMode(4)}
+                className={`drop-item drop-item-chat ${mode === 4 ? "active" : ""
+                  }`}
               >
                 Nhóm nhắn tin
               </CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
           <div
-            onClick={() => setMode(0)}
+            onClick={() => changeMode(0)}
             className={`mode-item mode-all ${mode === 0 ? "active" : ""}`}
           >
             Tất cả
           </div>
           <div
-            onClick={() => setMode(1)}
+            onClick={() => changeMode(1)}
             className={`mode-item mode-team ${mode === 1 ? "active" : ""}`}
           >
             Nhóm
           </div>
           <div
-            onClick={() => setMode(2)}
+            onClick={() => changeMode(2)}
             className={`mode-item mode-task ${mode === 2 ? "active" : ""}`}
           >
             Công việc
           </div>
           <div
-            onClick={() => setMode(3)}
+            onClick={() => changeMode(3)}
             className={`mode-item mode-board ${mode === 3 ? "active" : ""}`}
           >
             Bảng công việc
           </div>
           <div
-            onClick={() => setMode(4)}
+            onClick={() => changeMode(4)}
             className={`mode-item mode-chat ${mode === 4 ? "active" : ""}`}
           >
             Nhóm nhắn tin
