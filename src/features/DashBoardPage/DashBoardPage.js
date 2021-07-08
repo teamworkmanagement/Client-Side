@@ -12,6 +12,7 @@ import AvatarList from "src/shared_components/MySharedComponents/AvatarList/Avat
 import teamApi from "src/api/teamApi";
 import statisticsApi from "src/api/statisticsApi";
 import { saveAs } from "file-saver";
+import CountTaskModal from "./Components/CountTaskModal/CountTaskModal.js";
 
 const brandSuccess = getStyle("success") || "#4dbd74";
 const brandInfo = getStyle("info") || "#20a8d8";
@@ -25,6 +26,14 @@ function DashBoardPage(props) {
   const chartref = useRef(null);
   const [userStatistics, setUserStatistics] = useState([]);
   const [teamStatistics, setTeamStatistics] = useState([]);
+  const [showCountTaskModal, setShowCountTaskModal] = useState(false);
+
+  //0: cá nhân-đang chờ, 1: cá nhân-sắp tới hạn, 2: nhóm-đang chờ, 3: nhóm-sắp tới hạn
+  const [countModalType, setCountModalType] = useState(0);
+
+  function closeCountTaskModal() {
+    setShowCountTaskModal(false);
+  }
 
   const modeProgressList = [
     {
@@ -233,7 +242,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Đang chờ</div>
                   <div className="count">15 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(0);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
 
@@ -244,7 +261,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Sắp tới hạn</div>
                   <div className="count">2 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(1);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
             </CRow>
@@ -261,7 +286,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Đang chờ</div>
                   <div className="count">15 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(2);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
 
@@ -272,7 +305,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Sắp tới hạn</div>
                   <div className="count">2 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(3);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
             </CRow>
@@ -387,6 +428,11 @@ function DashBoardPage(props) {
           </table>
         </div>
       </div>
+      <CountTaskModal
+        type={countModalType}
+        onClose={closeCountTaskModal}
+        show={showCountTaskModal}
+      />
     </div>
   );
 }
