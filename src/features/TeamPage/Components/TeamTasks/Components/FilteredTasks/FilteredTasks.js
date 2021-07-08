@@ -6,6 +6,7 @@ import { VscSearchStop } from "react-icons/vsc";
 import AvatarComponent from "src/shared_components/MySharedComponents/AvatarComponent/AvatarComponent";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import taskApi from "src/api/taskApi";
 
 function FilteredTasks(props) {
   const fields = [
@@ -14,6 +15,7 @@ function FilteredTasks(props) {
     { key: "assigned", label: "Thành viên đảm nhận", _style: { width: "25%" } },
   ];
 
+  const currentBoard = useSelector(state => state.kanban.kanbanBoard.currentBoard);
   const [tasksFilter, setTasksFilter] = useState([]);
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
@@ -29,32 +31,13 @@ function FilteredTasks(props) {
 
   useEffect(() => {
     if (props.filter) {
-      let mytasks = tasks;
-      console.log("filter laf: ", props.filter);
-      console.log("danh sach task la: ", tasks);
-      if (props.filter.taskDescription) {
-        mytasks = mytasks.filter((t) =>
-          t.taskDescription.includes(props.filter.taskDescription)
-        );
-      }
-
-      if (props.filter.taskStatus) {
-        mytasks = mytasks.filter(
-          (t) => t.taskStatus === props.filter.taskStatus
-        );
-      }
-
-      if (props.filter.taskName) {
-        mytasks = mytasks.filter((t) =>
-          t.taskName.includes(props.filter.taskName)
-        );
-      }
-
-      if (props.filter.userId) {
-        mytasks = mytasks.filter((t) => t.userId === props.filter.userId);
-      }
-
-      setTasksFilter(mytasks);
+      const params = { ...props.filter, boardId: currentBoard };
+      taskApi.searchTasks({ params })
+        .then(res => {
+          setTasksFilter(res.data);
+        })
+        .catch(err => {
+        })
     }
   }, [props.filter]);
   function NoItemView() {

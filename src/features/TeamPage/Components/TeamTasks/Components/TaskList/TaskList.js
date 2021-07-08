@@ -43,7 +43,7 @@ function TaskList(props) {
           </div>
 
           <div className="noti-infor">Chưa có công việc nào trong bảng này</div>
-          <div className="create-btn">Tạo công việc mới</div>
+          {/*<div className="create-btn">Tạo công việc mới</div>*/}
         </div>
       )}
     </div>

@@ -261,11 +261,16 @@ function TaskEditModal(props) {
         setListScores(scoreClone);
       }
     }
+    else {
+      setTask({});
+      setCurrent(null);
+    }
   }, [props.data]);
 
   useEffect(() => {
     if (JSON.stringify(task) === JSON.stringify({})) return;
-
+    if (!props.data)
+      return;
     let payload = {};
     if (current === null) {
       payload = {
@@ -281,8 +286,8 @@ function TaskEditModal(props) {
 
     taskApi
       .reAssignTask(payload)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { console.log('số lần call api') })
+      .catch((err) => { });
   }, [current]);
 
   useEffect(() => {
