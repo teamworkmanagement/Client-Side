@@ -12,6 +12,7 @@ import AvatarList from "src/shared_components/MySharedComponents/AvatarList/Avat
 import teamApi from "src/api/teamApi";
 import statisticsApi from "src/api/statisticsApi";
 import { saveAs } from "file-saver";
+import axiosClient from "src/api/axiosClient";
 
 const brandSuccess = getStyle("success") || "#4dbd74";
 const brandInfo = getStyle("info") || "#20a8d8";
@@ -108,7 +109,7 @@ function DashBoardPage(props) {
       .then((res) => {
         setTeams(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, []);
 
   const changeMode = (value) => {
@@ -183,7 +184,22 @@ function DashBoardPage(props) {
       "chartjs-render-monitor"
     )[0];
     canvasSave.toBlob(function (blob) {
-      saveAs(blob, "testing.png");
+      var bodyFormData = new FormData();
+
+      bodyFormData.append('file', blob);
+      bodyFormData.append('datas', JSON.stringify([1, 2, 3]));
+      axiosClient.post("https://localhost:9001/api/test/test-export-complex", bodyFormData,
+        {
+          headers: { "Content-Type": "multipart/form-data" }
+        }).then(res => new Blob([res], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
+        .then(blob => {
+          saveAs(blob, "abc.xlsx");
+          //window.URL.revokeObjectURL(url);
+        })
+        .catch(err => {
+          console.log(err)
+        });
+      //saveAs(blob, "testing.png");
     });
 
     return;
