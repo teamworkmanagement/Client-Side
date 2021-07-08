@@ -40,7 +40,6 @@ const TheSidebar = (props) => {
         {darkMode && (
           <div className="logo-team-container">
             <div className="img"></div>
-            {/* <img alt="logoapp" src="../images/app/logoteam.png" /> */}
           </div>
         )}
       </CSidebarBrand>

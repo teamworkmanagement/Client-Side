@@ -45,6 +45,10 @@ function Breadcrumbs(props) {
       path: "/feedbacks",
       name: "Đóng góp cho ứng dụng",
     },
+    {
+      path: "/search",
+      name: "Tìm kiếm",
+    },
   ];
 
   function getBreadcrumbByName(path) {
@@ -103,6 +107,9 @@ function Breadcrumbs(props) {
         break;
       case "myaccount":
         currents.push(getBreadcrumbByName("/myaccount"));
+        break;
+      case "search":
+        currents.push(getBreadcrumbByName("/search"));
         break;
       case "feedbacks":
         currents.push(getBreadcrumbByName("/feedbacks"));

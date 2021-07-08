@@ -14,9 +14,11 @@ import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsP
 import NotFoundPage from "./shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import NoInternetPage from "./shared_components/MySharedComponents/NoInternetPage/NoInternetPage";
 import FeedbackPage from "./features/FeedbackPage/FeedbackPage";
+import SearchResultsPage from "./features/SearchResultsPage/SearchResultsPage.js";
 
 const routes = [
   { path: "/notfound", name: "Không tồn tại", component: NotFoundPage },
+  { path: "/search", name: "Tìm kiếm", component: SearchResultsPage },
   { path: "/testtoaster", name: "Test Toaster", component: MyToaster },
   {
     path: "/connectionerror",
