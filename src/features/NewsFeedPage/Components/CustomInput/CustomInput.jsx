@@ -1,15 +1,14 @@
 import Editor from '@draft-js-plugins/editor';
 import createEmojiPlugin from '@draft-js-plugins/emoji';
 import createMentionPlugin, {
-    defaultSuggestionsFilter, MentionData,
-    MentionPluginTheme,
+    defaultSuggestionsFilter
+    
 } from '@draft-js-plugins/mention';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import { EditorState, getDefaultKeyBinding } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import axiosClient from 'src/api/axiosClient';
 import userApi from 'src/api/userApi';
 import { getResetEditorState } from 'src/utils/draftjs';
 import './CustomInput.scss';
@@ -18,7 +17,6 @@ import './CustomInput.scss';
 
 
 const emojiPlugin = createEmojiPlugin();
-const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 
 function CustomInput(props) {
     const [editorState, setEditorState] = useState(() =>

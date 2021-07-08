@@ -116,6 +116,7 @@ const appSlice = createSlice({
     darkMode: true,
     collapseHeader: false,
     filterChanged: false,
+    searchGlobalStr: "",
     //data from api
 
     users: Users,
@@ -128,9 +129,12 @@ const appSlice = createSlice({
       userId: null,
     },
     taskEditModal: null,
-    viewHistory: null
+    viewHistory: null,
   },
   reducers: {
+    setSearchGlobalStr(state, action) {
+      state.searchGlobalStr = action.payload;
+    },
     setViewHistory(state, action) {
       state.viewHistory = action.payload;
     },
@@ -386,6 +390,7 @@ export const {
   changeUserSetting,
   setUserModal,
   setTaskEditModal,
-  setViewHistory
+  setViewHistory,
+  setSearchGlobalStr,
 } = actions; // named export
 export default reducer; // default export

@@ -1,0 +1,130 @@
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+
+@mixin CardStyle {
+    box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 15%);
+    background-color: white;
+    padding: 1rem;
+    border-radius: $borderRadius;
+    border: $borderStyle;
+}
+@mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+
+.search-team-item {
+    @include CardStyle;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    //flex-wrap: wrap;
+    margin-bottom: 1rem;
+    .overview-info {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        width: 5rem;
+        .icon-group {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: 0.5rem;
+        }
+        .team-image {
+            width: 4rem;
+            height: 3rem;
+            margin-right: 0.5rem;
+            border-radius: 5px;
+        }
+        .info-group {
+            flex-grow: 1;
+            width: 5rem;
+            display: flex;
+            flex-direction: column;
+            .name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: $subTextColor;
+                span {
+                    font-weight: bold;
+                    color: $textColor;
+                }
+            }
+            .description {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: $subTextColor;
+                font-size: 90%;
+            }
+        }
+    }
+    .detail-info {
+        margin-left: 1rem;
+        display: flex;
+        align-items: center;
+
+        .team-code {
+            background-color: lightgray;
+            padding: 0.2rem 1rem;
+            border-radius: 50rem;
+            font-weight: bold;
+            font-size: 110%;
+        }
+
+        .goto-btn {
+            @include NormalButtonStyle;
+            padding: 0.5rem;
+            border-radius: 50rem;
+            margin-left: 1rem;
+            width: 2rem;
+            height: 2rem;
+            .arrow-icon {
+                color: white;
+                padding-left: 0.1rem;
+            }
+        }
+    }
+
+    @media (max-width: 450px) {
+        .overview-info {
+            .team-image {
+                display: none;
+            }
+        }
+        .detail-info {
+            margin-left: 0;
+        }
+    }
+}

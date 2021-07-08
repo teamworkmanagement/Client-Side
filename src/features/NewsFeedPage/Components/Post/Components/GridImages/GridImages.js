@@ -52,7 +52,7 @@ class GridImages extends Component {
     const { images } = this.props;
     const { countFrom } = this.state;
     const overlay =
-      images.length > countFrom && countFrom == 1
+      images.length > countFrom && countFrom === 1
         ? this.renderCountOverlay(true)
         : this.renderOverlay();
 
@@ -114,7 +114,7 @@ class GridImages extends Component {
     const { images } = this.props;
     const { countFrom } = this.state;
     const conditionalRender =
-      images.length == 4 || (images.length > +countFrom && +countFrom == 4);
+      images.length === 4 || (images.length > +countFrom && +countFrom === 4);
     const overlay =
       !countFrom ||
       countFrom > 5 ||
@@ -216,7 +216,7 @@ class GridImages extends Component {
       <div className="grid-container">
         {[1, 3, 4].includes(imagesToShow.length) && this.renderOne()}
         {imagesToShow.length >= 2 &&
-          imagesToShow.length != 4 &&
+          imagesToShow.length !== 4 &&
           this.renderTwo()}
         {imagesToShow.length >= 4 && this.renderThree()}
 

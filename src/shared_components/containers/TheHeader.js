@@ -7,6 +7,7 @@ import {
   CHeaderNav,
   CSubheader,
   CTooltip,
+  CInput,
 } from "@coreui/react";
 
 import { TheHeaderDropdown, TheHeaderDropdownMssg } from "./index";
@@ -16,6 +17,7 @@ import {
   changeStateChatListSidebar,
   changeStateSettingOptionsSidebar,
   setCollapseHeader,
+  setSearchGlobalStr,
 } from "src/appSlice";
 import "./TheHeader.scss";
 import { useHistory } from "react-router-dom";
@@ -25,12 +27,14 @@ import {
   HiOutlineChevronDoubleUp,
 } from "react-icons/hi";
 import teamApi from "src/api/teamApi";
+import { BsSearch } from "react-icons/bs";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.app.sidebarShow);
   const collapseHeader = useSelector((state) => state.app.collapseHeader);
   const history = useHistory();
+  const [searchStr, setSearchStr] = useState("");
 
   const toggleSidebar = () => {
     const val = [true, "responsive"].includes(sidebarShow)
@@ -99,6 +103,21 @@ const TheHeader = () => {
     console.log(collapseHeader ? "true" : "false");
   }
 
+  function handleSearchGlobal() {
+    if (!searchStr || searchStr === "") {
+      return;
+    }
+
+    dispatch(setSearchGlobalStr(searchStr));
+    history.push("/search");
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchGlobal();
+    }
+  };
+
   return (
     <CHeader withSubheader>
       <CToggler
@@ -116,14 +135,17 @@ const TheHeader = () => {
         <img alt="logo" src="../images/app/logoteam.png" />
       </CHeaderBrand>
       <CHeaderNav style={{ paddingRight: "0.5rem" }} className="">
-        {/*<div className="lookup-input-header">
+        <div className="lookup-input-header">
           <CInput
             className="input-field"
             placeholder="Tìm kiếm..."
             type="text"
+            onKeyDown={handleKeyDown}
+            value={searchStr}
+            onChange={(e) => setSearchStr(e.target.value)}
           />
-          <BsSearch className="icon-search" />
-  </div>*/}
+          <BsSearch className="icon-search" onClick={handleSearchGlobal} />
+        </div>
 
         <TheHeaderDropdownMssg />
         <TheHeaderDropdown />

@@ -71,9 +71,9 @@ function TeamTasks(props) {
     setShowAddKBList(false);
   };
 
-  const notFound = (value) => {
-    setNotFound(value);
-  };
+  // const notFound = (value) => {
+  //   setNotFound(value);
+  // };
 
   useEffect(() => {
     const pathname = history.location.pathname.split("/");

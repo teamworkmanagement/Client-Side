@@ -21,7 +21,9 @@ function FilteredTasks(props) {
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
   const tasks = [];
+  //eslint-disable-next-line
   kanbanLists.map((kl) => {
+    //eslint-disable-next-line
     kl.taskUIKanbans.map((task) => {
       tasks.push(task);
     });
@@ -35,7 +37,6 @@ function FilteredTasks(props) {
           setTasksFilter(res.data);
         })
         .catch(err => {
-
         })
     }
   }, [props.filter]);

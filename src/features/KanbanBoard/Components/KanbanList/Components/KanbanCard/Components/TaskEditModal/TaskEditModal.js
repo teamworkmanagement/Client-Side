@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./TaskEditModal.scss";
 import CIcon from "@coreui/icons-react";
 import { Range, getTrackBackground } from "react-range";
-import { Popover, ArrowContainer, useArrowContainer } from "react-tiny-popover";
+import { Popover } from "react-tiny-popover";
 
 import {
   CCol,
@@ -61,27 +61,12 @@ export const CustomOption = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <img height={20} width={20} src={props.data.img} />
+        <img alt="" height={20} width={20} src={props.data.img} />
         <label>{props.data.label}</label>
       </div>
     </components.Option>
   );
 };
-
-const colorPalette1 = [
-  "#D63031",
-  "#FC5C65",
-  "#EE5A24",
-  "#FD9644",
-  "#FFC312",
-  "#F7B731",
-  "#26DE81",
-  "#2BCBBA",
-  "#45AAF2",
-  "#4B7BEC",
-  "#A55EEA",
-  "#E84393",
-];
 
 const colorPalette = [
   "#1CCE67",
@@ -95,34 +80,41 @@ const colorPalette = [
 ];
 
 function TaskEditModal(props) {
-  const [toasts, setToasts] = useState([]);
   const dispatch = useDispatch();
+  const imageRef = useRef(null);
+  const fileRef = useRef(null);
+  const pop1 = useRef();
+  const pop2 = useRef();
+
+  const newComment = useSelector((state) => state.signalr.newComment);
+  const user = useSelector((state) => state.auth.currentUser);
+  const curUser = useSelector((state) => state.auth.currentUser);
+  const adminAction = useSelector((state) => state.kanban.adminAction);
+  const kanbanLists = useSelector(
+    (state) => state.kanban.kanbanBoard.kanbanLists
+  );
+  const signalRAddFile = useSelector(
+    (state) => state.kanban.signalrData.addNewFile
+  );
+  const currentBoard = useSelector(
+    (state) => state.kanban.kanbanBoard.currentBoard
+  );
+
   const [finalColor, changeColor] = useState(null);
   const [isShowColorPicker, setIsShowColorPicker] = useState(false);
   const [taskNameEditing, setTaskNameEditing] = useState(false);
   const [taskDescriptionEditing, setTaskDescriptionEditing] = useState(false);
-
   const [task, setTask] = useState({});
   const [showDetail, setShowDetail] = useState(false);
-
-  const adminAction = useSelector((state) => state.kanban.adminAction);
   const [value, setValue] = useState(null);
   const [renderedValue, setRenderedValue] = useState([0]);
-
+  //eslint-disable-next-line
   const [updateTaskRequest, setUpdateTaskRequest] = useState(null);
-
   const [cmtLists, setCmtLists] = useState([]);
   const [attachments, setAttachments] = useState([]);
+  //eslint-disable-next-line
   const [triggerUpdateTask, setTriggerUpdateTask] = useState(-1); //cause setState is asynchonous action
-
-  const curUser = useSelector((state) => state.auth.currentUser);
-  const [currentAssignedUser, setCurrentAssignedUser] = useState(null);
-  const [commentContent, setCommentContent] = useState("");
-  const kanbanLists = useSelector(
-    (state) => state.kanban.kanbanBoard.kanbanLists
-  );
   const [kanbanLocal, setKanbanLocal] = useState([]);
-
   const [listScores, setListScores] = useState([
     {
       score: "0",
@@ -169,40 +161,15 @@ function TaskEditModal(props) {
       active: false,
     },
   ]);
-
-  const [options, setOptions] = useState([]);
   const [current, setCurrent] = useState(null);
-  const [isFocused, setFocus] = useState(false);
-  const user = useSelector((state) => state.auth.currentUser);
-
-  /**section modal history */
-  const [showTaskHistoryModal, setShowTaskHistoryModal] = useState(false);
-  const [details, setDetails] = useState([]);
-  function onCloseTaskHistoryModal() {
-    setShowTaskHistoryModal(false);
-  }
-
-  function refactorKanbanListWithActive() {
-    //set active cho list mà task này đang nằm trong đó, list đang dc chọn (active) sẽ có dấu check
-    var cloneLists = [...kanbanLists];
-
-    console.log(cloneLists);
-    for (let i = 0; i < cloneLists.length; i++) {
-      cloneLists[i] = {
-        ...cloneLists[i],
-        active: false,
-      };
-    }
-    //set active cho list đang chứa task này
-    cloneLists[0] = {
-      ...cloneLists[0],
-      active: true,
-    };
-    return cloneLists;
-  }
+  const [openPopoverLists, setOpenPopoverLists] = useState(false);
+  const [openPopoverScores, setOpenPopoverScores] = useState(false);
+  //eslint-disable-next-line
+  const [inputValue, setInputValue] = useState("");
+  const [memberList, setMemberList] = useState([]);
 
   useEffect(() => {
-    if (kanbanLists.length == 0) return;
+    if (kanbanLists.length === 0) return;
     var cloneLists = [...kanbanLists];
 
     console.log(cloneLists);
@@ -216,14 +183,8 @@ function TaskEditModal(props) {
     setKanbanLocal(cloneLists);
   }, [kanbanLists]);
 
-  const imageRef = useRef(null);
-  const fileRef = useRef(null);
-  const signalRAddFile = useSelector(
-    (state) => state.kanban.signalrData.addNewFile
-  );
-
   useEffect(() => {
-    if (signalRAddFile && signalRAddFile.fileTaskOwnerId == task.taskId) {
+    if (signalRAddFile && signalRAddFile.fileTaskOwnerId === task.taskId) {
       const cloneAttachs = [...attachments];
       cloneAttachs.splice(0, 0, { ...signalRAddFile });
       setAttachments(cloneAttachs);
@@ -274,7 +235,7 @@ function TaskEditModal(props) {
       console.log(props.data.taskPoint);
       if (props.data.taskPoint !== undefined && props.data.taskPoint !== null) {
         const indexScore = listScores.findIndex(
-          (x) => x.score == props.data.taskPoint
+          (x) => x.score === props.data.taskPoint
         );
         //set active cho list đang chứa task này
 
@@ -306,12 +267,6 @@ function TaskEditModal(props) {
     }
   }, [props.data]);
 
-  const onChange = (e) => {
-    setCurrent(e);
-    console.log("set current 1:");
-    console.log(e);
-  };
-
   useEffect(() => {
     if (JSON.stringify(task) === JSON.stringify({})) return;
     if (!props.data)
@@ -335,9 +290,60 @@ function TaskEditModal(props) {
       .catch((err) => { });
   }, [current]);
 
+  useEffect(() => {
+    if (updateTaskRequest) {
+    }
+  }, [updateTaskRequest]);
+
+  useEffect(() => {
+    if (triggerUpdateTask < 0) return;
+
+    if (props.updateGanttTask) {
+      props.updateGanttTask(task);
+    }
+  }, [triggerUpdateTask]);
+
+  useEffect(() => {
+    if (!newComment || !props.data) return;
+    if (newComment.commentTaskId === props.data.taskId) {
+      setCmtLists([newComment].concat([...cmtLists]));
+    }
+  }, [newComment]);
+
+  useEffect(() => {
+    console.log(props.data);
+    if (props.data) {
+      try {
+        async function getAllMembers() {
+          const params = {
+            boardId: currentBoard,
+            keyword: inputValue,
+          };
+          console.log(currentBoard);
+          const res = await userApi.searchUsersKanban({ params });
+
+          const listUsers = res.data?.map((x) => {
+            return {
+              value: x.userId,
+              label: x.userFullname,
+              img: x.userImageUrl,
+            };
+          });
+          setMemberList(listUsers);
+          console.log(listUsers);
+          //return listUsers;
+        }
+
+        getAllMembers();
+      } catch (e) {}
+    }
+  }, [props.data]);
+
+  const onChange = (e) => {
+    setCurrent(e);
+  };
+
   const dispatchUpdateTask = (obj) => {
-    //setTriggerUpdateTask(triggerUpdateTask + 1);
-    console.log(task);
     const { name, value } = obj;
     const {
       taskId,
@@ -366,7 +372,6 @@ function TaskEditModal(props) {
       [name]: value,
       userActionId: curUser.id,
     };
-    console.log(newUpdateObj);
 
     taskApi
       .updateTask(newUpdateObj)
@@ -374,31 +379,19 @@ function TaskEditModal(props) {
       .catch((err) => {});
   };
 
-  useEffect(() => {
-    if (updateTaskRequest) {
-    }
-  }, [updateTaskRequest]);
-  useEffect(() => {
-    if (triggerUpdateTask < 0) return;
-
-    if (props.updateGanttTask) {
-      props.updateGanttTask(task);
-    }
-  }, [triggerUpdateTask]);
-
   function handleClose() {
     if (props.closePopup) {
       props.closePopup();
     }
   }
 
-  function handleKeyDown(e) {
-    const limit = 80;
+  // function handleKeyDown(e) {
+  //   const limit = 80;
 
-    e.target.style.height = `${e.target.scrollHeight}px`;
-    // In case you have a limitation
-    e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
-  }
+  //   e.target.style.height = `${e.target.scrollHeight}px`;
+  //   // In case you have a limitation
+  //   e.target.style.height = `${Math.min(e.target.scrollHeight, limit)}px`;
+  // }
 
   function handleInputNameAndDes(e) {
     const { name, value } = e.target;
@@ -411,9 +404,6 @@ function TaskEditModal(props) {
     });
   }
 
-  const updateTaskFunc = (obj) => {
-    console.log("update :", task);
-  };
   function onSaveTaskName() {
     if (
       task.taskName === "" ||
@@ -461,16 +451,10 @@ function TaskEditModal(props) {
   }
   function onChangeStartDate(e) {
     const dateParts = e.target.value.split("-");
-    //const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-
     const newDate = new Date(
       Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2])
     );
 
-    console.log(e.target.value);
-    console.log(new Date(e.target.value));
-    console.log(new Date(Date.UTC(e.target.value)));
-    //return;
     setTask({
       ...task,
       taskStartDate: newDate,
@@ -511,6 +495,7 @@ function TaskEditModal(props) {
         return DONE_BACKGROUNDCOLOR;
     }
   }
+
   function getStatusColor() {
     switch (task.taskStatus) {
       case "todo":
@@ -521,6 +506,7 @@ function TaskEditModal(props) {
         return DONE_COLOR;
     }
   }
+
   function getStatusColorFormText(status) {
     switch (status) {
       case "todo":
@@ -663,56 +649,6 @@ function TaskEditModal(props) {
     }
   };
 
-  const newComment = useSelector((state) => state.signalr.newComment);
-
-  useEffect(() => {
-    if (!newComment || !props.data) return;
-    if (newComment.commentTaskId === props.data.taskId) {
-      setCmtLists([newComment].concat([...cmtLists]));
-    }
-  }, [newComment]);
-
-  const onAddComment = (e) => {
-    if (e.key === "Enter") {
-      if (commentContent !== "") {
-        commentApi
-          .addComment({
-            commentTaskId: task.taskId,
-            commentUserId: curUser.id,
-            commentContent: commentContent,
-            commentCreatedAt: new Date().toISOString(),
-            commentIsDeleted: false,
-            commentUserName: user.fullName,
-            commentUserAvatar: user.userAvatar,
-          })
-          .then((res) => {
-            setTask({
-              ...task,
-              commentsCount: task.commentsCount + 1,
-            });
-
-            /*const cmtObj = {
-              commentId: res.data.commentId,
-              commentTaskId: res.data.commentTaskId,
-              commentUserId: res.data.commentUserId,
-              commentContent: res.data.commentContent,
-              userName: curUser.fullName,
-              userAvatar: curUser.userAvatar,
-              commentCreatedAt: res.data.commentCreatedAt,
-            };
-
-            const cmtListsClone = [...cmtLists];
-            cmtListsClone.splice(0, 0, cmtObj);
-            setCmtLists(cmtListsClone);
-
-            dispatchUpdateTask();*/
-          })
-          .catch((err) => {});
-      }
-      setCommentContent("");
-    }
-  };
-
   const onFilePickChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -784,17 +720,6 @@ function TaskEditModal(props) {
     }
   };
 
-  function moveToList(listId) {
-    var cloneKanbanList = [...kanbanLocal];
-    for (let i = 0; i < cloneKanbanList.length; i++) {
-      cloneKanbanList[i].active = false;
-      if (cloneKanbanList[i].kanbanListId === listId) {
-        cloneKanbanList[i].active = true;
-      }
-    }
-    setKanbanLocal(cloneKanbanList);
-  }
-
   function selectList(index) {
     var cloneLists = [...kanbanLocal];
     for (let i = 0; i < cloneLists.length; i++) {
@@ -813,17 +738,14 @@ function TaskEditModal(props) {
   }
 
   const changeListClick = (index) => {
-    console.log(kanbanLists);
-    console.log(kanbanLocal);
     const localObjIndex = kanbanLocal.findIndex((kl) => kl.active);
 
-    if (localObjIndex == index) {
+    if (localObjIndex === index) {
       alert("errror");
       return;
     }
 
     const newList = kanbanLocal[index];
-    console.log(newList.kanbanListId);
 
     let pos = -9999;
     if (newList.taskUIKanbans.length === 0) {
@@ -845,7 +767,6 @@ function TaskEditModal(props) {
       .then((res) => {})
       .catch((err) => {});
 
-    console.log("zzzzz: ", index);
     selectList(index);
   };
 
@@ -871,7 +792,6 @@ function TaskEditModal(props) {
   }
 
   function selectScore(index) {
-    console.log("selected");
     var cloneLists = [...listScores];
     for (let i = 0; i < cloneLists.length; i++) {
       cloneLists[i] = {
@@ -918,73 +838,6 @@ function TaskEditModal(props) {
     );
   }
 
-  const [openPopoverLists, setOpenPopoverLists] = useState(false);
-  const [openPopoverScores, setOpenPopoverScores] = useState(false);
-
-  const [inputValue, setInputValue] = useState("");
-  const handleInputChange = (e) => {
-    console.log(e);
-    setInputValue(e);
-  };
-
-  const currentBoard = useSelector(
-    (state) => state.kanban.kanbanBoard.currentBoard
-  );
-  const filterColors = async (inputValue) => {
-    try {
-      const params = {
-        boardId: currentBoard,
-        keyword: inputValue,
-      };
-      const res = await userApi.searchUsersKanban({ params });
-
-      console.log(res.data);
-
-      return res.data.map((x) => {
-        return {
-          value: x.userId,
-          label: x.userFullname,
-          img: x.userImageUrl,
-        };
-      });
-    } catch (err) {}
-  };
-
-  const loadOptions = async (inputValue, callback) => {
-    callback(await filterColors(inputValue));
-  };
-
-  const [memberList, setMemberList] = useState([]);
-
-  useEffect(() => {
-    console.log(props.data);
-    if (props.data) {
-      try {
-        async function getAllMembers() {
-          const params = {
-            boardId: currentBoard,
-            keyword: inputValue,
-          };
-          console.log(currentBoard);
-          const res = await userApi.searchUsersKanban({ params });
-
-          const listUsers = res.data?.map((x) => {
-            return {
-              value: x.userId,
-              label: x.userFullname,
-              img: x.userImageUrl,
-            };
-          });
-          setMemberList(listUsers);
-          console.log(listUsers);
-          //return listUsers;
-        }
-
-        getAllMembers();
-      } catch (e) {}
-    }
-  }, [props.data]);
-
   String.prototype.replaceBetween = function (start, end, what) {
     return this.substring(0, start) + what + this.substring(end);
   };
@@ -995,30 +848,19 @@ function TaskEditModal(props) {
       if (blocks[0].text === "") return;
     }
     const cloneBlocks = [...blocks];
-
     //tags
     const obj = convertToRaw(editorState.getCurrentContent());
-
     const mentions = [];
     const entityMap = obj.entityMap;
 
-    //console.log(entityMap);
-    console.log(obj);
     for (const property in entityMap) {
       if (entityMap[property].type === "mention")
         mentions.push(entityMap[property].data.mention);
     }
 
-    //console.log(cloneBlocks);
-
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
         block.entityRanges.forEach((entity) => {
-          var nameTag = block.text.substring(
-            entity.offset,
-            entity.offset + entity.length
-          );
-
           let indexData = entity.key;
           const userTagId = entityMap[indexData].data.mention.id;
 
@@ -1027,12 +869,9 @@ function TaskEditModal(props) {
             entity.offset + entity.length,
             `<@tag>${userTagId}<@tag>`
           );
-          console.log(block.text);
         });
       }
     });
-
-    console.log(cloneBlocks);
 
     let value = cloneBlocks
       .map((block) => (!block.text.trim() && "\n") || block.text)
@@ -1056,7 +895,6 @@ function TaskEditModal(props) {
       })
       .then((res) => {})
       .catch((err) => {});
-    console.log(value);
   };
 
   const viewHistory = () => {
@@ -1067,9 +905,6 @@ function TaskEditModal(props) {
       })
     );
   };
-
-  const pop1 = useRef();
-  const pop2 = useRef();
 
   return (
     <div>
@@ -1093,7 +928,6 @@ function TaskEditModal(props) {
                   {task.taskCompletedPercent}%
                 </div>
               </div>
-
               <div
                 className="task-status-label-header"
                 style={{
@@ -1186,7 +1020,6 @@ function TaskEditModal(props) {
                                 <CIcon name="cil-user-follow" />
                                 Giao cho
                               </div>
-
                               <div style={{ width: "15rem" }}>
                                 <Select
                                   isDisabled={!adminAction}
@@ -1204,25 +1037,6 @@ function TaskEditModal(props) {
                                   noOptionsMessage={() => "Không tìm thấy"}
                                   onChange={onChange}
                                 />
-                                {/* <AsyncSelect
-                                  value={isFocused ? null : current}
-                                  onChange={onChange}
-                                  //options={options}
-                                  placeholder="Chọn thành viên"
-                                  loadOptions={loadOptions}
-                                  defaultOptions
-                                  onInputChange={handleInputChange}
-                                  components={{
-                                    Option: CustomOption,
-                                    SingleValue: ValueOption,
-                                  }}
-                                  // onFocus={() => {
-                                  //   setFocus(true);
-                                  //   setCurrent(null);
-                                  // }}
-                                  //onBlur={() => setFocus(false)}
-                                  //blurInputOnSelect={true}
-                                /> */}
                               </div>
                             </div>
                           </CCol>
@@ -1378,13 +1192,11 @@ function TaskEditModal(props) {
                           </CCol>
                         </CRow>
                       </CRow>
-
                       <div className="progress-group item-group">
                         <div className="progress-label label">
                           <CIcon name="cil-chart-line" />
                           Tiến độ
                         </div>
-
                         <div className="slider-container">
                           <Range
                             className="range"
@@ -1399,8 +1211,6 @@ function TaskEditModal(props) {
                             }}
                             renderTrack={({ props, children }) => (
                               <div
-                                //onMouseDown={props.onMouseDown}
-                                //onTouchStart={props.onTouchStart}
                                 className="track-container"
                                 style={{
                                   ...props.style,
@@ -1528,7 +1338,6 @@ function TaskEditModal(props) {
                     </div>
                   </CCollapse>
                   <div className="card-divider"></div>
-
                   <div className="comment-label">
                     <CIcon name="cil-speech" />
                     <div className="commnet">Bình luận</div>
@@ -1538,13 +1347,6 @@ function TaskEditModal(props) {
                       <img alt="" src={curUser.userAvatar} />
                     </div>
                     <div className="input-container">
-                      {/*<CInput
-                        type="text"
-                        placeholder="Viết bình luận..."
-                        onKeyDown={onAddComment}
-                        onChange={(e) => setCommentContent(e.target.value)}
-                        value={commentContent}
-                      />*/}
                       <TaskCommentInput
                         saveContent={saveContent}
                         boardId={currentBoard}
@@ -1581,12 +1383,6 @@ function TaskEditModal(props) {
                     content={renderContentList()}
                     ref={pop1}
                   >
-                    {/* <CTooltip
-                      content="Chuyển công việc đến danh sách khác"
-                      placement="top"
-                    >
-                     
-                    </CTooltip> */}
                     <div
                       className="action-item"
                       onClick={() => setOpenPopoverLists(!openPopoverLists)}
@@ -1606,9 +1402,6 @@ function TaskEditModal(props) {
                       onClickOutside={() => setOpenPopoverScores(false)}
                       content={renderContentScore()}
                     >
-                      {/* <CTooltip content="Cho điểm công việc" placement="top">
-                        
-                      </CTooltip> */}
                       <div
                         className="action-item"
                         onClick={() => setOpenPopoverScores(!openPopoverScores)}

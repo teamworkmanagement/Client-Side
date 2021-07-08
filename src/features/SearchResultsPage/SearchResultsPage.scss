@@ -1,0 +1,121 @@
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+.search-results-page {
+    padding: 1.5rem;
+    //background-color: white;
+    .search-page-header {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+        .search-input {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+            width: 15rem;
+            margin-bottom: 0.5rem;
+            input {
+                border-radius: 0.625rem;
+                padding-right: 1.8rem;
+            }
+            .icon-search {
+                margin-left: -1.5rem;
+                cursor: pointer;
+                color: $subTextColor;
+                transition: all 0.3s;
+
+                &:hover {
+                    transform: scale(1.2);
+                    color: $textColor;
+                }
+            }
+        }
+        .mode-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            .label {
+                margin-right: 0.75rem;
+                font-weight: bold;
+                color: $subTextColor;
+            }
+            .mode-dropdown {
+                display: none;
+                .dropdown-toggle.btn {
+                    margin-right: 0.5rem;
+                    border: 1.5px solid $baseColor;
+                    border-radius: 0.625rem;
+                    padding: 0.2rem 1rem;
+                    transition: all 0.2s;
+                }
+                .dropdown-menu {
+                    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+                    border-radius: 0.625rem;
+
+                    .drop-item {
+                        &:active {
+                            background-color: $lighterBaseColor;
+                            color: $baseColor;
+                        }
+                        &.active {
+                            background-color: $baseColor;
+                        }
+                    }
+                }
+            }
+            .mode-item {
+                margin: 0.25rem 0rem;
+                margin-right: 0.5rem;
+                border-radius: 50rem;
+                border: 1.5px solid $baseColor;
+                padding: 0.2rem 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                //font-weight: bold;
+                &:hover {
+                    background-color: $lighterBaseColor;
+                    color: $baseColor;
+                    border-color: $baseColor;
+                }
+                &.active {
+                    background-color: $baseColor;
+                    color: white;
+                }
+            }
+            @media (max-width: 450px) {
+                .mode-dropdown {
+                    display: block;
+                }
+                .mode-item {
+                    display: none;
+                }
+            }
+        }
+    }
+    .not-found-label {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+        width: 100%;
+        justify-content: center;
+        .icon-notfound {
+            margin-right: 0.5rem;
+            width: 1.8rem;
+            height: 1.8rem;
+        }
+        .label {
+            font-size: 140%;
+        }
+    }
+}

@@ -4,13 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import KanbanList from "./Components/KanbanList/KanbanList";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { setTeamLoading } from "src/appSlice";
-
 import taskApi from "src/api/taskApi";
 import kanbanApi from "src/api/kanbanApi";
 import { RiTableLine } from "react-icons/ri";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
-import queryString from "query-string";
 import {
   FindNextRank,
   FindPreRank,
@@ -18,7 +16,7 @@ import {
   genNewRank,
 } from "src/utils/lexorank/lexorank";
 import { connection } from "src/utils/signalr/kanbanService";
-import { dragListLocal, dragTaskLocal, setCurrentBoard } from "./kanbanSlice";
+import { dragListLocal, dragTaskLocal } from "./kanbanSlice";
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
@@ -29,15 +27,6 @@ function KanbanBoard(props) {
   const kanbanLists = useSelector(
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
-
-  const fixedList = useSelector((state) =>
-    state.kanban.kanbanBoard.kanbanLists.find(
-      (x) => x.kanbanListOrderInBoard === -999999
-    )
-  );
-
-  //const fixedList = kanbanLists.find(x => x.kanbanListOrderInBoard === -999999);
-  //kanbanLists = kanbanLists.filter(x => x.kanbanListOrderInBoard !== -999999)
 
   const currentBoard = useSelector(
     (state) => state.kanban.kanbanBoard.currentBoard
@@ -175,176 +164,19 @@ function KanbanBoard(props) {
   }
 
   const history = useHistory();
-
+  //eslint-disable-next-line
   const [boardId, setBoardId] = useState(null);
-  const [isShowEditPopup, setIsShowEditPopup] = useState(false);
-  const [modalTaskObj, setModaTaskObj] = useState(null);
 
   const tasks = [];
+  //eslint-disable-next-line
   kanbanLists.map((kl) => {
+    //eslint-disable-next-line
     kl.taskUIKanbans.map((task) => {
       tasks.push(task);
     });
   });
 
-  const updateTask = useSelector(
-    (state) => state.kanban.signalrData.updateTask
-  );
   const user = useSelector((state) => state.auth.currentUser);
-
-  /*useEffect(() => {
-    console.log("realtime", updateTask);
-    const queryObj = queryString.parse(history.location.search);
-    if (!queryObj.t) return;
-
-    if (updateTask && updateTask.taskId === queryObj.t) {
-      console.log("realtime");
-
-      let params = {};
-      if (props.isOfTeam) {
-        params = {
-          isOfTeam: true,
-          ownerId: props.ownerId,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      } else {
-        params = {
-          isOfTeam: false,
-          ownerId: user.id,
-          boardId: queryObj.b,
-          taskId: updateTask.taskId,
-          userRequest: user.id,
-        };
-      }
-      taskApi
-        .getTaskByBoard({ params })
-        .then((res) => {
-          setModaTaskObj(res.data);
-        })
-        .catch((err) => { });
-    }
-  }, [updateTask]);*/
-
-  const assignUser = useSelector(
-    (state) => state.kanban.signalrData.reAssignUser
-  );
-
-  /*useEffect(() => {
-    const queryObj = queryString.parse(history.location.search);
-
-    if (!queryObj.t) return;
-
-    if (assignUser && assignUser.taskId === queryObj.t) {
-
-      let params = {};
-      if (props.isOfTeam) {
-        params = {
-          isOfTeam: true,
-          ownerId: props.ownerId,
-          boardId: queryObj.b,
-          taskId: assignUser.taskId
-        }
-      }
-      else {
-        params = {
-          isOfTeam: false,
-          ownerId: user.id,
-          boardId: queryObj.b,
-          taskId: assignUser.taskId
-        }
-      }
-
-      taskApi.getTaskByBoard({ params }).then(res => {
-        setModaTaskObj(res.data);
-      }).catch(err => {
-
-      })
-    }
-  }, [assignUser])*/
-
-  /***useEffect(() => {
-    console.log(assignUser);
-    const queryObj = queryString.parse(history.location.search);
-
-    if (!queryObj.t) return;
-
-    if (!modalTaskObj) return;
-
-    if (assignUser && assignUser.taskId === queryObj.t) {
-      if (assignUser.userId === modalTaskObj.userId) return;
-      else {
-        setModaTaskObj({
-          ...modalTaskObj,
-          userId: assignUser.userId === "" ? null : assignUser.userId,
-          userAvatar:
-            assignUser.userAvatar === "" ? null : assignUser.userAvatar,
-          userName:
-            assignUser.userFullName === "" ? null : assignUser.userFullName,
-        });
-      }
-    }
-  }, [assignUser]);***/
-
-  /*useEffect(() => {
-    const queryObj = queryString.parse(history.location.search);
-    if (!queryObj.t && isShowEditPopup) {
-      setIsShowEditPopup(false);
-    }
-
-    if (queryObj.t && queryObj.b && !isShowEditPopup) {
-      console.log(history.location.search);
-      console.log(isShowEditPopup);
-      openEditPopup(queryObj.t);
-      console.log("call api");
-      return;
-    }
-  }, [history.location.search]);*/
-
-  const openEditPopup = (taskId) => {
-    setIsShowEditPopup(true);
-    const queryObj = queryString.parse(history.location.search);
-    let params = {};
-    if (props.isOfTeam) {
-      params = {
-        isOfTeam: true,
-        ownerId: props.ownerId,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    } else {
-      params = {
-        isOfTeam: false,
-        ownerId: user.id,
-        boardId: queryObj.b,
-        taskId: taskId,
-        userRequest: user.id,
-      };
-    }
-
-    taskApi
-      .getTaskByBoard({ params })
-      .then((res) => {
-        setModaTaskObj(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        history.push({
-          pathname: history.location.pathname,
-          search: history.location.search.substring(
-            0,
-            history.location.search.lastIndexOf("&")
-          ),
-        });
-        setIsShowEditPopup(false);
-
-        if (err.Message && err.Message.includes("Not found permission")) {
-          dispatch(setCurrentBoard(null));
-        }
-      });
-  };
 
   useEffect(() => {
     if (!boardId) return;
@@ -360,25 +192,13 @@ function KanbanBoard(props) {
           boardId: boardId,
         };
       } else {
+        //eslint-disable-next-line
         params = {
           isOfTeam: props.isOfTeam,
           ownerId: user.id,
           boardId: boardId,
         };
       }
-      /*dispatch(getBoardDataForUI({ params }))
-        .then(unwrapResult)
-        .then(originalPromiseResult => {
-          console.log('call done');
-          //props.notFound(false);
-        })
-        .catch(err => {
-          console.log(err);
-  
-          if (err.data?.ErrorCode === "404") {
-            //props.notFound(true);
-          }
-        });*/
     } catch (err) {
     } finally {
       dispatch(setTeamLoading(false));
@@ -443,23 +263,9 @@ function KanbanBoard(props) {
     );
   };
 
-  function onEditModalClose() {
-    setIsShowEditPopup(false);
-    console.log("ok");
-
-    history.push({
-      pathname: history.location.pathname,
-      search: history.location.search.substring(
-        0,
-        history.location.search.lastIndexOf("&")
-      ),
-    });
-  }
-
   return (
     <div className="kanban-board-page">
       {isLoading ? <Loading /> : renderNormal()}
-
       {!currentBoard && !isLoading && <NotFoundPage />}
     </div>
   );

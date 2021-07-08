@@ -104,7 +104,6 @@ export const genNewRank = () => {
   return newRank;
 };
 
-
 function FindLetterBetween(letterA, letterB) {
   const index1 = BASE_STR.indexOf(letterA);
   const index2 = BASE_STR.indexOf(letterB);
@@ -132,6 +131,7 @@ function getRandomBetween(min, max) {
 }
 
 //rebalance list rank when rank value is over size or out of available slots
+//eslint-disable-next-line
 function CreateNewListRank(n) {
   var newRanks = [MIN_RANK, MAX_RANK];
   var createDone = false;

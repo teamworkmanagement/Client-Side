@@ -23,18 +23,14 @@ moment.locale("vi");
 
 function ListFileTable(props) {
   const tableContainerRef = useRef(null);
-  // useEffect(() => {
-  //   tableContainerRef.current.children[1].children[0].children[0].children[0].innerHTML =
-  //     "Lọc:";
-  //   tableContainerRef.current.children[1].children[0].children[1].children[0].children[0].innerHTML =
-  //     "Số dòng:";
-  // });
 
   const [upload, setUpload] = useState(false);
   const [progress, setProgress] = useState(0);
   const [datas, setDatas] = useState([]);
+  //eslint-disable-next-line
   const [page, setPage] = useState(1);
   const [cfile, setCfile] = useState(null); //current file
+  //eslint-disable-next-line
   const [showExitPrompt, setShowExitPrompt] = useExitPrompt(false);
   const [triggerLoad, setTriggerLoad] = useState(0); //call api khi thêm file...
   const [showError, setShowError] = useState(false);

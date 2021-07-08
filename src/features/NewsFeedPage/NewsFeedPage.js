@@ -43,6 +43,8 @@ function NewsFeedPage(props) {
   const [addPostDone, setAddPostDone] = useState(null);
 
   const [grAddPost, setGrAddPost] = useState(null);
+
+  //eslint-disable-next-line
   const [newPostContent, setNewPostContent] = useState("");
   const [listPictures, setListPictures] = useState([]);
   const [resetEditorText, setResetEditorText] = useState(-1);
@@ -188,10 +190,10 @@ function NewsFeedPage(props) {
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
         block.entityRanges.forEach((entity) => {
-          var nameTag = block.text.substring(
-            entity.offset,
-            entity.offset + entity.length
-          );
+          // var nameTag = block.text.substring(
+          //   entity.offset,
+          //   entity.offset + entity.length
+          // );
 
           let indexData = entity.key;
           const userTagId = entityMap[indexData].data.mention.id;
@@ -241,27 +243,6 @@ function NewsFeedPage(props) {
     setShowCreatePost(false);
     setListPictures([]);
   };
-
-  const listImages = [
-    {
-      link: "https://momoshop.com.vn/wp-content/uploads/2018/11/balo-laptop-dep8623079002_293603435.jpg",
-    },
-    {
-      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
-    },
-    {
-      link: "https://ohay.vn/blog/wp-content/uploads/2020/06/ba-lo-laza11.jpg",
-    },
-    {
-      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
-    },
-    {
-      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
-    },
-    {
-      link: "https://balotuankhoi.com/wp-content/uploads/2020/10/xuong-may-balo-laptop-balotuankhoi.com_.jpg",
-    },
-  ];
 
   const onPickImageChange = (e) => {
     const newLists = Array.from(e.target.files).map((f) => {

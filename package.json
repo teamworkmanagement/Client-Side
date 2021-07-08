@@ -27,6 +27,7 @@
     "draft-js": "^0.11.7",
     "draftjs-utils": "^0.10.2",
     "enzyme": "^3.11.0",
+    "eslint-plugin-react-hooks": "^4.2.1-alpha-ed6c091fe-20210701",
     "file-saver": "^2.0.5",
     "file-type": "^16.3.0",
     "firebase": "^8.3.2",
@@ -66,7 +67,15 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "off",
+      "no-extend-native":"off"
+    }
   },
   "browserslist": {
     "production": [

@@ -150,7 +150,6 @@ const TheLayout = () => {
       return;
     }
   }, [taskEditModal]);
-
   const onEditModalClose = () => {
     console.log('on close');
     setModaTaskObj(null);

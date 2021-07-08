@@ -1,18 +1,24 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import DashBoardPage from "./features/DashBoardPage/DashBoardPage";
 import "./shared_components/scss/style.scss";
-import PrivateRoute from "./shared_components/team_route/PrivateRoute";
 import PublicRoute from "./shared_components/team_route/PublicRoute";
 import ForgotPassword from "./shared_components/views/pages/forgotpassword/ForgotPassword";
 import { islogin } from "./shared_components/views/pages/login/authSlice";
 import MyLogin from "./shared_components/views/pages/login/MyLogin/MyLogin";
-import { disconnectChatService, startChatService } from "./utils/signalr/chatService";
-import { disconnectKanbanService, startKanbanService } from "./utils/signalr/kanbanService";
+import {
+  disconnectChatService,
+  startChatService,
+} from "./utils/signalr/chatService";
+import {
+  disconnectKanbanService,
+  startKanbanService,
+} from "./utils/signalr/kanbanService";
 import { disconnectNoti, startNotiService } from "./utils/signalr/notiService";
-import { disconnectPostService, startPostService } from "./utils/signalr/postService";
+import {
+  disconnectPostService,
+  startPostService,
+} from "./utils/signalr/postService";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -26,9 +32,6 @@ const TheLayout = React.lazy(() =>
 );
 
 // Pages
-const Login = React.lazy(() =>
-  import("./shared_components/views/pages/login/Login")
-);
 const Register = React.lazy(() =>
   import("./shared_components/views/pages/register/Register")
 );
@@ -57,14 +60,13 @@ function App() {
       startKanbanService();
       startPostService();
       startNotiService();
-    }
-    else {
+    } else {
       disconnectNoti();
       disconnectChatService();
       disconnectKanbanService();
       disconnectPostService();
     }
-  }, [loginStatus])
+  }, [loginStatus]);
   return (
     <BrowserRouter
       getUserConfirmation={(message, callback) => {

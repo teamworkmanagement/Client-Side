@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./AvatarName.scss";
 
 function AvatarName(props) {
+  //eslint-disable-next-line
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   return (

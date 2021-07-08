@@ -7,6 +7,7 @@ import "moment/locale/vi";
 moment.locale("vi");
 
 function TaskHistoryModal(props) {
+  //eslint-disable-next-line
   const [showTaskInfo, setShowTaskInfo] = useState(false);
   function handleOnClose() {
     if (props.onClose) {

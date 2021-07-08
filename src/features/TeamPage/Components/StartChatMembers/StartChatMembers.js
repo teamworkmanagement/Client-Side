@@ -4,7 +4,7 @@ import { CInput, CModal, CModalBody, CModalHeader } from "@coreui/react";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
 
@@ -30,7 +30,7 @@ export const CustomOption = (props) => {
           justifyContent: "space-between",
         }}
       >
-        <img height={20} width={20} src={props.data.img} />
+        <img alt="" height={20} width={20} src={props.data.img} />
         <label>{props.data.label}</label>
       </div>
     </components.Option>
@@ -38,8 +38,6 @@ export const CustomOption = (props) => {
 };
 
 function StartChatMembers(props) {
-  const dispatch = useDispatch();
-
   const [grChatName, setGrChatName] = useState("");
   const [options, setOptions] = useState([]);
   const user = useSelector((state) => state.auth.currentUser);
@@ -53,6 +51,7 @@ function StartChatMembers(props) {
 
   useEffect(() => {}, []);
 
+  //eslint-disable-next-line
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
@@ -122,6 +121,8 @@ function StartChatMembers(props) {
         if (removedValue.isFixed) {
           return;
         }
+        break;
+      default:
         break;
     }
 

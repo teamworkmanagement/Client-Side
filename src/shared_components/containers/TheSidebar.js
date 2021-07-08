@@ -23,15 +23,16 @@ const TheSidebar = (props) => {
   const darkMode = useSelector((state) => state.app.darkMode);
 
   const onChange = (val) => {
+    console.log("sidebar: " + val);
     const param = { type: "set", sidebarShow: val };
     const action = changeState(param);
     dispatch(action);
   };
 
   const onClick = () => {
-    // const param = { type: "set", sidebarShow: false };
-    // const action = changeState(param);
-    // dispatch(action);
+    const param = { type: "set", sidebarShow: "responsive" };
+    const action = changeState(param);
+    dispatch(action);
   };
   return (
     <CSidebar show={show} onShowChange={onChange}>
@@ -39,7 +40,6 @@ const TheSidebar = (props) => {
         {darkMode && (
           <div className="logo-team-container">
             <div className="img"></div>
-            {/* <img alt="logoapp" src="../images/app/logoteam.png" /> */}
           </div>
         )}
       </CSidebarBrand>
