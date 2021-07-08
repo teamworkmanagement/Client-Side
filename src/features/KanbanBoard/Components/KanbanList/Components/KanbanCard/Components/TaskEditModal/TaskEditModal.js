@@ -117,47 +117,47 @@ function TaskEditModal(props) {
   const [kanbanLocal, setKanbanLocal] = useState([]);
   const [listScores, setListScores] = useState([
     {
-      score: "0",
+      score: 0,
       active: true,
     },
     {
-      score: "1",
+      score: 1,
       active: false,
     },
     {
-      score: "2",
+      score: 2,
       active: false,
     },
     {
-      score: "3",
+      score: 3,
       active: false,
     },
     {
-      score: "4",
+      score: 4,
       active: false,
     },
     {
-      score: "5",
+      score: 5,
       active: false,
     },
     {
-      score: "6",
+      score: 6,
       active: false,
     },
     {
-      score: "7",
+      score: 7,
       active: false,
     },
     {
-      score: "8",
+      score: 8,
       active: false,
     },
     {
-      score: "9",
+      score: 9,
       active: false,
     },
     {
-      score: "10",
+      score: 10,
       active: false,
     },
   ]);
@@ -335,7 +335,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [props.data]);
 
@@ -375,8 +375,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   function handleClose() {
@@ -645,7 +645,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -681,11 +681,11 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => {})
-              .catch((err) => {});
+              .then((res) => { })
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -712,8 +712,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -764,8 +764,8 @@ function TaskEditModal(props) {
         newList: newList.kanbanListId,
         boardId: currentBoard,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     selectList(index);
   };
@@ -893,8 +893,8 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   const viewHistory = () => {
