@@ -192,7 +192,7 @@ const TheLayout = () => {
       }
     }
 
-  }, [history.location.search])
+  }, [history.location.search, history.location.pathname])
 
   return (
     <div className="c-app c-default-layout">
