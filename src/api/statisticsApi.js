@@ -57,7 +57,16 @@ const statisticsApi = {
         return axiosClient.post(url, payload, {
             responseType: 'blob',
         });
-    }
+    },
+
+    getTasksStatusCount() {
+        const url = '/statistics/tasks-status-count';
+        return axiosClient.get(url);
+    },
+    getTasksStatusList(params) {
+        const url = '/statistics/tasks-status-list';
+        return axiosClient.get(url, params);
+    },
 };
 
 export default statisticsApi;
