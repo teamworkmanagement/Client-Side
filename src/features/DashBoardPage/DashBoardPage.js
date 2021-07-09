@@ -192,7 +192,21 @@ function DashBoardPage(props) {
       "chartjs-render-monitor"
     )[0];
     canvasSave.toBlob(function (blob) {
-      saveAs(blob, "testing.png");
+      //saveAs(blob, "testing.png");
+
+      let fdata = new FormData();
+      fdata.append('image', blob);
+      fdata.append('userStatis', JSON.stringify(userStatistics));
+      fdata.append('teamStatis', JSON.stringify(teamStatistics));
+
+      statisticsApi
+        .exportPersonalAndTeamStat(fdata)
+        .then((blob) => {
+          saveAs(blob, "abc.xlsx");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
 
     return;
@@ -392,7 +406,7 @@ function DashBoardPage(props) {
                         <img
                           src={team.teamImageUrl}
                           className="c-avatar-img"
-                          alt="admin@bootstrapmaster.com"
+                          alt="avatar"
                         />
                       </div>
                     </td>
