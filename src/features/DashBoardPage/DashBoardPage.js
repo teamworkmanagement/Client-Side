@@ -12,7 +12,7 @@ import AvatarList from "src/shared_components/MySharedComponents/AvatarList/Avat
 import teamApi from "src/api/teamApi";
 import statisticsApi from "src/api/statisticsApi";
 import { saveAs } from "file-saver";
-import axiosClient from "src/api/axiosClient";
+import CountTaskModal from "./Components/CountTaskModal/CountTaskModal.js";
 
 const brandSuccess = getStyle("success") || "#4dbd74";
 const brandInfo = getStyle("info") || "#20a8d8";
@@ -26,6 +26,14 @@ function DashBoardPage(props) {
   const chartref = useRef(null);
   const [userStatistics, setUserStatistics] = useState([]);
   const [teamStatistics, setTeamStatistics] = useState([]);
+  const [showCountTaskModal, setShowCountTaskModal] = useState(false);
+
+  //0: cá nhân-đang chờ, 1: cá nhân-sắp tới hạn, 2: nhóm-đang chờ, 3: nhóm-sắp tới hạn
+  const [countModalType, setCountModalType] = useState(0);
+
+  function closeCountTaskModal() {
+    setShowCountTaskModal(false);
+  }
 
   const modeProgressList = [
     {
@@ -109,7 +117,7 @@ function DashBoardPage(props) {
       .then((res) => {
         setTeams(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, []);
 
   const changeMode = (value) => {
@@ -184,22 +192,7 @@ function DashBoardPage(props) {
       "chartjs-render-monitor"
     )[0];
     canvasSave.toBlob(function (blob) {
-      var bodyFormData = new FormData();
-
-      bodyFormData.append('file', blob);
-      bodyFormData.append('datas', JSON.stringify([1, 2, 3]));
-      axiosClient.post("https://localhost:9001/api/test/test-export-complex", bodyFormData,
-        {
-          headers: { "Content-Type": "multipart/form-data" }
-        }).then(res => new Blob([res], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }))
-        .then(blob => {
-          saveAs(blob, "abc.xlsx");
-          //window.URL.revokeObjectURL(url);
-        })
-        .catch(err => {
-          console.log(err)
-        });
-      //saveAs(blob, "testing.png");
+      saveAs(blob, "testing.png");
     });
 
     return;
@@ -249,7 +242,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Đang chờ</div>
                   <div className="count">15 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(0);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
 
@@ -260,7 +261,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Sắp tới hạn</div>
                   <div className="count">2 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(1);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
             </CRow>
@@ -277,7 +286,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Đang chờ</div>
                   <div className="count">15 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(2);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
 
@@ -288,7 +305,15 @@ function DashBoardPage(props) {
                   </div>
                   <div className="title">Sắp tới hạn</div>
                   <div className="count">2 công việc</div>
-                  <div className="view-btn">Xem tất cả</div>
+                  <div
+                    className="view-btn"
+                    onClick={() => {
+                      setCountModalType(3);
+                      setShowCountTaskModal(true);
+                    }}
+                  >
+                    Xem tất cả
+                  </div>
                 </div>
               </CCol>
             </CRow>
@@ -403,6 +428,11 @@ function DashBoardPage(props) {
           </table>
         </div>
       </div>
+      <CountTaskModal
+        type={countModalType}
+        onClose={closeCountTaskModal}
+        show={showCountTaskModal}
+      />
     </div>
   );
 }
