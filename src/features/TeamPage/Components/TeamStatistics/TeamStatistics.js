@@ -471,6 +471,7 @@ function TeamStatistics(props) {
       let fdata = new FormData();
       fdata.append('image', blob);
       fdata.append('boardTaskDone', JSON.stringify(boardTaskDone));
+      fdata.append('boardName', selectedBoard.label);
       //saveAs(blob, "testing.png");
 
       statisticsApi
@@ -506,6 +507,7 @@ function TeamStatistics(props) {
       let fdata = new FormData();
       fdata.append('image', blob);
       fdata.append('requestModels', JSON.stringify(requestModels));
+      fdata.append('boardName', selectedBoard.label);
 
       statisticsApi
         .exportTeamUserPointTask(fdata)

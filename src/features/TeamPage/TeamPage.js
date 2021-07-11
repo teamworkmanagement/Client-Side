@@ -169,7 +169,7 @@ function TeamPage(props) {
             .then((res) => {
               setTeam(res.data);
             })
-            .catch((err) => {});
+            .catch((err) => { });
         })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
@@ -183,7 +183,7 @@ function TeamPage(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const renderNormal = () => {
@@ -271,7 +271,7 @@ function TeamPage(props) {
               <CTabPane>
                 {active === 5 && team.teamLeaderId === user.id ? (
                   <TeamStatistics />
-                ) : null}
+                ) : <NotFoundPage />}
               </CTabPane>
             </CTabContent>
           </div>

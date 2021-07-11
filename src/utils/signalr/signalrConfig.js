@@ -5,7 +5,7 @@ import {
   LogLevel,
 } from "@microsoft/signalr";
 
-const isDev = true;
+const isDev = process.env.NODE_ENV === 'development' ? true : false;
 //process.env.NODE_ENV === 'development';
 
 export const startSignalRConnection = async (connection) => {
