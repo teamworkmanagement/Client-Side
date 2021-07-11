@@ -196,7 +196,10 @@ function SearchResultsPage(props) {
     }
 
     const queryObj = queryString.parse(history.location.search);
-    history.push((`/search?query=${currentSearchStr}&type=${queryObj.type}`));
+    history.push({
+      pathname: history.location.pathname,
+      search: `query=${currentSearchStr}&type=${queryObj.type}`,
+    });
   }
 
   const handleKeyDown = (e) => {
