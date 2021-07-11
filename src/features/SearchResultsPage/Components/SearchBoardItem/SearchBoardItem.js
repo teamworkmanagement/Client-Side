@@ -2,9 +2,14 @@ import { CTooltip } from "@coreui/react";
 import React from "react";
 import { FaChevronRight } from "react-icons/fa";
 import { RiDashboardLine } from "react-icons/ri";
+import { useHistory } from "react-router-dom";
 import "./SearchBoardItem.scss";
 
 function SearchBoardItem({ board }) {
+  const history = useHistory();
+  const onNavigate = () => {
+    history.push(board.link);
+  }
   return (
     <div className="search-board-item">
       <div className="overview-info">
@@ -38,7 +43,7 @@ function SearchBoardItem({ board }) {
           </div>
         </div>
       </div>
-      <div className="detail-info">
+      <div className="detail-info" onClick={onNavigate}>
         <CTooltip content="Đi đến Bảng công việc" placement="top-end">
           <div className="goto-btn">
             <FaChevronRight className="arrow-icon" />

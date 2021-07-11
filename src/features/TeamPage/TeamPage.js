@@ -111,10 +111,21 @@ function TeamPage(props) {
 
     if (queryParams.b && tab === "task") {
     } else {
-      history.push({
-        pathname: history.location.pathname,
-        search: `tab=${tab}`,
-      });
+      let check = false;
+      const queryObj = queryString.parse(history.location.search);
+      if (queryObj.tab) {
+        if (queryObj.tab != tab) {
+          check = true;
+        }
+      } else {
+        check = true;
+      }
+      if (check) {
+        history.push({
+          pathname: history.location.pathname,
+          search: `tab=${tab}`,
+        });
+      }
     }
   }, [active]);
 
@@ -169,7 +180,7 @@ function TeamPage(props) {
             .then((res) => {
               setTeam(res.data);
             })
-            .catch((err) => {});
+            .catch((err) => { });
         })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
@@ -183,7 +194,7 @@ function TeamPage(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const renderNormal = () => {
@@ -271,7 +282,7 @@ function TeamPage(props) {
               <CTabPane>
                 {active === 5 && team.teamLeaderId === user.id ? (
                   <TeamStatistics />
-                ) : null}
+                ) : <NotFoundPage />}
               </CTabPane>
             </CTabContent>
           </div>

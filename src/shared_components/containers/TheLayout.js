@@ -15,7 +15,7 @@ import { useHistory } from "react-router-dom";
 import queryString from "query-string";
 import taskApi from "src/api/taskApi";
 import { setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
-import { setTaskEditModal, setViewHistory } from "src/appSlice";
+import { setTaskEditModal, setUserModal, setViewHistory } from "src/appSlice";
 import TaskHistoryModal from "../MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 
 const TheLayout = () => {
@@ -75,7 +75,7 @@ const TheLayout = () => {
         .then((res) => {
           setModaTaskObj(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [updateTask, moveTask]);
 
@@ -171,9 +171,28 @@ const TheLayout = () => {
           console.log(res.data);
           setDetails(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [viewHistory]);
+
+
+  useEffect(() => {
+    const object = queryString.parse(history.location.search);
+    if (!object.b || !object.t) {
+      if (taskEditModal)
+        dispatch(setTaskEditModal(null));
+
+      if (viewHistory)
+        dispatch(setViewHistory(null));
+    }
+
+    if ((!object.b || !object.t) && !history.location.pathname.includes('/newfeeds')) {
+      if (userModal) {
+        dispatch(setUserModal(null));
+      }
+    }
+
+  }, [history.location.search, history.location.pathname])
 
   return (
     <div className="c-app c-default-layout">
@@ -202,7 +221,7 @@ const TheLayout = () => {
         data={modalTaskObj}
       />
 
-      <UserInfoModal userId={userModal.userId} show={userModal?.show} />
+      <UserInfoModal userId={userModal?.userId} show={userModal?.show} />
 
       <TaskHistoryModal
         details={details}

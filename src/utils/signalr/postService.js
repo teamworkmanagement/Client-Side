@@ -23,7 +23,7 @@ connection.on("NewComment", (payload) => {
   store.dispatch(setNewComment(payload));
 });
 export const startPostService = () => {
-  if (connection.state === "Disconnected") {
+  if (connection.state == "Disconnected" || connection.state != 'Connected') {
     startSignalRConnection(connection);
   }
 };

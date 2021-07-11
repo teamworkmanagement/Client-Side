@@ -81,7 +81,7 @@ function ListTeamPage(props) {
   }, []);
 
   const navigateToTeam = (teamId) => {
-    history.push(`/team/${teamId}`);
+    history.push(`/team/${teamId}?tab=teaminfo`);
   };
 
   const leaveTeam = (teamId) => {

@@ -4,6 +4,7 @@ import ChatListItem from "./Components/ChatListItem/ChatListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentGroup } from "../../chatSlice";
 import { useHistory } from "react-router";
+import queryString from "query-string";
 
 function ChatList(props) {
   const dispatch = useDispatch();
@@ -16,7 +17,19 @@ function ChatList(props) {
 
   useEffect(() => {
     if (currentGroup) {
-      if (!history.location.pathname.startsWith("/team/")) {
+      let check = false;
+
+      const queryObj = queryString.parse(history.location.search);
+
+      if (queryObj.g) {
+        if (queryObj.g !== currentGroup) {
+          check = true;
+        }
+      }
+      else {
+        check = true;
+      }
+      if (!history.location.pathname.startsWith("/team/") && history.location.pathname.startsWith("/chat") && check) {
         history.push({
           pathname: history.location.pathname,
           search: `g=${currentGroup}`,

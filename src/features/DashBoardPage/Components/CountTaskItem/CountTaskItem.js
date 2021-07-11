@@ -2,7 +2,12 @@ import CIcon from "@coreui/icons-react";
 import { CTooltip } from "@coreui/react";
 import React from "react";
 import { FaChevronRight } from "react-icons/fa";
+import moment from "moment";
+import "moment/locale/vi";
 import "./CountTaskItem.scss";
+import { useHistory } from "react-router-dom";
+
+moment.locale("vi");
 
 function CountTaskItem({ type = 0, task, closeCountModal }) {
   function getStatusText(status) {
@@ -47,12 +52,14 @@ function CountTaskItem({ type = 0, task, closeCountModal }) {
     }
   }
 
+  const history = useHistory();
   function handleRouting() {
     //close modal first
-    if (closeCountModal) {
+    /*if (closeCountModal) {
       closeCountModal();
-    }
+    }*/
 
+    history.push(task.link);
     //routing here
   }
 
@@ -69,15 +76,15 @@ function CountTaskItem({ type = 0, task, closeCountModal }) {
             <span>{task.taskName}</span>
           </div>
           <div className="description">{task.taskDescription}</div>
-          <div className="deadline">
-            Thời hạn: <span>{task.taskDeadline}</span>
-          </div>
+          {task.taskDeadline && <div className="deadline">
+            Thời hạn: <span>{moment(task.taskDeadline).format("DD/MM/YYYY")}</span>
+          </div>}
         </div>
       </div>
       <div className="detail-info">
-        <div className="deadline">
-          Thời hạn: <span>{task.taskDeadline}</span>
-        </div>
+        {task.taskDeadline && <div className="deadline">
+          Thời hạn: <span>{moment(task.taskDeadline).format("DD/MM/YYYY")}</span>
+        </div>}
         {type !== 0 && type !== 2 && (
           <div
             className="status"

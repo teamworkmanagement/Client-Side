@@ -1,12 +1,13 @@
 import { CModal, CModalBody, CModalHeader } from "@coreui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
+import statisticsApi from "src/api/statisticsApi.js";
 import CountTaskItem from "../CountTaskItem/CountTaskItem.js";
 import "./CountTaskModal.scss";
 
 function CountTaskModal({ type = 0, show, onClose }) {
-  const taskList = [
+  /*const taskList = [
     {
       taskName: "Lorem ipsum dolor sit amet",
       taskStatus: "todo",
@@ -27,7 +28,7 @@ function CountTaskModal({ type = 0, show, onClose }) {
     {
       taskName: "Donec tempus, dui a posuere ornare",
       taskStatus: "doing",
-      taskDeadline: "21/12/2021",
+      taskDeadline: null,
       taskDescription: "",
       taskImage: "",
     },
@@ -49,10 +50,25 @@ function CountTaskModal({ type = 0, show, onClose }) {
       taskImage:
         "https://isaac.vn/wp-content/uploads/2020/04/quan-ly-bang-excel-1024x769.jpg",
     },
-  ];
+  ];*/
+
+  const [taskList, setTaskList] = useState([]);
 
   useEffect(() => {
     //call api get list task here
+    console.log(type);
+    if (type >= 0) {
+      statisticsApi.getTasksStatusList({
+        params: {
+          ownerType: type == 0 || type == 1 ? 'personal' : 'team',
+          statusType: type == 0 || type == 2 ? 'todo' : 'deadline',
+        }
+      }).then(res => {
+        setTaskList(res.data);
+      }).catch(err => {
+
+      })
+    }
   }, [type]);
 
   function handleOnClose() {
@@ -93,7 +109,7 @@ function CountTaskModal({ type = 0, show, onClose }) {
         <span className="content">{getContentByTitle()}</span>
       </CModalHeader>
       <CModalBody className="modal-body">
-        <div className="nodata-image">
+        {taskList.length == 0 && <div className="nodata-image">
           <div className="icon-group">
             <BiTaskX className="icon-task" />
             <VscSearchStop className="icon-search" />
@@ -102,9 +118,8 @@ function CountTaskModal({ type = 0, show, onClose }) {
           <div className="noti-infor">
             Chưa có công việc nào <span>{getContentByTitle()}</span>
           </div>
-          {/*<div className="create-btn">Tạo công việc mới</div>*/}
-        </div>
-        {false && taskList.length > 0 && (
+        </div>}
+        {taskList.length > 0 && (
           <div className="task-list">
             {taskList.map((task) => {
               return (

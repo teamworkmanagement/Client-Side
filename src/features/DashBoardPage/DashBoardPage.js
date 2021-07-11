@@ -117,7 +117,7 @@ function DashBoardPage(props) {
       .then((res) => {
         setTeams(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, []);
 
   const changeMode = (value) => {
@@ -192,7 +192,21 @@ function DashBoardPage(props) {
       "chartjs-render-monitor"
     )[0];
     canvasSave.toBlob(function (blob) {
-      saveAs(blob, "testing.png");
+      //saveAs(blob, "testing.png");
+
+      let fdata = new FormData();
+      fdata.append('image', blob);
+      fdata.append('userStatis', JSON.stringify(userStatistics));
+      fdata.append('teamStatis', JSON.stringify(teamStatistics));
+
+      statisticsApi
+        .exportPersonalAndTeamStat(fdata)
+        .then((blob) => {
+          saveAs(blob, "abc.xlsx");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
 
     return;
@@ -228,6 +242,17 @@ function DashBoardPage(props) {
       });
   };
 
+  const [countObject, setCountObject] = useState([]);
+  useEffect(() => {
+    statisticsApi.getTasksStatusCount()
+      .then(res => {
+        setCountObject(res.data);
+      })
+      .catch(err => {
+
+      });
+  }, [])
+
   return (
     <div className="dash-board-container">
       <CRow className="counting-group">
@@ -241,7 +266,7 @@ function DashBoardPage(props) {
                     <GiSandsOfTime className="icon" />
                   </div>
                   <div className="title">Đang chờ</div>
-                  <div className="count">15 công việc</div>
+                  <div className="count">{countObject[0]} công việc</div>
                   <div
                     className="view-btn"
                     onClick={() => {
@@ -260,7 +285,7 @@ function DashBoardPage(props) {
                     <GiAlarmClock className="icon" />
                   </div>
                   <div className="title">Sắp tới hạn</div>
-                  <div className="count">2 công việc</div>
+                  <div className="count">{countObject[1]} công việc</div>
                   <div
                     className="view-btn"
                     onClick={() => {
@@ -285,7 +310,7 @@ function DashBoardPage(props) {
                     <GiSandsOfTime className="icon" />
                   </div>
                   <div className="title">Đang chờ</div>
-                  <div className="count">15 công việc</div>
+                  <div className="count">{countObject[2]} công việc</div>
                   <div
                     className="view-btn"
                     onClick={() => {
@@ -304,7 +329,7 @@ function DashBoardPage(props) {
                     <GiAlarmClock className="icon" />
                   </div>
                   <div className="title">Sắp tới hạn</div>
-                  <div className="count">2 công việc</div>
+                  <div className="count">{countObject[3]} công việc</div>
                   <div
                     className="view-btn"
                     onClick={() => {
@@ -381,7 +406,7 @@ function DashBoardPage(props) {
                         <img
                           src={team.teamImageUrl}
                           className="c-avatar-img"
-                          alt="admin@bootstrapmaster.com"
+                          alt="avatar"
                         />
                       </div>
                     </td>
