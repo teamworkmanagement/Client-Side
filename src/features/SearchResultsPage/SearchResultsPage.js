@@ -19,154 +19,37 @@ import searchApi from 'src/api/searchApi';
 import "./SearchResultsPage.scss";
 
 function SearchResultsPage(props) {
-  const [mode, setMode] = useState(0); //0:all, 1:team, 2:task, 3: board, 4:groupchat
-  const searchGlobalStr = useSelector((state) => state.app.searchGlobalStr); //chuỗi search trên header
-  const [currentSearchStr, setCurrentSearchStr] = useState(searchGlobalStr); // chuỗi trên thanh search của trang search
+  const history = useHistory();
+  const queryParams = queryString.parse(history.location.search);
 
-  /*const taskList = [
-    {
-      taskName: "Lorem ipsum dolor sit amet",
-      taskStatus: "todo",
-      taskDescription:
-        "Pellentesque habitant morbi tristique senectus et netus et malesuada fames",
-      taskImage:
-        "https://diginet.com.vn/wp-content/uploads/2020/10/tai-sao-task-management-lai-quan-trong-voi-doanh-nghiep-1.png",
-    },
-    {
-      taskName: "Vestibulum felis justo",
-      taskStatus: "doing",
-      taskDescription:
-        "Sed hendrerit convallis elit eu pellentesque. Morbi ultricies ante a mi ullamcorper, sit amet vestibulum tellus placerat.",
-      taskImage: "",
-    },
-    {
-      taskName: "Donec tempus, dui a posuere ornare",
-      taskStatus: "doing",
-      taskDescription: "",
-      taskImage: "",
-    },
-    {
-      taskName: "Morbi euismod iaculis dui sit amet luctus.",
-      taskStatus: "done",
-      taskDescription:
-        "Phasellus laoreet porttitor mi, at ullamcorper nulla ornare vitae. Donec sit amet consectetur urna.",
-      taskImage:
-        "https://diginet.com.vn/wp-content/uploads/2020/09/phan-mem-giao-viec-task-management-hien-dai-linh-hoat-2.jpg",
-    },
-    {
-      taskName: "Maecenas varius aliquet magna",
-      taskStatus: "todo",
-      taskDescription:
-        "Donec posuere tortor eu ante lobortis consectetur. In hac habitasse platea dictumst.",
-      taskImage:
-        "https://isaac.vn/wp-content/uploads/2020/04/quan-ly-bang-excel-1024x769.jpg",
-    },
-  ];
-  const teamList = [
-    {
-      teamName: "Ut eget orci non quam iaculis",
-      teamDescription:
-        "Curabitur aliquet neque et tincidunt condimentum. Sed sit amet mi vitae arcu pellentesque rutrum.",
-      teamCode: "df87wejh",
-      teamImage:
-        "https://toggl.com/blog/wp-content/uploads/2018/09/project-task-list.jpg",
-    },
-    {
-      teamName: "Vivamus accumsan aliquet",
-      teamDescription:
-        "Quisque nisi neque, molestie at urna sed, malesuada viverra eros.",
-      teamCode: "23fe343f",
-      teamImage: "",
-    },
-    {
-      teamName: "Cras pharetra, nunc eget",
-      teamDescription:
-        "Maecenas varius aliquet magna, ac egestas dui facilisis eget. Sed eget tellus vitae nisi bibendum vestibulum sit amet id nisl.",
-      teamCode: "kyu4f34",
-      teamImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1h5ifZNQp2l8WTFiiqTsJnFG4q_734HTn1g&usqp=CAU",
-    },
-  ];
-  const boardList = [
-    {
-      boardName: "Fusce nec tempor nisi",
-      boardUserId: "1",
-      boardTeamImage: "",
-      boardTeamName: "",
-    },
-    {
-      boardName: "Praesent mi ipsum",
-      boardUserId: "2",
-      boardTeamImage: "",
-      boardTeamName: "",
-    },
-    {
-      boardName: "Nunc ac ante et metus",
-      boardUserId: "",
-      boardTeamImage:
-        "https://toggl.com/blog/wp-content/uploads/2018/09/project-task-list.jpg",
-      boardTeamName: "Mauris quis posuere leo",
-    },
-    {
-      boardName: "Etiam viverra imperdiet tincidunt",
-      boardUserId: "",
-      boardTeamImage: "",
-      boardTeamName: "Pellentesque semper sapien",
-    },
-  ];
+  const [mode, setMode] = useState(
+    () => {
+      if (queryParams != null) {
+        if (queryParams.type) {
+          switch (queryParams.type) {
+            case "all":
+              return 0;
+            case "team":
+              return 1;
+            case "task":
+              return 2;
+            case "board":
+              return 3;
+            case "chat":
+              return 4;
+            default:
+              return 0;
+          }
+        } else {
+          return 0;
+        }
+      }
+      return 0;
+    }
+  ); //0:all, 1:team, 2:task, 3: board, 4:groupchat
 
-  const chatList = [
-    {
-      chatName: "In ac ligula sapien",
-      chatImage:
-        "https://sandla.org/wp-content/uploads/2020/05/how-to-complete-task-1-ielts-writing-1.png",
-      chatIsOfTeam: true,
-      chatListMembers: [
-        {
-          memberName: "Khoa",
-          memberAvatar: "https://emilus.themenate.net/img/avatars/thumb-2.jpg",
-        },
-        {
-          memberName: "Huy Lê",
-          memberAvatar: "https://emilus.themenate.net/img/avatars/thumb-3.jpg",
-        },
-      ],
-    },
-    {
-      chatName: "Nam leo diam",
-      chatImage: "",
-      chatIsOfTeam: false,
-      chatListMembers: [
-        {
-          memberName: "Dưa leo",
-          memberAvatar: "https://emilus.themenate.net/img/avatars/thumb-4.jpg",
-        },
-        {
-          memberName: "Duy Nguyễn",
-          memberAvatar: "",
-        },
-      ],
-    },
-    {
-      chatName: "Proin dignissim",
-      chatImage: "",
-      chatIsOfTeam: true,
-      chatListMembers: [
-        {
-          memberName: "Fame",
-          memberAvatar: "https://emilus.themenate.net/img/avatars/thumb-6.jpg",
-        },
-        {
-          memberName: "BABE em",
-          memberAvatar: "",
-        },
-        {
-          memberName: "Lô CC",
-          memberAvatar: "",
-        },
-      ],
-    },
-  ];*/
+  const [currentSearchStr, setCurrentSearchStr] = useState(''); // chuỗi trên thanh search của trang search
+
 
   const [taskList, setTaskList] = useState([]);
   const [teamList, setTeamList] = useState([]);
@@ -190,81 +73,135 @@ function SearchResultsPage(props) {
   }
 
   useEffect(() => {
-    setCurrentSearchStr(searchGlobalStr);
-  }, [searchGlobalStr]);
-
-
-  const history = useHistory();
-
-  useEffect(() => {
     const obj = queryString.parse(history.location.search);
     console.log(obj);
 
     if (obj.query) {
-      searchApi.searchBoards({
-        params: {
-          keyWord: obj.query,
-          skipItems: 0,
-          pageSize: 10000,
+      setCurrentSearchStr(obj.query);
+      if (mode === 0) {
+        searchApi.searchBoards({
+          params: {
+            keyWord: obj.query,
+            skipItems: 0,
+            pageSize: 10000,
+          }
+        }).then(res => {
+          setBoardList(res.data.items);
+        }).catch(err => {
+
+        })
+
+        searchApi.searchTasks({
+          params: {
+            keyWord: obj.query,
+            skipItems: 0,
+            pageSize: 10000,
+          }
+        }).then(res => {
+          setTaskList(res.data.items);
+        }).catch(err => {
+
+        })
+
+        searchApi.searchTeams({
+          params: {
+            keyWord: obj.query,
+            skipItems: 0,
+            pageSize: 10000,
+          }
+        }).then(res => {
+          setTeamList(res.data.items);
+        }).catch(err => {
+
+        })
+
+        searchApi.searchChats({
+          params: {
+            keyWord: obj.query,
+            skipItems: 0,
+            pageSize: 10000,
+          }
+        }).then(res => {
+          setChatList(res.data.items);
+        }).catch(err => {
+
+        })
+      }
+      else {
+        if (mode === 1) {
+          searchApi.searchTeams({
+            params: {
+              keyWord: obj.query,
+              skipItems: 0,
+              pageSize: 10000,
+            }
+          }).then(res => {
+            setTeamList(res.data.items);
+          }).catch(err => {
+
+          })
         }
-      }).then(res => {
-        setBoardList(res.data.items);
-      }).catch(err => {
+        else {
+          if (mode === 2) {
+            searchApi.searchTasks({
+              params: {
+                keyWord: obj.query,
+                skipItems: 0,
+                pageSize: 10000,
+              }
+            }).then(res => {
+              setTaskList(res.data.items);
+            }).catch(err => {
 
-      })
+            })
+          } else {
+            if (mode === 3) {
+              searchApi.searchBoards({
+                params: {
+                  keyWord: obj.query,
+                  skipItems: 0,
+                  pageSize: 10000,
+                }
+              }).then(res => {
+                setBoardList(res.data.items);
+              }).catch(err => {
 
-      searchApi.searchTasks({
-        params: {
-          keyWord: obj.query,
-          skipItems: 0,
-          pageSize: 10000,
+              })
+            } else {
+              if (mode === 4) {
+                searchApi.searchChats({
+                  params: {
+                    keyWord: obj.query,
+                    skipItems: 0,
+                    pageSize: 10000,
+                  }
+                }).then(res => {
+                  setChatList(res.data.items);
+                }).catch(err => {
+
+                })
+              }
+            }
+          }
         }
-      }).then(res => {
-        setTaskList(res.data.items);
-      }).catch(err => {
+      }
 
-      })
-
-      searchApi.searchTeams({
-        params: {
-          keyWord: obj.query,
-          skipItems: 0,
-          pageSize: 10000,
-        }
-      }).then(res => {
-        setTeamList(res.data.items);
-      }).catch(err => {
-
-      })
-
-      searchApi.searchChats({
-        params: {
-          keyWord: obj.query,
-          skipItems: 0,
-          pageSize: 10000,
-        }
-      }).then(res => {
-        setChatList(res.data.items);
-      }).catch(err => {
-
-      })
     }
   }, [history.location.search])
 
-  function handleSearchGlobal() {
+  function handleSearch() {
     if (!currentSearchStr || currentSearchStr === "") {
       //hiển thị view vui lòng nhập nội dung tìm kiếm
       return;
     }
 
-    history.push((`/search?query=${currentSearchStr}`));
-
-    //call api search theo currentSearchStr ơ đây
+    const queryObj = queryString.parse(history.location.search);
+    history.push((`/search?query=${currentSearchStr}&type=${queryObj.type}`));
   }
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleSearchGlobal();
+      handleSearch();
     }
   };
 
@@ -296,8 +233,55 @@ function SearchResultsPage(props) {
 
   const changeMode = (mode) => {
     setMode(mode);
-    console.log(mode);
   }
+
+  useEffect(() => {
+    if (mode >= 0) {
+      console.log(mode);
+      let type = '';
+      switch (mode) {
+        case 0:
+          type = 'all';
+          break;
+        case 1:
+          type = 'team';
+          break;
+        case 2:
+          type = 'task';
+          break;
+        case 3:
+          type = 'board';
+          break;
+        case 4:
+          type = 'chat';
+          break;
+      }
+
+      const queryObj = queryString.parse(history.location.search);
+      let query = '';
+      if (queryObj.query) {
+        query = queryObj.query;
+      }
+
+      let check = false;
+      if (queryObj.type) {
+        if (queryObj.type != type) {
+          check = true;
+        }
+      } else {
+        check = true;
+      }
+
+      if (check) {
+        history.push({
+          pathname: history.location.pathname,
+          search: `query=${query}&type=${type}`
+        });
+      }
+    }
+  }, [mode])
+
+
   return (
     <div className="search-results-page">
       <div className="search-page-header">

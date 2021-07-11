@@ -109,7 +109,7 @@ const TheHeader = () => {
     }
 
     //dispatch(setSearchGlobalStr(searchStr));
-    history.push(`/search?query=${searchStr}`);
+    history.push(`/search?query=${searchStr}&type=all`);
   }
 
   const handleKeyDown = (e) => {
