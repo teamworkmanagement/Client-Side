@@ -111,10 +111,21 @@ function TeamPage(props) {
 
     if (queryParams.b && tab === "task") {
     } else {
-      history.push({
-        pathname: history.location.pathname,
-        search: `tab=${tab}`,
-      });
+      let check = false;
+      const queryObj = queryString.parse(history.location.search);
+      if (queryObj.tab) {
+        if (queryObj.tab != tab) {
+          check = true;
+        }
+      } else {
+        check = true;
+      }
+      if (check) {
+        history.push({
+          pathname: history.location.pathname,
+          search: `tab=${tab}`,
+        });
+      }
     }
   }, [active]);
 
