@@ -1,6 +1,5 @@
 import { CNavItem, CNavLink, CSidebar, CSidebarNav } from "@coreui/react";
 import React from "react";
-import { BiKey } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { ImInfo } from "react-icons/im";
 

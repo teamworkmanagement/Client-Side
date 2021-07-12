@@ -365,22 +365,6 @@ $baseTransition: all 0.3s;
                 @media (max-width: 400px) {
                     padding: 1rem;
                 }
-                &.tab-1 {
-                    font-size: 1rem;
-                    color: rgba($textColor, 0.9);
-                    strong {
-                        color: $textColor;
-                    }
-                    .intro-label {
-                        font-weight: bold;
-                        color: $textColor;
-                    }
-                    .feature-label {
-                        margin-top: 1.5rem;
-                        font-weight: bold;
-                        color: $textColor;
-                    }
-                }
             }
         }
     }

@@ -49,7 +49,6 @@ function AccountSettingsPage(props) {
   const dispatch = useDispatch();
   function ChooseSettingOption(index) {
     dispatch(setSettingPageTab(index));
-    setSelectedOptions(index);
   }
 
   const handleInputChange = (e) => {
@@ -164,6 +163,12 @@ function AccountSettingsPage(props) {
               ...userInfo,
               userAvatar: url,
             });
+            dispatch(
+              setCurrentUser({
+                ...userInfo,
+                userAvatar: url,
+              })
+            );
           })
           .catch((err) => {});
       });

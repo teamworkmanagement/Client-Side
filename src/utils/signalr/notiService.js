@@ -11,7 +11,7 @@ connection.on("SendNoti", (payload) => {
   store.dispatch(setNewNoti(payload));
 });
 export const startNotiService = () => {
-  if (connection.state == "Disconnected" || connection.state != 'Connected') {
+  if (connection.state === "Disconnected" || connection.state !== "Connected") {
     startSignalRConnection(connection);
   }
 };

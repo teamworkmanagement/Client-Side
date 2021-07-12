@@ -1,0 +1,30 @@
+.guide-page {
+    h4 {
+        margin-bottom: 1rem;
+    }
+    .toggle-label {
+        display: flex;
+        align-items: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: rgba(#3c4b64, 0.8);
+        transition: all 0.2s;
+        cursor: pointer;
+        margin-bottom: 0.2rem;
+        .icon-arrow {
+            margin-left: -0.3rem;
+            margin-right: 0.1rem;
+            transition: all 0.2s;
+            //color: ;
+        }
+        &:hover {
+            color: #3c4b64;
+        }
+        &.opening {
+            .icon-arrow {
+                margin-top: -0.15rem;
+                transform: rotate(90deg);
+            }
+        }
+    }
+}

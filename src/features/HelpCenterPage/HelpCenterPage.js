@@ -4,10 +4,12 @@ import { ImInfo } from "react-icons/im";
 
 import CIcon from "@coreui/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeStateHelpSidebar } from "src/appSlice.js";
+import { changeStateHelpSidebar, setHelpPageTab } from "src/appSlice.js";
 import { FiBookOpen } from "react-icons/fi";
 import { RiUserStarLine } from "react-icons/ri";
 import FounderInfoPage from "./Components/FounderInfoPage/FounderInfoPage.js";
+import IntroPage from "./Components/IntroPage/IntroPage.js";
+import GuidePage from "./Components/GuidePage/GuidePage.js";
 
 function HelpCenterPage(props) {
   const [selectedTab, setSelectedTab] = useState(0); //0:.., 1:..
@@ -21,6 +23,10 @@ function HelpCenterPage(props) {
       })
     );
   };
+
+  function openTab(index) {
+    dispatch(setHelpPageTab(index));
+  }
 
   useEffect(() => {
     setSelectedTab(helpPageTab);
@@ -41,21 +47,21 @@ function HelpCenterPage(props) {
             className={`tab-help tab-1 tab-infor ${
               selectedTab === 0 ? "active" : ""
             }`}
-            onClick={() => setSelectedTab(0)}
+            onClick={() => openTab(0)}
           >
             <ImInfo className="icon-info icon" />
             Thông tin ứng dụng
           </div>
           <div
             className={`tab-help tab-2 ${selectedTab === 1 ? "active" : ""}`}
-            onClick={() => setSelectedTab(1)}
+            onClick={() => openTab(1)}
           >
             <FiBookOpen className="icon-book icon" />
             Hướng dẫn sử dụng
           </div>
           <div
             className={`tab-help tab-2 ${selectedTab === 2 ? "active" : ""}`}
-            onClick={() => setSelectedTab(2)}
+            onClick={() => openTab(2)}
           >
             <RiUserStarLine className="icon-about-us icon" />
             Đội ngũ phát triển
@@ -65,25 +71,14 @@ function HelpCenterPage(props) {
         <div className="help-content-container">
           {selectedTab === 0 && (
             <div className="help-content tab-1">
-              <h4 className="intro-label">Giới thiệu</h4>
-              <div className="description">
-                <strong>EZTeam</strong> là ứng dụng web cung cấp các công cụ và
-                tiện ích hỗ trợ cho việc học tập và làm việc nhóm của bạn.
-                <br />
-                Với một giao diện thân thiện cùng các chức năng cần thiết,{` `}
-                <strong>EZTeam</strong> mong muốn nâng cao trải nghiệm người
-                dùng, tạo ra một môi trường hoạt động nhóm hữu dụng, năng suất
-                hơn, từ đó mang lại một kết quả tốt nhất cho mục tiêu học tập và
-                làm việc nhóm của bạn.
-              </div>
-              <h4 className="feature-label">Chức năng</h4>
-              <div className="label">
-                Những chức năng thông dụng mà <strong>EZTeam</strong> sẽ mang
-                đến cho bạn như:
-              </div>
+              <IntroPage />
             </div>
           )}
-          {selectedTab === 1 && <div className="help-content">b</div>}
+          {selectedTab === 1 && (
+            <div className="help-content">
+              <GuidePage />
+            </div>
+          )}
           {selectedTab === 2 && (
             <div className="help-content">
               <FounderInfoPage />

@@ -91,7 +91,7 @@ const TheHeaderDropdown = () => {
           <CIcon name="cil-user" className="mfe-2" />
           Cài đặt tài khoản
         </CDropdownItem>
-        <div className="darkmode-item">
+        {/* <div className="darkmode-item">
           <div className="title">
             <CIcon name="cil-moon" className="mfe-2" />
             Chế độ tối
@@ -105,7 +105,7 @@ const TheHeaderDropdown = () => {
             labelOff={"\u2715"}
             defaultValue="false"
           />
-        </div>
+        </div> */}
         <CDropdownItem divider />
         <CDropdownItem onClick={() => goToFeedbacks()}>
           <VscFeedback className="mfe-2 icon-feedback" />

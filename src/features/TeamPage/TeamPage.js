@@ -114,7 +114,7 @@ function TeamPage(props) {
       let check = false;
       const queryObj = queryString.parse(history.location.search);
       if (queryObj.tab) {
-        if (queryObj.tab != tab) {
+        if (queryObj.tab !== tab) {
           check = true;
         }
       } else {
@@ -180,7 +180,7 @@ function TeamPage(props) {
             .then((res) => {
               setTeam(res.data);
             })
-            .catch((err) => { });
+            .catch((err) => {});
         })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
@@ -194,7 +194,7 @@ function TeamPage(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const renderNormal = () => {
@@ -282,7 +282,9 @@ function TeamPage(props) {
               <CTabPane>
                 {active === 5 && team.teamLeaderId === user.id ? (
                   <TeamStatistics />
-                ) : <NotFoundPage />}
+                ) : (
+                  <NotFoundPage />
+                )}
               </CTabPane>
             </CTabContent>
           </div>

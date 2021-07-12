@@ -26,7 +26,7 @@ connection.on("ChangeGroupAvatar", (payload) => {
   store.dispatch(updateGroupChatImage(payload));
 });
 export const startChatService = () => {
-  if (connection.state == "Disconnected" || connection.state != 'Connected') {
+  if (connection.state === "Disconnected" || connection.state !== "Connected") {
     startSignalRConnection(connection);
   }
 };

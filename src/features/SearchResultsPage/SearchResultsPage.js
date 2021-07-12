@@ -8,54 +8,49 @@ import {
 import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
-import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import SearchBoardItem from "./Components/SearchBoardItem/SearchBoardItem.js";
 import SearchChatItem from "./Components/SearchChatItem/SearchChatItem.js";
 import SearchTaskItem from "./Components/SearchTaskItem/SearchTaskItem.js";
 import SearchTeamItem from "./Components/SearchTeamItem/SearchTeamItem.js";
-import queryString from 'query-string';
-import searchApi from 'src/api/searchApi';
+import queryString from "query-string";
+import searchApi from "src/api/searchApi";
 import "./SearchResultsPage.scss";
 
 function SearchResultsPage(props) {
   const history = useHistory();
   const queryParams = queryString.parse(history.location.search);
 
-  const [mode, setMode] = useState(
-    () => {
-      if (queryParams != null) {
-        if (queryParams.type) {
-          switch (queryParams.type) {
-            case "all":
-              return 0;
-            case "team":
-              return 1;
-            case "task":
-              return 2;
-            case "board":
-              return 3;
-            case "chat":
-              return 4;
-            default:
-              return 0;
-          }
-        } else {
-          return 0;
+  const [mode, setMode] = useState(() => {
+    if (queryParams != null) {
+      if (queryParams.type) {
+        switch (queryParams.type) {
+          case "all":
+            return 0;
+          case "team":
+            return 1;
+          case "task":
+            return 2;
+          case "board":
+            return 3;
+          case "chat":
+            return 4;
+          default:
+            return 0;
         }
+      } else {
+        return 0;
       }
-      return 0;
     }
-  ); //0:all, 1:team, 2:task, 3: board, 4:groupchat
+    return 0;
+  }); //0:all, 1:team, 2:task, 3: board, 4:groupchat
 
-  const [currentSearchStr, setCurrentSearchStr] = useState(''); // chuỗi trên thanh search của trang search
-
+  const [currentSearchStr, setCurrentSearchStr] = useState(""); // chuỗi trên thanh search của trang search
 
   const [taskList, setTaskList] = useState([]);
   const [teamList, setTeamList] = useState([]);
   const [boardList, setBoardList] = useState([]);
   const [chatList, setChatList] = useState([]);
-  const [searching, setSearching] = useState(false);
 
   function getDropdownText() {
     switch (mode) {
@@ -79,115 +74,120 @@ function SearchResultsPage(props) {
     if (obj.query) {
       setCurrentSearchStr(obj.query);
       if (mode === 0) {
-        searchApi.searchBoards({
-          params: {
-            keyWord: obj.query,
-            skipItems: 0,
-            pageSize: 10000,
-          }
-        }).then(res => {
-          setBoardList(res.data.items);
-        }).catch(err => {
-
-        })
-
-        searchApi.searchTasks({
-          params: {
-            keyWord: obj.query,
-            skipItems: 0,
-            pageSize: 10000,
-          }
-        }).then(res => {
-          setTaskList(res.data.items);
-        }).catch(err => {
-
-        })
-
-        searchApi.searchTeams({
-          params: {
-            keyWord: obj.query,
-            skipItems: 0,
-            pageSize: 10000,
-          }
-        }).then(res => {
-          setTeamList(res.data.items);
-        }).catch(err => {
-
-        })
-
-        searchApi.searchChats({
-          params: {
-            keyWord: obj.query,
-            skipItems: 0,
-            pageSize: 10000,
-          }
-        }).then(res => {
-          setChatList(res.data.items);
-        }).catch(err => {
-
-        })
-      }
-      else {
-        if (mode === 1) {
-          searchApi.searchTeams({
+        searchApi
+          .searchBoards({
             params: {
               keyWord: obj.query,
               skipItems: 0,
               pageSize: 10000,
-            }
-          }).then(res => {
-            setTeamList(res.data.items);
-          }).catch(err => {
-
+            },
           })
-        }
-        else {
-          if (mode === 2) {
-            searchApi.searchTasks({
+          .then((res) => {
+            setBoardList(res.data.items);
+          })
+          .catch((err) => {});
+
+        searchApi
+          .searchTasks({
+            params: {
+              keyWord: obj.query,
+              skipItems: 0,
+              pageSize: 10000,
+            },
+          })
+          .then((res) => {
+            setTaskList(res.data.items);
+          })
+          .catch((err) => {});
+
+        searchApi
+          .searchTeams({
+            params: {
+              keyWord: obj.query,
+              skipItems: 0,
+              pageSize: 10000,
+            },
+          })
+          .then((res) => {
+            setTeamList(res.data.items);
+          })
+          .catch((err) => {});
+
+        searchApi
+          .searchChats({
+            params: {
+              keyWord: obj.query,
+              skipItems: 0,
+              pageSize: 10000,
+            },
+          })
+          .then((res) => {
+            setChatList(res.data.items);
+          })
+          .catch((err) => {});
+      } else {
+        if (mode === 1) {
+          searchApi
+            .searchTeams({
               params: {
                 keyWord: obj.query,
                 skipItems: 0,
                 pageSize: 10000,
-              }
-            }).then(res => {
-              setTaskList(res.data.items);
-            }).catch(err => {
-
+              },
             })
-          } else {
-            if (mode === 3) {
-              searchApi.searchBoards({
+            .then((res) => {
+              setTeamList(res.data.items);
+            })
+            .catch((err) => {});
+        } else {
+          if (mode === 2) {
+            searchApi
+              .searchTasks({
                 params: {
                   keyWord: obj.query,
                   skipItems: 0,
                   pageSize: 10000,
-                }
-              }).then(res => {
-                setBoardList(res.data.items);
-              }).catch(err => {
-
+                },
               })
-            } else {
-              if (mode === 4) {
-                searchApi.searchChats({
+              .then((res) => {
+                setTaskList(res.data.items);
+              })
+              .catch((err) => {});
+          } else {
+            if (mode === 3) {
+              searchApi
+                .searchBoards({
                   params: {
                     keyWord: obj.query,
                     skipItems: 0,
                     pageSize: 10000,
-                  }
-                }).then(res => {
-                  setChatList(res.data.items);
-                }).catch(err => {
-
+                  },
                 })
+                .then((res) => {
+                  setBoardList(res.data.items);
+                })
+                .catch((err) => {});
+            } else {
+              if (mode === 4) {
+                searchApi
+                  .searchChats({
+                    params: {
+                      keyWord: obj.query,
+                      skipItems: 0,
+                      pageSize: 10000,
+                    },
+                  })
+                  .then((res) => {
+                    setChatList(res.data.items);
+                  })
+                  .catch((err) => {});
               }
             }
           }
         }
       }
-
     }
-  }, [history.location.search])
+  }, [history.location.search]);
 
   function handleSearch() {
     if (!currentSearchStr || currentSearchStr === "") {
@@ -236,39 +236,39 @@ function SearchResultsPage(props) {
 
   const changeMode = (mode) => {
     setMode(mode);
-  }
+  };
 
   useEffect(() => {
     if (mode >= 0) {
       console.log(mode);
-      let type = '';
+      let type = "";
       switch (mode) {
         case 0:
-          type = 'all';
+          type = "all";
           break;
         case 1:
-          type = 'team';
+          type = "team";
           break;
         case 2:
-          type = 'task';
+          type = "task";
           break;
         case 3:
-          type = 'board';
+          type = "board";
           break;
-        case 4:
-          type = 'chat';
+        default:
+          type = "chat";
           break;
       }
 
       const queryObj = queryString.parse(history.location.search);
-      let query = '';
+      let query = "";
       if (queryObj.query) {
         query = queryObj.query;
       }
 
       let check = false;
       if (queryObj.type) {
-        if (queryObj.type != type) {
+        if (queryObj.type !== type) {
           check = true;
         }
       } else {
@@ -278,12 +278,11 @@ function SearchResultsPage(props) {
       if (check) {
         history.push({
           pathname: history.location.pathname,
-          search: `query=${query}&type=${type}`
+          search: `query=${query}&type=${type}`,
         });
       }
     }
-  }, [mode])
-
+  }, [mode]);
 
   return (
     <div className="search-results-page">
@@ -307,36 +306,41 @@ function SearchResultsPage(props) {
             <CDropdownMenu placement="bottom-end">
               <CDropdownItem
                 onClick={() => changeMode(0)}
-                className={`drop-item drop-item-all ${mode === 0 ? "active" : ""
-                  }`}
+                className={`drop-item drop-item-all ${
+                  mode === 0 ? "active" : ""
+                }`}
               >
                 Tất cả
               </CDropdownItem>
               <CDropdownItem
                 onClick={() => changeMode(1)}
-                className={`drop-item drop-item-team ${mode === 1 ? "active" : ""
-                  }`}
+                className={`drop-item drop-item-team ${
+                  mode === 1 ? "active" : ""
+                }`}
               >
                 Nhóm
               </CDropdownItem>
               <CDropdownItem
                 onClick={() => changeMode(2)}
-                className={`drop-item drop-item-task ${mode === 2 ? "active" : ""
-                  }`}
+                className={`drop-item drop-item-task ${
+                  mode === 2 ? "active" : ""
+                }`}
               >
                 Công việc
               </CDropdownItem>
               <CDropdownItem
                 onClick={() => changeMode(3)}
-                className={`drop-item drop-item-board ${mode === 3 ? "active" : ""
-                  }`}
+                className={`drop-item drop-item-board ${
+                  mode === 3 ? "active" : ""
+                }`}
               >
                 Bảng công việc
               </CDropdownItem>
               <CDropdownItem
                 onClick={() => changeMode(4)}
-                className={`drop-item drop-item-chat ${mode === 4 ? "active" : ""
-                  }`}
+                className={`drop-item drop-item-chat ${
+                  mode === 4 ? "active" : ""
+                }`}
               >
                 Nhóm nhắn tin
               </CDropdownItem>
