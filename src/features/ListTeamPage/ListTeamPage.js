@@ -256,8 +256,6 @@ function ListTeamPage(props) {
             </div>
           </div>
         )}
-
-        {/* <TeamLoading isLoading={isLoading} /> */}
       </>
     );
   };
