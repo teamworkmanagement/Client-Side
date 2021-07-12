@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { gantt } from "dhtmlx-gantt";
 import "dhtmlx-gantt/codebase/skins/dhtmlxgantt_material.css";
 import "./GanttChart.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import taskApi from "src/api/taskApi";
 import moment from "moment";
 import { BiTaskX } from "react-icons/bi";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
 import "moment/locale/vi";
+import { setNullSignalRData } from "src/features/KanbanBoard/kanbanSlice";
 
 moment.locale("vi");
 
@@ -21,6 +22,7 @@ function GanttChart(props) {
     (state) => state.kanban.kanbanBoard.kanbanLists
   );
   const tasks = [];
+  const dispatch = useDispatch();
   //eslint-disable-next-line
   kanbanLists.map((kl) => {
     //eslint-disable-next-line
@@ -100,11 +102,15 @@ function GanttChart(props) {
   }
 
   useEffect(() => {
+    ganttFunc();
+  }, [])
+
+  /*useEffect(() => {
     const newData = refactorTasksForGantt();
     setData({
       data: newData,
     });
-  }, [addNewTask, removeTask, removeList]);
+  }, [addNewTask, removeTask, removeList]);*/
 
   /*useEffect(() => {
     if (data) {
@@ -206,7 +212,7 @@ function GanttChart(props) {
     </div>`;
   };
 
-  useEffect(() => {
+  const ganttFunc = () => {
     const myData = { data: refactorTasksForGantt() };
     console.log("zzzzzzz: ", myData);
     gantt.clearAll();
@@ -354,10 +360,60 @@ function GanttChart(props) {
           taskImageUrl: newTaskData.taskImageUrl,
           userActionId: user.id,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     });
-  }, [addNewTask, removeTask, removeList, updateTask, assignUser]);
+  }
+
+  useEffect(() => {
+    if (!addNewTask)
+      return;
+    const list = kanbanLists.find(kl => kl.kanbanListId === addNewTask.kanbanListId);
+    if (list) {
+      ganttFunc();
+    }
+    dispatch(setNullSignalRData('addNewTask'));
+  }, [addNewTask])
+
+  useEffect(() => {
+    if (!removeTask)
+      return;
+    const list = kanbanLists.find(kl => kl.kanbanListId === removeTask.kanbanListId);
+    if (list) {
+      ganttFunc();
+    }
+    dispatch(setNullSignalRData('removeTask'));
+  }, [removeTask])
+
+  useEffect(() => {
+    if (!removeList)
+      return;
+    const list = kanbanLists.find(kl => kl.kanbanListId === removeList.kanbanListId);
+    if (list) {
+      ganttFunc();
+    }
+    dispatch(setNullSignalRData('removeList'));
+  }, [removeList])
+
+  useEffect(() => {
+    if (!updateTask)
+      return;
+    const list = kanbanLists.find(kl => kl.kanbanListId === updateTask.kanbanListId);
+    if (list) {
+      ganttFunc();
+    }
+    dispatch(setNullSignalRData('updateTask'));
+  }, [updateTask])
+
+  useEffect(() => {
+    if (!assignUser)
+      return;
+    const list = kanbanLists.find(kl => kl.kanbanListId === assignUser.kanbanListId);
+    if (list) {
+      ganttFunc();
+    }
+    dispatch(setNullSignalRData('reAssignUser'));
+  }, [assignUser])
 
   const openEditPoup = async (taskId, task) => {
     history.push({

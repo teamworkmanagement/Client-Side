@@ -42,6 +42,42 @@ const kanbanSlice = createSlice({
         }
     },
     reducers: {
+        setNullSignalRData(state, action) {
+            switch (action.payload) {
+                case 'addNewTask':
+                    state.signalrData.addNewTask = null;
+                    break;
+                case 'addNewList':
+                    state.signalrData.addNewList = null;
+                    break;
+                case 'removeList':
+                    state.signalrData.removeList = null;
+                    break;
+                case 'moveTask':
+                    state.signalrData.addNewTask = null;
+                    break;
+                case 'moveList':
+                    state.signalrData.moveList = null;
+                    break;
+                case 'updateTask':
+                    state.signalrData.updateTask = null;
+                    break;
+                case 'updateList':
+                    state.signalrData.updateList = null;
+                    break;
+                case 'addNewTask':
+                    state.signalrData.addNewTask = null;
+                    break;
+                case 'reAssignUser':
+                    state.signalrData.reAssignUser = null;
+                    break;
+                case 'addNewFile':
+                    state.signalrData.addNewFile = null;
+                    break;
+                default:
+                    break;
+            }
+        },
         setCurrentBoard(state, action) {
             state.kanbanBoard.currentBoard = action.payload;
         },
@@ -222,6 +258,7 @@ export const {
     dragTaskLocal,
     reAssignUser,
     signalRChangeNameList,
-    signalRAddFile
+    signalRAddFile,
+    setNullSignalRData
 } = actions;
 export default reducer;

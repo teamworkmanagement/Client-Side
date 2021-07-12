@@ -108,7 +108,7 @@ function DashBoardPage(props) {
     return labels;
   }
   const navigateToTeam = (teamId) => {
-    history.push(`/team/${teamId}`);
+    history.push(`/team/${teamId}?tab=teaminfo`);
   };
 
   useEffect(() => {
@@ -389,8 +389,6 @@ function DashBoardPage(props) {
                 </th>
                 <th>Tên nhóm</th>
                 <th>Trưởng nhóm</th>
-
-                <th>Tiến độ</th>
                 <th className="text-center">Thành viên</th>
               </tr>
             </thead>
@@ -426,25 +424,8 @@ function DashBoardPage(props) {
                         <div className="">{team.teamLeaderName}</div>
                       </div>
                     </td>
-                    <td>
-                      <div className="clearfix">
-                        <div className="float-left">
-                          <strong>50%</strong>
-                        </div>
-                        <div className="float-right">
-                          <small className="text-muted">
-                            11/01/2021 - 20/04/2021
-                          </small>
-                        </div>
-                      </div>
-                      <CProgress
-                        className="progress-xs"
-                        color="success"
-                        value="50"
-                      />
-                    </td>
                     <td className="text-center">
-                      <AvatarList teamId={team.teamId} />
+                      <AvatarList teams={teams} teamId={team.teamId} />
                     </td>
                   </tr>
                 );

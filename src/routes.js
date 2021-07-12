@@ -12,7 +12,6 @@ import ManageMyTasksPage from "./features/ManageMyTasksPage/ManageMyTasksPage";
 import ManageTeamTasksPage from "./features/ManageTeamTasksPage/ManageTeamTasksPage";
 import AccountSettingsPage from "./features/AccountSettingsPage/AccountSettingsPage";
 import NotFoundPage from "./shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
-import NoInternetPage from "./shared_components/MySharedComponents/NoInternetPage/NoInternetPage";
 import FeedbackPage from "./features/FeedbackPage/FeedbackPage";
 import SearchResultsPage from "./features/SearchResultsPage/SearchResultsPage.js";
 import HelpCenterPage from "./features/HelpCenterPage/HelpCenterPage.js";
@@ -21,11 +20,6 @@ const routes = [
   { path: "/notfound", name: "Không tồn tại", component: NotFoundPage },
   { path: "/search", name: "Tìm kiếm", component: SearchResultsPage },
   { path: "/testtoaster", name: "Test Toaster", component: MyToaster },
-  {
-    path: "/connectionerror",
-    name: "Không có kết nối mạng",
-    component: NoInternetPage,
-  },
   { path: "/dashboard", name: "Tổng quan", component: DashBoardPage },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
