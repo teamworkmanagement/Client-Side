@@ -290,7 +290,7 @@ function TeamStatistics(props) {
             },
           ]);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [filterTeamObject]);
 
@@ -330,7 +330,7 @@ function TeamStatistics(props) {
             },
           ]);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [filterMembersObject]);
 
@@ -349,7 +349,7 @@ function TeamStatistics(props) {
 
         setListBoards(boards);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, []);
 
   useEffect(() => {
@@ -377,8 +377,8 @@ function TeamStatistics(props) {
           progressTimeMode === 1
             ? "week"
             : progressTimeMode === 2
-            ? "month"
-            : "year",
+              ? "month"
+              : "year",
         boardId: selectedBoard.value,
       });
     }
@@ -452,7 +452,7 @@ function TeamStatistics(props) {
 
   const exportBoardExcel = () => {
     console.log("click 1");
-    statisticsApi
+    /*statisticsApi
       .exportTeamDoneBoard({
         boardTaskDone: boardTaskDone,
       })
@@ -462,11 +462,32 @@ function TeamStatistics(props) {
       .catch((err) => {
         console.log(err);
       });
+      */
+
+    const canvasSave = document.getElementsByClassName(
+      "chartjs-render-monitor"
+    )[0];
+    canvasSave.toBlob(function (blob) {
+      let fdata = new FormData();
+      fdata.append('image', blob);
+      fdata.append('boardTaskDone', JSON.stringify(boardTaskDone));
+      fdata.append('boardName', selectedBoard.label);
+      //saveAs(blob, "testing.png");
+
+      statisticsApi
+        .exportTeamDoneBoard(fdata)
+        .then((blob) => {
+          saveAs(blob, "boardTaskDone.xlsx");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
   };
 
   const exportGroupByUserExcel = () => {
     console.log("click 2");
-    statisticsApi
+    /*statisticsApi
       .exportTeamUserPointTask({
         requestModels: requestModels,
       })
@@ -475,7 +496,28 @@ function TeamStatistics(props) {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });*/
+
+    const canvasSave = document.getElementsByClassName(
+      "chartjs-render-monitor"
+    )[1];
+    canvasSave.toBlob(function (blob) {
+      //saveAs(blob, "testing.png");
+
+      let fdata = new FormData();
+      fdata.append('image', blob);
+      fdata.append('requestModels', JSON.stringify(requestModels));
+      fdata.append('boardName', selectedBoard.label);
+
+      statisticsApi
+        .exportTeamUserPointTask(fdata)
+        .then((blob) => {
+          saveAs(blob, "pointandtaskgroupbyuser.xlsx");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
   };
   return (
     <div className=" team-statistics-container">
@@ -489,7 +531,7 @@ function TeamStatistics(props) {
             components={{ Option: Option }}
             placeholder="Chọn bảng công việc..."
             options={listBoards}
-            onInputChange={() => {}}
+            onInputChange={() => { }}
             onChange={onChangeSelectedBoard}
           />
         </CCol>

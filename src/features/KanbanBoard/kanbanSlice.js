@@ -89,7 +89,7 @@ const kanbanSlice = createSlice({
                     const task = listTasks.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
                     console.log(task);
                     task.taskRankInList = action.payload.position;
-                    listTasks.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+                    listTasks.taskUIKanbans.sort((x, y) => (x.taskRankInList > y.taskRankInList) ? 1 : -1);
                 }
                 else {
 
@@ -105,7 +105,7 @@ const kanbanSlice = createSlice({
 
                     listTasksNew.taskUIKanbans.push(task);
 
-                    listTasksNew.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+                    listTasksNew.taskUIKanbans.sort((x, y) => (x.taskRankInList > y.taskRankInList) ? 1 : -1);
                 }
             }
         },
@@ -114,7 +114,7 @@ const kanbanSlice = createSlice({
             if (action.payload.kanbanBoardId === state.kanbanBoard.currentBoard) {
                 const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
                 obj.kanbanListRankInBoard = action.payload.position;
-                state.kanbanBoard.kanbanLists.sort((x, y) => x.kanbanListRankInBoard > y.kanbanListRankInBoard);
+                state.kanbanBoard.kanbanLists.sort((x, y) => (x.kanbanListRankInBoard > y.kanbanListRankInBoard) ? 1 : -1);
             }
 
         },
@@ -149,7 +149,7 @@ const kanbanSlice = createSlice({
                 const task = listTasks.taskUIKanbans.find(x => x.taskId === action.payload.taskId);
                 console.log(task);
                 task.taskRankInList = action.payload.position;
-                listTasks.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+                listTasks.taskUIKanbans.sort((x, y) => (x.taskRankInList > y.taskRankInList) ? 1 : -1);
             }
             else {
                 const listTasksOld = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.oldList);
@@ -163,14 +163,14 @@ const kanbanSlice = createSlice({
 
                 listTasksNew.taskUIKanbans.push(task);
 
-                listTasksNew.taskUIKanbans.sort((x, y) => x.taskRankInList > y.taskRankInList);
+                listTasksNew.taskUIKanbans.sort((x, y) => (x.taskRankInList > y.taskRankInList) ? 1 : -1);
             }
         },
 
         dragListLocal(state, action) {
             const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
             obj.kanbanListRankInBoard = action.payload.position;
-            state.kanbanBoard.kanbanLists.sort((x, y) => x.kanbanListRankInBoard > y.kanbanListRankInBoard);
+            state.kanbanBoard.kanbanLists.sort((x, y) => (x.kanbanListRankInBoard > y.kanbanListRankInBoard) ? 1 : -1);
         },
 
         reAssignUser(state, action) {

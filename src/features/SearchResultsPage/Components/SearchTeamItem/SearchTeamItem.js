@@ -2,9 +2,14 @@ import { CTooltip } from "@coreui/react";
 import React from "react";
 import { AiOutlineTeam } from "react-icons/ai";
 import { FaChevronRight } from "react-icons/fa";
+import { useHistory } from "react-router-dom";
 import "./SearchTeamItem.scss";
 
 function SearchTeamItem({ team }) {
+  const history = useHistory();
+  const onNavigate = () => {
+    history.push(team.link);
+  }
   return (
     <div className="search-team-item">
       <div className="overview-info">
@@ -24,7 +29,7 @@ function SearchTeamItem({ team }) {
         <div className="team-code">{team.teamCode}</div>
 
         <CTooltip content="Đi đến nhóm" placement="top-end">
-          <div className="goto-btn">
+          <div className="goto-btn" onClick={onNavigate}>
             <FaChevronRight className="arrow-icon" />
           </div>
         </CTooltip>

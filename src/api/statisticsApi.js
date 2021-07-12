@@ -41,6 +41,7 @@ const statisticsApi = {
     exportPersonalAndTeamStat(payload) {
         const url = '/statistics/export-personalandteam';
         return axiosClient.post(url, payload, {
+            headers: { "Content-Type": "multipart/form-data" },
             responseType: 'blob',
         });
     },
@@ -48,6 +49,7 @@ const statisticsApi = {
     exportTeamDoneBoard(payload) {
         const url = '/statistics/export-teamdoneboard';
         return axiosClient.post(url, payload, {
+            headers: { "Content-Type": "multipart/form-data" },
             responseType: 'blob',
         });
     }
@@ -55,8 +57,26 @@ const statisticsApi = {
     exportTeamUserPointTask(payload) {
         const url = '/statistics/export-pointtask-groupbyuser';
         return axiosClient.post(url, payload, {
+            headers: { "Content-Type": "multipart/form-data" },
             responseType: 'blob',
         });
+    },
+
+    getTasksStatusCount() {
+        const url = '/statistics/tasks-status-count';
+        return axiosClient.get(url);
+    },
+    getTasksStatusList(params) {
+        const url = '/statistics/tasks-status-list';
+        return axiosClient.get(url, params);
+    },
+
+    testExportExcelWithImage(payload) {
+        const url = '/test/test-export-complex';
+        return axiosClient.post(url, payload, {
+            headers: { "Content-Type": "multipart/form-data" },
+            responseType: 'blob',
+        })
     }
 };
 

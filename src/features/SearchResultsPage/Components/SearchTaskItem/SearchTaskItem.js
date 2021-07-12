@@ -2,6 +2,7 @@ import CIcon from "@coreui/icons-react";
 import { CTooltip } from "@coreui/react";
 import React from "react";
 import { FaChevronRight } from "react-icons/fa";
+import { useHistory } from "react-router-dom";
 import "./SearchTaskItem.scss";
 
 function SearchTaskItem({ task }) {
@@ -47,6 +48,10 @@ function SearchTaskItem({ task }) {
     }
   }
 
+  const history = useHistory();
+  const onNavigate = () => {
+    history.push(task.link);
+  }
   return (
     <div className="search-task-item">
       <div className="overview-info">
@@ -74,7 +79,7 @@ function SearchTaskItem({ task }) {
         </div>
 
         <CTooltip content="Đi đến công việc" placement="top-end">
-          <div className="goto-btn">
+          <div className="goto-btn" onClick={onNavigate}>
             <FaChevronRight className="arrow-icon" />
           </div>
         </CTooltip>
