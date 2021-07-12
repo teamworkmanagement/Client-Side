@@ -26,6 +26,8 @@ import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/
 import teamApi from "src/api/teamApi";
 
 import { GrGroup } from "react-icons/gr";
+import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
+import { setAdminAction } from "../KanbanBoard/kanbanSlice";
 
 function TeamPage(props) {
   const dispatch = useDispatch();
@@ -35,6 +37,7 @@ function TeamPage(props) {
   const history = useHistory();
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
+  const teamUpdateInfo = useSelector(state => state.signalr.updateTeamInfo);
 
   const [active, setActive] = useState(() => {
     if (queryParams != null) {
@@ -138,6 +141,29 @@ function TeamPage(props) {
     }
   }, [history.location.search]);
 
+  useEffect(() => {
+    if (teamUpdateInfo) {
+      if (teamUpdateInfo.leaderId) {
+        if (teamId == teamUpdateInfo.teamId) {
+          if (teamUpdateInfo.leaderId === user.id) {
+            dispatch(setAdminAction(true));
+            setTeam({
+              ...team,
+              teamLeaderId: user.id,
+            })
+          } else {
+            dispatch(setAdminAction(false));
+            setTeam({
+              ...team,
+              teamLeaderId: null,
+            })
+          }
+        }
+      }
+      dispatch(setUpdateTeamInfo(null));
+    }
+  }, [teamUpdateInfo])
+
   const boardRender = () => {
     const pathname = history.location.pathname.split("/");
     return (
@@ -180,7 +206,7 @@ function TeamPage(props) {
             .then((res) => {
               setTeam(res.data);
             })
-            .catch((err) => {});
+            .catch((err) => { });
         })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
@@ -194,7 +220,7 @@ function TeamPage(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const renderNormal = () => {

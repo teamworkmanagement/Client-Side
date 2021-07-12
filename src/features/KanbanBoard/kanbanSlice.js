@@ -229,6 +229,9 @@ const kanbanSlice = createSlice({
                 const task = list.taskUIKanbans.find(x => x.taskId === action.payload.fileTaskOwnerId);
                 task.filesCount++;
             }
+        },
+        setAdminAction(state, action) {
+            state.adminAction = action.payload;
         }
     },
     extraReducers: {
@@ -259,6 +262,7 @@ export const {
     reAssignUser,
     signalRChangeNameList,
     signalRAddFile,
-    setNullSignalRData
+    setNullSignalRData,
+    setAdminAction
 } = actions;
 export default reducer;
