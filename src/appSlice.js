@@ -112,18 +112,23 @@ const appSlice = createSlice({
     teamTabsSidebarShow: "false",
     chatListSidebarShow: "false",
     settingOptionsSidebarShow: "false",
+    helpSidebarShow: "false",
     currentPostPage: 1,
     darkMode: true,
     collapseHeader: false,
     filterChanged: false,
     searchGlobalStr: "",
-    //data from api
 
+    //active tab account setting page
+    settingPageTab: 0, //0:info tab, 1: password tab
+    //active tab help center page
+    helpPageTab: 0, //0:.., 1: ...
+
+    //data from api
     users: Users,
     teamLoading: false,
     newNotfication: null,
 
-    userSetting: null,
     userModal: {
       show: false,
       userId: null,
@@ -132,6 +137,12 @@ const appSlice = createSlice({
     viewHistory: null,
   },
   reducers: {
+    setSettingPageTab(state, action) {
+      state.settingPageTab = action.payload;
+    },
+    setHelpPageTab(state, action) {
+      state.helpPageTab = action.payload;
+    },
     setSearchGlobalStr(state, action) {
       state.searchGlobalStr = action.payload;
     },
@@ -144,9 +155,7 @@ const appSlice = createSlice({
     setUserModal(state, action) {
       state.userModal = action.payload;
     },
-    changeUserSetting(state, action) {
-      state.userSetting = action.payload;
-    },
+
     changeState(state, payload) {
       if (payload.payload.type === "set") {
         state.sidebarShow = payload.payload.sidebarShow;
@@ -166,6 +175,11 @@ const appSlice = createSlice({
       if (payload.payload.type === "settingoptionssidebar") {
         state.settingOptionsSidebarShow =
           payload.payload.settingOptionsSidebarShow;
+      }
+    },
+    changeStateHelpSidebar(state, payload) {
+      if (payload.payload.type === "helpsidebar") {
+        state.helpSidebarShow = payload.payload.helpSidebarShow;
       }
     },
     setNewNoti(state, action) {
@@ -372,6 +386,9 @@ const appSlice = createSlice({
 
 const { actions, reducer } = appSlice;
 export const {
+  changeStateHelpSidebar,
+  setSettingPageTab,
+  setHelpPageTab,
   setKanbanBoardData,
   changeState,
   setCurrentPostPage,
@@ -387,7 +404,6 @@ export const {
   changeStateTeamTabsSidebar,
   changeStateChatListSidebar,
   changeStateSettingOptionsSidebar,
-  changeUserSetting,
   setUserModal,
   setTaskEditModal,
   setViewHistory,

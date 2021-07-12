@@ -260,37 +260,55 @@ $baseTransition: all 0.3s;
 }
 
 //========================================
-.sidebar-setting-options {
-    .nav-tab-item {
-        padding: 1rem;
-        cursor: pointer;
-        .tab-item-link {
-            display: flex;
-            align-items: center;
-            padding: 0;
-            .icon {
-                margin-top: -0.1rem;
-                margin-right: 1rem;
-                color: $textColor;
-            }
-            .tab-name {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                color: $textColor;
+.sidebar-chat-list {
+    background-color: white !important;
+    .chat-list {
+        width: 100%;
+        height: 100%;
+        border-right: $borderStyle;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .chat-list-header {
+            height: 3rem;
+            .input-group.chat-list-search {
+                height: 100%;
+                display: flex;
+                align-items: stretch;
+                border-bottom: $borderStyle;
+                input.form-control {
+                    height: 100%;
+                    border-bottom-left-radius: 0;
+                    border: none;
+                }
+                .input-group-append {
+                    button {
+                        background-color: white;
+                        border-radius: 0;
+                        border: none;
+                        .icon-search {
+                            color: $subTextColor;
+                        }
+                        &:hover {
+                            .icon-search {
+                                color: $textColor;
+                                transform: scale(1.1);
+                                transition: $baseTransition;
+                            }
+                        }
+                    }
+                }
             }
         }
-        &:hover {
-            background-color: $lighterBaseColor;
-            border-right: 3px solid $baseColor;
-
-            .tab-item-link {
-                .icon {
-                    color: $baseColor;
-                }
-                .tab-name {
-                    color: $baseColor;
-                }
+        .chat-list-container {
+            height: 5rem;
+            flex-grow: 1;
+        }
+        .btn-add-chat {
+            @include NormalButtonStyle;
+            margin: 1rem;
+            .c-icon {
+                margin-right: 0.3rem;
             }
         }
     }

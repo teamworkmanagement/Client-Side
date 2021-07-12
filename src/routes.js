@@ -15,6 +15,7 @@ import NotFoundPage from "./shared_components/MySharedComponents/NotFoundPage/No
 import NoInternetPage from "./shared_components/MySharedComponents/NoInternetPage/NoInternetPage";
 import FeedbackPage from "./features/FeedbackPage/FeedbackPage";
 import SearchResultsPage from "./features/SearchResultsPage/SearchResultsPage.js";
+import HelpCenterPage from "./features/HelpCenterPage/HelpCenterPage.js";
 
 const routes = [
   { path: "/notfound", name: "Không tồn tại", component: NotFoundPage },
@@ -74,6 +75,12 @@ const routes = [
     path: "/feedbacks",
     name: "Góp ý cải thiện ứng dụng",
     component: FeedbackPage,
+    exact: true,
+  },
+  {
+    path: "/help",
+    name: "Trợ giúp",
+    component: HelpCenterPage,
     exact: true,
   },
   {

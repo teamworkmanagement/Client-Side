@@ -9,7 +9,8 @@ import {
   CRow,
   CTextarea,
 } from "@coreui/react";
-import { BsInfoCircle } from "react-icons/bs";
+import { ImInfo } from "react-icons/im";
+
 import { AiOutlineLock, AiOutlineDelete, AiFillGithub } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import authApi from "src/api/authApi";
@@ -18,7 +19,10 @@ import {
   setCurrentUser,
 } from "src/shared_components/views/pages/login/authSlice";
 import CIcon from "@coreui/icons-react";
-import { changeStateSettingOptionsSidebar } from "src/appSlice";
+import {
+  changeStateSettingOptionsSidebar,
+  setSettingPageTab,
+} from "src/appSlice";
 import { FiEdit3 } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
 import firebaseConfig from "src/utils/firebase/firebaseConfig";
@@ -29,7 +33,7 @@ import { toast } from "react-toastify";
 import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 function AccountSettingsPage(props) {
-  const userSetting = useSelector((state) => state.app.userSetting);
+  const settingPageTab = useSelector((state) => state.app.settingPageTab);
   const [selectedOptions, setSelectedOptions] = useState(0); //0:INFO, 1:PASSWORD
   const user = { ...useSelector((state) => state.auth.currentUser) };
   const [userInfo, setUserInfo] = useState(user);
@@ -42,12 +46,11 @@ function AccountSettingsPage(props) {
   const [currentDirty, setCurrentDirty] = useState(false);
   const [newDirty, setNewDirty] = useState(false);
   const [confirmDirty, setConfirmDirty] = useState(false);
-
+  const dispatch = useDispatch();
   function ChooseSettingOption(index) {
+    dispatch(setSettingPageTab(index));
     setSelectedOptions(index);
   }
-
-  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,9 +61,8 @@ function AccountSettingsPage(props) {
   };
 
   useEffect(() => {
-    if (userSetting !== null && userSetting !== undefined)
-      setSelectedOptions(userSetting);
-  }, [userSetting]);
+    setSelectedOptions(settingPageTab);
+  }, [settingPageTab]);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -201,7 +203,7 @@ function AccountSettingsPage(props) {
             }`}
             onClick={() => ChooseSettingOption(0)}
           >
-            <BsInfoCircle className="icon-info icon" />
+            <ImInfo className="icon-info icon" />
             Thông tin của bạn
           </div>
           <div

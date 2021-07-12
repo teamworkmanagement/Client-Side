@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import ChatListSideBar from "./ChatListSideBar";
+import ChatListSideBar from "./SubSideBars/ChatListSideBar/ChatListSideBar";
 import { TheContent, TheSidebar, TheHeader } from "./index";
-import TeamTabsSideBar from "./TeamTabsSideBar";
+import TeamTabsSideBar from "./SubSideBars/TeamTabsSideBar/TeamTabsSideBar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SettingOptionsSidebar from "./SettingOptionsSidebar";
+import SettingOptionsSidebar from "./SubSideBars/SettingOptionsSidebar/SettingOptionsSidebar";
 
 import CustomToast from "../MySharedComponents/CustomToast/CustomToast";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import taskApi from "src/api/taskApi";
 import { setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
 import { setTaskEditModal, setViewHistory } from "src/appSlice";
 import TaskHistoryModal from "../MySharedComponents/TaskHistoryModal/TaskHistoryModal";
+import HelpSidebar from "./SubSideBars/HelpSidebar/HelpSidebar.js";
 
 const TheLayout = () => {
   const newNoti = useSelector((state) => state.app.newNotfication);
@@ -151,7 +152,7 @@ const TheLayout = () => {
     }
   }, [taskEditModal]);
   const onEditModalClose = () => {
-    console.log('on close');
+    console.log("on close");
     setModaTaskObj(null);
     dispatch(setTaskEditModal(null));
     history.push({
@@ -181,6 +182,7 @@ const TheLayout = () => {
       <TeamTabsSideBar />
       <ChatListSideBar />
       <SettingOptionsSidebar />
+      <HelpSidebar />
       <div className="c-wrapper">
         <TheHeader />
         <div className="c-body">

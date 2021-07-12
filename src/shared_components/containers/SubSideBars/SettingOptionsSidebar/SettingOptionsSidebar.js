@@ -1,21 +1,18 @@
-import {
-  CNavItem,
-  CNavLink, CSidebar,
-  CSidebarNav
-} from "@coreui/react";
+import { CNavItem, CNavLink, CSidebar, CSidebarNav } from "@coreui/react";
 import React from "react";
 import { BiKey } from "react-icons/bi";
-import { BsInfoCircle } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 // sidebar nav config
-import { changeStateSettingOptionsSidebar, changeUserSetting } from "src/appSlice";
+import {
+  changeStateSettingOptionsSidebar,
+  setSettingPageTab,
+} from "src/appSlice";
 import "./SettingOptionsSidebar.scss";
-
-
-
+import { ImInfo } from "react-icons/im";
 const SettingOptionsSidebar = (props) => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.app.settingOptionsSidebarShow);
+  const settingPageTab = useSelector((state) => state.app.settingPageTab);
 
   const onChange = (val) => {
     const param = {
@@ -26,8 +23,8 @@ const SettingOptionsSidebar = (props) => {
     dispatch(action);
   };
 
-  const onClick = (index) => {
-    dispatch(changeUserSetting(index));
+  const selectTab = (index) => {
+    dispatch(setSettingPageTab(index));
     dispatch(
       changeStateSettingOptionsSidebar({
         type: "settingoptionssidebar",
@@ -42,13 +39,19 @@ const SettingOptionsSidebar = (props) => {
       onShowChange={onChange}
     >
       <CSidebarNav>
-        <CNavItem onClick={() => onClick(0)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => selectTab(0)}
+          className={`nav-tab-item ${settingPageTab === 0 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
-            <BsInfoCircle className="icon-info icon" />
+            <ImInfo className="icon-info icon" />
             <div className="tab-name">Thông tin của bạn</div>
           </CNavLink>
         </CNavItem>
-        <CNavItem onClick={() => onClick(1)} className="nav-tab-item">
+        <CNavItem
+          onClick={() => selectTab(1)}
+          className={`nav-tab-item ${settingPageTab === 1 ? "active" : ""}`}
+        >
           <CNavLink href="#" className="tab-item-link">
             <BiKey className="icon-password icon" />
 

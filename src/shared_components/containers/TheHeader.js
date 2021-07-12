@@ -18,6 +18,7 @@ import {
   changeStateSettingOptionsSidebar,
   setCollapseHeader,
   setSearchGlobalStr,
+  changeStateHelpSidebar,
 } from "src/appSlice";
 import "./TheHeader.scss";
 import { useHistory } from "react-router-dom";
@@ -57,6 +58,12 @@ const TheHeader = () => {
       changeStateSettingOptionsSidebar({
         type: "settingoptionssidebar",
         settingOptionsSidebarShow: val,
+      })
+    );
+    dispatch(
+      changeStateHelpSidebar({
+        type: "helpsidebar",
+        helpSidebarShow: val,
       })
     );
   };

@@ -88,7 +88,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Trợ giúp",
-    to: "",
+    to: "/help",
     icon: <MdHelpOutline className="mfe-2 icon-help" />,
     label: true,
   },
