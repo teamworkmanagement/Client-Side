@@ -207,6 +207,9 @@ function TaskEditModal(props) {
         });
         console.log(current);
       }
+      else {
+        setCurrent(null);
+      }
       setTask({ ...props.data });
       changeColor(
         props.data.taskThemeColor ? props.data.taskThemeColor : "ffffff"
