@@ -220,7 +220,6 @@ function NewsFeedPage(props) {
     console.log(value);
     console.log(userIds);
 
-    return;
 
     const links = await uploadImage();
 

@@ -79,7 +79,7 @@ function FounderInfoPage(props) {
               Email:{" "}
             </div>
 
-            <a href="mailto: tiendunghk@gmail.com">tiendunghk@gmail.com</a>
+            <a href="mailto: dunghkuit@gmail.com">dunghkuit@gmail.com</a>
           </div>
           <div className="link-item">
             <div className="label">

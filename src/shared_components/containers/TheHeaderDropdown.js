@@ -36,6 +36,13 @@ const TheHeaderDropdown = () => {
     });
   };
 
+  const goToHelp = () => {
+    history.push({
+      pathname: "/help",
+      search: null,
+    });
+  }
+
   const onLogout = () => {
     dispatch(setAuthF());
     delete_cookie("backup");
@@ -111,7 +118,7 @@ const TheHeaderDropdown = () => {
           <VscFeedback className="mfe-2 icon-feedback" />
           Đóng góp cho ứng dụng
         </CDropdownItem>
-        <CDropdownItem>
+        <CDropdownItem onClick={() => goToHelp()}>
           <MdHelpOutline className="mfe-2 icon-help" />
           Trợ giúp
         </CDropdownItem>

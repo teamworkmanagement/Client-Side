@@ -62,40 +62,18 @@ function PostList(props) {
     }
 
     getPosts();
-  }, [pageNumber, props.filter, teamId, history.location.search]);
-
-  //o trong team
-  /* useEffect(() => {
-     if (teamId) {
-       async function getPosts() {
-         try {
-           setIsLoading(true);
-           const params = {
-             ...props.filter,
-             SkipItems: 0,
-           };
- 
-           params.teamId = teamId;
-           const outPut = await postApi.getPaginationTeam({ params });
-           setListPosts(outPut.data.items);
-         } catch (err) {
-           console.log(err);
-         } finally {
-           setIsLoading(false);
-         }
-       }
-       getPosts();
-     }
-   }, [teamId]);*/
+  }, [pageNumber, props.filter, teamId]);
 
   useEffect(() => {
     if (props.addPostDone === null) return;
 
     console.log(props.addPostDone);
 
-    const cur = [...latestPosts.current];
-    const las = [props.addPostDone].concat(cur);
-    setListPosts(las);
+    //const cur = [...latestPosts.current];
+    //const las = [props.addPostDone].concat(cur);
+    const cloneLists = [...listPosts];
+    const newPosts = [props.addPostDone].concat(cloneLists);
+    setListPosts(newPosts);
   }, [props.addPostDone]);
 
   useEffect(() => {
@@ -113,8 +91,9 @@ function PostList(props) {
       }
 
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        console.log("vl");
-        dispatch(setCurrentPostPage());
+        if (window.location.pathname.includes('/newsfeed') || window.location.search.includes('tab=feed')) {
+          dispatch(setCurrentPostPage());
+        }
       }
     };
   }, []);
