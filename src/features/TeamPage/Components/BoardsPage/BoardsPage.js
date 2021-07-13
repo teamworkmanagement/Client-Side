@@ -34,7 +34,7 @@ function BoardsPage(props) {
       .then((res) => {
         setBoardLists(res.data);
       })
-      .catch((err) => {})
+      .catch((err) => { })
       .finally(() => {
         setIsLoading(false);
       });
@@ -51,6 +51,22 @@ function BoardsPage(props) {
     }
     setBoardLists([...boardLists, e.data]);
   };
+
+  const searchBoards = (e) => {
+    const params = {
+      isOfTeam: true,
+      teamId: teamId,
+      keyWord: e.target.value,
+    };
+
+    kanbanApi
+      .searchKanbanBoards({ params })
+      .then((res) => {
+        setBoardLists(res.data);
+      })
+      .catch((err) => { });
+  };
+
   return (
     <div className="list-boards-in-teampage-container">
       <div className="list-boards-header">
@@ -59,6 +75,7 @@ function BoardsPage(props) {
             type="text"
             name="teamName"
             placeholder="Tìm bảng công việc..."
+            onChange={searchBoards}
           />
           <BsSearch className="icon-search" />
         </div>

@@ -267,6 +267,7 @@ function MessageList(props) {
       time: newMessage.timeSend,
       isLabel: false,
       messageType: newMessage.messageType,
+      messengerUserAvatar: newMessage.userAvatar,
     };
     const messageObj = { ...newMessage };
     dispatch(setReceiveMes(messageObj));
