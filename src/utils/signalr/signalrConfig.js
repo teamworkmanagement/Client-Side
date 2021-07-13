@@ -11,11 +11,9 @@ const isDev = process.env.NODE_ENV === 'development' ? true : false;
 export const startSignalRConnection = async (connection) => {
   try {
     await connection.start();
-    console.assert(connection.state === HubConnectionState.Connected);
     console.log("SignalR connection established", connection.connectionId);
   } catch (err) {
-    console.assert(connection.state === HubConnectionState.Disconnected);
-    console.error("SignalR Connection Error: ", err);
+    console.log("SignalR Connection Error: ", err);
     setTimeout(() => startSignalRConnection(connection), 5000);
   }
 };
@@ -46,7 +44,6 @@ export const setupSignalRConnection = (connectionHub, actionEventMap = {}) => {
 
   // re-establish the connection if connection dropped
   connection.onclose((error) => {
-    console.assert(connection.state === HubConnectionState.Disconnected);
     console.log(
       "Connection closed due to error. Try refreshing this page to restart the connection",
       error
@@ -54,24 +51,15 @@ export const setupSignalRConnection = (connectionHub, actionEventMap = {}) => {
   });
 
   connection.onreconnecting((error) => {
-    console.assert(connection.state === HubConnectionState.Reconnecting);
     console.log("Connection lost due to error. Reconnecting.", error);
   });
 
   connection.onreconnected((connectionId) => {
-    console.assert(connection.state === HubConnectionState.Connected);
     console.log(
       "Connection reestablished. Connected with connectionId",
       connectionId
     );
   });
-
-  //startSignalRConnection(connection);
-
-  /*connection.on('OnEvent', res => {
-        const eventHandler = actionEventMap[res.eventType];
-        eventHandler && dispatch(eventHandler(res));
-    });*/
 
   return connection;
 };

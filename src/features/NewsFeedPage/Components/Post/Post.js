@@ -132,7 +132,7 @@ function Post(props) {
 
     console.log(value);
 
-    //return;
+    return;
     commentApi
       .addComment({
         commentPostId: post.postId,
@@ -146,24 +146,7 @@ function Post(props) {
         commentUserTagIds: userIds,
       })
       .then((res) => {
-        /*setPost({
-          ...post,
-          postCommentCount: post.postCommentCount + 1,
-        });
 
-        const newArrr = [
-          {
-            commentId: res.data.commentId,
-            commentPostId: res.data.commentPostId,
-            commentUserId: res.data.commentUserId,
-            commentContent: res.data.commentContent,
-            userName: user.fullName,
-            userAvatar: user.userAvatar,
-            commentCreatedAt: res.data.commentCreatedAt,
-          },
-        ].concat([...cmtLists]);
-
-        setComments(newArrr);*/
       })
       .catch((err) => { });
   };
@@ -232,7 +215,7 @@ function Post(props) {
   const history = useHistory();
 
   const navigateToTeam = (post) => {
-    history.push(`/team/${post.postTeamId}`);
+    history.push(`/team/${post.postTeamId}?tab=teaminfo`);
   };
 
   return (

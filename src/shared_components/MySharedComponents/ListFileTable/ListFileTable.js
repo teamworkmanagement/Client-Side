@@ -164,7 +164,6 @@ function ListFileTable(props) {
           </div>
 
           <div className="noti-infor">Chưa có tệp nào trong nhóm</div>
-          <div className="create-btn">Tải tệp mới lên</div>
         </div>
       </div>
     );

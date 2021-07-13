@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import messageApi from "src/api/messageApi";
-import { setCurrentGroup, setIsSelected, setReceiveMes } from "../../chatSlice";
+import { setCurrentGroup, setIsSelected, setNewMessage, setReceiveMes } from "../../chatSlice";
 import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
 import "./MessageList.scss";
@@ -271,6 +271,8 @@ function MessageList(props) {
     };
     const messageObj = { ...newMessage };
     dispatch(setReceiveMes(messageObj));
+    dispatch(setNewMessage(null));
+    
     if (newMessage.groupId !== currentGroup) {
       return;
     }
@@ -324,8 +326,8 @@ function MessageList(props) {
 
     chatApi
       .sendMes(props.sendMes.mesObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   }, [props.sendMes]);
 
   const render = () => {

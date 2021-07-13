@@ -7,6 +7,7 @@ import {
   import { SIGNALR_URL } from "../../env";
 import { setCurrentUser } from "src/shared_components/views/pages/login/authSlice";
 import { setUpdateTeamInfo } from "./signalrSlice";
+import { HubConnectionState } from "@microsoft/signalr";
   
   const connection = setupSignalRConnection(`${SIGNALR_URL}/hubapp`);
   
@@ -22,7 +23,7 @@ import { setUpdateTeamInfo } from "./signalrSlice";
   
 
   export const startAppService = () => {
-    if (connection.state === "Disconnected" || connection.state !== "Connected") {
+    if (connection.state === HubConnectionState.Disconnected) {
       startSignalRConnection(connection);
     }
   };
