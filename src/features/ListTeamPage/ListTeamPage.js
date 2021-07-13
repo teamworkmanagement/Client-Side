@@ -25,6 +25,7 @@ import { BsClipboardData } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import teamApi from "src/api/teamApi";
+import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
@@ -60,10 +61,11 @@ function ListTeamPage(props) {
   const dispatch = useDispatch();
   const teams = useSelector((state) => state.team.teams);
   const user = useSelector((state) => state.auth.currentUser);
+  const teamUpdateInfo = useSelector(state => state.signalr.updateTeamInfo);
 
   useEffect(() => {
     console.log("loading teams");
-    async function loadData() {
+    function loadData() {
       setIsLoading(true);
       dispatch(getTeamByUserId(user.id))
         .then(unwrapResult)
@@ -73,12 +75,20 @@ function ListTeamPage(props) {
         .catch((err) => {
           setIsLoading(false);
         });
-
-      //setIsLoading(false);
     }
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (teamUpdateInfo) {
+      const teamFind = teams.find(t => t.teamId === teamUpdateInfo.teamId);
+      if (teamFind) {
+        dispatch(getTeamByUserId(user.id));
+      }
+      dispatch(setUpdateTeamInfo(null));
+    }
+  }, [teamUpdateInfo])
 
   const navigateToTeam = (teamId) => {
     history.push(`/team/${teamId}?tab=teaminfo`);
@@ -96,7 +106,7 @@ function ListTeamPage(props) {
       .then((res) => {
         dispatch(getTeamByUserId(user.id));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const renderNormal = () => {
@@ -207,8 +217,6 @@ function ListTeamPage(props) {
                     </th>
                     <th>Tên nhóm</th>
                     <th>Trưởng nhóm</th>
-
-                    {/* <th>Tiến độ</th> */}
                     <th className="text-center">Thành viên</th>
                   </tr>
                 </thead>
@@ -224,7 +232,7 @@ function ListTeamPage(props) {
                             <img
                               src={team.teamImageUrl}
                               className="c-avatar-img"
-                              alt="admin@bootstrapmaster.com"
+                              alt="avatar"
                             />
                           </div>
                         </td>
@@ -246,7 +254,7 @@ function ListTeamPage(props) {
                         </td>
 
                         <td className="text-center">
-                          <AvatarList teamId={team.teamId} />
+                          <AvatarList teams={teams} teamId={team.teamId} />
                         </td>
                       </tr>
                     );

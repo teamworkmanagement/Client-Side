@@ -15,7 +15,7 @@ import {
   CTooltip,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { Redirect, useParams } from "react-router";
+import { useParams } from "react-router";
 import teamApi from "src/api/teamApi";
 import InviteMemberModal from "./InviteMemberModal/InviteMemberModal";
 import chatApi from "src/api/chatApi";
@@ -33,6 +33,8 @@ import firebaseConfig from "src/utils/firebase/firebaseConfig";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { CgArrowsExchange } from "react-icons/cg";
 import { setUserModal } from "src/appSlice";
+import { useHistory } from "react-router-dom";
+import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
 
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
@@ -72,8 +74,9 @@ function TeamMembersList(props) {
   const [filterObj, setFilterObj] = useState(null);
 
   const imgPickerRef = useRef(null);
+  const history = useHistory();
 
-  const [redirect, setRedirect] = useState(null);
+  const updateTeamInfSignalR = useSelector(state => state.signalr.updateTeamInfo);
 
   useEffect(() => {
     console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzz: ", teamId);
@@ -85,7 +88,7 @@ function TeamMembersList(props) {
         console.log(res);
         setAdmin(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     const params = {
       teamId: teamId,
@@ -96,25 +99,48 @@ function TeamMembersList(props) {
 
     setFilterObj(params);
 
-    /*teamApi
-      .getUsersPagingByTeam({ params })
-      .then((res) => {
-        console.log(res.data.items);
-        setMembers(res.data.items);
-        setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
-        setLoadingMembers(false);
-      })
-      .catch((err) => {
-        setLoadingMembers(false);
-      });*/
-
     teamApi
       .getTeam(teamId)
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [teamId]);
+
+  useEffect(() => {
+    if (updateTeamInfSignalR) {
+      console.log('realtimezzzzzzzzzzzzzzzzzzzzzzz');
+      if (teamId === updateTeamInfSignalR.teamId) {
+        if (!teamId) return;
+        setLoadingMembers(true);
+        teamApi
+          .getAdmin(teamId)
+          .then((res) => {
+            console.log(res);
+            setAdmin(res.data);
+          })
+          .catch((err) => { });
+
+        const params = {
+          teamId: teamId,
+          pageNumber: 1,
+          pageSize: 5,
+          keyWord: null,
+        };
+
+        setFilterObj(params);
+
+        teamApi
+          .getTeam(teamId)
+          .then((res) => {
+            setTeam(res.data);
+          })
+          .catch((err) => { });
+
+        dispatch(setUpdateTeamInfo(null));
+      }
+    }
+  }, [updateTeamInfSignalR])
 
   const currentPageChange = (index) => {
     if (index === 0) return;
@@ -130,34 +156,10 @@ function TeamMembersList(props) {
     };
 
     setFilterObj(params);
-    /*teamApi
-      .getUsersPagingByTeam({ params })
-      .then((res) => {
-        console.log(res.data.items);
-        setMembers(res.data.items);
-        setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
-        setLoadingMembers(false);
-      })
-      .catch((err) => {
-        setLoadingMembers(false);
-      });*/
   };
 
   const onClose = (e) => {
     setShowInvite(false);
-    /*if (!e) return;
-    setToastContent(e);
-    setToasts([
-      ...toasts,
-      {
-        position: "bottom-left",
-        autohide: 1000,
-        closeButton: false,
-        fade: true,
-        color: "info",
-      },
-    ]);*/
-    //setShowInvite(false); //ở đây chương trình ko chạy tới dc
   };
 
   const nhanTin = (item) => {
@@ -170,13 +172,10 @@ function TeamMembersList(props) {
       .then((res) => {
         if (res.data.exists) {
           console.log(res.data);
-          /*history.push({
-          pathname: '/chat',
-          search: `g=${res.data.groupChatId}`
-        });*/
-          //history.push(`http://localhost:4155/chat?g=${res.data.groupChatId}`);
-          //history.replace(`/chat?g=${res.data.groupChatId}`);
-          setRedirect(`/chat?g=${res.data.groupChatId}`);
+          history.push({
+            pathname: '/chat',
+            search: `g=${res.data.groupChatId}`
+          });
         } else {
           console.log(res.data);
           setShowStartChat(true);
@@ -197,14 +196,17 @@ function TeamMembersList(props) {
           ]);
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const dispatch = useDispatch();
   const onStartChatClose = (grChatId) => {
     setShowStartChat(false);
     if (grChatId) {
-      setRedirect(`/chat?g=${grChatId}`);
+      history.push({
+        pathname: '/chat',
+        search: `g=${grChatId}`
+      })
     }
   };
 
@@ -216,7 +218,6 @@ function TeamMembersList(props) {
             <AiOutlineTeam className="icon-task" />
             <VscSearchStop className="icon-search" />
           </div>
-
           <div className="noti-infor">Không tìm thấy thành viên</div>
         </div>
       </div>
@@ -243,7 +244,7 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(newTeam);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const onPickImage = (e) => {
@@ -283,7 +284,7 @@ function TeamMembersList(props) {
 
             props.changeLeader();
           })
-          .catch((err) => {});
+          .catch((err) => { });
 
         const params = {
           teamId: teamId,
@@ -308,9 +309,9 @@ function TeamMembersList(props) {
           .then((res) => {
             setTeam(res.data);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const quitTeam = (item) => {
@@ -332,7 +333,7 @@ function TeamMembersList(props) {
 
         setFilterObj(params);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -348,7 +349,7 @@ function TeamMembersList(props) {
           setMembers(res.data.items);
           setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
         })
-        .catch((err) => {})
+        .catch((err) => { })
         .finally(() => {
           setLoadingMembers(false);
         });
@@ -370,8 +371,6 @@ function TeamMembersList(props) {
   };
   return (
     <div className="team-members-container">
-      {redirect ? <Redirect from="/team" to={redirect} /> : null}
-
       <div className="members-list-header">
         <div className="other-actions">
           <div className="lookup-input">
@@ -420,7 +419,7 @@ function TeamMembersList(props) {
             </div>
             <div className="team-name-actions">
               <div className="team-name">{team.teamName}</div>
-              <div className="actions-group">
+              {admin.userId === user.id && <div className="actions-group">
                 <div onClick={openPickImage} className="btn-change-image">
                   <RiImageEditFill className="icon-edit-image icon-edit" />
                   Đổi ảnh
@@ -439,18 +438,18 @@ function TeamMembersList(props) {
                   <FiEdit3 className="icon-edit-image icon-edit" />
                   Đổi tên nhóm
                 </div>
-              </div>
+              </div>}
             </div>
           </div>
           <div className="team-description-group">
             <div className="label-description">
               Mô tả
-              <div
+              {admin.userId === user.id && <div
                 className="icon-edit-container"
                 onClick={() => setShowEditDescription(true)}
               >
                 <FiEdit3 className="icon-edit-description icon-edit" />
-              </div>
+              </div>}
             </div>
             <div className="team-description">{team.teamDescription}</div>
           </div>
@@ -520,13 +519,13 @@ function TeamMembersList(props) {
                             aria-labelledby="dropdownMenuButton"
                             placement="bottom-end"
                           >
-                            <CDropdownItem
+                            {admin.userId !== user.id && <CDropdownItem
                               className="first"
                               onClick={() => nhanTin(admin)}
                             >
                               <CIcon name="cil-send" />
                               Nhắn tin
-                            </CDropdownItem>
+                            </CDropdownItem>}
                             <CDropdownItem
                               className="last"
                               onClick={() => xemThongTin(admin)}
@@ -636,13 +635,13 @@ function TeamMembersList(props) {
                               aria-labelledby="dropdownMenuButton"
                               placement="bottom-end"
                             >
-                              <CDropdownItem
+                              {item.userId !== user.id && <CDropdownItem
                                 className="first"
                                 onClick={() => nhanTin(item)}
                               >
                                 <CIcon name="cil-send" />
                                 Nhắn tin
-                              </CDropdownItem>
+                              </CDropdownItem>}
 
                               <CDropdownItem
                                 className="normal"
@@ -695,7 +694,7 @@ function TeamMembersList(props) {
         </CCol>
       </CRow>
 
-      <InviteMemberModal showAddInvite={showInvite} onClose={onClose} />
+      <InviteMemberModal showAddInvite={showInvite} teamId={team.teamId} onClose={onClose} />
       <EditTeamNameModal
         teamName={team.teamName}
         show={showEditName}

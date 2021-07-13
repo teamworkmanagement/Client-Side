@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
 
 import queryString from "query-string";
 import taskApi from "src/api/taskApi";
-import { setCurrentBoard } from "src/features/KanbanBoard/kanbanSlice";
+import { setCurrentBoard, setNullSignalRData } from "src/features/KanbanBoard/kanbanSlice";
 import { setTaskEditModal, setUserModal, setViewHistory } from "src/appSlice";
 import TaskHistoryModal from "../MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 import HelpSidebar from "./SubSideBars/HelpSidebar/HelpSidebar.js";
@@ -53,7 +53,8 @@ const TheLayout = () => {
   const history = useHistory();
 
   useEffect(() => {
-    console.log("realtime", updateTask);
+    if (!moveTask && !updateTask)
+      return;
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
 
@@ -67,7 +68,7 @@ const TheLayout = () => {
         isOfTeam: taskEditModal.isOfTeam,
         ownerId: taskEditModal.ownerId,
         boardId: queryObj.b,
-        taskId: updateTask?.taskId ? updateTask?.taskId : moveTask.taskId,
+        taskId: queryObj.t,
         userRequest: user.id,
       };
 
@@ -77,11 +78,30 @@ const TheLayout = () => {
           setModaTaskObj(res.data);
         })
         .catch((err) => { });
+
+      if (updateTask) {
+        dispatch(setNullSignalRData('updateTask'));
+      }
+
+      if (moveTask) {
+        dispatch(setNullSignalRData('moveTask'));
+      }
+    } else {
+      if (updateTask) {
+        dispatch(setNullSignalRData('updateTask'));
+      }
+
+      if (moveTask) {
+        dispatch(setNullSignalRData('moveTask'));
+      }
     }
   }, [updateTask, moveTask]);
 
   useEffect(() => {
     console.log(assignUser);
+    if (!assignUser)
+      return;
+
     const queryObj = queryString.parse(history.location.search);
 
     if (!queryObj.t) return;
@@ -89,7 +109,10 @@ const TheLayout = () => {
     if (!modalTaskObj) return;
 
     if (assignUser && assignUser.taskId === queryObj.t) {
-      if (assignUser.userId === modalTaskObj.userId) return;
+      if (assignUser.userId === modalTaskObj.userId) {
+        dispatch(setNullSignalRData('reAssignUser'));
+        return;
+      }
       else {
         setModaTaskObj({
           ...modalTaskObj,
@@ -99,6 +122,11 @@ const TheLayout = () => {
           userName:
             assignUser.userFullName === "" ? null : assignUser.userFullName,
         });
+        dispatch(setNullSignalRData('reAssignUser'));
+      }
+    } else {
+      if (assignUser) {
+        dispatch(setNullSignalRData('reAssignUser'));
       }
     }
   }, [assignUser]);

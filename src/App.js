@@ -6,6 +6,7 @@ import PublicRoute from "./shared_components/team_route/PublicRoute";
 import ForgotPassword from "./shared_components/views/pages/forgotpassword/ForgotPassword";
 import { islogin } from "./shared_components/views/pages/login/authSlice";
 import MyLogin from "./shared_components/views/pages/login/MyLogin/MyLogin";
+import { disconnectAppService, startAppService } from "./utils/signalr/appService";
 import {
   disconnectChatService,
   startChatService,
@@ -60,11 +61,13 @@ function App() {
       startKanbanService();
       startPostService();
       startNotiService();
+      startAppService();
     } else {
       disconnectNoti();
       disconnectChatService();
       disconnectKanbanService();
       disconnectPostService();
+      disconnectAppService();
     }
   }, [loginStatus]);
   return (

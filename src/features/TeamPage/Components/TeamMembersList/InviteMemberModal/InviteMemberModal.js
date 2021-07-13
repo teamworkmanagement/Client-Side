@@ -7,9 +7,12 @@ import {
   CModalBody,
   CModalHeader,
 } from "@coreui/react";
+import teamApi from "src/api/teamApi";
+import { useSelector } from "react-redux";
 
 function InviteMemberModal(props) {
   const [email, setEmail] = useState("");
+  const user = useSelector(state => state.auth.currentUser);
 
   function handleOnClose() {
     if (props.onClose) {
@@ -18,17 +21,21 @@ function InviteMemberModal(props) {
     }
   }
 
-  async function onCreateCard() {
-    try {
+  function onCreateCard() {
+    teamApi.inviteUser({
+      isByEmail: true,
+      email: email,
+      participationTeamId: props.teamId,
+      actionUserId: user.id,
+    }).then(res => {
+      setEmail('');
       props.onClose(null);
-    } catch (err) {
+    }).catch(err => {
       console.log(err);
+      setEmail('');
       props.onClose(err.Message);
-    } finally {
-    }
+    })
   }
-
-  useEffect(() => {}, []);
 
   return (
     <CModal

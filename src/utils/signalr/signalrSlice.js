@@ -5,6 +5,7 @@ const signalrSlice = createSlice({
         newAddReact: null,
         removeReact: null,
         newComment: null,
+        updateTeamInfo: null,
     },
     reducers: {
         setNewAddReact(state, action) {
@@ -15,6 +16,9 @@ const signalrSlice = createSlice({
         },
         setNewComment(state, action) {
             state.newComment = action.payload;
+        },
+        setUpdateTeamInfo(state, action) {
+            state.updateTeamInfo = action.payload;
         }
     },
 });
@@ -23,6 +27,7 @@ const { actions, reducer } = signalrSlice;
 export const {
     setNewAddReact,
     setRemoveReact,
-    setNewComment
+    setNewComment,
+    setUpdateTeamInfo
 } = actions;
 export default reducer;

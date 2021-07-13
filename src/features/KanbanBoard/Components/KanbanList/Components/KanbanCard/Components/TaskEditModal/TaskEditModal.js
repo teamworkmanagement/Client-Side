@@ -38,6 +38,7 @@ import TaskCommentInput from "./TaskCommentInput";
 import { convertToRaw } from "draft-js";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
+import { setNullSignalRData } from "src/features/KanbanBoard/kanbanSlice";
 
 const ValueOption = (props) => (
   <components.SingleValue {...props}>
@@ -184,10 +185,13 @@ function TaskEditModal(props) {
   }, [kanbanLists]);
 
   useEffect(() => {
+    if (!signalRAddFile)
+      return;
     if (signalRAddFile && signalRAddFile.fileTaskOwnerId === task.taskId) {
       const cloneAttachs = [...attachments];
       cloneAttachs.splice(0, 0, { ...signalRAddFile });
       setAttachments(cloneAttachs);
+      dispatch(setNullSignalRData('addNewFile'));
     }
   }, [signalRAddFile]);
 
@@ -202,6 +206,9 @@ function TaskEditModal(props) {
           img: props.data.userAvatar,
         });
         console.log(current);
+      }
+      else {
+        setCurrent(null);
       }
       setTask({ ...props.data });
       changeColor(
@@ -287,7 +294,7 @@ function TaskEditModal(props) {
       .then((res) => {
         console.log("số lần call api");
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [current]);
 
   useEffect(() => {

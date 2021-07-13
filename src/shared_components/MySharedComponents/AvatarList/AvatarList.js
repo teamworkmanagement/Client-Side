@@ -4,10 +4,7 @@ import { CTooltip } from "@coreui/react";
 import { useSelector } from "react-redux";
 
 function AvatarList(props) {
-  const team = useSelector((state) =>
-    state.team.teams.find((x) => x.teamId === props.teamId)
-  );
-
+  const team = props.teams.find((x) => x.teamId === props.teamId)
   useEffect(() => {
     console.log(team);
   }, [team]);

@@ -28,6 +28,7 @@ import {
 } from "react-icons/hi";
 import teamApi from "src/api/teamApi";
 import { BsSearch } from "react-icons/bs";
+import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
@@ -104,6 +105,39 @@ const TheHeader = () => {
     }
   }, [history.location.pathname]);
 
+  const updateTeamInfSignalR = useSelector(state => state.signalr.updateTeamInfo);
+  useEffect(() => {
+    if (updateTeamInfSignalR) {
+      if (history.location.pathname.includes("/team/")) {
+        const arr = history.location.pathname.split("/");
+        const teamId = arr[2];
+
+        if (teamId == updateTeamInfSignalR.teamId) {
+          teamApi
+            .getTeam(teamId)
+            .then((res) => {
+              if (res.data) {
+                setTeam(res.data);
+                setShowBadge(true);
+              } else {
+                setTeam({});
+                setShowBadge(false);
+              }
+            })
+            .catch((err) => {
+              setTeam({});
+              setShowBadge(false);
+            });
+        } else {
+          setTeam({});
+          setShowBadge(false);
+        }
+      }
+
+      dispatch(setUpdateTeamInfo(null));
+    }
+  }, [updateTeamInfSignalR]);
+
   function setCollapse(isCollapse) {
     dispatch(setCollapseHeader(isCollapse));
     console.log(collapseHeader ? "true" : "false");
@@ -173,9 +207,8 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CSubheader
-        className={`px-3 justify-content-between ${
-          collapseHeader ? "collapsed" : "expand"
-        }`}
+        className={`px-3 justify-content-between ${collapseHeader ? "collapsed" : "expand"
+          }`}
       >
         <div className="sub-header-content">
           <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />
