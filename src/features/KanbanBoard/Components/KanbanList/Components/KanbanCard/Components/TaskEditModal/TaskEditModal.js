@@ -3,7 +3,7 @@ import "./TaskEditModal.scss";
 import CIcon from "@coreui/icons-react";
 import { Range, getTrackBackground } from "react-range";
 import { Popover } from "react-tiny-popover";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 import {
   CCol,
@@ -46,7 +46,14 @@ const ValueOption = (props) => (
   <components.SingleValue {...props}>
     <div style={{ display: "flex", marginTop: "auto", marginBottom: "auto" }}>
       <img src={props.data.img} style={{ width: 30 }} alt="" />
-      <span style={{ marginTop: "auto", marginBottom: "auto" }}>
+      <span
+        style={{
+          marginTop: "auto",
+          marginBottom: "auto",
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+        }}
+      >
         {props.data.label}
       </span>
     </div>
@@ -55,13 +62,14 @@ const ValueOption = (props) => (
 
 export const CustomOption = (props) => {
   return (
-    <components.Option {...props}>
+    <components.Option {...props} className="select-option">
       <div
+        className="select-option-content"
         style={{
           display: "flex",
-          marginTop: "auto",
-          marginBottom: "auto",
-          justifyContent: "space-between",
+          //marginTop: "auto",
+          //marginBottom: "auto",
+          //justifyContent: "space-between",
         }}
       >
         <img alt="" height={20} width={20} src={props.data.img} />
@@ -187,13 +195,12 @@ function TaskEditModal(props) {
   }, [kanbanLists]);
 
   useEffect(() => {
-    if (!signalRAddFile)
-      return;
+    if (!signalRAddFile) return;
     if (signalRAddFile && signalRAddFile.fileTaskOwnerId === task.taskId) {
       const cloneAttachs = [...attachments];
       cloneAttachs.splice(0, 0, { ...signalRAddFile });
       setAttachments(cloneAttachs);
-      dispatch(setNullSignalRData('addNewFile'));
+      dispatch(setNullSignalRData("addNewFile"));
     }
   }, [signalRAddFile]);
 
@@ -208,8 +215,7 @@ function TaskEditModal(props) {
           img: props.data.userAvatar,
         });
         console.log(current);
-      }
-      else {
+      } else {
         setCurrent(null);
       }
       setTask({ ...props.data });
@@ -296,7 +302,7 @@ function TaskEditModal(props) {
       .then((res) => {
         console.log("số lần call api");
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [current]);
 
   useEffect(() => {
@@ -348,7 +354,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) { }
+      } catch (e) {}
     }
   }, [props.data]);
 
@@ -388,8 +394,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   function handleClose() {
@@ -658,7 +664,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -694,11 +700,11 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => { })
-              .catch((err) => { });
+              .then((res) => {})
+              .catch((err) => {});
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -725,8 +731,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
@@ -777,8 +783,8 @@ function TaskEditModal(props) {
         newList: newList.kanbanListId,
         boardId: currentBoard,
       })
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
 
     selectList(index);
   };
@@ -906,8 +912,8 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   const viewHistory = () => {
@@ -921,7 +927,7 @@ function TaskEditModal(props) {
 
   const downLoad = (item) => {
     saveAs(item.fileUrl, item.fileName);
-  }
+  };
 
   return (
     <div>
@@ -1332,7 +1338,10 @@ function TaskEditModal(props) {
                     <div className="list-attachments">
                       {attachments.map((item) => {
                         return (
-                          <div className="attachment-item" onClick={() => downLoad(item)}>
+                          <div
+                            className="attachment-item"
+                            onClick={() => downLoad(item)}
+                          >
                             <img alt="" src={GetFileTypeImage(item.fileType)} />
                             <div className="attachment-name-containner">
                               <div className="download-icon-container">
@@ -1370,15 +1379,17 @@ function TaskEditModal(props) {
                       );
                     })}
 
-                    {cmtLists.length !== task.commentsCount && <div
-                      className="load-more-comment"
-                      onClick={seeMoreComments}
-                    >
-                      <div>
-                        <i>Xem thêm</i>
+                    {cmtLists.length !== task.commentsCount && (
+                      <div
+                        className="load-more-comment"
+                        onClick={seeMoreComments}
+                      >
+                        <div>
+                          <i>Xem thêm</i>
+                        </div>
+                        <div className="rotate">&#171;</div>
                       </div>
-                      <div className="rotate">&#171;</div>
-                    </div>}
+                    )}
                   </div>
                 </div>
               </CCol>

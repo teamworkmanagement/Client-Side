@@ -14,10 +14,14 @@ import { useHistory } from "react-router-dom";
 
 import queryString from "query-string";
 import taskApi from "src/api/taskApi";
-import { setCurrentBoard, setNullSignalRData } from "src/features/KanbanBoard/kanbanSlice";
+import {
+  setCurrentBoard,
+  setNullSignalRData,
+} from "src/features/KanbanBoard/kanbanSlice";
 import { setTaskEditModal, setUserModal, setViewHistory } from "src/appSlice";
 import TaskHistoryModal from "../MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 import HelpSidebar from "./SubSideBars/HelpSidebar/HelpSidebar.js";
+import DialogModal from "../MySharedComponents/DialogModal/DialogModal.js";
 
 const TheLayout = () => {
   const newNoti = useSelector((state) => state.app.newNotfication);
@@ -53,8 +57,7 @@ const TheLayout = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (!moveTask && !updateTask)
-      return;
+    if (!moveTask && !updateTask) return;
     const queryObj = queryString.parse(history.location.search);
     if (!queryObj.t) return;
 
@@ -77,30 +80,29 @@ const TheLayout = () => {
         .then((res) => {
           setModaTaskObj(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
 
       if (updateTask) {
-        dispatch(setNullSignalRData('updateTask'));
+        dispatch(setNullSignalRData("updateTask"));
       }
 
       if (moveTask) {
-        dispatch(setNullSignalRData('moveTask'));
+        dispatch(setNullSignalRData("moveTask"));
       }
     } else {
       if (updateTask) {
-        dispatch(setNullSignalRData('updateTask'));
+        dispatch(setNullSignalRData("updateTask"));
       }
 
       if (moveTask) {
-        dispatch(setNullSignalRData('moveTask'));
+        dispatch(setNullSignalRData("moveTask"));
       }
     }
   }, [updateTask, moveTask]);
 
   useEffect(() => {
     console.log(assignUser);
-    if (!assignUser)
-      return;
+    if (!assignUser) return;
 
     const queryObj = queryString.parse(history.location.search);
 
@@ -110,10 +112,9 @@ const TheLayout = () => {
 
     if (assignUser && assignUser.taskId === queryObj.t) {
       if (assignUser.userId === modalTaskObj.userId) {
-        dispatch(setNullSignalRData('reAssignUser'));
+        dispatch(setNullSignalRData("reAssignUser"));
         return;
-      }
-      else {
+      } else {
         setModaTaskObj({
           ...modalTaskObj,
           userId: assignUser.userId === "" ? null : assignUser.userId,
@@ -122,11 +123,11 @@ const TheLayout = () => {
           userName:
             assignUser.userFullName === "" ? null : assignUser.userFullName,
         });
-        dispatch(setNullSignalRData('reAssignUser'));
+        dispatch(setNullSignalRData("reAssignUser"));
       }
     } else {
       if (assignUser) {
-        dispatch(setNullSignalRData('reAssignUser'));
+        dispatch(setNullSignalRData("reAssignUser"));
       }
     }
   }, [assignUser]);
@@ -200,10 +201,9 @@ const TheLayout = () => {
           console.log(res.data);
           setDetails(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   }, [viewHistory]);
-
 
   useEffect(() => {
     const object = queryString.parse(history.location.search);
@@ -213,17 +213,18 @@ const TheLayout = () => {
         dispatch(setTaskEditModal(null));
       }
 
-      if (viewHistory)
-        dispatch(setViewHistory(null));
+      if (viewHistory) dispatch(setViewHistory(null));
     }
 
-    if ((!object.b || !object.t) && !history.location.pathname.includes('/newfeeds')) {
+    if (
+      (!object.b || !object.t) &&
+      !history.location.pathname.includes("/newfeeds")
+    ) {
       if (userModal) {
         dispatch(setUserModal(null));
       }
     }
-
-  }, [history.location.search, history.location.pathname])
+  }, [history.location.search, history.location.pathname]);
 
   return (
     <div className="c-app c-default-layout">
@@ -253,6 +254,7 @@ const TheLayout = () => {
         data={modalTaskObj}
       />
 
+      <DialogModal />
       <UserInfoModal userId={userModal?.userId} show={userModal?.show} />
 
       <TaskHistoryModal

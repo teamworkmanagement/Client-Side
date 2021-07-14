@@ -184,6 +184,18 @@ $baseTransition: all 0.3s;
                 .btn-login {
                     @include NormalButtonStyle;
                     margin: 1.5rem 0rem;
+                    .spinner-border {
+                        display: none;
+                        margin-right: 0.5rem;
+                        color: $lighterBaseColor !important;
+                    }
+                    &.logining {
+                        background-color: rgba($baseColor, 0.6);
+                        cursor: unset;
+                        .spinner-border {
+                            display: block;
+                        }
+                    }
                 }
                 .label-other-media {
                     display: flex;

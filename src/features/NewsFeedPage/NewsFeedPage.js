@@ -68,7 +68,7 @@ function NewsFeedPage(props) {
       .then((res) => {
         setGroupList(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, []);
 
   function toggleShowFilter() {
@@ -161,11 +161,11 @@ function NewsFeedPage(props) {
   };
 
   function replaceOffset(str, offs) {
-    let tag = '<@tag>';
+    let tag = "<@tag>";
     offs.reverse().forEach(function (v) {
       str = str.replace(
-        new RegExp('(.{' + v[0] + '})(.{' + (v[1] - v[0]) + '})'),
-        '$1' + tag + '$2' + tag + ''
+        new RegExp("(.{" + v[0] + "})(.{" + (v[1] - v[0]) + "})"),
+        "$1" + tag + "$2" + tag + ""
       );
     });
     return str;
@@ -217,7 +217,7 @@ function NewsFeedPage(props) {
 
         let newStr = replaceOffset(block.text, offsets);
         console.log(newStr);
-        let myArray = newStr.split('<@tag>');
+        let myArray = newStr.split("<@tag>");
         let j = 0;
         for (let i = 0; i < myArray.length; i++) {
           if (i % 2 !== 0) {
@@ -228,7 +228,7 @@ function NewsFeedPage(props) {
           }
         }
 
-        const finalStr = myArray.join('');
+        const finalStr = myArray.join("");
         console.log(myArray);
         console.log(finalStr);
         block.text = finalStr;
@@ -246,7 +246,6 @@ function NewsFeedPage(props) {
 
     console.log(value);
     console.log(userIds);
-
 
     const links = await uploadImage();
 
@@ -339,15 +338,15 @@ function NewsFeedPage(props) {
                 style={
                   showFilter
                     ? {
-                      borderBottomLeftRadius: "0",
-                      borderBottomRightRadius: "0",
-                      borderBottom: "none",
-                    }
+                        borderBottomLeftRadius: "0",
+                        borderBottomRightRadius: "0",
+                        borderBottom: "none",
+                      }
                     : {
-                      borderBottomLeftRadius: "10px",
-                      borderBottomRightRadius: "10px",
-                      borderBottom: "1px solid #e6ebf1",
-                    }
+                        borderBottomLeftRadius: "10px",
+                        borderBottomRightRadius: "10px",
+                        borderBottom: "1px solid #e6ebf1",
+                      }
                 }
               >
                 <div className="title">
@@ -419,6 +418,7 @@ function NewsFeedPage(props) {
             ) : null}
 
             <PostEditor
+              
               postTeamId={grAddPost}
               reset={resetEditorText}
               onAddPost={onAddPost}

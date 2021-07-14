@@ -135,8 +135,29 @@ const appSlice = createSlice({
     },
     taskEditModal: null,
     viewHistory: null,
+
+    //dialog
+    showDialogModal: false,
+    dialogTitle: "",
+    dialogMessage: "",
+    dialogType: 0, //0:info, 1: confirm, 2: error
+    dialogResult: false, //for confirm dialog
   },
   reducers: {
+    setShowDialogModal(state, payload) {
+      const data = payload.payload;
+      if (data.showDialogModal) {
+        state.showDialogModal = true;
+        state.dialogTitle = data.dialogTitle;
+        state.dialogMessage = data.dialogMessage;
+        state.dialogType = data.dialogType;
+      } else {
+        state.showDialogModal = false;
+      }
+    },
+    setDialogResult(state, payload) {
+      state.dialogResult = payload.payload;
+    },
     setSettingPageTab(state, action) {
       state.settingPageTab = action.payload;
     },
@@ -386,6 +407,8 @@ const appSlice = createSlice({
 
 const { actions, reducer } = appSlice;
 export const {
+  setShowDialogModal,
+  setDialogResult,
   changeStateHelpSidebar,
   setSettingPageTab,
   setHelpPageTab,

@@ -12,7 +12,12 @@ function CommentItem({ comment }) {
     const myArr = str.split("<@tag>");
     return myArr.map((ele, index) => {
       if (index % 2 === 0) {
-        return <div dangerouslySetInnerHTML={{ __html: ele }}></div>;
+        return (
+          <div
+            className="normal-text-comment"
+            dangerouslySetInnerHTML={{ __html: ele }}
+          ></div>
+        );
       } else {
         return (
           <Tag

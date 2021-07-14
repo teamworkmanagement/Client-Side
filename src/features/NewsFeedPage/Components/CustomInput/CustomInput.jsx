@@ -100,7 +100,7 @@ function CustomInput(props) {
     }, [props.teamId])
 
     return (
-        <div className="custom-input-container">
+        <div className="custom-input-comment-post-container">
             <Editor
                 placeholder="Viết bình luận..."
                 className="editor"

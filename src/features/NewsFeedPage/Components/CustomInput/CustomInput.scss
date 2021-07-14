@@ -1,17 +1,20 @@
-.custom-input-container {
+.custom-input-comment-post-container {
     height: 100%;
     .DraftEditor-root {
         border-radius: 0.625rem;
         min-height: 2.3rem;
-        
+        display: flex;
+        align-items: center;
         .public-DraftEditorPlaceholder-root {
             padding: 0rem 0.5rem !important;
+            padding-left: 0.7rem !important;
             display: flex;
             height: 100%;
             align-items: center;
         }
         .DraftEditor-editorContainer {
             padding: 0rem 0.5rem;
+            width: 100%;
             .notranslate.public-DraftEditor-content {
                 display: flex;
                 height: 100%;

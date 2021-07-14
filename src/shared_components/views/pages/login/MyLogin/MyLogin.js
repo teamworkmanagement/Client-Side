@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./MyLogin.scss";
-import { CInput, CRow } from "@coreui/react";
+import { CInput, CRow, CSpinner } from "@coreui/react";
 import { FcGoogle } from "react-icons/fc";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -21,7 +21,7 @@ import { validateEmail } from "src/utils/common";
 function MyLogin(props) {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-
+  const [logining, setLogining] = useState(false);
   const [loginObject, setLoginObject] = useState({
     email: "",
     password: "",
@@ -37,6 +37,7 @@ function MyLogin(props) {
   };
 
   const onLoginClick = () => {
+    if (logining) return;
     if (!loginObject.email || !loginObject.password) {
       toast(
         <CustomToast
@@ -58,10 +59,14 @@ function MyLogin(props) {
       );
       return;
     }
+    setLogining(true);
     dispatch(login(loginObject))
       .then(unwrapResult)
-      .then((originalPromiseResult) => {})
+      .then((originalPromiseResult) => {
+        setLogining(false);
+      })
       .catch((err) => {
+        setLogining(false);
         console.log("login err :", err);
         if (err.Message?.includes("Invalid Credentials")) {
           toast(
@@ -229,7 +234,11 @@ function MyLogin(props) {
                   Quên mật khẩu?
                 </div>
               </div>
-              <div className="btn-login" onClick={onLoginClick}>
+              <div
+                className={`btn-login ${logining ? "logining" : ""}`}
+                onClick={onLoginClick}
+              >
+                <CSpinner color="success" size="sm" />
                 Đăng nhập
               </div>
               <div className="label-other-media">

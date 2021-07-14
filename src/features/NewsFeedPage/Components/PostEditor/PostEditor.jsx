@@ -75,13 +75,14 @@ function PostEditor(props) {
     return (
         <div onClick={() => {
             editorRef.current.focus();
-        }} className={editorStyles.editor}>
+        }} className={`${editorStyles.editor} post-textfield`}>
             <Editor ref={editorRef}
                 editorKey={'editor'}
                 editorState={editorState}
                 onChange={onChange}
                 plugins={plugins}
                 placeholder="Viết bài..."
+                className="post-textfield"
             />
             <MentionSuggestions
                 open={open}
