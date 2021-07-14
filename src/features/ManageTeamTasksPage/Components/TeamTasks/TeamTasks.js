@@ -8,6 +8,7 @@ import TaskList from "src/features/TeamPage/Components/TeamTasks/Components/Task
 import { AiOutlineLeft } from "react-icons/ai";
 import {
   getBoardDataForUI,
+  setAdminAction,
   setCurrentBoard,
 } from "src/features/KanbanBoard/kanbanSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,13 +16,14 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import queryString from "query-string";
 import { useHistory } from "react-router";
-import { setTeamLoading } from "src/appSlice";
+import { setTeamLoading, setUserModal } from "src/appSlice";
 import { BiFilterAlt } from "react-icons/bi";
 import CreateKBListModal from "src/features/TeamPage/Components/TeamTasks/Components/CreateKBListModal/CreateKBListModal";
 import FilteredTasks from "src/features/TeamPage/Components/TeamTasks/Components/FilteredTasks/FilteredTasks";
 import FilterTaskModal from "src/shared_components/MySharedComponents/FilterTaskModal/FilterTaskModal";
 import CreateCardModal from "src/features/KanbanBoard/Components/KanbanList/Components/CreateCardModal/CreateCardModal";
 import { setTaskEditModal } from "src/appSlice";
+import { setLeaveTeam, setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
 
 function TeamTasks(props) {
   const [showMode, setShowMode] = useState(1); //1:kanban, 2:list, 3:gantt
@@ -32,12 +34,16 @@ function TeamTasks(props) {
   const [showAddCard, setShowAddCard] = useState(false);
 
   const adminAction = useSelector((state) => state.kanban.adminAction);
+  const leftTeam = useSelector(state => state.signalr.leaveTeam);
+  const updateTeamInfo = useSelector(state => state.signalr.updateTeamInfo);
 
   const [notfound, setNotFound] = useState(false);
   const [showAddKBList, setShowAddKBList] = useState(false);
   const currentBoard = useSelector(
     (state) => state.kanban.kanbanBoard.currentBoard
   );
+
+  const user = useSelector(state => state.auth.currentUser);
 
   const dispatch = useDispatch();
 
@@ -110,6 +116,33 @@ function TeamTasks(props) {
     setShowAddKBList(true);
   };
 
+  useEffect(() => {
+    if (!leftTeam)
+      return;
+    const queryObj = queryString.parse(history.location.search);
+    if (queryObj.gr === leftTeam.teamId && user.id === leftTeam.userId) {
+      setNotFound(true);
+      dispatch(setUserModal(null));
+      dispatch(setTaskEditModal(null));
+    }
+
+    dispatch(setLeaveTeam(null));
+  }, [leftTeam])
+
+  useEffect(() => {
+    if (!updateTeamInfo)
+      return;
+    const queryObj = queryString.parse(history.location.search);
+    if (queryObj.gr === updateTeamInfo.teamId && updateTeamInfo.leaderId && updateTeamInfo.leaderId === user.id) {
+      dispatch(setAdminAction(true));
+    }
+    else {
+      if (queryObj.gr === updateTeamInfo.teamId) {
+        dispatch(setAdminAction(false));
+      }
+    }
+    dispatch(setUpdateTeamInfo(null));
+  }, [updateTeamInfo])
   const renderHeader = () => {
     return !currentBoard ? null : (
       <>

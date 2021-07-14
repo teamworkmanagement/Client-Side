@@ -6,6 +6,8 @@ const signalrSlice = createSlice({
         removeReact: null,
         newComment: null,
         updateTeamInfo: null,
+        leaveTeam: null,
+        joinTeam: null,
     },
     reducers: {
         setNewAddReact(state, action) {
@@ -43,6 +45,22 @@ const signalrSlice = createSlice({
             else {
                 state.updateTeamInfo = null;
             }
+        },
+        setLeaveTeam(state, action) {
+            if (window.location.pathname.includes('team') && action.payload) {
+                state.leaveTeam = action.payload;
+            }
+            else {
+                state.leaveTeam = null;
+            }
+        },
+        setJoinTeam(state, action) {
+            if (window.location.pathname.includes('team') && action.payload) {
+                state.joinTeam = action.payload;
+            }
+            else {
+                state.joinTeam = null;
+            }
         }
     },
 });
@@ -52,6 +70,8 @@ export const {
     setNewAddReact,
     setRemoveReact,
     setNewComment,
-    setUpdateTeamInfo
+    setUpdateTeamInfo,
+    setLeaveTeam,
+    setJoinTeam
 } = actions;
 export default reducer;

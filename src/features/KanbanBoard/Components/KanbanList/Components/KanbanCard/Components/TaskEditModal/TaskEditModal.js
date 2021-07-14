@@ -3,6 +3,7 @@ import "./TaskEditModal.scss";
 import CIcon from "@coreui/icons-react";
 import { Range, getTrackBackground } from "react-range";
 import { Popover } from "react-tiny-popover";
+import { saveAs } from 'file-saver';
 
 import {
   CCol,
@@ -918,6 +919,10 @@ function TaskEditModal(props) {
     );
   };
 
+  const downLoad = (item) => {
+    saveAs(item.fileUrl, item.fileName);
+  }
+
   return (
     <div>
       <CModal
@@ -1327,18 +1332,11 @@ function TaskEditModal(props) {
                     <div className="list-attachments">
                       {attachments.map((item) => {
                         return (
-                          <div className="attachment-item">
+                          <div className="attachment-item" onClick={() => downLoad(item)}>
                             <img alt="" src={GetFileTypeImage(item.fileType)} />
                             <div className="attachment-name-containner">
                               <div className="download-icon-container">
                                 <CIcon name="cil-vertical-align-bottom" />
-                                <a
-                                  href={item.fileUrl}
-                                  name="cil-space-bar"
-                                  className="icon-bottom"
-                                >
-                                  <CIcon />
-                                </a>
                               </div>
                               <div className="attachment-name">
                                 {item.fileName}
@@ -1372,7 +1370,7 @@ function TaskEditModal(props) {
                       );
                     })}
 
-                    <div
+                    {cmtLists.length !== task.commentsCount && <div
                       className="load-more-comment"
                       onClick={seeMoreComments}
                     >
@@ -1380,7 +1378,7 @@ function TaskEditModal(props) {
                         <i>Xem thêm</i>
                       </div>
                       <div className="rotate">&#171;</div>
-                    </div>
+                    </div>}
                   </div>
                 </div>
               </CCol>

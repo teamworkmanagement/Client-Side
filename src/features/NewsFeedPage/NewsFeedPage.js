@@ -264,7 +264,7 @@ function NewsFeedPage(props) {
 
   const history = useHistory();
   const navigateToTeam = (teamId) => {
-    history.push(`/team/${teamId}`);
+    history.push(`/team/${teamId}?tab=teaminfo`);
   };
   return (
     <div className="newsfeed-page-container">

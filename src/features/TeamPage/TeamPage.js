@@ -20,14 +20,15 @@ import BoardsPage from "./Components/BoardsPage/BoardsPage";
 import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
 import { useHistory, useLocation, useParams } from "react-router";
 import queryString from "query-string";
-import { changeStateTeamTabsSidebar } from "src/appSlice";
+import { changeStateTeamTabsSidebar, setTaskEditModal, setUserModal } from "src/appSlice";
 
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import teamApi from "src/api/teamApi";
 
 import { GrGroup } from "react-icons/gr";
-import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
+import { setJoinTeam, setLeaveTeam, setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
 import { setAdminAction } from "../KanbanBoard/kanbanSlice";
+
 
 function TeamPage(props) {
   const dispatch = useDispatch();
@@ -37,8 +38,12 @@ function TeamPage(props) {
   const history = useHistory();
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
-  const teamUpdateInfo = useSelector(state => state.signalr.updateTeamInfo);
 
+  const teamUpdateInfo = useSelector(state => state.signalr.updateTeamInfo);
+  const leftTeam = useSelector(state => state.signalr.leaveTeam);
+  const joinTeam = useSelector(state => state.signalr.joinTeam);
+
+  const { teamId } = useParams();
   const [active, setActive] = useState(() => {
     if (queryParams != null) {
       switch (queryParams.tab) {
@@ -142,26 +147,70 @@ function TeamPage(props) {
   }, [history.location.search]);
 
   useEffect(() => {
-    if (teamUpdateInfo) {
-      if (teamUpdateInfo.leaderId) {
-        if (teamId == teamUpdateInfo.teamId) {
-          if (teamUpdateInfo.leaderId === user.id) {
-            dispatch(setAdminAction(true));
-            setTeam({
-              ...team,
-              teamLeaderId: user.id,
-            })
-          } else {
-            dispatch(setAdminAction(false));
-            setTeam({
-              ...team,
-              teamLeaderId: null,
-            })
+    if (teamId) {
+      teamApi
+        .getAdmin(teamId)
+        .then((res) => {
+
+        })
+        .catch((err) => {
+          if (err.ErrorCode === "404") setNotfound(true);
+        });
+    }
+  }, [teamId])
+
+  useEffect(() => {
+    if (!joinTeam)
+      return;
+    if (joinTeam) {
+      if (teamId == joinTeam.teamId) {
+        //load lại ds thành viên
+
+      }
+    }
+    dispatch(setJoinTeam(null));
+  }, [joinTeam])
+
+  useEffect(() => {
+    if (!leftTeam)
+      return;
+    if (leftTeam) {
+      if (teamId == leftTeam.teamId) {
+        //load lại ds thành viên
+        if (leftTeam.userId === user.id) {
+          setNotfound(true);
+          const queryObj = queryString.parse(history.location.search);
+          if (queryObj.t) {
+            dispatch(setUserModal(null));
+            dispatch(setTaskEditModal(null));
           }
         }
       }
-      dispatch(setUpdateTeamInfo(null));
     }
+    dispatch(setLeaveTeam(null));
+  }, [leftTeam])
+
+  useEffect(() => {
+    if (!teamUpdateInfo)
+      return;
+    if (teamId === teamUpdateInfo.teamId && teamUpdateInfo.leaderId && user.id === teamUpdateInfo.leaderId) {
+      dispatch(setAdminAction(true));
+      setTeam({
+        ...team,
+        teamLeaderId: user.id,
+      })
+      console.log(1);
+    } else {
+      if (teamId === teamUpdateInfo.teamId) {
+        dispatch(setAdminAction(false));
+        setTeam({
+          ...team,
+          teamLeaderId: null,
+        })
+        console.log(2);
+      }
+    }
+    dispatch(setUpdateTeamInfo(null));
   }, [teamUpdateInfo])
 
   const boardRender = () => {
@@ -193,7 +242,6 @@ function TeamPage(props) {
   const [notfound, setNotfound] = useState(false);
   const [team, setTeam] = useState({});
 
-  const { teamId } = useParams();
   const user = useSelector((state) => state.auth.currentUser);
 
   useEffect(() => {
@@ -206,7 +254,10 @@ function TeamPage(props) {
             .then((res) => {
               setTeam(res.data);
             })
-            .catch((err) => { });
+            .catch((err) => {
+              if (err.ErrorCode === "404") setNotfound(true);
+              return;
+            });
         })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
@@ -214,14 +265,10 @@ function TeamPage(props) {
     }
   }, [teamId]);
 
-  const changeLeader = () => {
-    teamApi
-      .getTeam(teamId)
-      .then((res) => {
-        setTeam(res.data);
-      })
-      .catch((err) => { });
-  };
+
+  const setNotFoundView = () => {
+    setNotfound(true);
+  }
 
   const renderNormal = () => {
     return (
@@ -291,7 +338,7 @@ function TeamPage(props) {
             <CTabContent>
               <CTabPane>
                 {active === 0 ? (
-                  <TeamMembersList changeLeader={changeLeader} />
+                  <TeamMembersList />
                 ) : null}
               </CTabPane>
               <CTabPane>
