@@ -119,7 +119,7 @@ function AccountSettingsPage(props) {
     authApi
       .updateUserInfo(userInfoClone)
       .then((res) => {
-        dispatch(setCurrentUser(userInfoClone));
+
       })
       .catch((err) => {
         toast(<CustomToast type="error" title="Lỗi" message="Có lỗi xảy ra" />);
@@ -128,6 +128,10 @@ function AccountSettingsPage(props) {
 
   const changePasswordClick = () => {
     console.log(changePWObject);
+    if (!changePWObject.confirmPassword || (!changePWObject.currentPassword && !user.firstTimeSocial) && !changePWObject.newPassword) {
+      toast(<CustomToast type="error" title="Lỗi" message="Vui lòng kiểm tra dữ liệu" />);
+      return;
+    }
     dispatch(changePassword(changePWObject));
   };
   const toggleSettingOptionsSidebar = () => {
@@ -170,7 +174,7 @@ function AccountSettingsPage(props) {
               })
             );
           })
-          .catch((err) => {});
+          .catch((err) => { });
       });
     });
   };
@@ -188,7 +192,7 @@ function AccountSettingsPage(props) {
           userAvatar: `https://ui-avatars.com/api/?name=${userInfo.fullName}`,
         });
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
   return (
     <div className="account-page-container">
@@ -203,18 +207,16 @@ function AccountSettingsPage(props) {
       <div className="account-page-content">
         <div className="setting-options d-sm-down-none">
           <div
-            className={`tab-setting tab-1 tab-infor ${
-              selectedOptions === 0 ? "active" : ""
-            }`}
+            className={`tab-setting tab-1 tab-infor ${selectedOptions === 0 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(0)}
           >
             <ImInfo className="icon-info icon" />
             Thông tin của bạn
           </div>
           <div
-            className={`tab-setting tab-2 tab-passowrd ${
-              selectedOptions === 1 ? "active" : ""
-            }`}
+            className={`tab-setting tab-2 tab-passowrd ${selectedOptions === 1 ? "active" : ""
+              }`}
             onClick={() => ChooseSettingOption(1)}
           >
             <AiOutlineLock className="icon-password icon" />
@@ -309,7 +311,7 @@ function AccountSettingsPage(props) {
                     <CInput
                       name="userDob"
                       id="birthDate-input"
-                      value={userInfo.userDob}
+                      value={userInfo.userDob ? userInfo.userDob.substring(0, 10) : ''}
                       type="date"
                       onChange={handleInputChange}
                     />
@@ -349,9 +351,9 @@ function AccountSettingsPage(props) {
                       value={userInfo.userAddress}
                       onChange={handleInputChange}
                       name="userAddress"
-                      //value={userInfo.email}
-                      //onChange={handleInputChange}
-                      //invalid={userInfo.email === "" || userInfo.email === null}
+                    //value={userInfo.email}
+                    //onChange={handleInputChange}
+                    //invalid={userInfo.email === "" || userInfo.email === null}
                     />
                   </CFormGroup>
                 </CCol>
@@ -374,9 +376,9 @@ function AccountSettingsPage(props) {
                         value={userInfo.userGithubLink}
                         name="userGithubLink"
                         onChange={handleInputChange}
-                        //value={userInfo.email}
-                        //onChange={handleInputChange}
-                        //invalid={userInfo.email === "" || userInfo.email === null}
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                     <div className="social-group">
@@ -391,9 +393,9 @@ function AccountSettingsPage(props) {
                         name="userFacebookLink"
                         value={userInfo.userFacebookLink}
                         onChange={handleInputChange}
-                        //value={userInfo.email}
-                        //onChange={handleInputChange}
-                        //invalid={userInfo.email === "" || userInfo.email === null}
+                      //value={userInfo.email}
+                      //onChange={handleInputChange}
+                      //invalid={userInfo.email === "" || userInfo.email === null}
                       />
                     </div>
                   </CFormGroup>
@@ -461,12 +463,12 @@ function AccountSettingsPage(props) {
                     (changePWObject.confirmPassword === "" ||
                       changePWObject.confirmPassword === null ||
                       changePWObject.confirmPassword !==
-                        changePWObject.newPassword)
+                      changePWObject.newPassword)
                   }
                   valid={
                     confirmDirty &&
                     changePWObject.confirmPassword ===
-                      changePWObject.newPassword
+                    changePWObject.newPassword
                   }
                   name="confirmPassword"
                 />
