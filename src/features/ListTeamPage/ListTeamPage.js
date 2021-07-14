@@ -25,7 +25,7 @@ import { BsClipboardData } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import teamApi from "src/api/teamApi";
-import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
+import { setJoinTeam, setLeaveTeam, setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
@@ -62,6 +62,8 @@ function ListTeamPage(props) {
   const teams = useSelector((state) => state.team.teams);
   const user = useSelector((state) => state.auth.currentUser);
   const teamUpdateInfo = useSelector(state => state.signalr.updateTeamInfo);
+  const leftTeam = useSelector(state => state.signalr.leaveTeam);
+  const joinTeam = useSelector(state => state.signalr.joinTeam);
 
   useEffect(() => {
     console.log("loading teams");
@@ -78,7 +80,7 @@ function ListTeamPage(props) {
     }
 
     loadData();
-  }, []);
+  }, [showMode]);
 
   useEffect(() => {
     if (teamUpdateInfo) {
@@ -89,6 +91,24 @@ function ListTeamPage(props) {
       dispatch(setUpdateTeamInfo(null));
     }
   }, [teamUpdateInfo])
+
+  useEffect(() => {
+    if (leftTeam) {
+      if (user.id === leftTeam.userId) {
+        dispatch(getTeamByUserId(user.id));
+      }
+      dispatch(setLeaveTeam(null));
+    }
+  }, [leftTeam])
+
+  useEffect(() => {
+    if (joinTeam) {
+      if (user.id === joinTeam.userId) {
+        dispatch(getTeamByUserId(user.id));
+      }
+      dispatch(setJoinTeam(null));
+    }
+  }, [joinTeam])
 
   const navigateToTeam = (teamId) => {
     history.push(`/team/${teamId}?tab=teaminfo`);

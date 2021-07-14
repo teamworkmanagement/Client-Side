@@ -86,7 +86,7 @@ function MyLogin(props) {
           return;
         }
 
-        if (err.includes("timeout")) {
+        if (typeof err === 'string' && err.includes("timeout")) {
           toast(
             <CustomToast
               type="error"
@@ -163,7 +163,7 @@ function MyLogin(props) {
       .then(unwrapResult)
       .then((originalPromiseResult) => { })
       .catch((err) => {
-        if (err.includes("timeout")) {
+        if (typeof err === 'string' && err.includes("timeout")) {
           toast(
             <CustomToast
               type="error"

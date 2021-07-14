@@ -7,7 +7,9 @@ import {
 } from "@coreui/react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import teamApi from "src/api/teamApi";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 import { addTeam } from "../teamSlice";
 import "./JoinTeamModal.scss";
 
@@ -20,6 +22,8 @@ function JoinTeamModal(props) {
   };
 
   const onJoinTeamClick = () => {
+    if (!teamCode)
+      return;
     teamApi
       .joinTeam({
         userId: userId,
@@ -29,19 +33,31 @@ function JoinTeamModal(props) {
         const data = res.data;
         setTeamCode("");
         if (!data) {
-          alert("Team không tồn tại");
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Team không tồn tại!"
+            />
+          );
           return;
         }
 
         if (data?.teamName === null) {
-          alert("Bạn đã tham gia nhóm này trước đó");
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Bạn đã tham gia nhóm này trước đó!"
+            />
+          );
           return;
         }
-
-        alert("Tham gia nhóm thành công");
-        dispatch(addTeam(data));
       })
-      .catch((err) => {});
+      .catch((err) => { })
+      .finally(() => {
+        props.onClose();
+      });
   };
 
   return (

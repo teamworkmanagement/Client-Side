@@ -38,7 +38,6 @@ function ManageTeamTasksPage(props) {
     }
   }, [history.location.search]);
 
-  useEffect(() => {}, [boardId]);
   return (
     <div className="teamtasks-page-container">
       {!isInBoard && <TeamBoards goToBoard={goToBoard} />}

@@ -34,7 +34,7 @@ import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { CgArrowsExchange } from "react-icons/cg";
 import { setUserModal } from "src/appSlice";
 import { useHistory } from "react-router-dom";
-import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
+import { setUpdateTeamInfo, setLeaveTeam, setJoinTeam } from "src/utils/signalr/signalrSlice";
 
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
@@ -48,15 +48,6 @@ function TeamMembersList(props) {
     { key: "infor", label: "Tên", _style: { width: "100%" } },
     { key: "role", label: "Vai trò" },
     { key: "actions", label: "Hành động", _style: { width: "5%" } },
-  ];
-
-  const leaderData = [
-    {
-      avatar: "https://emilus.themenate.net/img/avatars/thumb-4.jpg",
-      name: "Huy Lê",
-      email: "huylengoc12@gmail.com",
-      isLeader: true,
-    },
   ];
 
   const [admin, setAdmin] = useState({});
@@ -77,6 +68,8 @@ function TeamMembersList(props) {
   const history = useHistory();
 
   const updateTeamInfSignalR = useSelector(state => state.signalr.updateTeamInfo);
+  const leftTeam = useSelector(state => state.signalr.leaveTeam);
+  const joinTeam = useSelector(state => state.signalr.joinTeam);
 
   useEffect(() => {
     console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzz: ", teamId);
@@ -108,11 +101,11 @@ function TeamMembersList(props) {
   }, [teamId]);
 
   useEffect(() => {
+    if (!updateTeamInfSignalR)
+      return;
     if (updateTeamInfSignalR) {
       console.log('realtimezzzzzzzzzzzzzzzzzzzzzzz');
       if (teamId === updateTeamInfSignalR.teamId) {
-        if (!teamId) return;
-        setLoadingMembers(true);
         teamApi
           .getAdmin(teamId)
           .then((res) => {
@@ -124,7 +117,7 @@ function TeamMembersList(props) {
         const params = {
           teamId: teamId,
           pageNumber: 1,
-          pageSize: 5,
+          pageSize: 10,
           keyWord: null,
         };
 
@@ -142,6 +135,44 @@ function TeamMembersList(props) {
     }
   }, [updateTeamInfSignalR])
 
+  useEffect(() => {
+    if (!joinTeam)
+      return;
+    if (joinTeam) {
+      if (teamId == joinTeam.teamId) {
+        //load lại ds thành viên
+        const params = {
+          teamId: teamId,
+          pageSize: 10,
+          pageNumber: 1,
+          keyWord: null,
+        };
+
+        setFilterObj(params);
+      }
+    }
+    dispatch(setJoinTeam(null));
+  }, [joinTeam])
+
+  useEffect(() => {
+    if (!leftTeam)
+      return;
+    if (leftTeam) {
+      if (teamId == leftTeam.teamId) {
+        //load lại ds thành viên
+        const params = {
+          teamId: teamId,
+          pageSize: 10,
+          pageNumber: 1,
+          keyWord: null,
+        };
+
+        setFilterObj(params);
+      }
+    }
+    dispatch(setLeaveTeam(null))
+  }, [leftTeam])
+
   const currentPageChange = (index) => {
     if (index === 0) return;
     setLoadingMembers(true);
@@ -150,7 +181,7 @@ function TeamMembersList(props) {
 
     const params = {
       teamId: teamId,
-      pageSize: 5,
+      pageSize: 10,
       pageNumber: index,
       keyWord: null,
     };
@@ -293,16 +324,6 @@ function TeamMembersList(props) {
         };
 
         setFilterObj(params);
-        /*teamApi
-        .getUsersPagingByTeam({ params })
-        .then((res) => {
-          console.log(res.data.items);
-          setMembers(res.data.items);
-          setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
-
-        })
-        .catch((err) => {
-        });*/
 
         teamApi
           .getTeam(teamId)
@@ -325,13 +346,7 @@ function TeamMembersList(props) {
     teamApi
       .leaveTeam({ params })
       .then((res) => {
-        const params = {
-          teamId: teamId,
-          pageNumber: 1,
-          pageSize: 10,
-        };
 
-        setFilterObj(params);
       })
       .catch((err) => { });
   };
@@ -472,7 +487,7 @@ function TeamMembersList(props) {
             <div className="leader-name">Huy Lê</div>
             <div className="leader-email">huylengoc12@gmail.com</div> */}
             <CDataTable
-              items={leaderData}
+              items={[admin]}
               fields={fields}
               scopedSlots={{
                 infor: (item) => {
