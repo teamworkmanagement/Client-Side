@@ -39,7 +39,7 @@ function UserFilter(props) {
             return {
               value: x.userId,
               label: x.userFullname,
-              img: "https://cdn.gametv.vn/gtv-photo/GTVNews/1616637522/api_cdn.gametv.vn-9bd2020a72acd9c7e91a4438108758ef.jpg",
+              img: x.userImageUrl,
             };
           });
           setOptions(ops);

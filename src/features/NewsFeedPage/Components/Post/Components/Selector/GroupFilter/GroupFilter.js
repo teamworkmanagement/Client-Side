@@ -53,9 +53,7 @@ function GroupFilter(props) {
             return {
               value: x.teamId,
               label: x.teamName,
-              img: x.teamAvatar
-                ? x.teamAvatar
-                : "https://cdn.gametv.vn/gtv-photo/GTVNews/1616637522/api_cdn.gametv.vn-9bd2020a72acd9c7e91a4438108758ef.jpg",
+              img: x.teamImageUrl,
             };
           });
           setOptions(ops);
