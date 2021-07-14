@@ -281,12 +281,12 @@ function Post(props) {
         })}
       </div>
 
-      <div className="load-more-comment">
+      {post.postCommentCount !== cmtLists.length && <div className="load-more-comment">
         <div onClick={seeMore}>
           <i>Xem thêm </i>
         </div>
         <div className="rotate">&#171;</div>
-      </div>
+      </div>}
     </div>
   );
 }
