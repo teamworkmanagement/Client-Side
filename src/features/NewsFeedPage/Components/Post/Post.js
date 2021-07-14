@@ -160,8 +160,6 @@ function Post(props) {
 
     console.log(value);
 
-    return;
-
     commentApi
       .addComment({
         commentPostId: post.postId,
