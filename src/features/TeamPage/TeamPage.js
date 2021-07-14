@@ -20,15 +20,22 @@ import BoardsPage from "./Components/BoardsPage/BoardsPage";
 import TeamStatistics from "./Components/TeamStatistics/TeamStatistics";
 import { useHistory, useLocation, useParams } from "react-router";
 import queryString from "query-string";
-import { changeStateTeamTabsSidebar, setTaskEditModal, setUserModal } from "src/appSlice";
+import {
+  changeStateTeamTabsSidebar,
+  setTaskEditModal,
+  setUserModal,
+} from "src/appSlice";
 
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import teamApi from "src/api/teamApi";
 
 import { GrGroup } from "react-icons/gr";
-import { setJoinTeam, setLeaveTeam, setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
+import {
+  setJoinTeam,
+  setLeaveTeam,
+  setUpdateTeamInfo,
+} from "src/utils/signalr/signalrSlice";
 import { setAdminAction } from "../KanbanBoard/kanbanSlice";
-
 
 function TeamPage(props) {
   const dispatch = useDispatch();
@@ -39,9 +46,9 @@ function TeamPage(props) {
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
 
-  const teamUpdateInfo = useSelector(state => state.signalr.updateTeamInfo);
-  const leftTeam = useSelector(state => state.signalr.leaveTeam);
-  const joinTeam = useSelector(state => state.signalr.joinTeam);
+  const teamUpdateInfo = useSelector((state) => state.signalr.updateTeamInfo);
+  const leftTeam = useSelector((state) => state.signalr.leaveTeam);
+  const joinTeam = useSelector((state) => state.signalr.joinTeam);
 
   const { teamId } = useParams();
   const [active, setActive] = useState(() => {
@@ -150,32 +157,27 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => {
-
-        })
+        .then((res) => {})
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
         });
     }
-  }, [teamId])
+  }, [teamId]);
 
   useEffect(() => {
-    if (!joinTeam)
-      return;
+    if (!joinTeam) return;
     if (joinTeam) {
-      if (teamId == joinTeam.teamId) {
+      if (teamId === joinTeam.teamId) {
         //load lại ds thành viên
-
       }
     }
     dispatch(setJoinTeam(null));
-  }, [joinTeam])
+  }, [joinTeam]);
 
   useEffect(() => {
-    if (!leftTeam)
-      return;
+    if (!leftTeam) return;
     if (leftTeam) {
-      if (teamId == leftTeam.teamId) {
+      if (teamId === leftTeam.teamId) {
         //load lại ds thành viên
         if (leftTeam.userId === user.id) {
           setNotfound(true);
@@ -188,17 +190,20 @@ function TeamPage(props) {
       }
     }
     dispatch(setLeaveTeam(null));
-  }, [leftTeam])
+  }, [leftTeam]);
 
   useEffect(() => {
-    if (!teamUpdateInfo)
-      return;
-    if (teamId === teamUpdateInfo.teamId && teamUpdateInfo.leaderId && user.id === teamUpdateInfo.leaderId) {
+    if (!teamUpdateInfo) return;
+    if (
+      teamId === teamUpdateInfo.teamId &&
+      teamUpdateInfo.leaderId &&
+      user.id === teamUpdateInfo.leaderId
+    ) {
       dispatch(setAdminAction(true));
       setTeam({
         ...team,
         teamLeaderId: user.id,
-      })
+      });
       console.log(1);
     } else {
       if (teamId === teamUpdateInfo.teamId) {
@@ -206,12 +211,12 @@ function TeamPage(props) {
         setTeam({
           ...team,
           teamLeaderId: null,
-        })
+        });
         console.log(2);
       }
     }
     dispatch(setUpdateTeamInfo(null));
-  }, [teamUpdateInfo])
+  }, [teamUpdateInfo]);
 
   const boardRender = () => {
     const pathname = history.location.pathname.split("/");
@@ -265,10 +270,10 @@ function TeamPage(props) {
     }
   }, [teamId]);
 
-
+  // eslint-disable-next-line
   const setNotFoundView = () => {
     setNotfound(true);
-  }
+  };
 
   const renderNormal = () => {
     return (
@@ -336,11 +341,7 @@ function TeamPage(props) {
               />
             </div>
             <CTabContent>
-              <CTabPane>
-                {active === 0 ? (
-                  <TeamMembersList />
-                ) : null}
-              </CTabPane>
+              <CTabPane>{active === 0 ? <TeamMembersList /> : null}</CTabPane>
               <CTabPane>
                 {active === 1 ? <NewsFeedPage isInTeam={true} /> : null}
               </CTabPane>

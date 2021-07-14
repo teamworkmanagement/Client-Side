@@ -11,7 +11,13 @@ import {
 } from "@coreui/react";
 import { ImInfo } from "react-icons/im";
 
-import { AiOutlineLock, AiOutlineDelete, AiFillGithub } from "react-icons/ai";
+import {
+  AiOutlineLock,
+  AiOutlineDelete,
+  AiFillGithub,
+  AiFillEye,
+  AiFillEyeInvisible,
+} from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import authApi from "src/api/authApi";
 import {
@@ -190,6 +196,10 @@ function AccountSettingsPage(props) {
       })
       .catch((err) => {});
   };
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showReNewPassword, setShowReNewPassword] = useState(false);
+
   return (
     <div className="account-page-container">
       <div className="toggle-setting-options-sidebar-btn">
@@ -412,15 +422,29 @@ function AccountSettingsPage(props) {
                   <CLabel className="input-label" htmlFor="current-password">
                     Mật khẩu hiện tại
                   </CLabel>
-                  <CInput
-                    id="current-password"
-                    placeholder="Nhập mật khẩu hiện tại..."
-                    value={changePWObject.currentPassword}
-                    onChange={handlePasswordChange}
-                    invalid={currentDirty && !changePWObject.currentPassword}
-                    type="password"
-                    name="currentPassword"
-                  />
+                  <div className="password-group">
+                    <CInput
+                      id="current-password"
+                      placeholder="Nhập mật khẩu hiện tại..."
+                      value={changePWObject.currentPassword}
+                      onChange={handlePasswordChange}
+                      invalid={currentDirty && !changePWObject.currentPassword}
+                      type={`${showPassword ? "text" : "password"}`}
+                      name="currentPassword"
+                    />
+                    {showPassword && (
+                      <AiFillEye
+                        onClick={() => setShowPassword(false)}
+                        className="icon-eye-password icon-showpassword"
+                      />
+                    )}
+                    {!showPassword && (
+                      <AiFillEyeInvisible
+                        onClick={() => setShowPassword(true)}
+                        className=" icon-eye-password icon-hidepassword"
+                      />
+                    )}
+                  </div>
                   <CInvalidFeedback>
                     Mật khẩu hiện tại không hợp lệ
                   </CInvalidFeedback>
@@ -430,46 +454,76 @@ function AccountSettingsPage(props) {
                 <CLabel className="input-label" htmlFor="new-password">
                   Mật khẩu mới
                 </CLabel>
-                <CInput
-                  type="password"
-                  id="new-password"
-                  placeholder="Nhập mật khẩu mới..."
-                  value={changePWObject.newPassword}
-                  onChange={handlePasswordChange}
-                  invalid={
-                    newDirty &&
-                    (changePWObject.newPassword === "" ||
-                      changePWObject.newPassword === null)
-                  }
-                  valid={newDirty && changePWObject.newPassword !== ""}
-                  name="newPassword"
-                />
+                <div className="password-group">
+                  <CInput
+                    type={`${showNewPassword ? "text" : "password"}`}
+                    id="new-password"
+                    placeholder="Nhập mật khẩu mới..."
+                    value={changePWObject.newPassword}
+                    onChange={handlePasswordChange}
+                    invalid={
+                      newDirty &&
+                      (changePWObject.newPassword === "" ||
+                        changePWObject.newPassword === null)
+                    }
+                    valid={newDirty && changePWObject.newPassword !== ""}
+                    name="newPassword"
+                  />
+                  {showNewPassword && (
+                    <AiFillEye
+                      onClick={() => setShowNewPassword(false)}
+                      className="icon-eye-password icon-showpassword"
+                    />
+                  )}
+                  {!showNewPassword && (
+                    <AiFillEyeInvisible
+                      onClick={() => setShowNewPassword(true)}
+                      className=" icon-eye-password icon-hidepassword"
+                    />
+                  )}
+                </div>
+
                 <CInvalidFeedback>Mật khẩu mới không hợp lệ</CInvalidFeedback>
               </CFormGroup>
               <CFormGroup>
                 <CLabel className="input-label" htmlFor="new-password-confirm">
                   Xác nhận mật khẩu mới
                 </CLabel>
-                <CInput
-                  type="password"
-                  id="new-password-confirm"
-                  placeholder="Nhập lại mật khẩu mới..."
-                  value={changePWObject.confirmPassword}
-                  onChange={handlePasswordChange}
-                  invalid={
-                    confirmDirty &&
-                    (changePWObject.confirmPassword === "" ||
-                      changePWObject.confirmPassword === null ||
-                      changePWObject.confirmPassword !==
-                        changePWObject.newPassword)
-                  }
-                  valid={
-                    confirmDirty &&
-                    changePWObject.confirmPassword ===
-                      changePWObject.newPassword
-                  }
-                  name="confirmPassword"
-                />
+                <div className="password-group">
+                  <CInput
+                    type={`${showReNewPassword ? "text" : "password"}`}
+                    id="new-password-confirm"
+                    placeholder="Nhập lại mật khẩu mới..."
+                    value={changePWObject.confirmPassword}
+                    onChange={handlePasswordChange}
+                    invalid={
+                      confirmDirty &&
+                      (changePWObject.confirmPassword === "" ||
+                        changePWObject.confirmPassword === null ||
+                        changePWObject.confirmPassword !==
+                          changePWObject.newPassword)
+                    }
+                    valid={
+                      confirmDirty &&
+                      changePWObject.confirmPassword ===
+                        changePWObject.newPassword
+                    }
+                    name="confirmPassword"
+                  />
+                  {showReNewPassword && (
+                    <AiFillEye
+                      onClick={() => setShowReNewPassword(false)}
+                      className="icon-eye-password icon-showpassword"
+                    />
+                  )}
+                  {!showReNewPassword && (
+                    <AiFillEyeInvisible
+                      onClick={() => setShowReNewPassword(true)}
+                      className=" icon-eye-password icon-hidepassword"
+                    />
+                  )}
+                </div>
+
                 <CInvalidFeedback>
                   xác nhận mật khẩu mới không trùng khớp
                 </CInvalidFeedback>

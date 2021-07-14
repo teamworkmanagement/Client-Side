@@ -15,7 +15,11 @@ import GridImages from "./Components/GridImages/GridImages";
 import { useHistory } from "react-router-dom";
 import Tag from "./Components/Tag/Tag";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
-import { setNewAddReact, setNewComment, setRemoveReact } from "src/utils/signalr/signalrSlice";
+import {
+  setNewAddReact,
+  setNewComment,
+  setRemoveReact,
+} from "src/utils/signalr/signalrSlice";
 
 moment.locale("vi");
 
@@ -55,13 +59,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-        .deleteReactPost({ params })
-        .then((res) => { })
-        .catch((err) => { })
+          .deleteReactPost({ params })
+          .then((res) => {})
+          .catch((err) => {})
       : postApi
-        .reactPost(params)
-        .then((res) => { })
-        .catch((err) => { });
+          .reactPost(params)
+          .then((res) => {})
+          .catch((err) => {});
   };
 
   String.prototype.replaceBetween = function (start, end, what) {
@@ -133,6 +137,7 @@ function Post(props) {
     console.log(value);
 
     return;
+    // eslint-disable-next-line
     commentApi
       .addComment({
         commentPostId: post.postId,
@@ -145,10 +150,8 @@ function Post(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => {
-
-      })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -189,7 +192,7 @@ function Post(props) {
         setPost({
           ...post,
           postReactCount: post.postReactCount - 1,
-        })
+        });
       }
     }
     if (removeReact) {
@@ -281,12 +284,14 @@ function Post(props) {
         })}
       </div>
 
-      {post.postCommentCount !== cmtLists.length && <div className="load-more-comment">
-        <div onClick={seeMore}>
-          <i>Xem thêm </i>
+      {post.postCommentCount !== cmtLists.length && (
+        <div className="load-more-comment">
+          <div onClick={seeMore}>
+            <i>Xem thêm </i>
+          </div>
+          <div className="rotate">&#171;</div>
         </div>
-        <div className="rotate">&#171;</div>
-      </div>}
+      )}
     </div>
   );
 }

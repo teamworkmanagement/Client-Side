@@ -5,7 +5,7 @@ import {
   CDropdownMenu,
   CDropdownToggle,
   CImg,
-  CSwitch,
+  //CSwitch,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import "./TheHeaderDropdown.scss";
 import { useHistory } from "react-router";
 import { delete_cookie } from "src/utils/auth";
 import { setAuthF } from "../views/pages/login/authSlice";
+import { getAvaImageLink } from "src/utils/avatar/avatarUtils.js";
 
 const TheHeaderDropdown = () => {
   const user = useSelector((state) => state.auth.currentUser);
@@ -41,12 +42,21 @@ const TheHeaderDropdown = () => {
       pathname: "/help",
       search: null,
     });
-  }
+  };
 
   const onLogout = () => {
     dispatch(setAuthF());
     delete_cookie("backup");
   };
+
+  // eslint-disable-next-line
+  function getUserAvaImage() {
+    if (!user.userAvatar || user.userAvatar === "") {
+      return getAvaImageLink(user.fullName);
+    }
+    return user.userAvatar;
+  }
+
   return (
     <CDropdown inNav className="c-header-nav-items mx-2" direction="down">
       <CDropdownToggle className="c-header-nav-link" caret={false}>

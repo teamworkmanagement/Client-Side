@@ -6,15 +6,13 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import teamApi from "src/api/teamApi";
 import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
-import { addTeam } from "../teamSlice";
 import "./JoinTeamModal.scss";
 
 function JoinTeamModal(props) {
-  const dispatch = useDispatch();
   const [teamCode, setTeamCode] = useState("");
   const userId = useSelector((state) => state.auth.currentUser.id);
   const handleOnClose = () => {

@@ -34,7 +34,11 @@ import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { CgArrowsExchange } from "react-icons/cg";
 import { setUserModal } from "src/appSlice";
 import { useHistory } from "react-router-dom";
-import { setUpdateTeamInfo, setLeaveTeam, setJoinTeam } from "src/utils/signalr/signalrSlice";
+import {
+  setUpdateTeamInfo,
+  setLeaveTeam,
+  setJoinTeam,
+} from "src/utils/signalr/signalrSlice";
 
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
@@ -67,9 +71,11 @@ function TeamMembersList(props) {
   const imgPickerRef = useRef(null);
   const history = useHistory();
 
-  const updateTeamInfSignalR = useSelector(state => state.signalr.updateTeamInfo);
-  const leftTeam = useSelector(state => state.signalr.leaveTeam);
-  const joinTeam = useSelector(state => state.signalr.joinTeam);
+  const updateTeamInfSignalR = useSelector(
+    (state) => state.signalr.updateTeamInfo
+  );
+  const leftTeam = useSelector((state) => state.signalr.leaveTeam);
+  const joinTeam = useSelector((state) => state.signalr.joinTeam);
 
   useEffect(() => {
     console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzz: ", teamId);
@@ -81,7 +87,7 @@ function TeamMembersList(props) {
         console.log(res);
         setAdmin(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
 
     const params = {
       teamId: teamId,
@@ -97,14 +103,13 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [teamId]);
 
   useEffect(() => {
-    if (!updateTeamInfSignalR)
-      return;
+    if (!updateTeamInfSignalR) return;
     if (updateTeamInfSignalR) {
-      console.log('realtimezzzzzzzzzzzzzzzzzzzzzzz');
+      console.log("realtimezzzzzzzzzzzzzzzzzzzzzzz");
       if (teamId === updateTeamInfSignalR.teamId) {
         teamApi
           .getAdmin(teamId)
@@ -112,7 +117,7 @@ function TeamMembersList(props) {
             console.log(res);
             setAdmin(res.data);
           })
-          .catch((err) => { });
+          .catch((err) => {});
 
         const params = {
           teamId: teamId,
@@ -128,18 +133,17 @@ function TeamMembersList(props) {
           .then((res) => {
             setTeam(res.data);
           })
-          .catch((err) => { });
+          .catch((err) => {});
 
         dispatch(setUpdateTeamInfo(null));
       }
     }
-  }, [updateTeamInfSignalR])
+  }, [updateTeamInfSignalR]);
 
   useEffect(() => {
-    if (!joinTeam)
-      return;
+    if (!joinTeam) return;
     if (joinTeam) {
-      if (teamId == joinTeam.teamId) {
+      if (teamId === joinTeam.teamId) {
         //load lại ds thành viên
         const params = {
           teamId: teamId,
@@ -152,13 +156,12 @@ function TeamMembersList(props) {
       }
     }
     dispatch(setJoinTeam(null));
-  }, [joinTeam])
+  }, [joinTeam]);
 
   useEffect(() => {
-    if (!leftTeam)
-      return;
+    if (!leftTeam) return;
     if (leftTeam) {
-      if (teamId == leftTeam.teamId) {
+      if (teamId === leftTeam.teamId) {
         //load lại ds thành viên
         const params = {
           teamId: teamId,
@@ -170,8 +173,8 @@ function TeamMembersList(props) {
         setFilterObj(params);
       }
     }
-    dispatch(setLeaveTeam(null))
-  }, [leftTeam])
+    dispatch(setLeaveTeam(null));
+  }, [leftTeam]);
 
   const currentPageChange = (index) => {
     if (index === 0) return;
@@ -204,8 +207,8 @@ function TeamMembersList(props) {
         if (res.data.exists) {
           console.log(res.data);
           history.push({
-            pathname: '/chat',
-            search: `g=${res.data.groupChatId}`
+            pathname: "/chat",
+            search: `g=${res.data.groupChatId}`,
           });
         } else {
           console.log(res.data);
@@ -227,7 +230,7 @@ function TeamMembersList(props) {
           ]);
         }
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const dispatch = useDispatch();
@@ -235,9 +238,9 @@ function TeamMembersList(props) {
     setShowStartChat(false);
     if (grChatId) {
       history.push({
-        pathname: '/chat',
-        search: `g=${grChatId}`
-      })
+        pathname: "/chat",
+        search: `g=${grChatId}`,
+      });
     }
   };
 
@@ -275,7 +278,7 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(newTeam);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const onPickImage = (e) => {
@@ -315,7 +318,7 @@ function TeamMembersList(props) {
 
             props.changeLeader();
           })
-          .catch((err) => { });
+          .catch((err) => {});
 
         const params = {
           teamId: teamId,
@@ -330,9 +333,9 @@ function TeamMembersList(props) {
           .then((res) => {
             setTeam(res.data);
           })
-          .catch((err) => { });
+          .catch((err) => {});
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const quitTeam = (item) => {
@@ -345,10 +348,8 @@ function TeamMembersList(props) {
 
     teamApi
       .leaveTeam({ params })
-      .then((res) => {
-
-      })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   useEffect(() => {
@@ -364,7 +365,7 @@ function TeamMembersList(props) {
           setMembers(res.data.items);
           setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
         })
-        .catch((err) => { })
+        .catch((err) => {})
         .finally(() => {
           setLoadingMembers(false);
         });
@@ -434,8 +435,16 @@ function TeamMembersList(props) {
             </div>
             <div className="team-name-actions">
               <div className="team-name">{team.teamName}</div>
-              {admin.userId === user.id && <div className="actions-group">
-                <div onClick={openPickImage} className="btn-change-image">
+              <div className="actions-group">
+                <div
+                  onClick={() => {
+                    if (admin.userId !== user.id) return;
+                    openPickImage();
+                  }}
+                  className={`btn-change-image ${
+                    admin.userId !== user.id ? "disable" : ""
+                  }`}
+                >
                   <RiImageEditFill className="icon-edit-image icon-edit" />
                   Đổi ảnh
                   <input
@@ -447,24 +456,35 @@ function TeamMembersList(props) {
                   />
                 </div>
                 <div
-                  className="btn-change-name"
-                  onClick={() => setShowEditName(true)}
+                  className={`btn-change-name ${
+                    admin.userId !== user.id ? "disable" : ""
+                  }`}
+                  onClick={() => {
+                    if (admin.userId !== user.id) return;
+                    setShowEditName(true);
+                  }}
                 >
                   <FiEdit3 className="icon-edit-image icon-edit" />
                   Đổi tên nhóm
                 </div>
-              </div>}
+              </div>
             </div>
+          </div>
+          <div className="team-code-group">
+            <div className="label-code">Mã nhóm</div>
+            <div className="team-code">{team?.teamCode}</div>
           </div>
           <div className="team-description-group">
             <div className="label-description">
               Mô tả
-              {admin.userId === user.id && <div
-                className="icon-edit-container"
-                onClick={() => setShowEditDescription(true)}
-              >
-                <FiEdit3 className="icon-edit-description icon-edit" />
-              </div>}
+              {admin.userId === user.id && (
+                <div
+                  className="icon-edit-container"
+                  onClick={() => setShowEditDescription(true)}
+                >
+                  <FiEdit3 className="icon-edit-description icon-edit" />
+                </div>
+              )}
             </div>
             <div className="team-description">{team.teamDescription}</div>
           </div>
@@ -534,13 +554,15 @@ function TeamMembersList(props) {
                             aria-labelledby="dropdownMenuButton"
                             placement="bottom-end"
                           >
-                            {admin.userId !== user.id && <CDropdownItem
-                              className="first"
-                              onClick={() => nhanTin(admin)}
-                            >
-                              <CIcon name="cil-send" />
-                              Nhắn tin
-                            </CDropdownItem>}
+                            {admin.userId !== user.id && (
+                              <CDropdownItem
+                                className="first"
+                                onClick={() => nhanTin(admin)}
+                              >
+                                <CIcon name="cil-send" />
+                                Nhắn tin
+                              </CDropdownItem>
+                            )}
                             <CDropdownItem
                               className="last"
                               onClick={() => xemThongTin(admin)}
@@ -650,13 +672,15 @@ function TeamMembersList(props) {
                               aria-labelledby="dropdownMenuButton"
                               placement="bottom-end"
                             >
-                              {item.userId !== user.id && <CDropdownItem
-                                className="first"
-                                onClick={() => nhanTin(item)}
-                              >
-                                <CIcon name="cil-send" />
-                                Nhắn tin
-                              </CDropdownItem>}
+                              {item.userId !== user.id && (
+                                <CDropdownItem
+                                  className="first"
+                                  onClick={() => nhanTin(item)}
+                                >
+                                  <CIcon name="cil-send" />
+                                  Nhắn tin
+                                </CDropdownItem>
+                              )}
 
                               <CDropdownItem
                                 className="normal"
@@ -709,7 +733,11 @@ function TeamMembersList(props) {
         </CCol>
       </CRow>
 
-      <InviteMemberModal showAddInvite={showInvite} teamId={team.teamId} onClose={onClose} />
+      <InviteMemberModal
+        showAddInvite={showInvite}
+        teamId={team.teamId}
+        onClose={onClose}
+      />
       <EditTeamNameModal
         teamName={team.teamName}
         show={showEditName}

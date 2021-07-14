@@ -105,14 +105,16 @@ const TheHeader = () => {
     }
   }, [history.location.pathname]);
 
-  const updateTeamInfSignalR = useSelector(state => state.signalr.updateTeamInfo);
+  const updateTeamInfSignalR = useSelector(
+    (state) => state.signalr.updateTeamInfo
+  );
   useEffect(() => {
     if (updateTeamInfSignalR) {
       if (history.location.pathname.includes("/team/")) {
         const arr = history.location.pathname.split("/");
         const teamId = arr[2];
 
-        if (teamId == updateTeamInfSignalR.teamId) {
+        if (teamId === updateTeamInfSignalR.teamId) {
           teamApi
             .getTeam(teamId)
             .then((res) => {
@@ -182,12 +184,16 @@ const TheHeader = () => {
       <CHeaderNav style={{ paddingRight: "0.5rem" }} className="">
         <div className="lookup-input-header">
           <CInput
-            className="input-field"
+            id="header-input"
+            className=""
             placeholder="Tìm kiếm..."
-            type="text"
+            // type="text"
             onKeyDown={handleKeyDown}
             value={searchStr}
-            onChange={(e) => setSearchStr(e.target.value)}
+            onChange={(e) => {
+              //debugger;
+              setSearchStr(e.target.value);
+            }}
           />
           <BsSearch className="icon-search" onClick={handleSearchGlobal} />
         </div>
@@ -207,8 +213,9 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CSubheader
-        className={`px-3 justify-content-between ${collapseHeader ? "collapsed" : "expand"
-          }`}
+        className={`px-3 justify-content-between ${
+          collapseHeader ? "collapsed" : "expand"
+        }`}
       >
         <div className="sub-header-content">
           <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />

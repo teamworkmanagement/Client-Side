@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./InviteMemberModal.scss";
 import {
   CButton,
@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 
 function InviteMemberModal(props) {
   const [email, setEmail] = useState("");
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
 
   function handleOnClose() {
     if (props.onClose) {
@@ -22,19 +22,22 @@ function InviteMemberModal(props) {
   }
 
   function onCreateCard() {
-    teamApi.inviteUser({
-      isByEmail: true,
-      email: email,
-      participationTeamId: props.teamId,
-      actionUserId: user.id,
-    }).then(res => {
-      setEmail('');
-      props.onClose(null);
-    }).catch(err => {
-      console.log(err);
-      setEmail('');
-      props.onClose(err.Message);
-    })
+    teamApi
+      .inviteUser({
+        isByEmail: true,
+        email: email,
+        participationTeamId: props.teamId,
+        actionUserId: user.id,
+      })
+      .then((res) => {
+        setEmail("");
+        props.onClose(null);
+      })
+      .catch((err) => {
+        console.log(err);
+        setEmail("");
+        props.onClose(err.Message);
+      });
   }
 
   return (

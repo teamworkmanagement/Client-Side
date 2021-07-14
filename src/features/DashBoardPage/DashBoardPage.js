@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./DashBoardPage.scss";
-import { CRow, CCol, CButton, CButtonGroup, CProgress } from "@coreui/react";
+import { CRow, CCol, CButton, CButtonGroup } from "@coreui/react";
 import { GiSandsOfTime, GiAlarmClock } from "react-icons/gi";
 import CIcon from "@coreui/icons-react";
 import { CChartLine } from "@coreui/react-chartjs";
 import { getStyle, hexToRgba } from "@coreui/utils";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-
 import AvatarList from "src/shared_components/MySharedComponents/AvatarList/AvatarList";
 import teamApi from "src/api/teamApi";
 import statisticsApi from "src/api/statisticsApi";
@@ -117,7 +116,7 @@ function DashBoardPage(props) {
       .then((res) => {
         setTeams(res.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, []);
 
   const changeMode = (value) => {
@@ -195,9 +194,9 @@ function DashBoardPage(props) {
       //saveAs(blob, "testing.png");
 
       let fdata = new FormData();
-      fdata.append('image', blob);
-      fdata.append('userStatis', JSON.stringify(userStatistics));
-      fdata.append('teamStatis', JSON.stringify(teamStatistics));
+      fdata.append("image", blob);
+      fdata.append("userStatis", JSON.stringify(userStatistics));
+      fdata.append("teamStatis", JSON.stringify(teamStatistics));
 
       statisticsApi
         .exportPersonalAndTeamStat(fdata)
@@ -244,14 +243,13 @@ function DashBoardPage(props) {
 
   const [countObject, setCountObject] = useState([]);
   useEffect(() => {
-    statisticsApi.getTasksStatusCount()
-      .then(res => {
+    statisticsApi
+      .getTasksStatusCount()
+      .then((res) => {
         setCountObject(res.data);
       })
-      .catch(err => {
-
-      });
-  }, [])
+      .catch((err) => {});
+  }, []);
 
   return (
     <div className="dash-board-container">

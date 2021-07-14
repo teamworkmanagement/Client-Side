@@ -3,7 +3,7 @@ import "./MyLogin.scss";
 import { CInput, CRow } from "@coreui/react";
 import { FcGoogle } from "react-icons/fc";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { login, socialLogin } from "../authSlice";
 import socialMediaAuth from "src/utils/firebase/authSocial";
 import {
@@ -21,7 +21,6 @@ import { validateEmail } from "src/utils/common";
 function MyLogin(props) {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const authStatus = useSelector((state) => state.auth.loginStatus);
 
   const [loginObject, setLoginObject] = useState({
     email: "",
@@ -86,7 +85,7 @@ function MyLogin(props) {
           return;
         }
 
-        if (typeof err === 'string' && err.includes("timeout")) {
+        if (typeof err === "string" && err.includes("timeout")) {
           toast(
             <CustomToast type="error" title="Lỗi" message="Vui lòng thử lại!" />
           );
@@ -159,7 +158,7 @@ function MyLogin(props) {
       .then(unwrapResult)
       .then((originalPromiseResult) => {})
       .catch((err) => {
-        if (typeof err === 'string' && err.includes("timeout")) {
+        if (typeof err === "string" && err.includes("timeout")) {
           toast(
             <CustomToast type="error" title="Lỗi" message="Vui lòng thử lại!" />
           );

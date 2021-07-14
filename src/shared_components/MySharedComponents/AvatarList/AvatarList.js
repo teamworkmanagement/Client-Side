@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./AvatarList.scss";
 import { CTooltip } from "@coreui/react";
-import { useSelector } from "react-redux";
 
 function AvatarList(props) {
-  const team = props.teams.find((x) => x.teamId === props.teamId)
+  const team = props.teams.find((x) => x.teamId === props.teamId);
 
   return (
     <div className="avatar-list-container">

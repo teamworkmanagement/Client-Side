@@ -129,6 +129,13 @@ $baseTransition: all 0.3s;
     &:hover {
         background-color: $darkerBaseColor;
     }
+    &.disable {
+        opacity: 0.6;
+        cursor: not-allowed;
+        &:hover {
+            background-color: $baseColor;
+        }
+    }
 }
 
 @mixin DropdownToggleButtonStyle {
@@ -379,6 +386,23 @@ $baseTransition: all 0.3s;
                             justify-content: center;
                         }
                     }
+                }
+            }
+            .team-code-group {
+                margin-top: 1rem;
+                .label-code {
+                    font-weight: bold;
+                    // font-size: 90%;
+                    margin-bottom: 0.3rem;
+                    margin-top: 1rem;
+                    color: $subTextColor;
+                    display: flex;
+                    align-items: center;
+                }
+                .team-code {
+                    font-weight: bold;
+                    color: $textColor;
+                    font-size: 120%;
                 }
             }
             .team-description-group {

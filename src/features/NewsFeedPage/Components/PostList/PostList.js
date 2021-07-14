@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import postApi from "src/api/postApi";
 import { setCurrentPostPage, setFilterChange } from "src/appSlice";
 import CIcon from "@coreui/icons-react";
-import { useHistory, useLocation, useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import queryString from "query-string";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 
@@ -27,7 +27,6 @@ function PostList(props) {
 
   const { teamId } = useParams();
 
-  const history = useHistory();
   useEffect(() => {
     async function getPosts() {
       try {
@@ -91,7 +90,10 @@ function PostList(props) {
       }
 
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        if (window.location.pathname.includes('/newsfeed') || window.location.search.includes('tab=feed')) {
+        if (
+          window.location.pathname.includes("/newsfeed") ||
+          window.location.search.includes("tab=feed")
+        ) {
           dispatch(setCurrentPostPage());
         }
       }
