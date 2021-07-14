@@ -3,7 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import messageApi from "src/api/messageApi";
-import { setCurrentGroup, setIsSelected, setNewMessage, setReceiveMes } from "../../chatSlice";
+import {
+  setCurrentGroup,
+  setIsSelected,
+  setNewMessage,
+  setReceiveMes,
+} from "../../chatSlice";
 import chatApi from "src/api/chatApi";
 import { useParams } from "react-router";
 import "./MessageList.scss";
@@ -74,6 +79,7 @@ function MessageList(props) {
           isLabel: false,
           messageType: mes.messageType,
           messengerUserAvatar: mes.messengerUserAvatar,
+          mesUserId: mes.messageUserId,
         };
       });
       const arrayWithLabels = [];
@@ -169,10 +175,18 @@ function MessageList(props) {
               ) {
                 arrayWithLabels[i].class = "normal";
               } else {
-                if (arrayWithLabels[i - 1].class === "end") {
+                if (
+                  arrayWithLabels[i].mesUserId !==
+                  arrayWithLabels[i - 1].mesUserId
+                ) {
+                  //thằng ở trên là của user khác gửi
                   arrayWithLabels[i].class = "normal";
                 } else {
-                  arrayWithLabels[i].class = "end";
+                  if (arrayWithLabels[i - 1].class === "end") {
+                    arrayWithLabels[i].class = "normal";
+                  } else {
+                    arrayWithLabels[i].class = "end";
+                  }
                 }
               }
 
@@ -184,6 +198,7 @@ function MessageList(props) {
               arrayWithLabels[i - 1].isLabel ||
               arrayWithLabels[i - 1].isMine
             ) {
+              // là của tôi
               if (
                 arrayWithLabels[i + 1].isLabel ||
                 arrayWithLabels[i + 1].isMine
@@ -193,13 +208,22 @@ function MessageList(props) {
                 arrayWithLabels[i].class = "start";
               }
             } else {
+              //không là của tôi
               if (
-                arrayWithLabels[i + 1].isLabel ||
-                arrayWithLabels[i + 1].isMine
+                arrayWithLabels[i].mesUserId !==
+                arrayWithLabels[i - 1].mesUserId
               ) {
-                arrayWithLabels[i].class = "end";
+                //thằng ở trên là của user khác gửi
+                arrayWithLabels[i].class = "normal";
               } else {
-                arrayWithLabels[i].class = "middle";
+                if (
+                  arrayWithLabels[i + 1].isLabel ||
+                  arrayWithLabels[i + 1].isMine
+                ) {
+                  arrayWithLabels[i].class = "end";
+                } else {
+                  arrayWithLabels[i].class = "middle";
+                }
               }
             }
           }
@@ -268,11 +292,12 @@ function MessageList(props) {
       isLabel: false,
       messageType: newMessage.messageType,
       messengerUserAvatar: newMessage.userAvatar,
+      mesUserId: newMessage.userId,
     };
     const messageObj = { ...newMessage };
     dispatch(setReceiveMes(messageObj));
     dispatch(setNewMessage(null));
-    
+
     if (newMessage.groupId !== currentGroup) {
       return;
     }
@@ -292,13 +317,22 @@ function MessageList(props) {
         };
       } else {
         //chưa quá 5 phút, new mes phải được check class
+
         if (cloneList[cloneList.length - 1].isMine === newMes.isMine) {
-          if (cloneList[cloneList.length - 1].class === "end") {
-            cloneList[cloneList.length - 1].class = "middle";
+          if (cloneList[cloneList.length - 1].mesUserId !== newMes.mesUserId) {
+            //khác user gửi
+
+            newMes.class = "normal";
           } else {
-            cloneList[cloneList.length - 1].class = "start";
+            if (cloneList[cloneList.length - 1].class === "end") {
+              //mes cuối luôn chỉ có 2 class: end/normal
+              cloneList[cloneList.length - 1].class = "middle";
+            } else {
+              cloneList[cloneList.length - 1].class = "start";
+            }
+
+            newMes.class = "end";
           }
-          newMes.class = "end";
         }
       }
 
@@ -310,7 +344,9 @@ function MessageList(props) {
     cloneList.push(newMes);
     setListMes(cloneList);
 
+    console.log(props.reachBot);
     const timeOut = setTimeout(() => {
+      console.log(props.reachBot);
       if (props.reachBot) scrollToBottom();
     }, 0);
 
@@ -326,8 +362,8 @@ function MessageList(props) {
 
     chatApi
       .sendMes(props.sendMes.mesObj)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   }, [props.sendMes]);
 
   const render = () => {

@@ -2,6 +2,8 @@
     height: 100%;
     .DraftEditor-root {
         border-radius: 0.625rem;
+        display: flex;
+        align-items: center;
         .public-DraftEditorPlaceholder-root {
             padding: 0rem 0.5rem !important;
             display: flex;
@@ -10,6 +12,7 @@
         }
         .DraftEditor-editorContainer {
             padding: 0rem 0.5rem;
+            width: 100%;
             .notranslate.public-DraftEditor-content {
                 display: flex;
                 height: 100%;

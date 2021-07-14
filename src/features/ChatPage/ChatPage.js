@@ -90,7 +90,7 @@ function ChatPage(props) {
     if (element.scrollTop === 0) {
       setReachTop(reachTop + 1);
     }
-    if (element.scrollHeight - element.scrollTop - element.clientHeight < 2) {
+    if (element.scrollHeight - element.scrollTop - element.clientHeight < 10) {
       setReachBot(true);
     } else setReachBot(false);
   };
@@ -136,7 +136,8 @@ function ChatPage(props) {
 
   const scrollToBottom = () => {
     //messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    scrollRef.current?.scrollTo(0, 10000);
+    scrollRef.current?.scrollTo(0, 1000000);
+    console.log("bottom");
     //objDiv.scrollTop = objDiv.scrollHeight;
   };
 

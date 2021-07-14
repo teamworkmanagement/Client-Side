@@ -61,7 +61,7 @@ function MyLogin(props) {
     }
     dispatch(login(loginObject))
       .then(unwrapResult)
-      .then((originalPromiseResult) => { })
+      .then((originalPromiseResult) => {})
       .catch((err) => {
         console.log("login err :", err);
         if (err.Message?.includes("Invalid Credentials")) {
@@ -88,11 +88,7 @@ function MyLogin(props) {
 
         if (err.includes("timeout")) {
           toast(
-            <CustomToast
-              type="error"
-              title="Lỗi"
-              message="Vui lòng thử lại!"
-            />
+            <CustomToast type="error" title="Lỗi" message="Vui lòng thử lại!" />
           );
           return;
         }
@@ -161,15 +157,11 @@ function MyLogin(props) {
     };
     dispatch(socialLogin(data))
       .then(unwrapResult)
-      .then((originalPromiseResult) => { })
+      .then((originalPromiseResult) => {})
       .catch((err) => {
         if (err.includes("timeout")) {
           toast(
-            <CustomToast
-              type="error"
-              title="Lỗi"
-              message="Vui lòng thử lại!"
-            />
+            <CustomToast type="error" title="Lỗi" message="Vui lòng thử lại!" />
           );
           return;
         }
