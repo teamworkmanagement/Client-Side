@@ -124,9 +124,7 @@ function AccountSettingsPage(props) {
     const userInfoClone = { ...userInfo, userDob: dob };
     authApi
       .updateUserInfo(userInfoClone)
-      .then((res) => {
-        dispatch(setCurrentUser(userInfoClone));
-      })
+      .then((res) => {})
       .catch((err) => {
         toast(<CustomToast type="error" title="Lỗi" message="Có lỗi xảy ra" />);
       });
@@ -134,6 +132,21 @@ function AccountSettingsPage(props) {
 
   const changePasswordClick = () => {
     console.log(changePWObject);
+    if (
+      !changePWObject.confirmPassword ||
+      (!changePWObject.currentPassword &&
+        !user.firstTimeSocial &&
+        !changePWObject.newPassword)
+    ) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Vui lòng kiểm tra dữ liệu"
+        />
+      );
+      return;
+    }
     dispatch(changePassword(changePWObject));
   };
   const toggleSettingOptionsSidebar = () => {
@@ -319,7 +332,11 @@ function AccountSettingsPage(props) {
                     <CInput
                       name="userDob"
                       id="birthDate-input"
-                      value={userInfo.userDob}
+                      value={
+                        userInfo.userDob
+                          ? userInfo.userDob.substring(0, 10)
+                          : ""
+                      }
                       type="date"
                       onChange={handleInputChange}
                     />

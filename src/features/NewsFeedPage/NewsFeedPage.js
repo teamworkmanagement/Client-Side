@@ -68,7 +68,7 @@ function NewsFeedPage(props) {
       .then((res) => {
         setGroupList(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, []);
 
   function toggleShowFilter() {
@@ -160,6 +160,17 @@ function NewsFeedPage(props) {
     setListPictures([]);
   };
 
+  function replaceOffset(str, offs) {
+    let tag = '<@tag>';
+    offs.reverse().forEach(function (v) {
+      str = str.replace(
+        new RegExp('(.{' + v[0] + '})(.{' + (v[1] - v[0]) + '})'),
+        '$1' + tag + '$2' + tag + ''
+      );
+    });
+    return str;
+  }
+
   const onAddPost = async (editorState) => {
     if (!grAddPost) {
       alert("Xem lại");
@@ -189,6 +200,8 @@ function NewsFeedPage(props) {
 
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
+        let offsets = [];
+        let users = [];
         block.entityRanges.forEach((entity) => {
           // var nameTag = block.text.substring(
           //   entity.offset,
@@ -198,13 +211,27 @@ function NewsFeedPage(props) {
           let indexData = entity.key;
           const userTagId = entityMap[indexData].data.mention.id;
 
-          block.text = block.text.replaceBetween(
-            entity.offset,
-            entity.offset + entity.length,
-            `<@tag>${userTagId}<@tag>`
-          );
-          console.log(block.text);
+          offsets.push([entity.offset, entity.offset + entity.length]);
+          users.push(userTagId);
         });
+
+        let newStr = replaceOffset(block.text, offsets);
+        console.log(newStr);
+        let myArray = newStr.split('<@tag>');
+        let j = 0;
+        for (let i = 0; i < myArray.length; i++) {
+          if (i % 2 !== 0) {
+            myArray[i] = `<@tag>${users[j]}<@tag>`;
+            j++;
+          } else {
+            continue;
+          }
+        }
+
+        const finalStr = myArray.join('');
+        console.log(myArray);
+        console.log(finalStr);
+        block.text = finalStr;
       }
     });
 
@@ -312,15 +339,15 @@ function NewsFeedPage(props) {
                 style={
                   showFilter
                     ? {
-                        borderBottomLeftRadius: "0",
-                        borderBottomRightRadius: "0",
-                        borderBottom: "none",
-                      }
+                      borderBottomLeftRadius: "0",
+                      borderBottomRightRadius: "0",
+                      borderBottom: "none",
+                    }
                     : {
-                        borderBottomLeftRadius: "10px",
-                        borderBottomRightRadius: "10px",
-                        borderBottom: "1px solid #e6ebf1",
-                      }
+                      borderBottomLeftRadius: "10px",
+                      borderBottomRightRadius: "10px",
+                      borderBottom: "1px solid #e6ebf1",
+                    }
                 }
               >
                 <div className="title">

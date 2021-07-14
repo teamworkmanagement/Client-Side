@@ -76,12 +76,24 @@ function Post(props) {
     const myArr = str.split("<@tag>");
     return myArr.map((ele, index) => {
       if (index % 2 === 0) {
-        return <div dangerouslySetInnerHTML={{ __html: ele }}></div>;
+        return ele;
       } else {
         return <Tag userId={ele} />;
       }
     });
   };
+
+  function replaceOffset(str, offs) {
+    let tag = "<@tag>";
+    offs.reverse().forEach(function (v) {
+      str = str.replace(
+        new RegExp("(.{" + v[0] + "})(.{" + (v[1] - v[0]) + "})"),
+        "$1" + tag + "$2" + tag + ""
+      );
+    });
+    return str;
+  }
+
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
@@ -106,6 +118,8 @@ function Post(props) {
 
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
+        let offsets = [];
+        let users = [];
         block.entityRanges.forEach((entity) => {
           // var nameTag = block.text.substring(
           //   entity.offset,
@@ -115,13 +129,27 @@ function Post(props) {
           let indexData = entity.key;
           const userTagId = entityMap[indexData].data.mention.id;
 
-          block.text = block.text.replaceBetween(
-            entity.offset,
-            entity.offset + entity.length,
-            `<@tag>${userTagId}<@tag>`
-          );
-          console.log(block.text);
+          offsets.push([entity.offset, entity.offset + entity.length]);
+          users.push(userTagId);
         });
+
+        let newStr = replaceOffset(block.text, offsets);
+        console.log(newStr);
+        let myArray = newStr.split("<@tag>");
+        let j = 0;
+        for (let i = 0; i < myArray.length; i++) {
+          if (i % 2 !== 0) {
+            myArray[i] = `<@tag>${users[j]}<@tag>`;
+            j++;
+          } else {
+            continue;
+          }
+        }
+
+        const finalStr = myArray.join("");
+        console.log(myArray);
+        console.log(finalStr);
+        block.text = finalStr;
       }
     });
 
@@ -136,8 +164,6 @@ function Post(props) {
 
     console.log(value);
 
-    return;
-    // eslint-disable-next-line
     commentApi
       .addComment({
         commentPostId: post.postId,
