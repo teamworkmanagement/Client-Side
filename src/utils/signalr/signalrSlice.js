@@ -9,16 +9,40 @@ const signalrSlice = createSlice({
     },
     reducers: {
         setNewAddReact(state, action) {
-            state.newAddReact = action.payload;
+            if ((window.location.pathname.includes('newsfeed') ||
+                window.location.search.includes('tab=feed')
+                || window.location.search.includes('b=')) && action.payload) {
+                state.newAddReact = action.payload;
+            } else {
+                state.newAddReact = null;
+            }
         },
         setRemoveReact(state, action) {
-            state.removeReact = action.payload;
+            if ((window.location.pathname.includes('newsfeed') ||
+                window.location.search.includes('tab=feed')
+                || window.location.search.includes('b=')) && action.payload) {
+                state.removeReact = action.payload;
+            } else {
+                state.removeReact = null;
+            }
         },
         setNewComment(state, action) {
-            state.newComment = action.payload;
+            if ((window.location.pathname.includes('newsfeed') ||
+                window.location.search.includes('tab=feed')
+                || window.location.search.includes('b=')) && action.payload) {
+                state.newComment = action.payload;
+            } else {
+                state.newComment = null;
+            }
+
         },
         setUpdateTeamInfo(state, action) {
-            state.updateTeamInfo = action.payload;
+            if (window.location.pathname.includes('team') && action.payload) {
+                state.updateTeamInfo = action.payload;
+            }
+            else {
+                state.updateTeamInfo = null;
+            }
         }
     },
 });
