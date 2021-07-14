@@ -61,27 +61,40 @@ function MyLogin(props) {
     }
     dispatch(login(loginObject))
       .then(unwrapResult)
-      .then((originalPromiseResult) => {})
+      .then((originalPromiseResult) => { })
       .catch((err) => {
         console.log("login err :", err);
-        if (err.Message.includes("Invalid Credentials")) {
+        if (err.Message?.includes("Invalid Credentials")) {
           toast(
             <CustomToast
               type="error"
               title="Lỗi"
-              message="Mật khẩu không chính xác"
+              message="Mật khẩu không chính xác!"
             />
           );
+          return;
         }
 
-        if (err.Message.includes("No Accounts Registered")) {
+        if (err.Message?.includes("No Accounts Registered")) {
           toast(
             <CustomToast
               type="error"
               title="Lỗi"
-              message="Tài khoản không tồn tại"
+              message="Tài khoản không tồn tại!"
             />
           );
+          return;
+        }
+
+        if (err.includes("timeout")) {
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Vui lòng thử lại!"
+            />
+          );
+          return;
         }
       });
   };
@@ -146,19 +159,21 @@ function MyLogin(props) {
       imageUrl: outPut.picture,
       email: outPut.email,
     };
-
-    /*try {
-      const token = await authApi.socialLogin(data);
-      console.log('token là: ', token);
-    }
-    catch (error) {
-      console.log(error);
-    }*/
-    await dispatch(socialLogin(data));
-
-    if (authStatus) {
-      history.push("/dashboard");
-    }
+    dispatch(socialLogin(data))
+      .then(unwrapResult)
+      .then((originalPromiseResult) => { })
+      .catch((err) => {
+        if (err.includes("timeout")) {
+          toast(
+            <CustomToast
+              type="error"
+              title="Lỗi"
+              message="Vui lòng thử lại!"
+            />
+          );
+          return;
+        }
+      });
   };
 
   return (

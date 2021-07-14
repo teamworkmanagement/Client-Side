@@ -8,13 +8,14 @@ import "moment/locale/vi";
 import commentApi from "src/api/commentApi";
 import classNames from "classnames";
 import postApi from "src/api/postApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomInput from "../CustomInput/CustomInput";
 import { convertToRaw } from "draft-js";
 import GridImages from "./Components/GridImages/GridImages";
 import { useHistory } from "react-router-dom";
 import Tag from "./Components/Tag/Tag";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
+import { setNewAddReact, setNewComment, setRemoveReact } from "src/utils/signalr/signalrSlice";
 
 moment.locale("vi");
 
@@ -26,6 +27,8 @@ function Post(props) {
   const newAddReact = useSelector((state) => state.signalr.newAddReact);
   const removeReact = useSelector((state) => state.signalr.removeReact);
   const newComment = useSelector((state) => state.signalr.newComment);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getComments() {
@@ -52,21 +55,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-          .deleteReactPost({ params })
-          .then((res) => {})
-          .catch((err) => {})
+        .deleteReactPost({ params })
+        .then((res) => { })
+        .catch((err) => { })
       : postApi
-          .reactPost(params)
-          .then((res) => {})
-          .catch((err) => {});
-
-    setPost({
-      ...post,
-      postReactCount: post.isReacted
-        ? post.postReactCount - 1
-        : post.postReactCount + 1,
-      isReacted: !post.isReacted,
-    });
+        .reactPost(params)
+        .then((res) => { })
+        .catch((err) => { });
   };
 
   String.prototype.replaceBetween = function (start, end, what) {
@@ -137,7 +132,7 @@ function Post(props) {
 
     console.log(value);
 
-    //return;
+    return;
     commentApi
       .addComment({
         commentPostId: post.postId,
@@ -151,47 +146,54 @@ function Post(props) {
         commentUserTagIds: userIds,
       })
       .then((res) => {
-        setPost({
-          ...post,
-          postCommentCount: post.postCommentCount + 1,
-        });
 
-        const newArrr = [
-          {
-            commentId: res.data.commentId,
-            commentPostId: res.data.commentPostId,
-            commentUserId: res.data.commentUserId,
-            commentContent: res.data.commentContent,
-            userName: user.fullName,
-            userAvatar: user.userAvatar,
-            commentCreatedAt: res.data.commentCreatedAt,
-          },
-        ].concat([...cmtLists]);
-
-        setComments(newArrr);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   useEffect(() => {
     if (!newAddReact) return;
 
+    console.log(newAddReact);
     if (newAddReact.postId === post.postId) {
-      setPost({
-        ...post,
-        postReactCount: post.postReactCount + 1,
-      });
+      if (newAddReact.userId === user.id) {
+        setPost({
+          ...post,
+          postReactCount: post.postReactCount + 1,
+          isReacted: true,
+        });
+      } else {
+        setPost({
+          ...post,
+          postReactCount: post.postReactCount + 1,
+        });
+      }
+    }
+    if (newAddReact) {
+      dispatch(setNewAddReact(null));
     }
   }, [newAddReact]);
 
   useEffect(() => {
     if (!removeReact) return;
 
+    console.log(removeReact);
     if (removeReact.postId === post.postId) {
-      setPost({
-        ...post,
-        postReactCount: post.postReactCount - 1,
-      });
+      if (removeReact.userId === user.id) {
+        setPost({
+          ...post,
+          postReactCount: post.postReactCount - 1,
+          isReacted: false,
+        });
+      } else {
+        setPost({
+          ...post,
+          postReactCount: post.postReactCount - 1,
+        })
+      }
+    }
+    if (removeReact) {
+      dispatch(setRemoveReact(null));
     }
   }, [removeReact]);
 
@@ -205,12 +207,15 @@ function Post(props) {
       });
       console.log(newComment);
     }
+    if (newComment) {
+      dispatch(setNewComment(null));
+    }
   }, [newComment]);
 
   const history = useHistory();
 
   const navigateToTeam = (post) => {
-    history.push(`/team/${post.postTeamId}`);
+    history.push(`/team/${post.postTeamId}?tab=teaminfo`);
   };
 
   return (

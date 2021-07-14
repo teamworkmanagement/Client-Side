@@ -108,6 +108,7 @@ function ChatPage(props) {
         message: msg,
         userId: user.id,
         groupId: currentGroup,
+        userAvatar: user.userAvatar,
         timeSend: Date.now(),
       };
       setSend({

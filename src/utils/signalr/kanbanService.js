@@ -19,6 +19,7 @@ import {
 } from "src/features/KanbanBoard/kanbanSlice";
 
 import { SIGNALR_URL } from "../../env";
+import { HubConnectionState } from "@microsoft/signalr";
 
 export const connection = setupSignalRConnection(`${SIGNALR_URL}/hubkanban`);
 
@@ -77,7 +78,7 @@ connection.on("AddFile", (payload) => {
 });
 
 export const startKanbanService = () => {
-  if (connection.state === "Disconnected" || connection.state !== "Connected") {
+  if (connection.state === HubConnectionState.Disconnected) {
     startSignalRConnection(connection);
   }
 };

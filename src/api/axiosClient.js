@@ -48,7 +48,7 @@ axiosClient.interceptors.response.use(
   function (err) {
     const originalRequest = err.config;
     if (getCookie("TokenExpired") === "true") {
-
+      delete_cookie("TokenExpired");
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
           reqQueue.push({ resolve, reject })
@@ -64,13 +64,11 @@ axiosClient.interceptors.response.use(
       return new Promise(function (resolve, reject) {
         refreshTokenFunc()
           .then((data) => {
-            delete_cookie("TokenExpired");
             processQueue(null);
             isRefreshing = false;
             resolve(axiosClient(originalRequest));
           })
           .catch((error) => {
-            delete_cookie("TokenExpired");
             processQueue(err, null);
             isRefreshing = false;
             store.dispatch(setValueAuth(false));
@@ -88,11 +86,17 @@ axiosClient.interceptors.response.use(
 
       return Promise.reject(err.response.data);
     } else if (err.request) {
-      console.log("er2", err.request.response);
-      return Promise.reject(err.request.response);
+      if (err.message.includes('timeout')) {
+        return Promise.reject(err.message);
+      }
+
+      console.log("er2", err.request);
+      return Promise.reject(err.request);
     } else {
       console.log("er3", err);
     }
+
+    console.log(err);
     return Promise.reject(err);
   }
 );

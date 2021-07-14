@@ -5,13 +5,14 @@ import {
 import store from "../../app/store";
 import { setNewNoti } from "src/appSlice";
 import { SIGNALR_URL } from "../../env";
+import { HubConnectionState } from "@microsoft/signalr";
 
 const connection = setupSignalRConnection(`${SIGNALR_URL}/hubnoti`);
 connection.on("SendNoti", (payload) => {
   store.dispatch(setNewNoti(payload));
 });
 export const startNotiService = () => {
-  if (connection.state === "Disconnected" || connection.state !== "Connected") {
+  if (connection.state === HubConnectionState.Disconnected) {
     startSignalRConnection(connection);
   }
 };

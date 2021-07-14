@@ -176,7 +176,7 @@ function TeamPage(props) {
             goBackListBoards={goBackListBoards}
           />
         ) : (
-          <BoardsPage openBoard={openBoard} />
+          <BoardsPage team={team} openBoard={openBoard} />
         )}
       </div>
     );

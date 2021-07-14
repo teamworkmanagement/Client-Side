@@ -220,6 +220,7 @@ function NewsFeedPage(props) {
     console.log(value);
     console.log(userIds);
 
+
     const links = await uploadImage();
 
     postApi

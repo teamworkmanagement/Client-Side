@@ -85,39 +85,70 @@ const kanbanSlice = createSlice({
             state.taskSelected = action.payload;
         },
         signalRAddNewTask(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.addNewTask = null;
+                return;
+            }
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
                 state.signalrData.addNewTask = action.payload;
                 list.taskUIKanbans.push(action.payload);
             }
+            state.signalrData.addNewTask = null;
         },
         signalRAddNewList(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.addNewList = null;
+                return;
+            }
             if (action.payload.kanbanListBoardBelongedId === state.kanbanBoard.currentBoard) {
                 console.log("trùng");
                 state.signalrData.addNewList = action.payload;
                 state.kanbanBoard.kanbanLists.push(action.payload);
             }
-
+            state.signalrData.addNewList = null;
         },
         signalRRemoveTask(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.removeTask = null;
+                return;
+            }
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
                 state.signalrData.removeTask = action.payload;
                 const index = list.taskUIKanbans.findIndex(x => x.taskId === action.payload.taskId);
                 list.taskUIKanbans.splice(index, 1);
             }
+            state.signalrData.removeTask = null;
         },
         signalRRemoveList(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.removeList = null;
+                return;
+            }
             state.removeList = action.payload;
             if (action.payload.kanbanListBoardBelongedId === state.kanbanBoard.currentBoard) {
                 state.signalrData.removeList = action.payload;
                 const index = state.kanbanBoard.kanbanLists.findIndex(e => e.kanbanListId === action.payload.kanbanListId);
                 state.kanbanBoard.kanbanLists.splice(index, 1);
             }
-
+            state.signalrData.removeList = null;
         },
         signalRMoveTask(state, action) {
-
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.moveTask = null;
+                return;
+            }
             if (state.kanbanBoard.currentBoard === action.payload.boardId) {
                 state.signalrData.moveTask = action.payload;
                 if (action.payload.oldList === action.payload.newList) {
@@ -144,17 +175,29 @@ const kanbanSlice = createSlice({
                     listTasksNew.taskUIKanbans.sort((x, y) => (x.taskRankInList > y.taskRankInList) ? 1 : -1);
                 }
             }
+            state.signalrData.moveTask = null;
         },
         signalRMoveList(state, action) {
-
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.moveList = null;
+                return;
+            }
             if (action.payload.kanbanBoardId === state.kanbanBoard.currentBoard) {
                 const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
                 obj.kanbanListRankInBoard = action.payload.position;
                 state.kanbanBoard.kanbanLists.sort((x, y) => (x.kanbanListRankInBoard > y.kanbanListRankInBoard) ? 1 : -1);
             }
-
+            state.signalrData.moveList = null;
         },
         signalRUpdateTask(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.updateTask = null;
+                return;
+            }
             state.signalrData.updateTask = action.payload;
 
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
@@ -174,9 +217,7 @@ const kanbanSlice = createSlice({
                 obj.taskThemeColor = action.payload.taskThemeColor;
                 obj.commentsCount = action.payload.commentsCount;
             }
-        },
-        signalRUpdateList(state, action) {
-            state.updateList = action.payload;
+            state.signalrData.updateTask = null;
         },
 
         dragTaskLocal(state, action) {
@@ -210,6 +251,12 @@ const kanbanSlice = createSlice({
         },
 
         reAssignUser(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                state.signalrData.reAssignUser = null;
+                return;
+            }
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
                 state.signalrData.reAssignUser = action.payload;
@@ -217,20 +264,37 @@ const kanbanSlice = createSlice({
                 task.userId = action.payload.userId;
                 task.userAvatar = action.payload.userAvatar;
             }
+            state.signalrData.reAssignUser = null;
         },
         signalRChangeNameList(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                return;
+            }
             const obj = state.kanbanBoard.kanbanLists.find(e => e.kanbanListId === action.payload.kanbanListId);
             obj.kanbanListTitle = action.payload.kanbanListName;
         },
         signalRAddFile(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                return;
+            }
             const list = state.kanbanBoard.kanbanLists.find(x => x.kanbanListId === action.payload.kanbanListId);
             if (list) {
                 state.signalrData.addNewFile = action.payload;
                 const task = list.taskUIKanbans.find(x => x.taskId === action.payload.fileTaskOwnerId);
                 task.filesCount++;
             }
+            state.signalrData.addNewFile = null;
         },
         setAdminAction(state, action) {
+            if (!action.payload)
+                return;
+            if (!window.location.search.includes('b=')) {
+                return;
+            }
             state.adminAction = action.payload;
         }
     },

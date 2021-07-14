@@ -41,7 +41,7 @@ const chatSlice = createSlice({
     setLoadDone: (state, action) => {
       state.loadDone = action.payload;
     },
-    editChatGroup: (state, action) => {},
+    editChatGroup: (state, action) => { },
     setCurrentGroup: (state, action) => {
       const gr = state.groupChat.find((x) => x.groupChatId === action.payload);
       if (gr) {
@@ -60,31 +60,37 @@ const chatSlice = createSlice({
         action.payload.messageType === "image"
           ? "[Hình ảnh]"
           : action.payload.messageType === "file"
-          ? "[Tệp tin]"
-          : action.payload.message;
+            ? "[Tệp tin]"
+            : action.payload.message;
       gr.groupChatUpdatedAt = Date.now();
     },
     setNewMessage(state, action) {
       state.newMessage = action.payload;
+      if (!action.payload)
+        return;
 
-      let grChat = state.groupChat.findIndex(
-        (x) => x.groupChatId === action.payload.groupId
-      );
-      if (grChat === null) {
-        state.groupChat = [
-          {
-            groupChatId: action.payload.groupId,
-            groupChatName: "No name",
-            groupChatUpdatedAt: Date.now(),
-            newMessage: true,
-            groupAvatar: "",
-            lastestMes: action.payload.message,
-          },
-        ].concat(state.groupChat);
+      if (window.location.pathname.includes('/chat') || window.location.search.includes('tab=message')) {
+        let grChat = state.groupChat.findIndex(
+          (x) => x.groupChatId === action.payload.groupId
+        );
+        if (grChat === null) {
+          state.groupChat = [
+            {
+              groupChatId: action.payload.groupId,
+              groupChatName: "No name",
+              groupChatUpdatedAt: Date.now(),
+              newMessage: true,
+              groupAvatar: "",
+              lastestMes: action.payload.message,
+            },
+          ].concat(state.groupChat);
+        } else {
+          const backupdata = state.groupChat[grChat];
+          state.groupChat.splice(grChat, 1);
+          state.groupChat = [backupdata].concat(state.groupChat);
+        }
       } else {
-        const backupdata = state.groupChat[grChat];
-        state.groupChat.splice(grChat, 1);
-        state.groupChat = [backupdata].concat(state.groupChat);
+        state.newMessage = null;
       }
     },
 
@@ -118,8 +124,8 @@ const chatSlice = createSlice({
           ? action.payload[1].groupChatId
           : state.currentGroup;*/
     },
-    [getGroupChatForUser.rejected]: (state, action) => {},
-    [searchGroupChatForUser.rejected]: (state, action) => {},
+    [getGroupChatForUser.rejected]: (state, action) => { },
+    [searchGroupChatForUser.rejected]: (state, action) => { },
     [searchGroupChatForUser.fulfilled]: (state, action) => {
       state.groupChat = action.payload.groupChats;
     },

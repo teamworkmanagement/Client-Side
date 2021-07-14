@@ -9,6 +9,7 @@ import {
   updateGroupChatImage,
 } from "src/features/ChatPage/chatSlice";
 import { SIGNALR_URL } from "../../env";
+import { HubConnectionState } from "@microsoft/signalr";
 
 const connection = setupSignalRConnection(`${SIGNALR_URL}/hubchat`);
 
@@ -26,7 +27,7 @@ connection.on("ChangeGroupAvatar", (payload) => {
   store.dispatch(updateGroupChatImage(payload));
 });
 export const startChatService = () => {
-  if (connection.state === "Disconnected" || connection.state !== "Connected") {
+  if (connection.state === HubConnectionState.Disconnected) {
     startSignalRConnection(connection);
   }
 };

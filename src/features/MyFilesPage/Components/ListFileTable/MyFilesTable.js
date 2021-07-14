@@ -15,6 +15,7 @@ import { GetFileTypeImage, GetTypeFromExt } from "src/utils/file";
 import uuid from "src/utils/file/uuid";
 import "./MyFilesTable.scss";
 import UploadItem from "./ProgressBottom/UploadItem";
+import { saveAs } from 'file-saver';
 
 moment.locale("vi");
 
@@ -36,8 +37,9 @@ function MyFilesTable(props) {
   const pickerRef = useRef(null);
   const maxSize = 30; //MB
 
-  const handleDownload = (index) => {
+  const handleDownload = (item) => {
     console.log("action in table");
+    saveAs(item.fileUrl, item.fileUrl.split("/").pop());
     //setDetails();
   };
 
@@ -146,7 +148,7 @@ function MyFilesTable(props) {
         setDatas(dts);
         //setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         //console.log(outPut.data.items);
-      } catch (err) {}
+      } catch (err) { }
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -169,7 +171,6 @@ function MyFilesTable(props) {
           </div>
 
           <div className="noti-infor">Chưa có tệp nào trong nhóm</div>
-          {/*<div className="create-btn">Tải tệp mới lên</div>*/}
         </div>
       </div>
     );
@@ -255,14 +256,14 @@ function MyFilesTable(props) {
             return (
               <td>
                 <div className="download-btn-container">
-                  <a href={item.fileUrl}>
-                    <img
-                      className="download-btn"
-                      src={"../images/download.png"}
-                      alt=""
-                      onClick={handleDownload}
-                    ></img>
-                  </a>
+
+                  <img
+                    className="download-btn"
+                    src={"../images/download.png"}
+                    alt=""
+                    onClick={() => handleDownload(item)}
+                  ></img>
+
                 </div>
               </td>
             );

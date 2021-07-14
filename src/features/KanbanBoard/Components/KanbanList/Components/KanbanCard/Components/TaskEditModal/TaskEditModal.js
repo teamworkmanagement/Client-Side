@@ -39,6 +39,7 @@ import { convertToRaw } from "draft-js";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
 import { setNullSignalRData } from "src/features/KanbanBoard/kanbanSlice";
+import { setNewComment } from "src/utils/signalr/signalrSlice";
 
 const ValueOption = (props) => (
   <components.SingleValue {...props}>
@@ -314,6 +315,10 @@ function TaskEditModal(props) {
     if (!newComment || !props.data) return;
     if (newComment.commentTaskId === props.data.taskId) {
       setCmtLists([newComment].concat([...cmtLists]));
+    }
+
+    if (newComment) {
+      dispatch(setNewComment(null));
     }
   }, [newComment]);
 
