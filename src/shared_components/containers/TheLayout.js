@@ -208,8 +208,10 @@ const TheLayout = () => {
   useEffect(() => {
     const object = queryString.parse(history.location.search);
     if (!object.b || !object.t) {
-      if (taskEditModal)
+      if (taskEditModal) {
+        setModaTaskObj(null);
         dispatch(setTaskEditModal(null));
+      }
 
       if (viewHistory)
         dispatch(setViewHistory(null));
@@ -238,7 +240,7 @@ const TheLayout = () => {
       </div>
       <ToastContainer
         position="bottom-right"
-        autoClose={2000}
+        autoClose={1000}
         progressClassName="toastProgress"
       />
 
