@@ -1,7 +1,6 @@
 const MIN_RANK = "00000000000000000000000000000000000000000000000000";
 const MAX_RANK = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
 const BASE_STR = "0123456789abcdefghijklmnopqrstuvwxyz";
-export const GetFileTypeImage = (file_type_name) => {};
 
 //output{0: a>=b not valid, string: found, false: notfound}
 export const FindRankBetween = (str1, str2) => {

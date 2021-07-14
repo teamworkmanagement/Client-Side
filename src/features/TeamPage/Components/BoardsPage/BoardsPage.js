@@ -8,6 +8,7 @@ import { BsClipboardData, BsSearch } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory, useParams } from "react-router";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
+import { useSelector } from "react-redux";
 
 function BoardsPage(props) {
   const history = useHistory();
@@ -26,6 +27,7 @@ function BoardsPage(props) {
   const [showAddBoard, setShowAddBoard] = useState(false);
   const { teamId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector(state => state.auth.currentUser);
 
   useEffect(() => {
     setIsLoading(true);
@@ -81,12 +83,12 @@ function BoardsPage(props) {
           />
           <BsSearch className="icon-search" />
         </div>
-        <div className="other-actions">
+        {props.team.teamLeaderId === user.id && <div className="other-actions">
           <div className="add-btn add-task-btn" onClick={showModalAddBoard}>
             <CIcon name="cil-plus" />
             Tạo bảng công việc mới
           </div>
-        </div>
+        </div>}
       </div>
       {isLoading && boardLists.length === 0 && <Loading />}
       {boardLists.length > 0 && (

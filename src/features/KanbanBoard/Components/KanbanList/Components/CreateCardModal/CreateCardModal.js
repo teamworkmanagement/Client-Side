@@ -56,9 +56,10 @@ function CreateCardModal(props) {
             taskStatus: "todo",
             taskDeadline: date.addDays(1),
             userActionId: user.id,
+            taskPoint: 0,
           })
-          .then((res) => {})
-          .catch((err) => {});
+          .then((res) => { })
+          .catch((err) => { });
 
         setTaskName("");
       } else {
@@ -83,9 +84,10 @@ function CreateCardModal(props) {
               taskStatus: "todo",
               taskDeadline: date.addDays(1),
               userActionId: user.id,
+              taskPoint: 0,
             })
-            .then((res) => {})
-            .catch((err) => {});
+            .then((res) => { })
+            .catch((err) => { });
         }
 
         setTaskName("");

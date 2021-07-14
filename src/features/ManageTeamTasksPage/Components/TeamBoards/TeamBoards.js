@@ -58,12 +58,6 @@ function TeamBoards(props) {
           />
           <BsSearch className="icon-search" />
         </div>
-        {/*<div className="other-actions">
-          <div className="add-btn add-task-btn">
-            <CIcon name="cil-plus" />
-            Tạo bảng công việc mới
-          </div>
-  </div>*/}
       </div>
       <div className="list-boards">
         <CRow xl={{ cols: 5, gutter: 3 }}>

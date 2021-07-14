@@ -10,8 +10,10 @@ const isDev = process.env.NODE_ENV === 'development' ? true : false;
 
 export const startSignalRConnection = async (connection) => {
   try {
-    await connection.start();
-    console.log("SignalR connection established", connection.connectionId);
+    if (connection.state === HubConnectionState.Disconnected) {
+      await connection.start();
+      console.log("SignalR connection established", connection.connectionId);
+    }
   } catch (err) {
     console.log("SignalR Connection Error: ", err);
     setTimeout(() => startSignalRConnection(connection), 5000);

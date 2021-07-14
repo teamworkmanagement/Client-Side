@@ -321,6 +321,10 @@ $message-not-mine-backgroundcolor: #ededed;
             font-weight: 500;
         }
 
+        .message-file{
+            cursor: pointer;
+        }
+
         &:active {
             .message-time {
                 display: block;

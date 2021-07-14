@@ -1,13 +1,13 @@
 import firebase from 'firebase/app';
 import "firebase/storage";
 const firebaseConf = {
-    apiKey: "AIzaSyAmHPFXOsSO0GkNAw-UtQRsVAfJuIeVhiE",
-    authDomain: "teamappauth-29adc.firebaseapp.com",
-    projectId: "teamappauth-29adc",
-    storageBucket: "teamappauth-29adc.appspot.com",
-    messagingSenderId: "491396690623",
-    appId: "1:491396690623:web:647124c84cd6525ad00c0a"
-  };
+  apiKey: "AIzaSyD_WlTTOqNZS_jmz8ziKpGe6p6RgFUyLQw",
+  authDomain: "teamappstorage.firebaseapp.com",
+  projectId: "teamappstorage",
+  storageBucket: "teamappstorage.appspot.com",
+  messagingSenderId: "556124578165",
+  appId: "1:556124578165:web:01c170ae7b6299b1ecb33c"
+};
 // Initialize Firebase
 const firebaseConfig = firebase.initializeApp(firebaseConf);
 

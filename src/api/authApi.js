@@ -4,7 +4,9 @@ import axiosClient from "./axiosClient";
 const authApi = {
     socialLogin(data) {
         const url = '/account/social-login';
-        return axiosClient.post(url, data);
+        return axiosClient.post(url, data, {
+            timeout: 60000,
+        });
     },
     register(data) {
         const url = '/account/register';
@@ -13,7 +15,9 @@ const authApi = {
     ,
     login(data) {
         const url = '/account/authenticate';
-        return axiosClient.post(url, data);
+        return axiosClient.post(url, data, {
+            timeout: 60000,
+        });
     },
     isLogin() {
         const url = '/account/is-login';

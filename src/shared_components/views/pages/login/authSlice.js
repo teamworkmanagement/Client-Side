@@ -22,7 +22,6 @@ export const socialLogin = createAsyncThunk(
     catch (err) {
       return rejectWithValue(err);
     }
-
   }
 );
 

@@ -2,12 +2,16 @@ import React from "react";
 import "./Message.scss";
 import { CTooltip } from "@coreui/react";
 import moment from "moment";
+import { saveAs } from 'file-saver';
 
 function Message({ item, index }) {
+  const downLoad = () => {
+    saveAs(item.message, item.message.split("/").pop());
+  }
   const renderMes = () => {
     switch (item.messageType) {
       case "file":
-        return <strong>{item.message.split("/").pop()}</strong>;
+        return <strong onClick={downLoad} className="message-file">{item.message.split("/").pop()}</strong>;
       case "image":
         return (
           <img
@@ -28,9 +32,8 @@ function Message({ item, index }) {
         <div
           key={item.messageId}
           animationDelay={index + 2}
-          className={`message-item-container ${item.class ? item.class : ""} ${
-            item.isMine ? "mine" : ""
-          } `}
+          className={`message-item-container ${item.class ? item.class : ""} ${item.isMine ? "mine" : ""
+            } `}
         >
           <img className="avatar" alt="" src={item.messengerUserAvatar} />
 

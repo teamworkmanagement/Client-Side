@@ -18,6 +18,7 @@ import useExitPrompt from "../../../utils/customHook/useExitPrompt";
 import CustomToast from "../CustomToast/CustomToast";
 import "./ListFileTable.scss";
 import UploadItem from "./ProgressBottom/UploadItem";
+import { saveAs } from 'file-saver';
 
 moment.locale("vi");
 
@@ -145,7 +146,7 @@ function ListFileTable(props) {
         setDatas(dts);
         //setTotals(Math.ceil(outPut.data.totalRecords / pageSize));
         //console.log(outPut.data.items);
-      } catch (err) {}
+      } catch (err) { }
     }
     getDatas();
   }, [page, triggerLoad]);
@@ -181,8 +182,15 @@ function ListFileTable(props) {
           <CustomToast type="success" title="Thông báo" message="Thành công!" />
         );
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
+
+  const handleDownload = (item) => {
+    console.log("action in table");
+    saveAs(item.fileUrl, item.fileUrl.split("/").pop());
+    //setDetails();
+  };
+
   return (
     <div ref={tableContainerRef} className="list-file-table-container">
       <div onClick={onClick} className="upload-container">
@@ -265,22 +273,20 @@ function ListFileTable(props) {
                 <div className="actions-group">
                   <CTooltip placement="top" content="Tải về">
                     <div className="download-btn-container">
-                      <a href={item.fileUrl}>
-                        {/* <img
+                      {/* <img
                       className="download-btn"
                       src={"../images/download.png"}
                       alt=""
                       onClick={handleDownload}
                     ></img> */}
-                        <div className="download-btn">
-                          <div className="overlay-div"></div>
-                          <CIcon
-                            name="cil-arrow-bottom"
-                            className="arrow-icon"
-                          />
-                          <CIcon name="cil-space-bar" />
-                        </div>
-                      </a>
+                      <div className="download-btn" onClick={() => handleDownload(item)}>
+                        <div className="overlay-div"></div>
+                        <CIcon
+                          name="cil-arrow-bottom"
+                          className="arrow-icon"
+                        />
+                        <CIcon name="cil-space-bar" />
+                      </div>
                     </div>
                   </CTooltip>
 
