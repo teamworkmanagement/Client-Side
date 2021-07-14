@@ -190,6 +190,29 @@ function TeamPage(props) {
     dispatch(setLeaveTeam(null));
   }, [leftTeam])
 
+  useEffect(() => {
+    if (!teamUpdateInfo)
+      return;
+    if (teamId === teamUpdateInfo.teamId && teamUpdateInfo.leaderId && user.id === teamUpdateInfo.leaderId) {
+      dispatch(setAdminAction(true));
+      setTeam({
+        ...team,
+        teamLeaderId: user.id,
+      })
+      console.log(1);
+    } else {
+      if (teamId === teamUpdateInfo.teamId) {
+        dispatch(setAdminAction(false));
+        setTeam({
+          ...team,
+          teamLeaderId: null,
+        })
+        console.log(2);
+      }
+    }
+    dispatch(setUpdateTeamInfo(null));
+  }, [teamUpdateInfo])
+
   const boardRender = () => {
     const pathname = history.location.pathname.split("/");
     return (
@@ -242,14 +265,6 @@ function TeamPage(props) {
     }
   }, [teamId]);
 
-  const changeLeader = () => {
-    teamApi
-      .getTeam(teamId)
-      .then((res) => {
-        setTeam(res.data);
-      })
-      .catch((err) => { });
-  };
 
   const setNotFoundView = () => {
     setNotfound(true);
@@ -323,7 +338,7 @@ function TeamPage(props) {
             <CTabContent>
               <CTabPane>
                 {active === 0 ? (
-                  <TeamMembersList changeLeader={changeLeader} />
+                  <TeamMembersList />
                 ) : null}
               </CTabPane>
               <CTabPane>

@@ -26,7 +26,6 @@ const kanbanSlice = createSlice({
             kanbanLists: [],
             currentBoard: null,
             taskSelected: null,
-            adminAction: false,
         },
         signalrData: {
             addNewTask: null,
@@ -39,7 +38,8 @@ const kanbanSlice = createSlice({
             updateList: null,
             reAssignUser: null,
             addNewFile: null,
-        }
+        },
+        adminAction: false,
     },
     reducers: {
         setNullSignalRData(state, action) {
@@ -292,7 +292,7 @@ const kanbanSlice = createSlice({
         setAdminAction(state, action) {
             if (!action.payload)
                 return;
-            if (!window.location.search.includes('b=')) {
+            if (!window.location.search.includes('b=') || !window.location.pathname.includes('team')) {
                 return;
             }
             state.adminAction = action.payload;
