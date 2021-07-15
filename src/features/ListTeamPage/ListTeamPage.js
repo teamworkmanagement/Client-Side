@@ -26,6 +26,8 @@ import { VscSearchStop } from "react-icons/vsc";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import teamApi from "src/api/teamApi";
 import { setJoinTeam, setLeaveTeam, setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
@@ -114,17 +116,26 @@ function ListTeamPage(props) {
     history.push(`/team/${teamId}?tab=teaminfo`);
   };
 
-  const leaveTeam = (teamId) => {
-    console.log(teamId);
+  const leaveTeam = (team) => {
+    if (team.teamLeaderId === user.id) {
+      toast(
+        <CustomToast
+          title="Chú ý"
+          message="Vui lòng trao lại quyền trường nhóm!"
+        />
+      );
+      return;
+    }
+
     const params = {
-      teamId: teamId,
+      teamId: team.teamId,
       userId: user.id,
     };
 
     teamApi
       .leaveTeam({ params })
       .then((res) => {
-        dispatch(getTeamByUserId(user.id));
+        //dispatch(getTeamByUserId(user.id));
       })
       .catch((err) => { });
   };
@@ -166,7 +177,7 @@ function ListTeamPage(props) {
                               </CDropdownItem>
                               <CDropdownItem
                                 className="last"
-                                onClick={() => leaveTeam(team.teamId)}
+                                onClick={() => leaveTeam(team)}
                               >
                                 <CIcon name="cil-account-logout" />
                                 Rời nhóm

@@ -87,7 +87,7 @@ function TeamMembersList(props) {
         console.log(res);
         setAdmin(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
 
     const params = {
       teamId: teamId,
@@ -103,7 +103,7 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [teamId]);
 
   useEffect(() => {
@@ -117,7 +117,7 @@ function TeamMembersList(props) {
             console.log(res);
             setAdmin(res.data);
           })
-          .catch((err) => {});
+          .catch((err) => { });
 
         const params = {
           teamId: teamId,
@@ -133,7 +133,7 @@ function TeamMembersList(props) {
           .then((res) => {
             setTeam(res.data);
           })
-          .catch((err) => {});
+          .catch((err) => { });
 
         dispatch(setUpdateTeamInfo(null));
       }
@@ -230,7 +230,7 @@ function TeamMembersList(props) {
           ]);
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const dispatch = useDispatch();
@@ -278,7 +278,7 @@ function TeamMembersList(props) {
       .then((res) => {
         setTeam(newTeam);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const onPickImage = (e) => {
@@ -302,6 +302,10 @@ function TeamMembersList(props) {
   };
 
   const changeLeader = (item) => {
+    const confirmBox = window.confirm("Bạn có chắc chắn muốn trao lại quyền quản lý?");
+    if (confirmBox !== true) {
+      return;
+    }
     teamApi
       .changeLeader({
         teamId: team.teamId,
@@ -318,7 +322,7 @@ function TeamMembersList(props) {
 
             props.changeLeader();
           })
-          .catch((err) => {});
+          .catch((err) => { });
 
         const params = {
           teamId: teamId,
@@ -333,9 +337,9 @@ function TeamMembersList(props) {
           .then((res) => {
             setTeam(res.data);
           })
-          .catch((err) => {});
+          .catch((err) => { });
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const quitTeam = (item) => {
@@ -348,8 +352,8 @@ function TeamMembersList(props) {
 
     teamApi
       .leaveTeam({ params })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -365,7 +369,7 @@ function TeamMembersList(props) {
           setMembers(res.data.items);
           setPages(Math.ceil(res.data.totalRecords / res.data.pageSize));
         })
-        .catch((err) => {})
+        .catch((err) => { })
         .finally(() => {
           setLoadingMembers(false);
         });
@@ -441,9 +445,8 @@ function TeamMembersList(props) {
                     if (admin.userId !== user.id) return;
                     openPickImage();
                   }}
-                  className={`btn-change-image ${
-                    admin.userId !== user.id ? "disable" : ""
-                  }`}
+                  className={`btn-change-image ${admin.userId !== user.id ? "disable" : ""
+                    }`}
                 >
                   <RiImageEditFill className="icon-edit-image icon-edit" />
                   Đổi ảnh
@@ -456,9 +459,8 @@ function TeamMembersList(props) {
                   />
                 </div>
                 <div
-                  className={`btn-change-name ${
-                    admin.userId !== user.id ? "disable" : ""
-                  }`}
+                  className={`btn-change-name ${admin.userId !== user.id ? "disable" : ""
+                    }`}
                   onClick={() => {
                     if (admin.userId !== user.id) return;
                     setShowEditName(true);
