@@ -36,7 +36,7 @@ function InviteMemberModal(props) {
       .catch((err) => {
         console.log(err);
         setEmail("");
-        props.onClose(err.Message);
+        props.onClose(err);
       });
   }
 

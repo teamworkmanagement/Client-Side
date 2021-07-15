@@ -39,6 +39,8 @@ import {
   setLeaveTeam,
   setJoinTeam,
 } from "src/utils/signalr/signalrSlice";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 function TeamMembersList(props) {
   const [showMode, setShowMode] = useState(1); //1:list, 2:grid
@@ -192,8 +194,28 @@ function TeamMembersList(props) {
     setFilterObj(params);
   };
 
-  const onClose = (e) => {
+  const onClose = (err) => {
     setShowInvite(false);
+    if (err.ErrorCode && err.ErrorCode === '409') {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Thành viên đã tồn tại!"
+        />
+      );
+      return;
+    }
+    if (err.ErrorCode && err.ErrorCode === '404') {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Người dùng tồn tại!"
+        />
+      );
+      return;
+    }
   };
 
   const nhanTin = (item) => {
