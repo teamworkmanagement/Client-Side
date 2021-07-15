@@ -8,6 +8,7 @@ import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
 import { setCurrentGroup, setIsSelected } from "../../chatSlice";
 import "./CreateChatInChatPage.scss";
+import { setShowDialogModal } from "src/appSlice.js";
 
 const ValueOption = (props) => (
   <components.MultiValue {...props}>
@@ -111,13 +112,27 @@ function CreateChatInChatPage(props) {
       return option.value;
     });
 
-    if (!grChatName && members.length > 2) {
-      alert("name empty");
+    if (!grChatName) {
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Không hợp lệ",
+        dialogMessage: "Tên nhóm nhắn tin không được trống",
+        dialogType: 2, //error
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
       return;
     }
 
     if (members.length < 2) {
-      alert("more users");
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Không hợp lệ",
+        dialogMessage: "Nhóm nhắn tin phải có ít nhất 2 thành viên",
+        dialogType: 2, //error
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
       return;
     }
 

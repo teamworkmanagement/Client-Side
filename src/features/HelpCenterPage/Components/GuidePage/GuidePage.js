@@ -72,7 +72,7 @@ function GuidePage(props) {
         <BsFillCaretRightFill className={`icon-arrow `} />
         Đổi mật khẩu
       </div>
-      <CCollapse show={showCreateTeam}>hehe</CCollapse>
+      <CCollapse show={showCreateTeam}></CCollapse>
     </div>
   );
 }

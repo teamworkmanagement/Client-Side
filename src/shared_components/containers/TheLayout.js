@@ -241,7 +241,7 @@ const TheLayout = () => {
       </div>
       <ToastContainer
         position="bottom-right"
-        autoClose={1000}
+        autoClose={3000}
         progressClassName="toastProgress"
       />
 

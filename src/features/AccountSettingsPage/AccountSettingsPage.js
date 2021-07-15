@@ -28,7 +28,6 @@ import CIcon from "@coreui/icons-react";
 import {
   changeStateSettingOptionsSidebar,
   setSettingPageTab,
-  setShowDialogModal,
 } from "src/appSlice";
 import { FiEdit3 } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
@@ -548,48 +547,6 @@ function AccountSettingsPage(props) {
               </CFormGroup>
               <div onClick={changePasswordClick} className="save-btn-password">
                 Cập nhật
-              </div>
-              <div
-                onClick={() => {
-                  const data = {
-                    showDialogModal: true,
-                    dialogTitle: "Thông báo hết hạn",
-                    dialogMessage: "Tài khoản đã hết hạn sử dụng",
-                    dialogType: 0, //info
-                  };
-                  dispatch(setShowDialogModal(data));
-                }}
-                className="save-btn-password"
-              >
-                Info
-              </div>
-              <div
-                className="save-btn-password"
-                onClick={() => {
-                  const data = {
-                    showDialogModal: true,
-                    dialogTitle: "Xác nhận xóa",
-                    dialogMessage: "Bạn có chắc chắn xóa công việc này?",
-                    dialogType: 1, //confirm
-                  };
-                  dispatch(setShowDialogModal(data));
-                }}
-              >
-                confirm
-              </div>
-              <div
-                className="save-btn-password"
-                onClick={() => {
-                  const data = {
-                    showDialogModal: true,
-                    dialogTitle: "Công việc không tồn tại",
-                    dialogMessage: "Công việc bạn đang update không tồn tại",
-                    dialogType: 2, //error
-                  };
-                  dispatch(setShowDialogModal(data));
-                }}
-              >
-                error
               </div>
             </div>
           )}

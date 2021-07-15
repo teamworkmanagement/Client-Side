@@ -423,122 +423,137 @@ $baseTransition: all 0.3s;
                     border-radius: 0.625rem;
                     border: 1px solid #e6ebf1;
                     transition: $baseTransition;
+                    height: 100%;
+                    justify-content: space-between;
                     //cursor: pointer;
-
-                    .team-header {
+                    .team-top-info {
                         width: 100%;
                         display: flex;
-                        justify-content: flex-end;
-                        .header-actions-dropdown {
-                            .dropdown-toggle.btn {
-                                @include DropdownToggleButtonStyle;
-                            }
-                            .dropdown-menu.show {
-                                @include DropdownMenuStyle;
-                                .dropdown-item {
-                                    .dropdown-icon-group {
-                                        display: flex;
-                                        flex-direction: column;
-                                        .rotate-45 {
-                                            transform: rotate(45deg);
-                                            margin-top: -1.3rem;
-                                            margin-left: 0.15rem;
-                                            width: 1.2rem;
-                                            height: 1.2rem;
+                        flex-direction: column;
+                        align-items: center;
+                        .team-header {
+                            width: 100%;
+                            display: flex;
+                            justify-content: flex-end;
+                            .header-actions-dropdown {
+                                .dropdown-toggle.btn {
+                                    @include DropdownToggleButtonStyle;
+                                }
+                                .dropdown-menu.show {
+                                    @include DropdownMenuStyle;
+                                    .dropdown-item {
+                                        .dropdown-icon-group {
+                                            display: flex;
+                                            flex-direction: column;
+                                            .rotate-45 {
+                                                transform: rotate(45deg);
+                                                margin-top: -1.3rem;
+                                                margin-left: 0.15rem;
+                                                width: 1.2rem;
+                                                height: 1.2rem;
+                                            }
                                         }
-                                    }
-                                    .special-text {
-                                        margin-left: -0.5rem !important;
+                                        .special-text {
+                                            margin-left: -0.5rem !important;
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    .team-infor {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        margin-top: -0.8rem;
-                        width: 100%;
-                        .team-avatar {
-                            width: 7rem;
-                            height: 7rem;
-                            border-radius: 100px;
-                            margin-bottom: 0.5rem;
-                        }
-                        .team-name {
-                            font-weight: bold;
-                            width: 100%;
-                            text-align: center;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: pre;
-                        }
-                        .team-description {
-                            color: #768192;
-                            font-size: 95%;
-                            width: 100%;
-                            padding: 0 1rem;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            white-space: pre;
-                            text-align: center;
-                        }
-                    }
-                    .team-detail-infor {
-                        margin-top: 1rem;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 100%;
-                        .member-infor {
+                        .team-infor {
                             display: flex;
+                            flex-direction: column;
                             align-items: center;
-                            //margin-right: 0.5rem;
-                            .c-icon {
-                                margin-right: 0.2rem;
+                            margin-top: -0.8rem;
+                            width: 100%;
+                            .team-avatar {
+                                width: 7rem;
+                                height: 7rem;
+                                border-radius: 100px;
+                                margin-bottom: 0.5rem;
                             }
-                            .member-count {
-                            }
-                        }
-                        .divider {
-                            width: 1.2px;
-                            height: 18px;
-                            background-color: #3c4b64;
-                            margin: 0rem 0.5rem;
-                        }
-
-                        .leader-infor {
-                            display: flex;
-                            align-items: center;
-                            overflow-x: hidden;
-                            .icon-group {
-                                display: flex;
-                                margin-right: 0.1rem;
-                                align-items: center;
-                            }
-                            img {
-                                width: 1.5rem;
-                                height: 1.5rem;
-                                border-radius: 50px;
-                                margin-right: 0.2rem;
-                            }
-                            .leader-name {
+                            .team-name {
+                                font-weight: bold;
+                                width: 100%;
+                                text-align: center;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
                                 white-space: pre;
-                                display: flex;
-                                align-items: center;
+                            }
+                            .team-description {
+                                color: #768192;
+                                font-size: 95%;
+                                width: 100%;
+                                padding: 0 1rem;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: pre;
+                                text-align: center;
                             }
                         }
                     }
-                    .team-action {
-                        @include NormalButtonStyle;
-                        margin-top: 1rem;
-                        font-weight: bold;
-                        border-radius: 50px;
-                        width: 80%;
+
+                    .team-bottom-info {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        .team-detail-infor {
+                            margin-top: 1rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            .member-infor {
+                                display: flex;
+                                align-items: center;
+                                //margin-right: 0.5rem;
+                                .c-icon {
+                                    margin-right: 0.2rem;
+                                }
+                                .member-count {
+                                }
+                            }
+                            .divider {
+                                width: 1.2px;
+                                height: 18px;
+                                background-color: #3c4b64;
+                                margin: 0rem 0.5rem;
+                            }
+
+                            .leader-infor {
+                                display: flex;
+                                align-items: center;
+                                overflow-x: hidden;
+                                .icon-group {
+                                    display: flex;
+                                    margin-right: 0.1rem;
+                                    align-items: center;
+                                }
+                                img {
+                                    width: 1.5rem;
+                                    height: 1.5rem;
+                                    border-radius: 50px;
+                                    margin-right: 0.2rem;
+                                }
+                                .leader-name {
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: pre;
+                                    display: flex;
+                                    align-items: center;
+                                }
+                            }
+                        }
+                        .team-action {
+                            @include NormalButtonStyle;
+                            margin-top: 1rem;
+                            font-weight: bold;
+                            border-radius: 50px;
+                            width: 80%;
+                        }
                     }
+
                     &:hover {
                         border-color: transparent;
                         box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px 0 rgb(0 0 0 / 12%),

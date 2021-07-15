@@ -21,7 +21,11 @@ import {
 } from "@coreui/react";
 import { CirclePicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
-import { setViewHistory } from "src/appSlice";
+import {
+  setShowDialogModal,
+  setTaskRemoveId,
+  setViewHistory,
+} from "src/appSlice";
 import moment from "moment";
 import TextareaAutosize from "react-textarea-autosize";
 import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/CommentItem/CommentItem";
@@ -302,7 +306,7 @@ function TaskEditModal(props) {
       .then((res) => {
         console.log("số lần call api");
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [current]);
 
   useEffect(() => {
@@ -354,7 +358,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) { }
+      } catch (e) {}
     }
   }, [props.data]);
 
@@ -394,8 +398,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   function handleClose() {
@@ -664,7 +668,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -700,11 +704,11 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => { })
-              .catch((err) => { });
+              .then((res) => {})
+              .catch((err) => {});
           }
         })
-        .send((err) => { });
+        .send((err) => {});
     }
   };
 
@@ -723,20 +727,40 @@ function TaskEditModal(props) {
     setCmtLists(newCmts);
   };
 
-  const onRemoveTask = () => {
-    const confirmBox = window.confirm("Bạn có chắc chắn muốn xóa task?");
-    if (confirmBox !== true) {
-      return;
-    }
+  const taskRemoveId = useSelector((state) => state.app.taskRemoveId);
+  const dialogResult = useSelector((state) => state.app.dialogResult);
 
+  useEffect(() => {
+    if (!taskRemoveId) return;
+    if (taskRemoveId !== task.taskId) return;
+
+    if (!dialogResult) return;
     taskApi
       .removeTask(task.taskId)
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {
+        dispatch(setTaskRemoveId(null));
+      })
+      .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
     }
+  }, [dialogResult]);
+
+  const onRemoveTask = () => {
+    //const confirmBox = window.confirm("Bạn có chắc chắn muốn xóa task?");
+    const data = {
+      showDialogModal: true,
+      dialogTitle: "Xác nhận xóa",
+      dialogMessage: "Bạn có chắc chắn xóa công việc này?",
+      dialogType: 1, //confirm
+      dialogLevel: 1,
+      taskRemoveId: task.taskId,
+    };
+    dispatch(setShowDialogModal(data));
+    // if (confirmBox !== true) {
+    //   return;
+    // }
   };
 
   function selectList(index) {
@@ -760,7 +784,7 @@ function TaskEditModal(props) {
     const localObjIndex = kanbanLocal.findIndex((kl) => kl.active);
 
     if (localObjIndex === index) {
-      alert("errror");
+      //alert("errror");
       return;
     }
 
@@ -783,8 +807,8 @@ function TaskEditModal(props) {
         newList: newList.kanbanListId,
         boardId: currentBoard,
       })
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
 
     selectList(index);
   };
@@ -861,17 +885,6 @@ function TaskEditModal(props) {
     return this.substring(0, start) + what + this.substring(end);
   };
 
-  function replaceOffset(str, offs) {
-    let tag = "<@tag>";
-    offs.reverse().forEach(function (v) {
-      str = str.replace(
-        new RegExp("(.{" + v[0] + "})(.{" + (v[1] - v[0]) + "})"),
-        "$1" + tag + "$2" + tag + ""
-      );
-    });
-    return str;
-  }
-
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
@@ -890,46 +903,22 @@ function TaskEditModal(props) {
 
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
-        let offsets = [];
-        let users = [];
         block.entityRanges.forEach((entity) => {
-          // var nameTag = block.text.substring(
-          //   entity.offset,
-          //   entity.offset + entity.length
-          // );
-
           let indexData = entity.key;
           const userTagId = entityMap[indexData].data.mention.id;
 
-          offsets.push([entity.offset, entity.offset + entity.length]);
-          users.push(userTagId);
+          block.text = block.text.replaceBetween(
+            entity.offset,
+            entity.offset + entity.length,
+            `<@tag>${userTagId}<@tag>`
+          );
         });
-
-        let newStr = replaceOffset(block.text, offsets);
-        console.log(newStr);
-        let myArray = newStr.split("<@tag>");
-        let j = 0;
-        for (let i = 0; i < myArray.length; i++) {
-          if (i % 2 !== 0) {
-            myArray[i] = `<@tag>${users[j]}<@tag>`;
-            j++;
-          } else {
-            continue;
-          }
-        }
-
-        const finalStr = myArray.join("");
-        console.log(myArray);
-        console.log(finalStr);
-        block.text = finalStr;
       }
     });
 
     let value = cloneBlocks
       .map((block) => (!block.text.trim() && "\n") || block.text)
       .join("<br>");
-
-    console.log(value);
 
     let userIds = [];
     if (mentions.length > 0) {
@@ -947,8 +936,8 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => { })
-      .catch((err) => { });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   const viewHistory = () => {
@@ -1400,7 +1389,7 @@ function TaskEditModal(props) {
                     <div className="my-avatar">
                       <img alt="" src={curUser.userAvatar} />
                     </div>
-                    <div className="input-container">
+                    <div className="input-comment-container">
                       <TaskCommentInput
                         saveContent={saveContent}
                         boardId={currentBoard}

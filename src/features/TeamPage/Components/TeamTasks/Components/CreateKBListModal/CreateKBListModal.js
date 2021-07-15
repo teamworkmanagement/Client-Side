@@ -8,16 +8,24 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import kanbanApi from "src/api/kanbanApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
+import { setShowDialogModal } from "src/appSlice.js";
 
 function CreateKBListModal(props) {
   const listKBs = useSelector((state) => state.kanban.kanbanBoard.kanbanLists);
   const [listName, setListName] = useState("");
-
-  function onCreateBoard() {
+  const dispatch = useDispatch();
+  function onCreateList() {
     if (!listName) {
-      alert("Tên không được để trống");
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Không hợp lệ",
+        dialogMessage: "Tên danh sách không được để trống",
+        dialogType: 2, //error
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
       return;
     }
 
@@ -65,7 +73,7 @@ function CreateKBListModal(props) {
             onChange={(e) => setListName(e.target.value)}
             placeholder="Tên danh sách..."
           />
-          <CButton onClick={onCreateBoard} className="add-list-btn">
+          <CButton onClick={onCreateList} className="add-list-btn">
             Tạo
           </CButton>
         </div>

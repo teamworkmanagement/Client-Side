@@ -17,10 +17,19 @@ import "./Register.scss";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { AiOutlineUser } from "react-icons/ai";
 import { HiOutlineMail } from "react-icons/hi";
+import DialogModalRegister from "./Components/DialogModalRegister/DialogModalRegister.js";
 
 const Register = () => {
   const [registerObj, setRegisterObj] = useState(null);
   const history = useHistory();
+  const [showDialogModal, setShowDialogModal] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setdialogMessage] = useState("");
+  const [dialogType, setDialogType] = useState(0);
+
+  function closeDialog() {
+    setShowDialogModal(false);
+  }
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -32,23 +41,37 @@ const Register = () => {
 
   const onRegisterClick = () => {
     if (
-      !registerObj.email ||
-      !registerObj.password ||
-      !registerObj.confirmPassword ||
-      !registerObj.fullName
+      !registerObj?.email ||
+      !registerObj?.password ||
+      !registerObj?.confirmPassword ||
+      !registerObj?.fullName
     ) {
-      alert("Thông tin không được bỏ trống");
+      setDialogTitle("Không hợp lệ");
+      setdialogMessage("Vui lòng cung cấp đầy đủ thông tin");
+      setDialogType(2);
+      setShowDialogModal(true);
+      return;
     }
 
     authApi
       .register(registerObj)
       .then((res) => {
-        alert("Kiểm tra email và hoàn tất quá trình đăng ký");
+        setDialogTitle("Thành công");
+        setdialogMessage(
+          "Email xác nhận đã được gửi đến email của bạn, vui lòng kiểm tra email và hoàn tất quá trình đăng ký"
+        );
+        setDialogType(0);
+        setShowDialogModal(true);
         history.push("/login");
       })
       .catch((err) => {
-        console.log(err.data);
-        alert("Vui lòng kiểm tra dữ liệu");
+        setDialogTitle("Lỗi");
+        setdialogMessage(
+          "Thông tin cung cấp không hợp lệ, vui lòng kiểm tra lại"
+        );
+        setDialogType(2);
+        setShowDialogModal(true);
+        return;
       });
   };
   return (
@@ -150,6 +173,13 @@ const Register = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <DialogModalRegister
+        onClose={closeDialog}
+        showDialogModal={showDialogModal}
+        dialogTitle={dialogTitle}
+        dialogMessage={dialogMessage}
+        dialogType={dialogType}
+      />
     </div>
   );
 };

@@ -393,7 +393,7 @@ const ForgotPassword = () => {
         </CRow>
       </CContainer>
 
-      <ToastContainer position="bottom-right" autoClose={2000} />
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
 };

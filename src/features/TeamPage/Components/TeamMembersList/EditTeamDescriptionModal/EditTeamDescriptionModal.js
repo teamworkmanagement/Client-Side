@@ -10,7 +10,6 @@ import {
 
 function EditTeamDescriptionModal(props) {
   const [value, setValue] = useState("");
-
   function handleOnClose() {
     if (props.onClose) {
       props.onClose();
@@ -22,7 +21,9 @@ function EditTeamDescriptionModal(props) {
   }, [props.teamDescription]);
 
   const onSave = () => {
-    if (!value) alert("error");
+    if (!value) {
+      setValue("");
+    }
     props.onSave({
       name: "teamDescription",
       value: value,

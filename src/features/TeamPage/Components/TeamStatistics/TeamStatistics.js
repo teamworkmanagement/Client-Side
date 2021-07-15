@@ -290,7 +290,7 @@ function TeamStatistics(props) {
             },
           ]);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   }, [filterTeamObject]);
 
@@ -330,7 +330,7 @@ function TeamStatistics(props) {
             },
           ]);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   }, [filterMembersObject]);
 
@@ -349,7 +349,7 @@ function TeamStatistics(props) {
 
         setListBoards(boards);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, []);
 
   useEffect(() => {
@@ -377,8 +377,8 @@ function TeamStatistics(props) {
           progressTimeMode === 1
             ? "week"
             : progressTimeMode === 2
-              ? "month"
-              : "year",
+            ? "month"
+            : "year",
         boardId: selectedBoard.value,
       });
     }
@@ -469,20 +469,20 @@ function TeamStatistics(props) {
     )[0];
     canvasSave.toBlob(function (blob) {
       let fdata = new FormData();
-      fdata.append('image', blob);
-      fdata.append('boardTaskDone', JSON.stringify(boardTaskDone));
-      fdata.append('boardName', selectedBoard.label);
+      fdata.append("image", blob);
+      fdata.append("boardTaskDone", JSON.stringify(boardTaskDone));
+      fdata.append("boardName", selectedBoard.label);
       //saveAs(blob, "testing.png");
 
       statisticsApi
         .exportTeamDoneBoard(fdata)
         .then((blob) => {
-          saveAs(blob, "boardTaskDone.xlsx");
+          saveAs(blob, "Tiến độ công việc nhóm.xlsx");
         })
         .catch((err) => {
           console.log(err);
         });
-    })
+    });
   };
 
   const exportGroupByUserExcel = () => {
@@ -505,23 +505,23 @@ function TeamStatistics(props) {
       //saveAs(blob, "testing.png");
 
       let fdata = new FormData();
-      fdata.append('image', blob);
-      fdata.append('requestModels', JSON.stringify(requestModels));
-      fdata.append('boardName', selectedBoard.label);
+      fdata.append("image", blob);
+      fdata.append("requestModels", JSON.stringify(requestModels));
+      fdata.append("boardName", selectedBoard.label);
 
       statisticsApi
         .exportTeamUserPointTask(fdata)
         .then((blob) => {
-          saveAs(blob, "pointandtaskgroupbyuser.xlsx");
+          saveAs(blob, "Thống kê đóng góp thành viên.xlsx");
         })
         .catch((err) => {
           console.log(err);
         });
-    })
+    });
   };
   return (
     <div className=" team-statistics-container">
-      <div className="header-label">Thống kê công việc nhóm Khóa luận Team</div>
+      <div className="header-label">Thống kê công việc nhóm</div>
       <div className="board-select-group">
         {/* <div className="label">Chọn Bảng công việc</div> */}
         <CCol lg="6" sm="12" className="col-select">
@@ -531,7 +531,7 @@ function TeamStatistics(props) {
             components={{ Option: Option }}
             placeholder="Chọn bảng công việc..."
             options={listBoards}
-            onInputChange={() => { }}
+            onInputChange={() => {}}
             onChange={onChangeSelectedBoard}
           />
         </CCol>

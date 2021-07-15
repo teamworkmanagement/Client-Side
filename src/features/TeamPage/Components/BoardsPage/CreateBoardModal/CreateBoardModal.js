@@ -9,13 +9,22 @@ import {
 } from "@coreui/react";
 import kanbanApi from "src/api/kanbanApi";
 import { useParams } from "react-router";
+import { setShowDialogModal } from "src/appSlice.js";
+import { useDispatch } from "react-redux";
 
 function CreateBoardModal(props) {
   const [boardName, setBoardName] = useState("");
-
+  const dispatch = useDispatch();
   function onCreateBoard() {
     if (!boardName) {
-      alert("Tên không được để trống");
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Không hợp lệ",
+        dialogMessage: "Tên nhóm không được để trống",
+        dialogType: 2, //error
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
       return;
     }
 
