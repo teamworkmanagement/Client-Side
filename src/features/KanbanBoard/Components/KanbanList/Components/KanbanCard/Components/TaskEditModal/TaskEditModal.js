@@ -1389,7 +1389,7 @@ function TaskEditModal(props) {
                     <div className="my-avatar">
                       <img alt="" src={curUser.userAvatar} />
                     </div>
-                    <div className="input-container">
+                    <div className="input-comment-container">
                       <TaskCommentInput
                         saveContent={saveContent}
                         boardId={currentBoard}

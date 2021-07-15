@@ -551,10 +551,41 @@
                         border-radius: inherit;
                     }
                 }
-                .input-container {
-                    width: 100% !important;
+                .input-comment-container {
+                    width: 5rem !important;
+                    flex-grow: 1;
+                    height: 2.5rem;
                     input {
                         background-color: #fafafa;
+                    }
+                    .public-DraftEditorPlaceholder-root {
+                        padding-left: 0.7rem !important;
+                    }
+                    .DraftEditor-editorContainer {
+                        overflow: hidden !important;
+                    }
+                    .DraftEditor-root {
+                        border-radius: 0.625rem;
+                        min-height: 2.3rem;
+                        display: flex;
+                        align-items: center;
+                        .public-DraftEditorPlaceholder-root {
+                            padding: 0rem 0.5rem !important;
+                            padding-left: 0.7rem !important;
+                            display: flex;
+                            height: 100%;
+                            align-items: center;
+                        }
+                        .DraftEditor-editorContainer {
+                            padding: 0rem 0.5rem;
+                            width: 100%;
+                            .notranslate.public-DraftEditor-content {
+                                display: flex;
+                                height: 100%;
+                                align-items: center;
+                                overflow-wrap: anywhere !important;
+                            }
+                        }
                     }
                 }
             }
