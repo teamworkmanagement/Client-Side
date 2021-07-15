@@ -43,7 +43,7 @@ function MyLogin(props) {
         <CustomToast
           type="error"
           title="Lỗi"
-          message="Vui lòng nhập thông tin"
+          message="Vui lòng nhập thông tin!"
         />
       );
       return;
@@ -54,7 +54,7 @@ function MyLogin(props) {
         <CustomToast
           type="error"
           title="Lỗi"
-          message="Vui lòng xem lại thông tin"
+          message="Vui lòng xem lại thông tin!"
         />
       );
       return;
@@ -96,6 +96,10 @@ function MyLogin(props) {
           );
           return;
         }
+
+        toast(
+          <CustomToast type="error" title="Lỗi" message="Đã có lỗi xảy ra!" />
+        );
       });
   };
 
@@ -161,13 +165,17 @@ function MyLogin(props) {
     };
     dispatch(socialLogin(data))
       .then(unwrapResult)
-      .then((originalPromiseResult) => {})
+      .then((originalPromiseResult) => { })
       .catch((err) => {
         if (typeof err === "string" && err.includes("timeout")) {
           toast(
             <CustomToast type="error" title="Lỗi" message="Vui lòng thử lại!" />
           );
           return;
+        } else {
+          toast(
+            <CustomToast type="error" title="Lỗi" message="Đã có lỗi xảy ra!" />
+          );
         }
       });
   };

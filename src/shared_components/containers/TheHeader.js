@@ -29,6 +29,7 @@ import {
 import teamApi from "src/api/teamApi";
 import { BsSearch } from "react-icons/bs";
 import { setUpdateTeamInfo } from "src/utils/signalr/signalrSlice";
+import queryString from 'query-string';
 
 const TheHeader = () => {
   const dispatch = useDispatch();
@@ -100,8 +101,29 @@ const TheHeader = () => {
           setShowBadge(false);
         });
     } else {
-      setTeam({});
-      setShowBadge(false);
+      if (history.location.search.includes("gr=")) {
+
+        const teamId = queryString.parse(history.location.search).gr;
+
+        teamApi
+          .getTeam(teamId)
+          .then((res) => {
+            if (res.data) {
+              setTeam(res.data);
+              setShowBadge(true);
+            } else {
+              setTeam({});
+              setShowBadge(false);
+            }
+          })
+          .catch((err) => {
+            setTeam({});
+            setShowBadge(false);
+          });
+      } else {
+        setTeam({});
+        setShowBadge(false);
+      }
     }
   }, [history.location.pathname]);
 
@@ -213,9 +235,8 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CSubheader
-        className={`px-3 justify-content-between ${
-          collapseHeader ? "collapsed" : "expand"
-        }`}
+        className={`px-3 justify-content-between ${collapseHeader ? "collapsed" : "expand"
+          }`}
       >
         <div className="sub-header-content">
           <Breadcrumbs className="c-subheader-nav m-0 px-0 px-md-3" />

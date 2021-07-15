@@ -10,8 +10,10 @@ import {
 } from "@coreui/react";
 import { useHistory } from "react-router";
 import { AiOutlineDelete } from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 function TaskListItem(props) {
+  const adminAction = useSelector((state) => state.kanban.adminAction);
   const history = useHistory();
 
   // function onEditModalClose() {
@@ -159,7 +161,7 @@ function TaskListItem(props) {
             <div
               className="attachment infor"
               style={{ display: props.data.filesCount === 0 ? "none" : "flex" }}
-              // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
+            // style={{ visibility: attachmentsCount === 0 ? "hidden" : "visible" }}
             >
               <CIcon name="cil-paperclip" className=""></CIcon>
               <div className="">{props.data.filesCount} </div>
@@ -227,10 +229,10 @@ function TaskListItem(props) {
                   <CIcon name="cil-pencil" />
                   Chỉnh sửa
                 </CDropdownItem>
-                <CDropdownItem className="last" onClick={onRemoveTask}>
+                {adminAction && <CDropdownItem className="last" onClick={onRemoveTask}>
                   <AiOutlineDelete className="icon-delete" />
                   Xóa
-                </CDropdownItem>
+                </CDropdownItem>}
               </CDropdownMenu>
             </CDropdown>
           </div>

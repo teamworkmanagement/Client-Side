@@ -17,6 +17,8 @@ import { VscSearchStop } from "react-icons/vsc";
 import { BiMessageDetail } from "react-icons/bi";
 import Loading from "src/shared_components/MySharedComponents/Loading/Loading";
 import "./MessageList.scss";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 function MessageList(props) {
   const dispatch = useDispatch();
@@ -362,8 +364,16 @@ function MessageList(props) {
 
     chatApi
       .sendMes(props.sendMes.mesObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => {
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Đã có lỗi xảy ra"
+          />
+        );
+      });
   }, [props.sendMes]);
 
   const render = () => {
