@@ -10,6 +10,7 @@ import { RiTableLine } from "react-icons/ri";
 import { VscSearchStop } from "react-icons/vsc";
 import { useHistory } from "react-router";
 import {
+  CreateNewListRank,
   FindNextRank,
   FindPreRank,
   FindRankBetween,
@@ -67,16 +68,41 @@ function KanbanBoard(props) {
               listTasksSource[listTasksSource.length - 1].taskRankInList
             );
           } else {
-            if (source.index < destination.index)
-              pos = FindRankBetween(
+            if (source.index < destination.index) {
+              const newRank = FindRankBetween(
                 listTasksSource[destination.index].taskRankInList,
                 listTasksSource[destination.index + 1].taskRankInList
               );
-            else
-              pos = FindRankBetween(
+              pos = newRank.rank;
+              if (!newRank.rank && newRank.isOutOfSlot) {
+                //rebalance here
+                kanbanApi.rebalanceTask({
+                  kanbanListId: destination.droppableId,
+                  ranks: CreateNewListRank(listTaskDestination.length)
+                }).then(res => {
+
+                }).catch(err => {
+
+                })
+              }
+            } else {
+              const newRank = FindRankBetween(
                 listTasksSource[destination.index - 1].taskRankInList,
                 listTasksSource[destination.index].taskRankInList
               );
+              pos = newRank.rank;
+              if (newRank.isOutOfSlot) {
+                //rebalance here
+                kanbanApi.rebalanceTask({
+                  kanbanListId: destination.droppableId,
+                  ranks: CreateNewListRank(listTaskDestination.length)
+                }).then(res => {
+
+                }).catch(err => {
+
+                })
+              }
+            }
           }
         }
       }
@@ -94,10 +120,22 @@ function KanbanBoard(props) {
               listTaskDestination[listTaskDestination.length - 1].taskRankInList
             );
           } else {
-            pos = FindRankBetween(
+            const newRank = FindRankBetween(
               listTaskDestination[destination.index - 1].taskRankInList,
               listTaskDestination[destination.index].taskRankInList
             );
+            pos = newRank.rank;
+            if (newRank.isOutOfSlot) {
+              //rebalance here
+              kanbanApi.rebalanceTask({
+                kanbanListId: destination.droppableId,
+                ranks: CreateNewListRank(listTaskDestination.length)
+              }).then(res => {
+
+              }).catch(err => {
+
+              })
+            }
           }
         }
       }
@@ -120,8 +158,8 @@ function KanbanBoard(props) {
           boardId: currentBoard,
           connectionId: connection.connectionId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     } else {
       if (destination.index === 0) {
         pos = FindPreRank(cloneKbLists[0].kanbanListRankInBoard);
@@ -131,16 +169,41 @@ function KanbanBoard(props) {
             cloneKbLists[cloneKbLists.length - 1].kanbanListRankInBoard
           );
         } else {
-          if (source.index < destination.index)
-            pos = FindRankBetween(
+          if (source.index < destination.index) {
+            const newRank = FindRankBetween(
               cloneKbLists[destination.index].kanbanListRankInBoard,
               cloneKbLists[destination.index + 1].kanbanListRankInBoard
             );
-          else
-            pos = FindRankBetween(
+            pos = newRank.rank;
+            if (newRank.isOutOfSlot) {
+              //rebalance here
+              kanbanApi.rebalanceList({
+                kanbanBoardId: currentBoard,
+                ranks: CreateNewListRank(kanbanLists.length)
+              }).then(res => {
+
+              }).catch(err => {
+
+              })
+            }
+          } else {
+            const newRank = FindRankBetween(
               cloneKbLists[destination.index - 1].kanbanListRankInBoard,
               cloneKbLists[destination.index].kanbanListRankInBoard
             );
+            pos = newRank.rank;
+            if (newRank.isOutOfSlot) {
+              //rebalance here
+              kanbanApi.rebalanceList({
+                kanbanBoardId: currentBoard,
+                ranks: CreateNewListRank(kanbanLists.length)
+              }).then(res => {
+
+              }).catch(err => {
+
+              })
+            }
+          }
         }
       }
 
@@ -158,8 +221,8 @@ function KanbanBoard(props) {
           kanbanListId: draggableId,
           connectionId: connection.connectionId,
         })
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
     }
   }
 

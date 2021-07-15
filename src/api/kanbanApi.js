@@ -40,6 +40,14 @@ const kanbanApi = {
     searchKanbanBoards(params) {
         const url = '/kanbanboard/search-boards';
         return axiosClient.get(url, params);
+    },
+    rebalanceTask(payload) {
+        const url = '/kanbanboard/rebalance-task';
+        return axiosClient.post(url, payload);
+    },
+    rebalanceList(payload) {
+        const url = '/kanbanboard/rebalance-list';
+        return axiosClient.post(url, payload);
     }
 };
 

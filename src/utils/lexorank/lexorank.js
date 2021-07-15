@@ -3,17 +3,21 @@ const MAX_RANK = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
 const BASE_STR = "0123456789abcdefghijklmnopqrstuvwxyz";
 
 //output{0: a>=b not valid, string: found, false: notfound}
-export const FindRankBetween = (str1, str2) => {
+export const FindRankBetween = (str1, str2, checkFullSlot = false) => {
   const a = str1.toLocaleLowerCase();
   const b = str2.toLocaleLowerCase();
   if (a >= b) {
-    return 0;
+    return {
+      rank: 0,
+      isOutOfSlot: false,
+    };
   }
-  var res = "";
+  var res = ""; //rank between result
   var index = 0;
   var isFound = false;
   while (true) {
     if (a.length - 1 < index && b.length - 1 < index) {
+      //khi đã đi qua hết cà 2 chuỗi
       if (res === a) {
         res += FindLetterBetween("0", "z");
         isFound = true;
@@ -23,10 +27,11 @@ export const FindRankBetween = (str1, str2) => {
       }
       break;
     }
+
     if (a.length - 1 < index) {
       //khi đã đi qua hết chuỗi a
       if (b[index] === "0") {
-        // ký tự tại index là 0 => không có ký tự nhỏ hơn
+        // ký tự của b tại index là 0 => không có ký tự nhỏ hơn
         res += "0";
         index++;
         continue;
@@ -70,37 +75,54 @@ export const FindRankBetween = (str1, str2) => {
       index++;
       continue;
     }
+
     //trường hợp a[index]>b[index]
     res += a[index];
     index++;
   }
 
   if (!isFound) {
-    console.log("not found" + a + "-" + b);
-    return false;
+    return {
+      rank: false,
+      isOutOfSlot: false,
+    };
   } else {
     res = formatAgain(res);
 
     if (a < res && res < b) {
-      return res;
+      let isFull1 = false;
+      let isFull2 = false;
+      if (checkFullSlot) {
+        isFull1 = FindLetterBetween(a, res, false);
+        isFull2 = FindLetterBetween(res, b, false);
+      }
+      const isFull = isFull1.isOutOfSlot || isFull2.isOutOfSlot;
+
+      return {
+        rank: res,
+        isOutOfSlot: isFull,
+      };
     } else {
       console.log("found but wrong" + a + "-" + b + "-res:" + res);
-      return false;
+      return {
+        rank: false,
+        isOutOfSlot: false,
+      };
     }
   }
 };
 
 export const FindNextRank = (str) => {
-  const nextRank = FindRankBetween(str, MAX_RANK);
-  return nextRank;
+  const nextRank = FindRankBetween(str, MAX_RANK, false);
+  return nextRank.rank;
 };
 export const FindPreRank = (str) => {
-  const preRank = FindRankBetween(MIN_RANK, str);
-  return preRank;
+  const preRank = FindRankBetween(MIN_RANK, str, false);
+  return preRank.rank;
 };
 export const genNewRank = () => {
   const newRank = FindRankBetween(MIN_RANK, MAX_RANK);
-  return newRank;
+  return newRank.rank;
 };
 
 function FindLetterBetween(letterA, letterB) {
@@ -131,7 +153,7 @@ function getRandomBetween(min, max) {
 
 //rebalance list rank when rank value is over size or out of available slots
 //eslint-disable-next-line
-function CreateNewListRank(n) {
+export const CreateNewListRank = (n) => {
   var newRanks = [MIN_RANK, MAX_RANK];
   var createDone = false;
   while (!createDone) {
@@ -140,24 +162,17 @@ function CreateNewListRank(n) {
     for (let i = 0; i < newRanks.length - 1; i++) {
       saveNewRanks.push(newRanks[i]);
       if (!createDone) {
-        const newRank = FindRankBetween(newRanks[i], newRanks[i + 1]);
-        if (newRank === 0 || newRank === false) {
-          console.log(newRanks[i]);
-          console.log(newRanks[i + 1]);
-        }
-        saveNewRanks.push(newRank);
-        if (newRank <= newRanks[i] || newRank >= newRanks[i + 1]) {
-          debugger;
-        }
+        const newRank = FindRankBetween(newRanks[i], newRanks[i + 1], false);
+        saveNewRanks.push(newRank.rank);
       }
-      if (newRanks.length + i + 1 - 2 === n) {
+      if (newRanks.length + i - 1 === n) {
         //đã tạo đủ
         createDone = true;
       }
     }
     newRanks = [...saveNewRanks, MAX_RANK];
-    //console.log("ok");
   }
-  //console.clear();
+
+  //remove min_rank && maxrank flags
   return newRanks.slice(1, newRanks.length - 1);
 }
