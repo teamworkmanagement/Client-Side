@@ -21,7 +21,11 @@ import {
 } from "@coreui/react";
 import { CirclePicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
-import { setViewHistory } from "src/appSlice";
+import {
+  setShowDialogModal,
+  setTaskRemoveId,
+  setViewHistory,
+} from "src/appSlice";
 import moment from "moment";
 import TextareaAutosize from "react-textarea-autosize";
 import CommentItem from "src/features/NewsFeedPage/Components/Post/Components/CommentItem/CommentItem";
@@ -723,20 +727,40 @@ function TaskEditModal(props) {
     setCmtLists(newCmts);
   };
 
-  const onRemoveTask = () => {
-    const confirmBox = window.confirm("Bạn có chắc chắn muốn xóa task?");
-    if (confirmBox !== true) {
-      return;
-    }
+  const taskRemoveId = useSelector((state) => state.app.taskRemoveId);
+  const dialogResult = useSelector((state) => state.app.dialogResult);
 
+  useEffect(() => {
+    if (!taskRemoveId) return;
+    if (taskRemoveId !== task.taskId) return;
+
+    if (!dialogResult) return;
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
+      .then((res) => {
+        dispatch(setTaskRemoveId(null));
+      })
       .catch((err) => {});
 
     if (props.closePopup) {
       props.closePopup();
     }
+  }, [dialogResult]);
+
+  const onRemoveTask = () => {
+    //const confirmBox = window.confirm("Bạn có chắc chắn muốn xóa task?");
+    const data = {
+      showDialogModal: true,
+      dialogTitle: "Xác nhận xóa",
+      dialogMessage: "Bạn có chắc chắn xóa công việc này?",
+      dialogType: 1, //confirm
+      dialogLevel: 1,
+      taskRemoveId: task.taskId,
+    };
+    dispatch(setShowDialogModal(data));
+    // if (confirmBox !== true) {
+    //   return;
+    // }
   };
 
   function selectList(index) {
@@ -760,7 +784,7 @@ function TaskEditModal(props) {
     const localObjIndex = kanbanLocal.findIndex((kl) => kl.active);
 
     if (localObjIndex === index) {
-      alert("errror");
+      //alert("errror");
       return;
     }
 

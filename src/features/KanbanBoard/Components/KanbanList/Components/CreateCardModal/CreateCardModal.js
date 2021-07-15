@@ -8,12 +8,13 @@ import {
   CModalHeader,
 } from "@coreui/react";
 import taskApi from "src/api/taskApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FindNextRank, genNewRank } from "src/utils/lexorank/lexorank";
+import { setShowDialogModal } from "src/appSlice.js";
 
 function CreateCardModal(props) {
   const kbLists = useSelector((state) => state.kanban.kanbanBoard.kanbanLists);
-
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentUser);
   const [taskName, setTaskName] = useState("");
   function handleOnClose() {
@@ -32,7 +33,17 @@ function CreateCardModal(props) {
   function onCreateCard() {
     if (props.setShowAddCard) {
       console.log(taskName, props.kblistId);
-      if (!taskName) alert("Tên task rỗng");
+      if (!taskName) {
+        const data = {
+          showDialogModal: true,
+          dialogTitle: "Không hợp lệ",
+          dialogMessage: "Tên công việc không được để trống",
+          dialogType: 2, //error
+          dialogLevel: 1,
+        };
+        dispatch(setShowDialogModal(data));
+        return;
+      }
 
       console.log(props.defaultList);
 
@@ -58,8 +69,8 @@ function CreateCardModal(props) {
             userActionId: user.id,
             taskPoint: 0,
           })
-          .then((res) => { })
-          .catch((err) => { });
+          .then((res) => {})
+          .catch((err) => {});
 
         setTaskName("");
       } else {
@@ -86,8 +97,8 @@ function CreateCardModal(props) {
               userActionId: user.id,
               taskPoint: 0,
             })
-            .then((res) => { })
-            .catch((err) => { });
+            .then((res) => {})
+            .catch((err) => {});
         }
 
         setTaskName("");

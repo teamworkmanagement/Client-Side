@@ -7,10 +7,12 @@ import {
   CModalBody,
   CModalHeader,
 } from "@coreui/react";
+import { setShowDialogModal } from "src/appSlice.js";
+import { useDispatch } from "react-redux";
 
 function EditTeamNameModal(props) {
   const [value, setValue] = useState("");
-
+  const dispatch = useDispatch();
   useEffect(() => {
     setValue(props.teamName);
   }, [props.teamName]);
@@ -22,7 +24,17 @@ function EditTeamNameModal(props) {
   }
 
   const onSave = () => {
-    if (!value) alert("error");
+    if (!value) {
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Không hợp lệ",
+        dialogMessage: "Tên nhóm không được để trống",
+        dialogType: 2, //error
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
+      return;
+    }
     props.onSave({
       name: "teamName",
       value: value,

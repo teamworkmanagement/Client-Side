@@ -22,6 +22,7 @@ function DialogModal(props) {
   const dialogTitle = useSelector((state) => state.app.dialogTitle);
   const dialogMessage = useSelector((state) => state.app.dialogMessage);
   const dialogType = useSelector((state) => state.app.dialogType);
+  const dialogLevel = useSelector((state) => state.app.dialogLevel);
   function handleOnClose(result) {
     dispatch(setDialogResult(result));
     const data = {
@@ -43,7 +44,9 @@ function DialogModal(props) {
 
   return (
     <CModal
-      className={`dialog-modal ${getClassByDialogType()}`}
+      className={`dialog-modal ${
+        dialogLevel === 1 ? "high-level" : ""
+      } ${getClassByDialogType()}`}
       show={showDialogModal}
       onClose={() => handleOnClose(false)}
       size="sm"

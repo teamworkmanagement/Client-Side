@@ -142,6 +142,8 @@ const appSlice = createSlice({
     dialogMessage: "",
     dialogType: 0, //0:info, 1: confirm, 2: error
     dialogResult: false, //for confirm dialog
+    dialogLevel: 0, //0: normal, 1: lay on a modal
+    taskRemoveId: null,
   },
   reducers: {
     setShowDialogModal(state, payload) {
@@ -151,9 +153,17 @@ const appSlice = createSlice({
         state.dialogTitle = data.dialogTitle;
         state.dialogMessage = data.dialogMessage;
         state.dialogType = data.dialogType;
+        state.dialogLevel = data.dialogLevel;
+        if (data.taskRemoveId) {
+          state.taskRemoveId = data.taskRemoveId;
+          state.dialogResult = false;
+        }
       } else {
         state.showDialogModal = false;
       }
+    },
+    setTaskRemoveId(state, payload) {
+      state.taskRemoveId = null;
     },
     setDialogResult(state, payload) {
       state.dialogResult = payload.payload;
@@ -407,6 +417,7 @@ const appSlice = createSlice({
 
 const { actions, reducer } = appSlice;
 export const {
+  setTaskRemoveId,
   setShowDialogModal,
   setDialogResult,
   changeStateHelpSidebar,

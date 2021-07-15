@@ -273,7 +273,7 @@ function MyLogin(props) {
       </div>
       <ToastContainer
         position="bottom-right"
-        autoClose={2000}
+        autoClose={3000}
         hideProgressBar
       />
     </div>

@@ -4,9 +4,10 @@ import { CInput, CModal, CModalBody, CModalHeader } from "@coreui/react";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import chatApi from "src/api/chatApi";
+import { setShowDialogModal } from "src/appSlice.js";
 
 const ValueOption = (props) => (
   <components.MultiValue {...props}>
@@ -41,7 +42,7 @@ function StartChatMembers(props) {
   const [grChatName, setGrChatName] = useState("");
   const [options, setOptions] = useState([]);
   const user = useSelector((state) => state.auth.currentUser);
-
+  const dispatch = useDispatch();
   function handleOnClose() {
     if (props.onModalClose) {
       setGrChatName("");
@@ -93,8 +94,27 @@ function StartChatMembers(props) {
     setGrChatName("");
     setOptions([]);
 
-    if (!grChatName && members.length > 2) {
-      alert("name empty");
+    if (!grChatName) {
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Không hợp lệ",
+        dialogMessage: "Tên nhóm nhắn tin không được trống",
+        dialogType: 2, //error
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
+      return;
+    }
+
+    if (members.length < 2) {
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Không hợp lệ",
+        dialogMessage: "Nhóm nhắn tin phải có ít nhất 2 thành viên",
+        dialogType: 2, //error
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
       return;
     }
 

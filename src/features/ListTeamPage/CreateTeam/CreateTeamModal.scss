@@ -262,10 +262,21 @@ $baseTransition: all 0.3s;
 //========================================
 
 .create-team-modal {
+    font-size: 110%;
+    .name-label {
+        display: flex;
+        align-items: center;
+        span {
+            color: #e55353;
+            font-size: 120%;
+            font-weight: bold;
+        }
+    }
     .label-description {
         margin-top: 1rem;
     }
     input {
+        height: 2.5rem;
         border-radius: $borderRadius;
     }
     .create-team-btn {

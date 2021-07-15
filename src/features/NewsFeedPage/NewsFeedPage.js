@@ -15,7 +15,7 @@ import PostList from "./Components/PostList/PostList";
 import PostToolBar from "./Components/PostToolBar/PostToolBar";
 import CIcon from "@coreui/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilterChange } from "src/appSlice";
+import { setFilterChange, setShowDialogModal } from "src/appSlice";
 import GroupFilter from "./Components/Post/Components/Selector/GroupFilter/GroupFilter";
 import postApi from "src/api/postApi";
 import { useLocation, useParams } from "react-router";
@@ -173,14 +173,28 @@ function NewsFeedPage(props) {
 
   const onAddPost = async (editorState) => {
     if (!grAddPost) {
-      alert("Xem lại");
+      const data = {
+        showDialogModal: true,
+        dialogTitle: "Bài đăng không hợp lệ",
+        dialogMessage: "Vui lòng chọn nhóm để đăng bài viết này",
+        dialogType: 2, //info
+        dialogLevel: 1,
+      };
+      dispatch(setShowDialogModal(data));
       return;
     }
 
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
       if (blocks[0].text === "") {
-        alert("Xem lại!");
+        const data = {
+          showDialogModal: true,
+          dialogTitle: "Bài đăng không hợp lệ",
+          dialogMessage: "Nội dung bài đăng phải chứa ít nhất 1 ký tự",
+          dialogType: 2, //info
+          dialogLevel: 1,
+        };
+        dispatch(setShowDialogModal(data));
         return;
       }
     }
@@ -418,7 +432,6 @@ function NewsFeedPage(props) {
             ) : null}
 
             <PostEditor
-              
               postTeamId={grAddPost}
               reset={resetEditorText}
               onAddPost={onAddPost}

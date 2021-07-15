@@ -7,10 +7,12 @@ import {
   CModalHeader,
   CTextarea,
 } from "@coreui/react";
+import { setShowDialogModal } from "src/appSlice.js";
+import { useDispatch } from "react-redux";
 
 function EditTeamDescriptionModal(props) {
   const [value, setValue] = useState("");
-
+  const dispatch = useDispatch();
   function handleOnClose() {
     if (props.onClose) {
       props.onClose();
@@ -22,7 +24,9 @@ function EditTeamDescriptionModal(props) {
   }, [props.teamDescription]);
 
   const onSave = () => {
-    if (!value) alert("error");
+    if (!value) {
+      setValue("");
+    }
     props.onSave({
       name: "teamDescription",
       value: value,
