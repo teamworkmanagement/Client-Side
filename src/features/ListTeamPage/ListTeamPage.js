@@ -30,6 +30,8 @@ import {
   setLeaveTeam,
   setUpdateTeamInfo,
 } from "src/utils/signalr/signalrSlice";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 function ListTeamPage(props) {
   const [showMode, setShowMode] = useState(1); //1:grid, 2:list
@@ -118,10 +120,19 @@ function ListTeamPage(props) {
     history.push(`/team/${teamId}?tab=teaminfo`);
   };
 
-  const leaveTeam = (teamId) => {
-    console.log(teamId);
+  const leaveTeam = (team) => {
+    if (team.teamLeaderId === user.id) {
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Vui lòng trao lại quyền quản lý!"
+        />
+      );
+      return;
+    }
     const params = {
-      teamId: teamId,
+      teamId: team.teamId,
       userId: user.id,
     };
 
@@ -130,7 +141,7 @@ function ListTeamPage(props) {
       .then((res) => {
         dispatch(getTeamByUserId(user.id));
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const renderNormal = () => {
@@ -171,7 +182,7 @@ function ListTeamPage(props) {
                                 </CDropdownItem>
                                 <CDropdownItem
                                   className="last"
-                                  onClick={() => leaveTeam(team.teamId)}
+                                  onClick={() => leaveTeam(team)}
                                 >
                                   <CIcon name="cil-account-logout" />
                                   Rời nhóm
