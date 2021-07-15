@@ -216,6 +216,9 @@ function GanttChart(props) {
     const myData = { data: refactorTasksForGantt() };
     console.log("zzzzzzz: ", myData);
     gantt.clearAll();
+    gantt.config.drag_progress = false;
+    gantt.config.drag_resize = false;
+    gantt.config.drag_links = false;
     gantt.config.scale_height = 54;
     gantt.config.date_format = "%Y-%m-%d %H:%i";
     gantt.config.row_height = 55;
