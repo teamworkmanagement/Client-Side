@@ -302,7 +302,7 @@ function TaskEditModal(props) {
       .then((res) => {
         console.log("số lần call api");
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [current]);
 
   useEffect(() => {
@@ -354,7 +354,7 @@ function TaskEditModal(props) {
         }
 
         getAllMembers();
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [props.data]);
 
@@ -394,8 +394,8 @@ function TaskEditModal(props) {
 
     taskApi
       .updateTask(newUpdateObj)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   function handleClose() {
@@ -664,7 +664,7 @@ function TaskEditModal(props) {
             });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -700,11 +700,11 @@ function TaskEditModal(props) {
 
             fileApi
               .addFile(body)
-              .then((res) => {})
-              .catch((err) => {});
+              .then((res) => { })
+              .catch((err) => { });
           }
         })
-        .send((err) => {});
+        .send((err) => { });
     }
   };
 
@@ -731,8 +731,8 @@ function TaskEditModal(props) {
 
     taskApi
       .removeTask(task.taskId)
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     if (props.closePopup) {
       props.closePopup();
@@ -783,8 +783,8 @@ function TaskEditModal(props) {
         newList: newList.kanbanListId,
         boardId: currentBoard,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
 
     selectList(index);
   };
@@ -861,6 +861,17 @@ function TaskEditModal(props) {
     return this.substring(0, start) + what + this.substring(end);
   };
 
+  function replaceOffset(str, offs) {
+    let tag = "<@tag>";
+    offs.reverse().forEach(function (v) {
+      str = str.replace(
+        new RegExp("(.{" + v[0] + "})(.{" + (v[1] - v[0]) + "})"),
+        "$1" + tag + "$2" + tag + ""
+      );
+    });
+    return str;
+  }
+
   const saveContent = (editorState) => {
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
     if (blocks.length === 1) {
@@ -879,22 +890,46 @@ function TaskEditModal(props) {
 
     cloneBlocks.forEach((block, index) => {
       if (block.entityRanges.length > 0) {
+        let offsets = [];
+        let users = [];
         block.entityRanges.forEach((entity) => {
+          // var nameTag = block.text.substring(
+          //   entity.offset,
+          //   entity.offset + entity.length
+          // );
+
           let indexData = entity.key;
           const userTagId = entityMap[indexData].data.mention.id;
 
-          block.text = block.text.replaceBetween(
-            entity.offset,
-            entity.offset + entity.length,
-            `<@tag>${userTagId}<@tag>`
-          );
+          offsets.push([entity.offset, entity.offset + entity.length]);
+          users.push(userTagId);
         });
+
+        let newStr = replaceOffset(block.text, offsets);
+        console.log(newStr);
+        let myArray = newStr.split("<@tag>");
+        let j = 0;
+        for (let i = 0; i < myArray.length; i++) {
+          if (i % 2 !== 0) {
+            myArray[i] = `<@tag>${users[j]}<@tag>`;
+            j++;
+          } else {
+            continue;
+          }
+        }
+
+        const finalStr = myArray.join("");
+        console.log(myArray);
+        console.log(finalStr);
+        block.text = finalStr;
       }
     });
 
     let value = cloneBlocks
       .map((block) => (!block.text.trim() && "\n") || block.text)
       .join("<br>");
+
+    console.log(value);
 
     let userIds = [];
     if (mentions.length > 0) {
@@ -912,8 +947,8 @@ function TaskEditModal(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   const viewHistory = () => {
