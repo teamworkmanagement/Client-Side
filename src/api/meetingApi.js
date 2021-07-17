@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 
 const meetingApi = {
-    getMeeting(teamId) {
+    getMeetings(teamId) {
         const url = `/meeting/team/${teamId}`;
         return axiosClient.get(url);
     },
@@ -22,9 +22,9 @@ const meetingApi = {
         const url = '/meeting/invite-meeting';
         return axiosClient.post(url, payload);
     },
-    getById(meetingId) {
-        const url = `/meeting/${meetingId}`;
-        return axiosClient.get(url);
+    getMeeting(params) {
+        const url = `/meeting`;
+        return axiosClient.get(url, params);
     }
 };
 

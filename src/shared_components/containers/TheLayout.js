@@ -80,7 +80,7 @@ const TheLayout = () => {
         .then((res) => {
           setModaTaskObj(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
 
       if (updateTask) {
         dispatch(setNullSignalRData("updateTask"));
@@ -201,7 +201,7 @@ const TheLayout = () => {
           console.log(res.data);
           setDetails(res.data);
         })
-        .catch((err) => {});
+        .catch((err) => { });
     }
   }, [viewHistory]);
 
@@ -226,24 +226,32 @@ const TheLayout = () => {
     }
   }, [history.location.search, history.location.pathname]);
 
+  const [isMeeting, setMeeting] = useState(false);
+
+  useEffect(() => {
+    if (history.location.pathname.includes('meetingvideo')) {
+      setMeeting(true);
+    }
+  }, [history.location.pathname])
+
   return (
     <div className="c-app c-default-layout">
-      <TheSidebar />
-      <TeamTabsSideBar />
-      <ChatListSideBar />
-      <SettingOptionsSidebar />
-      <HelpSidebar />
+      {!isMeeting && <TheSidebar />}
+      {!isMeeting && <TeamTabsSideBar />}
+      {!isMeeting && <ChatListSideBar />}
+      {!isMeeting && <SettingOptionsSidebar />}
+      {!isMeeting && <HelpSidebar />}
       <div className="c-wrapper">
-        <TheHeader />
+        {!isMeeting && <TheHeader />}
         <div className="c-body">
           <TheContent />
         </div>
       </div>
-      <ToastContainer
+      {!isMeeting && <ToastContainer
         position="bottom-right"
         autoClose={3000}
         progressClassName="toastProgress"
-      />
+      />}
 
       {/* <ForgotPassword /> */}
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./NotFoundPage.scss";
 import NotiPopup from "../NotiPopup/NotiPopup";
 import { useHistory } from "react-router-dom";
@@ -16,6 +16,18 @@ function NotFoundPage(props) {
   function onCloseNotiPopup() {
     setShowNotiPopup(false);
   }
+
+  const [close, setClose] = useState(false);
+
+  useEffect(() => {
+    if (history.location.pathname.includes('meetingvideo')) {
+      setClose(true);
+    }
+  }, [history.location.pathname])
+
+  const onCloseTab = () => {
+    window.close();
+  }
   return (
     <div className="not-found-page-container">
       <img className="normal" alt="" src="../images/notfound/notfound.png" />
@@ -25,9 +37,11 @@ function NotFoundPage(props) {
         src="../images/notfound/notfound.png"
       />
       <div className="content">Nội dung này không tồn tại!</div>
-      <div className="back-home-btn" onClick={goBackHome}>
+      {!close ? <div className="back-home-btn" onClick={goBackHome}>
         Quay về trang chủ
-      </div>
+      </div> : <div className="back-home-btn" onClick={onCloseTab}>
+        Đóng
+      </div>}
       <NotiPopup
         popupType="info"
         popupMessage="Test thôi"
