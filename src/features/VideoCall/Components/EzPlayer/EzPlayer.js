@@ -28,6 +28,7 @@ function EzPlayer({
     jitsiContainerStyles,
     onError,
     onJitsi,
+    password,
     ...options
 }) {
     const { loading, error, jitsi } = useJitsi({
