@@ -28,23 +28,17 @@ function MeetingVideo(props) {
     const [showInviteMembers, setShowInviteMembers] = useState(false);
 
     useEffect(() => {
-        if (!connection.connectionId)
-            return;
-        const queryObj = queryString.parse(history.location.search);
+        /*const queryObj = queryString.parse(history.location.search);
         if (!queryObj.id || !queryObj.tid) {
             setNotFound(true);
             return;
         }
-
 
         const params = {
             meetingId: queryObj.id,
             teamId: queryObj.tid
         }
 
-        let timeOut = setTimeout(() => {
-
-        }, 500)
         meetingApi.getMeeting({ params })
             .then(resMeet => {
                 meetingApi.joinMeeting({
@@ -62,9 +56,16 @@ function MeetingVideo(props) {
             })
             .catch(err => {
                 setNotFound(true);
-            })
+            })*/
 
-    }, [connection.connectionId])
+        console.log('abczzzzzz');
+        console.log(connection);
+
+    }, [history.location.search])
+
+    useEffect(() => {
+        console.log('aaaaaa: ', connection);
+    }, [connection])
 
     const onMeetingEnd = () => {
         setMeeting(null);
