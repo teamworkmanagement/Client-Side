@@ -6,7 +6,7 @@ import {
   HttpTransportType
 } from "@microsoft/signalr";
 
-const isDev = process.env.NODE_ENV === 'development' ? true : false;
+const isDev = true;
 //process.env.NODE_ENV === 'development';
 
 export const startSignalRConnection = async (connection) => {
