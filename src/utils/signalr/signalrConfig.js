@@ -3,6 +3,7 @@ import {
   HubConnectionState,
   HubConnectionBuilder,
   LogLevel,
+  HttpTransportType
 } from "@microsoft/signalr";
 
 const isDev = process.env.NODE_ENV === 'development' ? true : false;
@@ -27,6 +28,8 @@ export const setupSignalRConnection = (connectionHub, actionEventMap = {}) => {
   const options = {
     logMessageContent: isDev,
     logger: isDev ? LogLevel.Warning : LogLevel.Error,
+    skipNegotiation: false,
+    transport: HttpTransportType.WebSockets
   };
   // create the connection instance
   // withAutomaticReconnect will automatically try to reconnect
