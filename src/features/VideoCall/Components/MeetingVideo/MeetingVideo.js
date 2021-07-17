@@ -28,6 +28,8 @@ function MeetingVideo(props) {
     const [showInviteMembers, setShowInviteMembers] = useState(false);
 
     useEffect(() => {
+        if (!connection.connectionId)
+            return;
         const queryObj = queryString.parse(history.location.search);
         if (!queryObj.id || !queryObj.tid) {
             setNotFound(true);
@@ -41,31 +43,28 @@ function MeetingVideo(props) {
         }
 
         let timeOut = setTimeout(() => {
-            meetingApi.getMeeting({ params })
-                .then(resMeet => {
-                    meetingApi.joinMeeting({
-                        meetingId: resMeet.data.meetingId,
-                        userConnectionId: connection.connectionId,
-                    }).then(res => {
-                        if (!res.succeeded)
-                            alert('already join');
-                        else {
-                            setMeeting(resMeet.data);
-                        }
-                    }).catch(err => {
-                        setNotFound(true);
-                    })
-                })
-                .catch(err => {
+
+        }, 500)
+        meetingApi.getMeeting({ params })
+            .then(resMeet => {
+                meetingApi.joinMeeting({
+                    meetingId: resMeet.data.meetingId,
+                    userConnectionId: connection.connectionId,
+                }).then(res => {
+                    if (!res.succeeded)
+                        alert('already join');
+                    else {
+                        setMeeting(resMeet.data);
+                    }
+                }).catch(err => {
                     setNotFound(true);
                 })
-        }, 500)
+            })
+            .catch(err => {
+                setNotFound(true);
+            })
 
-        return () => {
-            clearTimeout(timeOut);
-        }
-
-    }, [history.location.search])
+    }, [connection.connectionId])
 
     const onMeetingEnd = () => {
         setMeeting(null);
