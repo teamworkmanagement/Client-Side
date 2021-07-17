@@ -15,6 +15,7 @@ import NotFoundPage from "./shared_components/MySharedComponents/NotFoundPage/No
 import FeedbackPage from "./features/FeedbackPage/FeedbackPage";
 import SearchResultsPage from "./features/SearchResultsPage/SearchResultsPage.js";
 import HelpCenterPage from "./features/HelpCenterPage/HelpCenterPage.js";
+import MeetingVideo from "./features/VideoCall/Components/MeetingVideo/MeetingVideo";
 
 const routes = [
   { path: "/notfound", name: "Không tồn tại", component: NotFoundPage },
@@ -23,6 +24,7 @@ const routes = [
   { path: "/dashboard", name: "Tổng quan", component: DashBoardPage },
   { path: "/newsfeed", name: "Bản tin", component: NewsFeedPage, exact: true },
   { path: "/chat", name: "Tin nhắn", component: ChatPage, exact: true },
+  { path: "/meetingvideo", component: MeetingVideo, extract: true },
   {
     path: "/teams",
     name: "Danh sách nhóm",

@@ -29,6 +29,10 @@ const userApi = {
     feedback(payload) {
         const url = '/feedback';
         return axiosClient.post(url, payload);
+    },
+    searchInviteMeeting(params) {
+        const url = '/user/search-invite-meeting';
+        return axiosClient.get(url, params);
     }
 };
 
