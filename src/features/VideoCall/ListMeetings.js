@@ -36,7 +36,7 @@ function ListMeetings(props) {
     const history = useHistory();
 
     useEffect(() => {
-        meetingApi.getMeeting(props.teamId)
+        meetingApi.getMeetings(props.teamId)
             .then(res => {
                 setMeetings(res.data);
             })
@@ -53,7 +53,7 @@ function ListMeetings(props) {
             return;
 
         if (createMeeting.teamId == props.teamId) {
-            meetingApi.getMeeting(props.teamId)
+            meetingApi.getMeetings(props.teamId)
                 .then(res => {
                     setMeetings(res.data);
                 })
@@ -72,7 +72,7 @@ function ListMeetings(props) {
             return;
 
         if (removeMeeting.teamId == props.teamId) {
-            meetingApi.getMeeting(props.teamId)
+            meetingApi.getMeetings(props.teamId)
                 .then(res => {
                     setMeetings(res.data);
                 })
@@ -92,43 +92,14 @@ function ListMeetings(props) {
     }
 
     const goToMeeting = (item) => {
-        console.log(item);
-        meetingApi.joinMeeting({
-            userId: user.id,
-            meetingId: item.meetingId,
-            userConnectionId: connection.connectionId,
-        }).then(res => {
-            if (res.succeeded) {
-                dispatch(setMeeting({
-                    room: item.meetingName,
-                    password: item.password,
-                    meetingId: item.meetingId,
-                    userName: user.userName,
-                }));
-
-                history.push('/meetingvideo');
-            }
-            else {
-                alert('bạn đã tham gia bằng client khác')
-            }
-        }).catch(err => {
-
-        })
-
+        window.open(`http://localhost:3000/meetingvideo?id=${item.meetingId}&tid=${item.teamId}`, 'sharer', 'height=550,width=750');
     }
 
     const onClose = (e) => {
         setShowAddMeeting(false);
         console.log('close: ', e);
         if (e) {
-            dispatch(setMeeting({
-                room: e.meetingName,
-                password: e.password,
-                meetingId: e.meetingId,
-                userName: user.userName,
-            }));
-
-            history.push('/meetingvideo');
+            window.open(`http://localhost:3000/meetingvideo?id=${e.meetingId}&tid=${e.teamId}`, 'sharer', 'height=550,width=750');
         }
     }
 

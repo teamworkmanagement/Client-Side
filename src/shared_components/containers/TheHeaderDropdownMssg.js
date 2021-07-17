@@ -83,33 +83,8 @@ const TheHeaderDropdownMssg = () => {
 
     if (noti.notificationLink) {
       const data = JSON.parse(noti.notificationLink);
-      if (data && data.MeetingId) {
-        meetingApi.getById(data.MeetingId)
-          .then(meeting => {
-            meetingApi.joinMeeting({
-              userId: user.id,
-              meetingId: data.MeetingId,
-              userConnectionId: connection.connectionId,
-            }).then(res => {
-              if (res.succeeded) {
-                dispatch(setMeeting({
-                  room: meeting.data.meetingName,
-                  password: meeting.data.password,
-                  meetingId: meeting.data.meetingId,
-                  userName: user.userName,
-                }));
-                history.push('/meetingvideo');
-              }
-              else {
-                alert('bạn đã tham gia bằng client khác')
-              }
-            }).catch(err => {
-
-            })
-          }).catch(err => {
-            dispatch(setMeeting(null));
-            history.push("/meetingvideo");
-          })
+      if (data && data.MeetingId && data.TeamId) {
+        window.open(`http://localhost:3000/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`, 'sharer', 'height=550,width=750');
       } else {
         history.push({
           pathname: noti.notificationLink.split("?")[0],

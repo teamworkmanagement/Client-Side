@@ -23,8 +23,12 @@ function CreateMeetingModal(props) {
       teamId: props.teamId,
       connectionId: connection.connectionId,
     }).then(res => {
+      setMeetingName("");
       props.onClose(res.data);
-    }).catch(err => { })
+    }).catch(err => {
+      setMeetingName("");
+      props.onClose(null);
+    })
 
   }
 
