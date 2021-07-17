@@ -84,7 +84,7 @@ const TheHeaderDropdownMssg = () => {
     if (noti.notificationLink) {
       const data = JSON.parse(noti.notificationLink);
       if (data && data.MeetingId && data.TeamId) {
-        window.open(`/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`, 'sharer', 'height=550,width=750');
+        window.open(`https://ezteam.tech/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`, 'sharer', 'height=550,width=750');
       } else {
         history.push({
           pathname: noti.notificationLink.split("?")[0],

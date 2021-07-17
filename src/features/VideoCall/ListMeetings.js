@@ -92,14 +92,14 @@ function ListMeetings(props) {
     }
 
     const goToMeeting = (item) => {
-        window.open(`/meetingvideo?id=${item.meetingId}&tid=${item.teamId}`, 'sharer', 'height=550,width=750');
+        window.open(`https://ezteam.tech/meetingvideo?id=${item.meetingId}&tid=${item.teamId}`, 'sharer', 'height=550,width=750');
     }
 
     const onClose = (e) => {
         setShowAddMeeting(false);
         console.log('close: ', e);
         if (e) {
-            window.open(`/meetingvideo?id=${e.meetingId}&tid=${e.teamId}`, 'sharer', 'height=550,width=750');
+            window.open(`https://ezteam.tech/meetingvideo?id=${e.meetingId}&tid=${e.teamId}`, 'sharer', 'height=550,width=750');
         }
     }
 
