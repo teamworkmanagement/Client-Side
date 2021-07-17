@@ -65,6 +65,7 @@ function MeetingVideo(props) {
 
     useEffect(() => {
         console.log('aaaaaa: ', connection);
+        console.log('aaaaaazzz: ', connection.connectionId);
     }, [connection])
 
     const onMeetingEnd = () => {
