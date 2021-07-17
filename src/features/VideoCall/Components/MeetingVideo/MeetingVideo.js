@@ -10,7 +10,8 @@ import meetingApi from 'src/api/meetingApi';
 import InviteMembers from '../InviteMembers/InviteMembers';
 import NotFoundPage from 'src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage';
 import queryString from 'query-string';
-import { connection } from 'src/utils/signalr/appService';
+import { connection } from 'src/utils/signalr/kanbanService';
+
 
 MeetingVideo.propTypes = {
 
