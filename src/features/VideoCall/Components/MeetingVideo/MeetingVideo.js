@@ -39,24 +39,31 @@ function MeetingVideo(props) {
             meetingId: queryObj.id,
             teamId: queryObj.tid
         }
-        meetingApi.getMeeting({ params })
-            .then(resMeet => {
-                meetingApi.joinMeeting({
-                    meetingId: resMeet.data.meetingId,
-                    userConnectionId: connection.connectionId,
-                }).then(res => {
-                    if (!res.succeeded)
-                        alert('already join');
-                    else {
-                        setMeeting(resMeet.data);
-                    }
-                }).catch(err => {
+
+        let timeOut = setTimeout(() => {
+            meetingApi.getMeeting({ params })
+                .then(resMeet => {
+                    meetingApi.joinMeeting({
+                        meetingId: resMeet.data.meetingId,
+                        userConnectionId: connection.connectionId,
+                    }).then(res => {
+                        if (!res.succeeded)
+                            alert('already join');
+                        else {
+                            setMeeting(resMeet.data);
+                        }
+                    }).catch(err => {
+                        setNotFound(true);
+                    })
+                })
+                .catch(err => {
                     setNotFound(true);
                 })
-            })
-            .catch(err => {
-                setNotFound(true);
-            })
+        }, 500)
+
+        return () => {
+            clearTimeout(timeOut);
+        }
 
     }, [history.location.search])
 
