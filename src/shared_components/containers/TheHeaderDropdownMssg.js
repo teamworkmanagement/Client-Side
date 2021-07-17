@@ -9,17 +9,21 @@ import {
 import CIcon from "@coreui/icons-react";
 import notiApi from "src/api/notiApi";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./notification.scss";
 import { useHistory } from "react-router";
 import "./TheHeaderDropdownMssg.scss";
 import { HiOutlineBan } from "react-icons/hi";
 import moment from "moment";
 import "moment/locale/vi";
+import meetingApi from "src/api/meetingApi";
+import { setMeeting } from "src/appSlice";
+import { connection } from "src/utils/signalr/appService";
 
 moment.locale("vi");
 
 const TheHeaderDropdownMssg = () => {
+  const dispatch = useDispatch();
   const [notis, setNotis] = useState([]);
   const newNoti = useSelector((state) => state.app.newNotfication);
   const [itemsCount, setItemsCount] = useState(0);
@@ -43,7 +47,7 @@ const TheHeaderDropdownMssg = () => {
           [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [triggerLoad]);
 
   useEffect(() => {
@@ -68,8 +72,8 @@ const TheHeaderDropdownMssg = () => {
 
       notiApi
         .readNoti(payload)
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
       const cloneNotis = [...notis];
 
       cloneNotis[index].notificationStatus = true;
@@ -77,13 +81,45 @@ const TheHeaderDropdownMssg = () => {
       setItemsCount(itemsCount - 1);
     }
 
-    if (noti.notificationLink)
-      history.push({
-        pathname: noti.notificationLink.split("?")[0],
-        search: noti.notificationLink.split("?")[1]
-          ? noti.notificationLink.split("?")[1]
-          : null,
-      });
+    if (noti.notificationLink) {
+      const data = JSON.parse(noti.notificationLink);
+      if (data && data.MeetingId) {
+        meetingApi.getById(data.MeetingId)
+          .then(meeting => {
+            meetingApi.joinMeeting({
+              userId: user.id,
+              meetingId: data.MeetingId,
+              userConnectionId: connection.connectionId,
+            }).then(res => {
+              if (res.succeeded) {
+                dispatch(setMeeting({
+                  room: meeting.data.meetingName,
+                  password: meeting.data.password,
+                  meetingId: meeting.data.meetingId,
+                  userName: user.userName,
+                }));
+                history.push('/meetingvideo');
+              }
+              else {
+                alert('bạn đã tham gia bằng client khác')
+              }
+            }).catch(err => {
+
+            })
+          }).catch(err => {
+            dispatch(setMeeting(null));
+            history.push("/meetingvideo");
+          })
+      } else {
+        history.push({
+          pathname: noti.notificationLink.split("?")[0],
+          search: noti.notificationLink.split("?")[1]
+            ? noti.notificationLink.split("?")[1]
+            : null,
+        });
+      }
+    }
+
   };
 
   // function getNotiContent(noti) {
@@ -178,9 +214,8 @@ const TheHeaderDropdownMssg = () => {
                 return (
                   <div
                     onClick={() => onClick(noti, index)}
-                    className={`noti-item ${
-                      noti.notificationStatus ? "seen" : ""
-                    }`}
+                    className={`noti-item ${noti.notificationStatus ? "seen" : ""
+                      }`}
                   >
                     <div className="seen-signal"></div>
                     <img alt="" src={noti.notificationActionAvatar} />

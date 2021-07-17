@@ -8,6 +8,8 @@ const signalrSlice = createSlice({
         updateTeamInfo: null,
         leaveTeam: null,
         joinTeam: null,
+        createMeeting: null,
+        removeMeeting: null,
     },
     reducers: {
         setNewAddReact(state, action) {
@@ -61,6 +63,22 @@ const signalrSlice = createSlice({
             else {
                 state.joinTeam = null;
             }
+        },
+        setCreateMeeting(state, action) {
+            if (window.location.search.includes('tab=meeting') && action.payload) {
+                state.createMeeting = action.payload;
+            }
+            else {
+                state.createMeeting = null;
+            }
+        },
+        setRemoveMeeting(state, action) {
+            if (window.location.search.includes('tab=meeting') && action.payload) {
+                state.removeMeeting = action.payload;
+            }
+            else {
+                state.removeMeeting = null;
+            }
         }
     },
 });
@@ -72,6 +90,8 @@ export const {
     setNewComment,
     setUpdateTeamInfo,
     setLeaveTeam,
-    setJoinTeam
+    setJoinTeam,
+    setCreateMeeting,
+    setRemoveMeeting
 } = actions;
 export default reducer;

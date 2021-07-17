@@ -36,6 +36,7 @@ import {
   setUpdateTeamInfo,
 } from "src/utils/signalr/signalrSlice";
 import { setAdminAction } from "../KanbanBoard/kanbanSlice";
+import VideoCall from "../VideoCall/ListMeetings";
 
 function TeamPage(props) {
   const dispatch = useDispatch();
@@ -63,10 +64,12 @@ function TeamPage(props) {
         case "message":
           return 3;
         case "files":
-          return 4;
+          return 5;
 
         case "statistics":
-          return 5;
+          return 6;
+        case "meeting":
+          return 4;
         default:
           return 0;
       }
@@ -110,12 +113,15 @@ function TeamPage(props) {
       case 3:
         tab = "message";
         break;
-      case 4:
+      case 5:
         tab = "files";
         break;
 
-      case 5:
+      case 6:
         tab = "statistics";
+        break;
+      case 4:
+        tab = "meeting";
         break;
       default:
         tab = "teaminfo";
@@ -157,7 +163,7 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => {})
+        .then((res) => { })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
         });
@@ -313,6 +319,14 @@ function TeamPage(props) {
               </CTooltip>
             </CNavItem>
             <CNavItem>
+              <CTooltip content="Họp" placement="right">
+                <CNavLink>
+                  <CIcon name="cil-movie" />
+                  <div className="tab-name">Họp</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
+            <CNavItem>
               <CTooltip content="Tài liệu" placement="right">
                 <CNavLink>
                   <CIcon name="cil-description" />
@@ -351,10 +365,15 @@ function TeamPage(props) {
                   <ChatPage isInTeam={true} tabActiveTeam={active} />
                 ) : null}
               </CTabPane>
-              <CTabPane>{active === 4 ? <ListFileTable /> : null}</CTabPane>
+              <CTabPane>
+                {active === 4 && (
+                  <VideoCall teamId={teamId} />
+                )}
+              </CTabPane>
+              <CTabPane>{active === 5 ? <ListFileTable /> : null}</CTabPane>
 
               <CTabPane>
-                {active === 5 && team.teamLeaderId === user.id ? (
+                {active === 6 && team.teamLeaderId === user.id ? (
                   <TeamStatistics />
                 ) : (
                   <NotFoundPage />

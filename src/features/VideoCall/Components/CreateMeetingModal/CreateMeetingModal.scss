@@ -1,0 +1,35 @@
+.modal.create-board-modal {
+    .modal-dialog.modal-sm {
+        display: flex;
+        justify-content: center;
+        .modal-content {
+            width: max-content;
+            border-radius: 0.625rem;
+            margin-top: 10rem;
+            .modal-header {
+                font-weight: 500;
+            }
+            .new-card-form {
+                display: flex;
+                align-items: center;
+                padding: 1.5rem;
+                width: max-content;
+                .name-label {
+                    margin-right: 1rem;
+                    font-weight: 500;
+                }
+                input {
+                    border-radius: 0.625rem;
+                    width: 15rem;
+                }
+                .add-card-btn {
+                    background-color: #3e79f7;
+                    color: white;
+                    border-radius: 0.625rem;
+                    margin-left: 1rem;
+                    padding: 0.5rem 1rem !important;
+                }
+            }
+        }
+    }
+}
