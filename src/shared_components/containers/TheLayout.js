@@ -18,7 +18,7 @@ import {
   setCurrentBoard,
   setNullSignalRData,
 } from "src/features/KanbanBoard/kanbanSlice";
-import { setTaskEditModal, setUserModal, setViewHistory } from "src/appSlice";
+import { setMeeting, setTaskEditModal, setUserModal, setViewHistory } from "src/appSlice";
 import TaskHistoryModal from "../MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 import HelpSidebar from "./SubSideBars/HelpSidebar/HelpSidebar.js";
 import DialogModal from "../MySharedComponents/DialogModal/DialogModal.js";
@@ -26,6 +26,7 @@ import DialogModal from "../MySharedComponents/DialogModal/DialogModal.js";
 const TheLayout = () => {
   const newNoti = useSelector((state) => state.app.newNotfication);
   const moveTask = useSelector((state) => state.kanban.signalrData.moveTask);
+  const meeting = useSelector(state => state.app.meeting);
   useEffect(() => {
     if (!newNoti) return;
 
@@ -226,13 +227,26 @@ const TheLayout = () => {
     }
   }, [history.location.search, history.location.pathname]);
 
-  const [isMeeting, setMeeting] = useState(false);
+  const [isMeeting, setMeetingValue] = useState(false);
 
   useEffect(() => {
     if (history.location.pathname.includes('meetingvideo')) {
-      setMeeting(true);
+      setMeetingValue(true);
     }
   }, [history.location.pathname])
+
+  useEffect(() => {
+    if (!meeting)
+      return;
+    else {
+      toast(<CustomToast
+        type="Error"
+        title="Lỗi"
+        message="Bạn đang tham gia một cuộc họp!" />)
+    }
+
+    dispatch(setMeeting(null));
+  }, [meeting])
 
   return (
     <div className="c-app c-default-layout">

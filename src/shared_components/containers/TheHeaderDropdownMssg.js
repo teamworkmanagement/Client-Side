@@ -82,10 +82,24 @@ const TheHeaderDropdownMssg = () => {
     }
 
     if (noti.notificationLink) {
-      const data = JSON.parse(noti.notificationLink);
-      if (data && data.MeetingId && data.TeamId) {
-        window.open(`/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`, 'sharer', 'height=550,width=750');
-      } else {
+      if (noti.notificationLink.includes('MeetingId')) {
+        const data = JSON.parse(noti.notificationLink);
+        if (data && data.MeetingId && data.TeamId) {
+          meetingApi.checkIsCalling()
+            .then(res => {
+              if (res.data === true) {
+                dispatch(setMeeting({ userId: user.id, time: Date.now() }));
+              }
+              else {
+                window.open(`/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`, 'sharer', 'height=550,width=750');
+              }
+            })
+            .catch(err => {
+
+            })
+        }
+      }
+      else {
         history.push({
           pathname: noti.notificationLink.split("?")[0],
           search: noti.notificationLink.split("?")[1]

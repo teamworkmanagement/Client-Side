@@ -15,7 +15,7 @@ $infoColor: #3399ff;
                 padding: 1rem;
                 display: flex;
                 align-items: center;
-
+                cursor: default;
                 .toast-icon-container {
                     margin-right: 0.8rem;
                     .toast-icon {
@@ -48,6 +48,7 @@ $infoColor: #3399ff;
                     }
                 }
                 .toast-close-btn {
+                    cursor: pointer;
                     margin-left: 1rem;
                     .icon-close-toast {
                         color: $subTextColor;
