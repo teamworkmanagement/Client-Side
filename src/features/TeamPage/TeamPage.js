@@ -37,6 +37,7 @@ import {
 } from "src/utils/signalr/signalrSlice";
 import { setAdminAction } from "../KanbanBoard/kanbanSlice";
 import VideoCall from "../VideoCall/ListMeetings";
+import { HiOutlineVideoCamera } from "react-icons/hi";
 
 function TeamPage(props) {
   const dispatch = useDispatch();
@@ -163,7 +164,7 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => { })
+        .then((res) => {})
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
         });
@@ -321,8 +322,16 @@ function TeamPage(props) {
             <CNavItem>
               <CTooltip content="Họp" placement="right">
                 <CNavLink>
-                  <CIcon name="cil-movie" />
+                  <HiOutlineVideoCamera className="icon-meeting" />
                   <div className="tab-name">Họp</div>
+                </CNavLink>
+              </CTooltip>
+            </CNavItem>
+            <CNavItem>
+              <CTooltip content="Lịch hẹn nhóm" placement="right">
+                <CNavLink>
+                  <CIcon name="cil-alarm" />
+                  <div className="tab-name">Lịch hẹn</div>
                 </CNavLink>
               </CTooltip>
             </CNavItem>
@@ -366,14 +375,15 @@ function TeamPage(props) {
                 ) : null}
               </CTabPane>
               <CTabPane>
-                {active === 4 && (
-                  <VideoCall teamId={teamId} />
-                )}
+                {active === 4 && <VideoCall teamId={teamId} />}
               </CTabPane>
-              <CTabPane>{active === 5 ? <ListFileTable /> : null}</CTabPane>
+              <CTabPane>
+                {active === 5 && <VideoCall teamId={teamId} />}
+              </CTabPane>
+              <CTabPane>{active === 6 ? <ListFileTable /> : null}</CTabPane>
 
               <CTabPane>
-                {active === 6 && team.teamLeaderId === user.id ? (
+                {active === 7 && team.teamLeaderId === user.id ? (
                   <TeamStatistics />
                 ) : (
                   <NotFoundPage />

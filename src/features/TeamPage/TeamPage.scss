@@ -319,6 +319,10 @@ $baseTransition: all 0.3s;
                         stroke: $subTextColor;
                     }
                 }
+                .icon-meeting {
+                    width: 1.55rem;
+                    height: 1.55rem;
+                }
                 &.active {
                     .c-icon {
                         width: 1.55rem;

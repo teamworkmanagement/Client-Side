@@ -9,21 +9,17 @@ import {
 import CIcon from "@coreui/icons-react";
 import notiApi from "src/api/notiApi";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "./notification.scss";
 import { useHistory } from "react-router";
 import "./TheHeaderDropdownMssg.scss";
 import { HiOutlineBan } from "react-icons/hi";
 import moment from "moment";
 import "moment/locale/vi";
-import meetingApi from "src/api/meetingApi";
-import { setMeeting } from "src/appSlice";
-import { connection } from "src/utils/signalr/appService";
 
 moment.locale("vi");
 
 const TheHeaderDropdownMssg = () => {
-  const dispatch = useDispatch();
   const [notis, setNotis] = useState([]);
   const newNoti = useSelector((state) => state.app.newNotfication);
   const [itemsCount, setItemsCount] = useState(0);
@@ -47,7 +43,7 @@ const TheHeaderDropdownMssg = () => {
           [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, [triggerLoad]);
 
   useEffect(() => {
@@ -72,8 +68,8 @@ const TheHeaderDropdownMssg = () => {
 
       notiApi
         .readNoti(payload)
-        .then((res) => { })
-        .catch((err) => { });
+        .then((res) => {})
+        .catch((err) => {});
       const cloneNotis = [...notis];
 
       cloneNotis[index].notificationStatus = true;
@@ -84,7 +80,11 @@ const TheHeaderDropdownMssg = () => {
     if (noti.notificationLink) {
       const data = JSON.parse(noti.notificationLink);
       if (data && data.MeetingId && data.TeamId) {
-        window.open(`/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`, 'sharer', 'height=550,width=750');
+        window.open(
+          `/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`,
+          "sharer",
+          "height=550,width=750"
+        );
       } else {
         history.push({
           pathname: noti.notificationLink.split("?")[0],
@@ -94,7 +94,6 @@ const TheHeaderDropdownMssg = () => {
         });
       }
     }
-
   };
 
   // function getNotiContent(noti) {
@@ -189,8 +188,9 @@ const TheHeaderDropdownMssg = () => {
                 return (
                   <div
                     onClick={() => onClick(noti, index)}
-                    className={`noti-item ${noti.notificationStatus ? "seen" : ""
-                      }`}
+                    className={`noti-item ${
+                      noti.notificationStatus ? "seen" : ""
+                    }`}
                   >
                     <div className="seen-signal"></div>
                     <img alt="" src={noti.notificationActionAvatar} />
