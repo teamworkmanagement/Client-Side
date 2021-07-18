@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./CreateMeetingModal.scss";
 import {
   CButton,
@@ -8,30 +8,29 @@ import {
   CModalHeader,
 } from "@coreui/react";
 
-import { useDispatch } from "react-redux";
 import meetingApi from "src/api/meetingApi";
 import { connection } from "src/utils/signalr/appService";
 
 function CreateMeetingModal(props) {
   const [meetingName, setMeetingName] = useState("");
   const onCreateMeeting = () => {
-    if (!meetingName)
-      return;
+    if (!meetingName) return;
 
-    meetingApi.createMeeting({
-      meetingName: meetingName,
-      teamId: props.teamId,
-      connectionId: connection.connectionId,
-    }).then(res => {
-      setMeetingName("");
-      props.onClose(res.data);
-    }).catch(err => {
-      setMeetingName("");
-      props.onClose(null);
-    })
-
-  }
-
+    meetingApi
+      .createMeeting({
+        meetingName: meetingName,
+        teamId: props.teamId,
+        connectionId: connection.connectionId,
+      })
+      .then((res) => {
+        setMeetingName("");
+        props.onClose(res.data);
+      })
+      .catch((err) => {
+        setMeetingName("");
+        props.onClose(null);
+      });
+  };
 
   const handleOnClose = () => {
     setMeetingName("");

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./ListMeetings.scss";
-import { CCol, CInput, CRow } from "@coreui/react";
+import { CCol, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { BsClipboardData, BsSearch } from "react-icons/bs";
+import { BsClipboardData } from "react-icons/bs";
 import { VscSearchStop } from "react-icons/vsc";
-import { useHistory, useParams } from "react-router-dom";
 import meetingApi from "src/api/meetingApi";
 import CreateMeetingModal from "./Components/CreateMeetingModal/CreateMeetingModal";
 import {
@@ -13,16 +12,17 @@ import {
   setRemoveMeeting,
 } from "src/utils/signalr/signalrSlice";
 import { setMeeting } from "src/appSlice";
-import { connection } from "src/utils/signalr/appService";
 
 ListMeetings.propTypes = {};
 
 function ListMeetings(props) {
   const dispatch = useDispatch();
+  // eslint-disable-next-line
   const [room, setRoom] = useState("gfácdgvsgdfgdfg");
+  // eslint-disable-next-line
   const [name, setName] = useState("fgfdgdfgfg");
+  // eslint-disable-next-line
   const [call, setCall] = useState(true);
-  const [password, setPassword] = useState("");
 
   const [showAddMeeting, setShowAddMeeting] = useState(false);
   const user = useSelector((state) => state.auth.currentUser);
@@ -31,9 +31,6 @@ function ListMeetings(props) {
 
   const [meetings, setMeetings] = useState([]);
   const [loadone, setLoadDone] = useState(false);
-  const { teamId } = useParams();
-
-  const history = useHistory();
 
   useEffect(() => {
     meetingApi
@@ -50,7 +47,7 @@ function ListMeetings(props) {
   useEffect(() => {
     if (!createMeeting) return;
 
-    if (createMeeting.teamId == props.teamId) {
+    if (createMeeting.teamId === props.teamId) {
       meetingApi
         .getMeetings(props.teamId)
         .then((res) => {
@@ -65,7 +62,7 @@ function ListMeetings(props) {
   useEffect(() => {
     if (!removeMeeting) return;
 
-    if (removeMeeting.teamId == props.teamId) {
+    if (removeMeeting.teamId === props.teamId) {
       meetingApi
         .getMeetings(props.teamId)
         .then((res) => {
@@ -77,6 +74,7 @@ function ListMeetings(props) {
     dispatch(setRemoveMeeting(null));
   }, [removeMeeting]);
 
+  // eslint-disable-next-line
   const handleClick = (event) => {
     event.preventDefault();
     if (room && name) setCall(true);

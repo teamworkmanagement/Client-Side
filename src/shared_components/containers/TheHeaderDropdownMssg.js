@@ -18,7 +18,6 @@ import moment from "moment";
 import "moment/locale/vi";
 import meetingApi from "src/api/meetingApi";
 import { setMeeting } from "src/appSlice";
-import { connection } from "src/utils/signalr/appService";
 
 moment.locale("vi");
 

@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { CInput, CModal, CModalBody, CModalHeader } from "@coreui/react";
+import React, { useState } from "react";
+import { CModal, CModalBody, CModalHeader } from "@coreui/react";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
-
-import { useDispatch, useSelector } from "react-redux";
 import userApi from "src/api/userApi";
 import "./InviteMembers.scss";
 import meetingApi from "src/api/meetingApi";
@@ -38,10 +36,9 @@ export const CustomOption = (props) => {
 };
 
 function InviteMembers(props) {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.currentUser);
   const [options, setOptions] = useState(null);
-  const [inputValue, setInputValue] = useState('');
+  // eslint-disable-next-line
+  const [inputValue, setInputValue] = useState("");
 
   function handleOnClose() {
     props.onCLoseModal();
@@ -69,7 +66,7 @@ function InviteMembers(props) {
           img: x.userImageUrl,
         };
       });
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const loadOptions = async (inputValue, callback) => {
@@ -83,14 +80,13 @@ function InviteMembers(props) {
       return option.value;
     });
 
-    meetingApi.inviteUsers({
-      meetingId: props.meetingId,
-      userIds: members,
-    }).then(res => {
-
-    }).catch(err => {
-
-    })
+    meetingApi
+      .inviteUsers({
+        meetingId: props.meetingId,
+        userIds: members,
+      })
+      .then((res) => {})
+      .catch((err) => {});
 
     props.onCLoseModal();
   };

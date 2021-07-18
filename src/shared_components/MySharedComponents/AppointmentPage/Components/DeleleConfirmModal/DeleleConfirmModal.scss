@@ -1,0 +1,73 @@
+//border
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+@mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+.modal.dialog-modal.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    .modal-dialog {
+        height: fit-content;
+        margin-top: -3rem;
+        .modal-content {
+            margin-top: 0;
+            width: 16rem;
+            .modal-header {
+                font-size: 110%;
+                font-weight: bold;
+                justify-content: center;
+            }
+            .modal-body {
+                text-align: center;
+            }
+            .modal-footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                border-top: none;
+                padding-top: 0 !important;
+                .cancel-button {
+                    font-size: 120%;
+                    color: #ff5454 !important;
+                }
+                .ok-button {
+                    @include NormalButtonStyle;
+                    padding: 0.5rem 1.5rem;
+                    background-color: #ff5454 !important;
+                }
+            }
+        }
+    }
+}

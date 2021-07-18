@@ -3,7 +3,6 @@ import {
   HubConnectionState,
   HubConnectionBuilder,
   LogLevel,
-  HttpTransportType
 } from "@microsoft/signalr";
 
 const isDev = true;
@@ -28,7 +27,7 @@ export const setupSignalRConnection = (connectionHub, actionEventMap = {}) => {
   const options = {
     logMessageContent: isDev,
     logger: isDev ? LogLevel.Warning : LogLevel.Error,
-    skipNegotiation: false
+    skipNegotiation: false,
   };
   // create the connection instance
   // withAutomaticReconnect will automatically try to reconnect

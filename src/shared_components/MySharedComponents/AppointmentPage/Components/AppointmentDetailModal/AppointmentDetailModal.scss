@@ -1,0 +1,152 @@
+//border
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+@mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+.appointment-detail-modal.show {
+    .modal-content {
+        margin-top: 0;
+        width: 16rem;
+        .modal-header {
+            font-size: 110%;
+            font-weight: bold !important;
+            justify-content: center;
+        }
+        .modal-body {
+            text-align: center;
+            .icon-alarm {
+                width: 3rem;
+                height: 3rem;
+                color: $subTextColor;
+                margin-bottom: 0.5rem;
+            }
+            .appointment-name-group {
+                align-items: center;
+                font-size: 110%;
+                font-weight: bold;
+                span {
+                    margin-right: 0.5rem;
+                    color: $subTextColor;
+                    font-size: 100%;
+                }
+            }
+            .appointment-description-group {
+                align-items: center;
+                font-size: 100%;
+                color: $textColor;
+                span {
+                    margin-right: 0.5rem;
+                    color: $subTextColor;
+                    font-size: 100%;
+                }
+            }
+            .appointment-time-group {
+                align-items: center;
+                font-size: 110%;
+                margin-top: 0.3rem;
+                font-weight: bold;
+                span {
+                    margin-right: 0.5rem;
+                    font-size: 100%;
+                }
+            }
+            .leader-infor {
+                display: flex;
+                align-items: center;
+                overflow-x: hidden;
+                justify-content: center;
+                margin-top: 0.5rem;
+                .owner-title {
+                    margin-right: 0.5rem;
+                    color: $subTextColor;
+                }
+                .icon-group {
+                    display: flex;
+                    margin-right: 0.1rem;
+                    align-items: center;
+                }
+                img {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    border-radius: 50px;
+                    margin-right: 0.2rem;
+                }
+                .leader-name {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: pre;
+                    display: flex;
+                    align-items: center;
+                    color: $textColor;
+                    font-weight: bold;
+                }
+            }
+            .type-group {
+                display: flex;
+                align-items: center;
+                font-style: italic;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-top: 1.5rem;
+                color: $subTextColor;
+                .type-item {
+                    display: flex;
+                    align-items: center;
+                    .type-icon {
+                        margin: 0 0.3rem;
+                        width: 1.2rem;
+                        height: 1.2rem;
+                        &.icon-chat {
+                            margin-top: -0.1rem;
+                        }
+                    }
+                    &.normal {
+                        margin-left: 0.3rem;
+                    }
+                }
+            }
+        }
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            border-top: none;
+            padding-top: 0 !important;
+            .ok-button {
+                @include NormalButtonStyle;
+                padding: 0.5rem 1.5rem;
+            }
+        }
+    }
+}
