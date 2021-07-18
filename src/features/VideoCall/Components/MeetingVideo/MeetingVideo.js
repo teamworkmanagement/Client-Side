@@ -10,7 +10,7 @@ import meetingApi from 'src/api/meetingApi';
 import InviteMembers from '../InviteMembers/InviteMembers';
 import NotFoundPage from 'src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage';
 import queryString from 'query-string';
-import { connection } from 'src/utils/signalr/kanbanService';
+import { connection } from 'src/utils/signalr/appService';
 
 
 MeetingVideo.propTypes = {
@@ -59,14 +59,14 @@ function MeetingVideo(props) {
                 setNotFound(true);
             })*/
 
-        console.log('abczzzzzz');
-        console.log(connection);
+        console.log('a ', connection);
+        console.log('b ' + connection.connectionId);
 
     }, [history.location.search])
 
     useEffect(() => {
-        console.log('aaaaaa: ', connection);
-        console.log('aaaaaazzz: ', connection.connectionId);
+        console.log('c ', connection);
+        console.log('d ' + connection.connectionId);
     }, [connection])
 
     const onMeetingEnd = () => {
