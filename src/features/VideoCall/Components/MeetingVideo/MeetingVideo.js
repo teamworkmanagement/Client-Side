@@ -10,7 +10,8 @@ import meetingApi from 'src/api/meetingApi';
 import InviteMembers from '../InviteMembers/InviteMembers';
 import NotFoundPage from 'src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage';
 import queryString from 'query-string';
-import { connection } from 'src/utils/signalr/kanbanService';
+import { connection } from 'src/utils/signalr/appService';
+import Loading from 'src/shared_components/MySharedComponents/Loading/Loading';
 
 
 MeetingVideo.propTypes = {
@@ -21,6 +22,7 @@ function MeetingVideo(props) {
     const history = useHistory();
     const dispatch = useDispatch();
     const [meeting, setMeeting] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [meetingEnd, setMeetingEnd] = useState(false);
     const user = useSelector(state => state.auth.currentUser);
 
@@ -29,49 +31,57 @@ function MeetingVideo(props) {
     const [showInviteMembers, setShowInviteMembers] = useState(false);
 
     useEffect(() => {
-        /*const queryObj = queryString.parse(history.location.search);
-        if (!queryObj.id || !queryObj.tid) {
-            setNotFound(true);
-            return;
-        }
+        setTimeout(() => {
+            console.log('a ', connection);
+            console.log('b ' + connection.connectionId);
 
-        const params = {
-            meetingId: queryObj.id,
-            teamId: queryObj.tid
-        }
+            const queryObj = queryString.parse(history.location.search);
+            if (!queryObj.id || !queryObj.tid) {
+                setNotFound(true);
+                setLoading(false);
+                return;
+            }
 
-        meetingApi.getMeeting({ params })
-            .then(resMeet => {
-                meetingApi.joinMeeting({
-                    meetingId: resMeet.data.meetingId,
-                    userConnectionId: connection.connectionId,
-                }).then(res => {
-                    if (!res.succeeded)
-                        alert('already join');
-                    else {
-                        setMeeting(resMeet.data);
-                    }
-                }).catch(err => {
+
+            const params = {
+                meetingId: queryObj.id,
+                teamId: queryObj.tid
+            }
+            meetingApi.getMeeting({ params })
+                .then(resMeet => {
+                    meetingApi.joinMeeting({
+                        meetingId: resMeet.data.meetingId,
+                        userConnectionId: connection.connectionId,
+                    }).then(res => {
+                        if (!res.succeeded)
+                            alert('already join');
+                        else {
+                            setMeeting(resMeet.data);
+                        }
+                    }).catch(err => {
+                        setLoading(false);
+                        setNotFound(true);
+                    })
+                })
+                .catch(err => {
+                    setLoading(false);
                     setNotFound(true);
                 })
-            })
-            .catch(err => {
-                setNotFound(true);
-            })*/
 
-        console.log('abczzzzzz');
-        console.log(connection);
+            setLoading(false);
+        }, 1500)
 
     }, [history.location.search])
 
     useEffect(() => {
-        console.log('aaaaaa: ', connection);
-        console.log('aaaaaazzz: ', connection.connectionId);
+        console.log('c ', connection);
+        console.log('d ' + connection.connectionId);
     }, [connection])
 
     const onMeetingEnd = () => {
         setMeeting(null);
         setMeetingEnd(true);
+        window.close();
         meetingApi.leaveMeeting({
             meetingId: meeting.meetingId,
             userId: user.id,
@@ -88,7 +98,8 @@ function MeetingVideo(props) {
                 <div>
                     <button onClick={() => setShowInviteMembers(true)} className="btn btn-info">Mời thành viên</button>
                     <EzPlayer
-                        roomName={meeting.meetingName}
+                        subject={meeting.meetingName}
+                        roomName={meeting.meetingId}
                         displayName={user.fullName}
                         password={meeting.password}
                         onMeetingEnd={() => onMeetingEnd()}

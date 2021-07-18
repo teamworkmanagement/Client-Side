@@ -9,17 +9,21 @@ import {
 import CIcon from "@coreui/icons-react";
 import notiApi from "src/api/notiApi";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./notification.scss";
 import { useHistory } from "react-router";
 import "./TheHeaderDropdownMssg.scss";
 import { HiOutlineBan } from "react-icons/hi";
 import moment from "moment";
 import "moment/locale/vi";
+import meetingApi from "src/api/meetingApi";
+import { setMeeting } from "src/appSlice";
+import { connection } from "src/utils/signalr/appService";
 
 moment.locale("vi");
 
 const TheHeaderDropdownMssg = () => {
+  const dispatch = useDispatch();
   const [notis, setNotis] = useState([]);
   const newNoti = useSelector((state) => state.app.newNotfication);
   const [itemsCount, setItemsCount] = useState(0);
@@ -78,13 +82,24 @@ const TheHeaderDropdownMssg = () => {
     }
 
     if (noti.notificationLink) {
-      const data = JSON.parse(noti.notificationLink);
-      if (data && data.MeetingId && data.TeamId) {
-        window.open(
-          `/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`,
-          "sharer",
-          "height=550,width=750"
-        );
+      if (noti.notificationLink.includes("MeetingId")) {
+        const data = JSON.parse(noti.notificationLink);
+        if (data && data.MeetingId && data.TeamId) {
+          meetingApi
+            .checkIsCalling()
+            .then((res) => {
+              if (res.data === true) {
+                dispatch(setMeeting({ userId: user.id, time: Date.now() }));
+              } else {
+                window.open(
+                  `/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`,
+                  "sharer",
+                  "height=550,width=750"
+                );
+              }
+            })
+            .catch((err) => {});
+        }
       } else {
         history.push({
           pathname: noti.notificationLink.split("?")[0],

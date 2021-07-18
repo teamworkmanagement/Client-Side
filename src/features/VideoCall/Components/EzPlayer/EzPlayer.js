@@ -29,6 +29,7 @@ function EzPlayer({
     onError,
     onJitsi,
     password,
+    subject,
     ...options
 }) {
     const { loading, error, jitsi } = useJitsi({
@@ -37,6 +38,7 @@ function EzPlayer({
             prejoinPageEnabled: false,
         },
         domain: 'meet.ezteam.tech',
+        subject: subject,
         ...options
     })
 

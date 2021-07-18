@@ -320,7 +320,7 @@ function TeamPage(props) {
               </CTooltip>
             </CNavItem>
             <CNavItem>
-              <CTooltip content="Họp" placement="right">
+              <CTooltip content="Phòng họp" placement="right">
                 <CNavLink>
                   <HiOutlineVideoCamera className="icon-meeting" />
                   <div className="tab-name">Họp</div>
