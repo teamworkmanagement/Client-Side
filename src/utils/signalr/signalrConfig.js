@@ -28,8 +28,7 @@ export const setupSignalRConnection = (connectionHub, actionEventMap = {}) => {
   const options = {
     logMessageContent: isDev,
     logger: isDev ? LogLevel.Warning : LogLevel.Error,
-    skipNegotiation: false,
-    transport: HttpTransportType.WebSockets
+    skipNegotiation: false
   };
   // create the connection instance
   // withAutomaticReconnect will automatically try to reconnect

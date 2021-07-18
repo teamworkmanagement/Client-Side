@@ -81,6 +81,7 @@ function MeetingVideo(props) {
     const onMeetingEnd = () => {
         setMeeting(null);
         setMeetingEnd(true);
+        window.close();
         meetingApi.leaveMeeting({
             meetingId: meeting.meetingId,
             userId: user.id,

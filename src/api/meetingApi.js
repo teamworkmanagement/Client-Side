@@ -25,6 +25,10 @@ const meetingApi = {
     getMeeting(params) {
         const url = `/meeting`;
         return axiosClient.get(url, params);
+    },
+    checkIsCalling() {
+        const url = '/meeting/check-call';
+        return axiosClient.get(url);
     }
 };
 
