@@ -38,6 +38,7 @@ import {
 import { setAdminAction } from "../KanbanBoard/kanbanSlice";
 import VideoCall from "../VideoCall/ListMeetings";
 import { HiOutlineVideoCamera } from "react-icons/hi";
+import AppointmentPage from "src/shared_components/MySharedComponents/AppointmentPage/AppointmentPage";
 
 function TeamPage(props) {
   const dispatch = useDispatch();
@@ -64,13 +65,14 @@ function TeamPage(props) {
           return 2;
         case "message":
           return 3;
-        case "files":
-          return 5;
-
-        case "statistics":
-          return 6;
         case "meeting":
           return 4;
+        case "appointment":
+          return 5;
+        case "files":
+          return 6;
+        case "statistics":
+          return 7;
         default:
           return 0;
       }
@@ -114,15 +116,17 @@ function TeamPage(props) {
       case 3:
         tab = "message";
         break;
-      case 5:
-        tab = "files";
-        break;
-
-      case 6:
-        tab = "statistics";
-        break;
       case 4:
         tab = "meeting";
+        break;
+      case 5:
+        tab = "appointment";
+        break;
+      case 6:
+        tab = "files";
+        break;
+      case 7:
+        tab = "statistics";
         break;
       default:
         tab = "teaminfo";
@@ -164,7 +168,7 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => {})
+        .then((res) => { })
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
         });
@@ -378,7 +382,7 @@ function TeamPage(props) {
                 {active === 4 && <VideoCall teamId={teamId} />}
               </CTabPane>
               <CTabPane>
-                {active === 5 && <VideoCall teamId={teamId} />}
+                {active === 5 && <AppointmentPage teamId={teamId} />}
               </CTabPane>
               <CTabPane>{active === 6 ? <ListFileTable /> : null}</CTabPane>
 
