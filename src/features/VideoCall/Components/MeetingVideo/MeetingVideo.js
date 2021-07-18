@@ -97,7 +97,8 @@ function MeetingVideo(props) {
                 <div>
                     <button onClick={() => setShowInviteMembers(true)} className="btn btn-info">Mời thành viên</button>
                     <EzPlayer
-                        roomName={meeting.meetingName}
+                        subject={meeting.meetingName}
+                        roomName={meeting.meetingId}
                         displayName={user.fullName}
                         password={meeting.password}
                         onMeetingEnd={() => onMeetingEnd()}
