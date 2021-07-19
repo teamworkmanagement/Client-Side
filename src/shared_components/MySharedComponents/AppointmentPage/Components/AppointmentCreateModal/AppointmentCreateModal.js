@@ -12,20 +12,37 @@ import {
   CModalHeader,
   CTextarea,
 } from "@coreui/react";
-
+import DateFnsUtils from "@date-io/date-fns";
 import "./AppointmentCreateModal.scss";
 import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { FaRegNewspaper } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import appointmentApi from "src/api/appointmentApi";
+import {
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import { BsClockHistory } from "react-icons/bs";
+import moment from "moment";
 
 function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
   const [type, setType] = useState(0); //0:normal,1:meeting, 2:chat, 3:task,4:news,
-  const [date, setDate] = useState(null);
+  //const [date, setDate] = useState(new Date());
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
+  const [time, setTime] = useState(new Date());
   const [appointReq, setAppointReq] = useState({});
+
+  useEffect(() => {
+    //setDate(moment(new Date()).format("YYYY-MM-DD"));
+    setTime(new Date());
+    setAppointReq({
+      name: "",
+      description: "",
+      date: moment(new Date()).format("YYYY-MM-DD"),
+    });
+    setType(0);
+  }, [show]);
 
   function handleOnClose() {
     if (onClose) {
@@ -34,8 +51,6 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
         name: "",
         description: "",
       });
-      setDate("");
-      setType(0);
       onClose();
     }
   }
@@ -46,17 +61,24 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
       setError("Bạn chưa nhập tên cuộc hẹn!");
       return;
     }
-    if (!appointReq.date || appointReq.date === "") {
+
+    if (time + "" === "Invalid Date") {
       setShowError(true);
-      setError("Bạn chưa đặt thời gian cuộc hẹn!");
+      setError("Thời gian không hợp lệ!");
       return;
     }
+
+    const hour = time.getHours();
+    const minute = time.getMinutes();
+    const alarmDate = new Date(appointReq.date);
+    const dateWithHour = new Date(alarmDate.setHours(hour));
+    const dateWithHourMinute = new Date(dateWithHour.setMinutes(minute));
 
     const newAppointment = {
       ...appointReq,
       type: getTypeText(),
       teamId: teamId,
-      date: new Date(appointReq.date),
+      date: dateWithHourMinute,
     };
 
     appointmentApi
@@ -66,12 +88,6 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
       .finally(() => {
         handleOnClose();
       });
-  }
-
-  function formatDate(date) {
-    //convert từ YYYY-MM-DD sang DD/MM/YYYY
-    const dateParts = date.split("-");
-    return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
   }
 
   function getTypeText() {
@@ -171,14 +187,29 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
             placeholder="Nội dung lịch hẹn..."
           />
         </div>
-
-        <div className="date-group">
+        <div className="time-group">
           <div className="title">
             <span>*</span>Thời gian:
           </div>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardTimePicker
+              ampm={false}
+              helperText=""
+              variant="inline"
+              value={time}
+              onChange={setTime}
+              keyboardIcon={<BsClockHistory className="icon-time" />}
+            />
+          </MuiPickersUtilsProvider>
+        </div>
+
+        <div className="date-group">
+          <div className="title">
+            <span>*</span>Ngày:
+          </div>
           <CInput
-            value={date}
-            type="datetime-local"
+            value={appointReq.date}
+            type="date"
             //defaultValue={moment("2021-07-18").format("YYYY-MM-DD")}
             placeholder="date"
             onChange={onDateChange}

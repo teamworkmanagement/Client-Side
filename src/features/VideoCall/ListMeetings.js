@@ -4,7 +4,7 @@ import { CCol, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import { BsClipboardData } from "react-icons/bs";
-import { VscSearchStop } from "react-icons/vsc";
+import { VscDeviceCameraVideo, VscSearchStop } from "react-icons/vsc";
 import meetingApi from "src/api/meetingApi";
 import CreateMeetingModal from "./Components/CreateMeetingModal/CreateMeetingModal";
 import {
@@ -12,6 +12,8 @@ import {
   setRemoveMeeting,
 } from "src/utils/signalr/signalrSlice";
 import { setMeeting } from "src/appSlice";
+import { AiOutlineVideoCamera } from "react-icons/ai";
+import { BiLogInCircle } from "react-icons/bi";
 
 ListMeetings.propTypes = {};
 
@@ -131,7 +133,7 @@ function ListMeetings(props) {
           </div>
         </div>
       </div>
-      <div className="list-boards">
+      <div className="list-meeting">
         <CRow xl={{ cols: 5, gutter: 3 }}>
           {meetings.map((item, index) => {
             return (
@@ -142,21 +144,24 @@ function ListMeetings(props) {
                 xl="3"
                 key={index}
                 style={{ animationDelay: `${index / 20}s` }}
-                className="board-item-container"
+                className="meeting-item-container"
               >
-                <div className="board-item">
-                  <div className="board-title">{item.meetingName}</div>
-                  <div className="board-team-infor">
-                    Bởi:
+                <div className="meeting-item">
+                  <div className="meeting-title">
+                    Cuộc họp:
+                    <span className="meeting-name">{item.meetingName}</span>
+                  </div>
+                  <div className="meeting-user-create-infor">
+                    Tạo bởi:
                     <img alt="" src={item.userCreateAvatar} />
                     <div className="team-name">{item.userCreateName}</div>
                   </div>
                   <div>
                     <button
                       onClick={() => goToMeeting(item)}
-                      className="btn btn-info"
+                      className="join-meeting-btn"
                     >
-                      <CIcon name="cil-plus" />
+                      <BiLogInCircle className="icon-join" />
                       Tham gia
                     </button>
                   </div>
@@ -169,7 +174,7 @@ function ListMeetings(props) {
       {meetings.length === 0 && loadone && (
         <div className="nodata-image">
           <div className="icon-group">
-            <BsClipboardData className="icon-task" />
+            <AiOutlineVideoCamera className="icon-task" />
             <VscSearchStop className="icon-search" />
           </div>
 

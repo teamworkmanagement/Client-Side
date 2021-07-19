@@ -10,6 +10,8 @@ import appointmentApi from "src/api/appointmentApi";
 import AppointmentEditModal from "./Components/AppointmentEditModal/AppointmentEditModal.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setReloadAppointment } from "src/utils/signalr/signalrSlice";
+import { VscSearchStop } from "react-icons/vsc";
+import { BiAlarmExclamation } from "react-icons/bi";
 
 function AppointmentPage(props) {
   const appointmentType = ["meeting", "chat", "task", "news", "normal"];
@@ -130,36 +132,38 @@ function AppointmentPage(props) {
   const [deletingId, setDeletingId] = useState(null);
   const [showingIndex, setShowingIndex] = useState(null);
 
-  const reloadAppointment = useSelector(state => state.signalr.reloadAppointment);
+  const reloadAppointment = useSelector(
+    (state) => state.signalr.reloadAppointment
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    appointmentApi.getByTeam(props.teamId)
-      .then(res => {
+    appointmentApi
+      .getByTeam(props.teamId)
+      .then((res) => {
         setAppointmentList(res.data);
-      }).catch(err => {
-
       })
-  }, [])
+      .catch((err) => {});
+  }, []);
 
   useEffect(() => {
-    if (!reloadAppointment)
-      return;
-    appointmentApi.getByTeam(props.teamId)
-      .then(res => {
+    if (!reloadAppointment) return;
+    appointmentApi
+      .getByTeam(props.teamId)
+      .then((res) => {
         setAppointmentList(res.data);
-      }).catch(err => {
-
       })
+      .catch((err) => {});
 
     dispatch(setReloadAppointment(null));
-  }, [reloadAppointment])
+  }, [reloadAppointment]);
 
   function confirmDelete(res) {
     if (res) {
-      appointmentApi.deleteAppointment(deletingId)
-        .then(res => { })
-        .catch(err => { })
+      appointmentApi
+        .deleteAppointment(deletingId)
+        .then((res) => {})
+        .catch((err) => {});
     }
     setShowDeleteModal(false);
     setDeletingId(null); //xóa hoặc không xóa vẫn reset delete index về null
@@ -225,7 +229,12 @@ function AppointmentPage(props) {
 
       {appointmentList.length === 0 && (
         <div className="nodata-image">
-          <div className="noti-infor">Không có cuộc hẹn nào!</div>
+          <div className="icon-group">
+            <BiAlarmExclamation className="icon-task" />
+            <VscSearchStop className="icon-search" />
+          </div>
+
+          <div className="noti-infor">Chưa có lịch hẹn nào!</div>
         </div>
       )}
     </div>

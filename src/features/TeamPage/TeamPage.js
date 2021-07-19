@@ -39,6 +39,7 @@ import { setAdminAction } from "../KanbanBoard/kanbanSlice";
 import VideoCall from "../VideoCall/ListMeetings";
 import { HiOutlineVideoCamera } from "react-icons/hi";
 import AppointmentPage from "src/shared_components/MySharedComponents/AppointmentPage/AppointmentPage";
+import { VscDeviceCameraVideo } from "react-icons/vsc";
 
 function TeamPage(props) {
   const dispatch = useDispatch();
@@ -168,7 +169,7 @@ function TeamPage(props) {
     if (teamId) {
       teamApi
         .getAdmin(teamId)
-        .then((res) => { })
+        .then((res) => {})
         .catch((err) => {
           if (err.ErrorCode === "404") setNotfound(true);
         });
@@ -326,8 +327,8 @@ function TeamPage(props) {
             <CNavItem>
               <CTooltip content="Phòng họp" placement="right">
                 <CNavLink>
-                  <HiOutlineVideoCamera className="icon-meeting" />
-                  <div className="tab-name">Họp</div>
+                  <VscDeviceCameraVideo className="icon-meeting" />
+                  <div className="tab-name">Phòng họp</div>
                 </CNavLink>
               </CTooltip>
             </CNavItem>

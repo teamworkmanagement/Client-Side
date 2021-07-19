@@ -6,26 +6,63 @@ import userApi from "src/api/userApi";
 import "./InviteMembers.scss";
 import meetingApi from "src/api/meetingApi";
 
+// const ValueOption = (props) => (
+//   <components.MultiValue {...props}>
+//     <div style={{ display: "flex", marginTop: "auto", marginBottom: "auto" }}>
+//       <img src={props.data.img} style={{ width: 30 }} alt="" />
+//       <span style={{ marginTop: "auto", marginBottom: "auto" }}>
+//         {props.data.label}
+//       </span>
+//     </div>
+//   </components.MultiValue>
+// );
+
 const ValueOption = (props) => (
-  <components.MultiValue {...props}>
+  <components.SingleValue {...props}>
     <div style={{ display: "flex", marginTop: "auto", marginBottom: "auto" }}>
       <img src={props.data.img} style={{ width: 30 }} alt="" />
-      <span style={{ marginTop: "auto", marginBottom: "auto" }}>
+      <span
+        style={{
+          marginTop: "auto",
+          marginBottom: "auto",
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+        }}
+      >
         {props.data.label}
       </span>
     </div>
-  </components.MultiValue>
+  </components.SingleValue>
 );
+
+// export const CustomOption = (props) => {
+//   return (
+//     <components.Option {...props}>
+//       <div
+//         style={{
+//           display: "flex",
+//           marginTop: "auto",
+//           marginBottom: "auto",
+//           justifyContent: "space-between",
+//         }}
+//       >
+//         <img alt="" height={20} width={20} src={props.data.img} />
+//         <label>{props.data.label}</label>
+//       </div>
+//     </components.Option>
+//   );
+// };
 
 export const CustomOption = (props) => {
   return (
-    <components.Option {...props}>
+    <components.Option {...props} className="select-option">
       <div
+        className="select-option-content"
         style={{
           display: "flex",
-          marginTop: "auto",
-          marginBottom: "auto",
-          justifyContent: "space-between",
+          //marginTop: "auto",
+          //marginBottom: "auto",
+          //justifyContent: "space-between",
         }}
       >
         <img alt="" height={20} width={20} src={props.data.img} />
@@ -100,11 +137,11 @@ function InviteMembers(props) {
       className="create-chat-in-chat-page"
       show={props.showInviteMembers}
       onClose={handleOnClose}
-      size="sm"
+      size="md"
     >
       <CModalHeader closeButton>Mời thành viên</CModalHeader>
       <CModalBody className="new-card-form">
-        <div style={{ width: "21rem" }}>
+        <div className="invite-content-container">
           <AsyncSelect
             value={options}
             className="select-css"
@@ -119,6 +156,7 @@ function InviteMembers(props) {
               Option: CustomOption,
               MultiValue: ValueOption,
             }}
+            noOptionsMessage={() => "Không tìm thấy"}
           />
           <div onClick={onInviteMembers} className="create-chat-btn">
             Mời

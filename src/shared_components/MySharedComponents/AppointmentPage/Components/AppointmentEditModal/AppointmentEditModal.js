@@ -13,6 +13,14 @@ import {
   CTextarea,
 } from "@coreui/react";
 
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import { BsClockHistory } from "react-icons/bs";
+import moment from "moment";
+
 import "./AppointmentEditModal.scss";
 import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
@@ -26,59 +34,24 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(null);
+  const [time, setTime] = useState(null);
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (!appointment) return;
+    setDate(moment(new Date(appointment.date)).format("YYYY-MM-DD"));
+    setTime(new Date(appointment.date));
+    setName(appointment.name);
+    setDescription(appointment.description ? appointment.description : "");
+    setType(getTypeNumber(appointment.type));
+  }, [show]);
+
   function handleOnClose() {
     if (onClose) {
-      setName('');
-      setDescription('');
-      setDate('');
-      setType(0);
       onClose();
     }
   }
-
-  function getDefaultDate() {
-    var res = "";
-    const dateParts = appointment.date.split("/");
-    res = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0] + "T";
-    const hour =
-      appointment.hour >= 10 ? appointment.hour + "" : "0" + appointment.hour;
-    const minute =
-      appointment.minute >= 10
-        ? appointment.minute + ""
-        : "0" + appointment.minute;
-    res += hour + ":" + minute;
-    return res;
-  }
-
-  useEffect(() => {
-    if (!appointment) return;
-    setName(appointment.name);
-    setDescription(appointment?.description ? appointment?.description : '');
-
-    //setDate(getDefaultDate());
-    console.log(appointment.date);
-    setDate(appointment.date.substring(0, 16))
-
-    switch (appointment.type) {
-      case "normal":
-        setType(0);
-        break;
-      case "meeting":
-        setType(1);
-        break;
-      case "chat":
-        setType(2);
-        break;
-      case "task":
-        setType(3);
-        break;
-      default:
-        setType(4);
-    }
-  }, [show]);
 
   function getTypeText() {
     switch (type) {
@@ -94,6 +67,20 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
         return "news";
     }
   }
+  function getTypeNumber(defaultType) {
+    switch (defaultType) {
+      case "normal":
+        return 0;
+      case "meeting":
+        return 1;
+      case "chat":
+        return 2;
+      case "task":
+        return 3;
+      default:
+        return 4;
+    }
+  }
 
   function handleOnUpdate() {
     if (!name || name === "") {
@@ -101,40 +88,35 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
       setError("Bạn chưa nhập tên cuộc hẹn!");
       return;
     }
-    if (!date || date === "") {
+    if (time + "" === "Invalid Date") {
       setShowError(true);
-      setError("Bạn chưa đặt thời gian cuộc hẹn!");
+      setError("Thời gian không hợp lệ!");
       return;
     }
+
+    const hour = time.getHours();
+    const minute = time.getMinutes();
+    const alarmDate = new Date(date);
+    const dateWithHour = new Date(alarmDate.setHours(hour));
+    const dateWithHourMinute = new Date(dateWithHour.setMinutes(minute));
 
     const updateObj = {
       id: appointment.id,
       name: name,
       description: description,
-      date: date ? new Date(date) : null,
+      date: dateWithHourMinute,
       type: getTypeText(),
-    }
+    };
 
-    console.log(updateObj);
+    appointmentApi
+      .updateAppointment(updateObj)
+      .then((res) => {})
+      .catch((err) => {});
 
-    appointmentApi.updateAppointment(updateObj)
-      .then(res => {
-
-      }).catch(err => {
-
-      })
-
-    //handleOnClose();
-  }
-
-  function formatDate(date) {
-    //convert từ YYYY-MM-DD sang DD/MM/YYYY
-    const dateParts = date.split("-");
-    return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
+    handleOnClose();
   }
 
   function onDateChange(e) {
-    console.log(e.target.value);
     setDate(e.target.value);
   }
 
@@ -204,15 +186,28 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
             placeholder="Nội dung lịch hẹn..."
           />
         </div>
-
-        <div className="date-group">
+        <div className="time-group">
           <div className="title">
             <span>*</span>Thời gian:
           </div>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardTimePicker
+              ampm={false}
+              helperText=""
+              variant="inline"
+              value={time}
+              onChange={setTime}
+              keyboardIcon={<BsClockHistory className="icon-time" />}
+            />
+          </MuiPickersUtilsProvider>
+        </div>
+        <div className="date-group">
+          <div className="title">
+            <span>*</span>Ngày:
+          </div>
           <CInput
             value={date}
-            type="datetime-local"
-            //defaultValue={moment("2021-07-18").format("YYYY-MM-DD")}
+            type="date"
             placeholder="date"
             onChange={onDateChange}
           />

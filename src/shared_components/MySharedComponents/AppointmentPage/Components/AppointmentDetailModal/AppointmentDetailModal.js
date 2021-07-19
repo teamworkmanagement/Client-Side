@@ -102,7 +102,7 @@ function AppointmentDetailModal({ show, onClose, appointment }) {
         </div>
         <div className="appointment-description-group">
           <span>Nội dung:</span>
-          {appointment?.description}
+          {appointment?.description ? appointment?.description : "..."}
         </div>
         <div className="appointment-time-group">
           <span>Thời gian:</span>

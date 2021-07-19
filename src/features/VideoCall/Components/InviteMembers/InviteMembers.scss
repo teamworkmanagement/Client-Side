@@ -261,7 +261,7 @@ $baseTransition: all 0.3s;
 
 //========================================
 .modal.create-chat-in-chat-page {
-    .modal-dialog.modal-sm {
+    .modal-dialog.modal-md {
         display: flex;
         justify-content: center;
         .modal-content {
@@ -275,6 +275,10 @@ $baseTransition: all 0.3s;
                 align-items: center;
                 padding: 1.5rem;
                 width: max-content;
+                width: 100%;
+                .invite-content-container {
+                    width: 100%;
+                }
                 .name-label {
                     margin-right: 1rem;
                     font-weight: 500;
@@ -287,6 +291,19 @@ $baseTransition: all 0.3s;
                 }
                 //react-select
                 .select-css {
+                    height: 2.5rem;
+                    .css-yk16xz-control {
+                        height: 100%;
+                        .css-g1d714-ValueContainer {
+                            height: 100%;
+                            .css-b8ldur-Input {
+                                height: 100%;
+                                & > div:first-child {
+                                    height: 100%;
+                                }
+                            }
+                        }
+                    }
                     .css-1rhbuit-multiValue {
                         border-radius: $borderRadius;
 
@@ -313,6 +330,27 @@ $baseTransition: all 0.3s;
                     margin-top: 1rem;
                 }
             }
+        }
+    }
+}
+.select-option {
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    width: auto !important;
+    div {
+        cursor: pointer;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        img {
+            margin: 0 !important;
+            margin-right: 0.5rem !important;
+            cursor: pointer;
+            border-radius: 50rem;
+        }
+        label {
+            margin: 0;
+            cursor: pointer;
         }
     }
 }

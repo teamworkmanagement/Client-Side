@@ -273,6 +273,10 @@ $baseTransition: all 0.3s;
                 margin-top: -0.1rem;
                 margin-right: 1rem;
                 color: $textColor;
+                &.icon-meeting {
+                    width: 1.1rem;
+                    height: 1.1rem;
+                }
             }
             .icon-group {
                 path {

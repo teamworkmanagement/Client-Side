@@ -1,0 +1,124 @@
+//@import "../../shared_components/scss/style.scss";
+//========================================
+//border
+$borderStyle: 1px solid #e6ebf1;
+$borderRadius: 0.625rem;
+
+//color
+$baseColor: #3e79f7;
+$lighterBaseColor: #ebf1fe;
+$darkerBaseColor: #3363ca;
+$successColor: #2eb85c;
+$errorColor: #e55353;
+$infoColor: #3399ff;
+
+//background color
+$backgroundColorApp: #fafafb;
+
+//text
+$textColor: #3c4b64;
+$subTextColor: #768192;
+
+//animation
+$baseTransition: all 0.3s;
+
+// Here you can add other styles
+@mixin background-color-theme {
+    background: #3e79f7;
+}
+@mixin PaddingForLeftPanel {
+    padding: 2rem 1rem 2rem 2rem;
+    @media (max-width: 992px) {
+        padding: 1rem 0.5rem 1rem 1rem;
+    }
+}
+@mixin PaddingForRightPanel {
+    padding: 2rem 2rem 2rem 1rem;
+    @media (max-width: 992px) {
+        padding: 1rem 1rem 1rem 0.5rem;
+    }
+}
+
+@mixin SideBarItemNormal {
+    background-color: white;
+    color: #3c4b64;
+    font-weight: 500;
+    border: none;
+    .c-sidebar-nav-icon {
+        color: #3c4b64;
+    }
+}
+@mixin SideBarItemSelected {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe;
+    border-right: 3px solid #3e79f7 !important;
+    .c-sidebar-nav-icon {
+        color: #3e79f7;
+    }
+}
+@mixin SideBarItemHover {
+    color: #3e79f7 !important;
+    background-color: #ebf1fe !important;
+
+    .c-sidebar-nav-icon {
+        color: #3e79f7 !important;
+    }
+}
+
+@mixin CardStyle {
+    box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 15%);
+    background-color: white;
+    padding: 1rem;
+    border-radius: $borderRadius;
+    border: $borderStyle;
+}
+
+//text
+
+@mixin TitleStyle {
+    font-weight: bold;
+    font-size: 110%;
+}
+@mixin SubTextStyle {
+    font-size: 90%;
+    color: $subTextColor;
+}
+
+@mixin NormalButtonStyle {
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    background-color: $baseColor;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: $borderRadius;
+    transition: $baseTransition;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: $darkerBaseColor;
+    }
+}
+
+.meeting-video-page {
+    height: 100%;
+    .meeting-video-page-content {
+        height: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        background-color: rgba(0, 0, 0, 0.8);
+        .invite-btn {
+            @include NormalButtonStyle;
+            border: none;
+            margin: 0.5rem 1rem;
+            width: fit-content;
+            .c-icon {
+                margin-right: 0.5rem;
+            }
+        }
+        & > div:first-child {
+            //height:100%;
+            flex-grow: 1;
+        }
+    }
+}

@@ -150,6 +150,7 @@ $baseTransition: all 0.3s;
                     border-radius: 0.625rem;
                     width: 13rem;
                     flex-grow: 1;
+                    color: #3c4b64;
                 }
             }
             .type-group {
@@ -174,7 +175,7 @@ $baseTransition: all 0.3s;
                         display: flex;
                         align-items: center;
                         border-radius: 0.625rem;
-                        border: 2px solid rgba($baseColor, 0.8);
+                        border: 1px solid lightgray;
                         .type-item {
                             display: flex;
                             align-items: center;

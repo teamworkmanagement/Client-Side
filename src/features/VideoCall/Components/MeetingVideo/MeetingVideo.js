@@ -9,6 +9,7 @@ import InviteMembers from "../InviteMembers/InviteMembers";
 import NotFoundPage from "src/shared_components/MySharedComponents/NotFoundPage/NotFoundPage";
 import queryString from "query-string";
 import { connection } from "src/utils/signalr/appService";
+import CIcon from "@coreui/icons-react";
 
 function MeetingVideo(props) {
   const history = useHistory();
@@ -89,15 +90,9 @@ function MeetingVideo(props) {
   };
 
   return (
-    <div>
+    <div className="meeting-video-page">
       {meeting && (
-        <div>
-          <button
-            onClick={() => setShowInviteMembers(true)}
-            className="btn btn-info"
-          >
-            Mời thành viên
-          </button>
+        <div className="meeting-video-page-content">
           <EzPlayer
             subject={meeting.meetingName}
             roomName={meeting.meetingId}
@@ -107,6 +102,14 @@ function MeetingVideo(props) {
             loadingComponent={<p>loading ...</p>}
             errorComponent={<p>Oops, something went wrong</p>}
           />
+          <button
+            onClick={() => setShowInviteMembers(true)}
+            className="invite-btn"
+          >
+            <CIcon name="cil-plus" />
+            Mời thành viên
+          </button>
+
           <InviteMembers
             meetingId={meeting.meetingId}
             showInviteMembers={showInviteMembers}

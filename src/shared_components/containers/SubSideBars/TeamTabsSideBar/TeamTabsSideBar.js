@@ -9,6 +9,8 @@ import CIcon from "@coreui/icons-react";
 import { changeStateTeamTabsSidebar } from "src/appSlice";
 import { setActiveTab } from "src/features/ListTeamPage/teamSlice";
 import { GrGroup } from "react-icons/gr";
+import { HiOutlineVideoCamera } from "react-icons/hi";
+import { VscDeviceCameraVideo } from "react-icons/vsc";
 
 const TeamTabsSideBar = (props) => {
   const dispatch = useDispatch();
@@ -78,14 +80,33 @@ const TeamTabsSideBar = (props) => {
           className={`nav-tab-item ${activeTab === 4 ? "active" : ""}`}
         >
           <CNavLink href="#" className="tab-item-link">
+            <VscDeviceCameraVideo className="nav-link-icon icon-meeting" />
+            <div className="tab-name">Phòng họp</div>
+          </CNavLink>
+        </CNavItem>
+        <CNavItem
+          onClick={() => onClick(5)}
+          className={`nav-tab-item ${activeTab === 5 ? "active" : ""}`}
+        >
+          <CNavLink href="#" className="tab-item-link">
+            <CIcon className="nav-link-icon" name="cil-alarm" />
+            <div className="tab-name">Đặt hẹn</div>
+          </CNavLink>
+        </CNavItem>
+
+        <CNavItem
+          onClick={() => onClick(6)}
+          className={`nav-tab-item ${activeTab === 6 ? "active" : ""}`}
+        >
+          <CNavLink href="#" className="tab-item-link">
             <CIcon className="nav-link-icon" name="cil-description" />
             <div className="tab-name">Tài liệu</div>
           </CNavLink>
         </CNavItem>
 
         <CNavItem
-          onClick={() => onClick(5)}
-          className={`nav-tab-item ${activeTab === 5 ? "active" : ""}`}
+          onClick={() => onClick(7)}
+          className={`nav-tab-item ${activeTab === 7 ? "active" : ""}`}
         >
           <CNavLink href="#" className="tab-item-link">
             <CIcon className="nav-link-icon" name="cil-chart-line" />
