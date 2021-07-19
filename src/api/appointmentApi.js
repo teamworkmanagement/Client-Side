@@ -13,6 +13,14 @@ const appointmentApi = {
     getByTeam(teamId) {
         const url = `/appointment/team/${teamId}`;
         return axiosClient.get(url);
+    },
+    updateAppointment(payload) {
+        const url = '/appointment';
+        return axiosClient.put(url, payload);
+    },
+    getByUser() {
+        const url = '/appointment/user';
+        return axiosClient.get(url);
     }
 };
 

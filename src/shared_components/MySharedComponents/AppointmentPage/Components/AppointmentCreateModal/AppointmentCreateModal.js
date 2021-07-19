@@ -21,27 +21,21 @@ import { useSelector } from "react-redux";
 import appointmentApi from "src/api/appointmentApi";
 
 function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
-  const user = useSelector((state) => state.auth.currentUser);
   const [type, setType] = useState(0); //0:normal,1:meeting, 2:chat, 3:task,4:news,
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [date, setDate] = useState(null);
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
   const [appointReq, setAppointReq] = useState({});
 
-  // name: "Lorem ipsum dolor sit amet",
-  // userCreateName: "Khoa Nguyễn",
-  // userCreateAvatar: "https://emilus.themenate.net/img/avatars/thumb-1.jpg",
-  // date: "18/07/2021",
-  // hour: "12",
-  // minute: "24",
-  // description:
-  //   "Quisque volutpat diam tellus, sed pharetra odio mollis in. Integer bibendum sit amet massa nec vulputate. Phasellus et aliquam massa, nec dapibus nisl",
-  // type: "normal",
-
   function handleOnClose() {
     if (onClose) {
+      setAppointReq({
+        ...appointReq,
+        name: '',
+        description: ''
+      });
+      setDate('');
+      setType(0);
       onClose();
     }
   }
@@ -65,9 +59,6 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
       date: new Date(appointReq.date)
     }
 
-
-    console.log(newAppointment);
-
     appointmentApi.createAppointment(newAppointment)
       .then(res => {
 
@@ -75,10 +66,9 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
       .catch(res => {
 
       })
-
-    return;
-    onCreate(newAppointment);
-    handleOnClose();
+      .finally(() => {
+        handleOnClose();
+      })
   }
 
   function formatDate(date) {
@@ -103,8 +93,6 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
   }
 
   function onDateChange(e) {
-    //console.log(e.target.value);
-    //setDate(e.target.value);
     setAppointReq({
       ...appointReq,
       date: e.target.value,
@@ -172,6 +160,7 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
           <CInput
             type="text"
             name="name"
+            value={appointReq.name}
             onChange={(e) => onChangeText(e)}
             placeholder="Tên cuộc hẹn..."
           />
@@ -181,6 +170,7 @@ function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
           <CTextarea
             type="text"
             name="description"
+            value={appointReq.description}
             onChange={(e) => onChangeText(e)}
             placeholder="Nội dung lịch hẹn..."
           />

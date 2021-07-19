@@ -106,7 +106,7 @@ function AppointmentDetailModal({ show, onClose, appointment }) {
         </div>
         <div className="appointment-time-group">
           <span>Thời gian:</span>
-          {moment(appointment?.date).format("HH:MM DD/MM/YYYY")}
+          {moment(appointment?.date).format("HH:mm DD/MM/YYYY")}
         </div>
         <div className="leader-infor">
           <div className="owner-title">Tạo bởi:</div>

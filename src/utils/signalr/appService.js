@@ -6,7 +6,7 @@ import store from "../../app/store";
 
 import { SIGNALR_URL } from "../../env";
 import { setCurrentUser } from "src/shared_components/views/pages/login/authSlice";
-import { setCreateMeeting, setJoinTeam, setLeaveTeam, setRemoveMeeting, setUpdateTeamInfo } from "./signalrSlice";
+import { setCreateMeeting, setJoinTeam, setLeaveTeam, setReloadAppointment, setRemoveMeeting, setUpdateTeamInfo } from "./signalrSlice";
 import { HubConnectionState } from "@microsoft/signalr";
 
 export const connection = setupSignalRConnection(`${SIGNALR_URL}/hubapp`);
@@ -39,6 +39,11 @@ connection.on("CreateMeeting", (payload) => {
 connection.on("RemoveMeeting", (payload) => {
   console.log("RemoveMeeting ", payload);
   store.dispatch(setRemoveMeeting(payload));
+});
+
+connection.on("ReloadAppointment", payload => {
+  console.log("ReloadAppointment ", payload);
+  store.dispatch(setReloadAppointment(payload));
 });
 
 export const startAppService = () => {

@@ -12,6 +12,7 @@ import CIcon from "@coreui/icons-react";
 import { BsAlarm } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 function AppointmentItem({
   index,
@@ -20,6 +21,7 @@ function AppointmentItem({
   onShowDetail,
   onEdit,
 }) {
+  const user = useSelector(state => state.auth.currentUser);
   return (
     <CCol
       sm="6"
@@ -32,7 +34,7 @@ function AppointmentItem({
         <div className="team-top-info">
           <div className="team-header">
             <div className="header-actions-dropdown">
-              <CDropdown>
+              {user.id === appointment.userCreateId && <CDropdown>
                 <CDropdownToggle id="dropdownMenuButton" caret>
                   <div className="lane-actions">
                     <CIcon name="cil-options" />
@@ -54,7 +56,7 @@ function AppointmentItem({
                     Xóa lịch hẹn
                   </CDropdownItem>
                 </CDropdownMenu>
-              </CDropdown>
+              </CDropdown>}
             </div>
           </div>
 

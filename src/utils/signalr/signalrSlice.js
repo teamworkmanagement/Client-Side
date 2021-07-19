@@ -10,6 +10,7 @@ const signalrSlice = createSlice({
         joinTeam: null,
         createMeeting: null,
         removeMeeting: null,
+        reloadAppointment: null,
     },
     reducers: {
         setNewAddReact(state, action) {
@@ -79,6 +80,14 @@ const signalrSlice = createSlice({
             else {
                 state.removeMeeting = null;
             }
+        },
+        setReloadAppointment(state, action) {
+            if (window.location.search.includes('tab=appointment') && action.payload) {
+                state.reloadAppointment = action.payload;
+            }
+            else {
+                state.reloadAppointment = null;
+            }
         }
     },
 });
@@ -92,6 +101,7 @@ export const {
     setLeaveTeam,
     setJoinTeam,
     setCreateMeeting,
-    setRemoveMeeting
+    setRemoveMeeting,
+    setReloadAppointment
 } = actions;
 export default reducer;
