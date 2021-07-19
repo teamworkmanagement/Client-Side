@@ -18,8 +18,9 @@ import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { FaRegNewspaper } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import appointmentApi from "src/api/appointmentApi";
 
-function AppointmentCreateModal({ show, onClose, onCreate }) {
+function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
   const user = useSelector((state) => state.auth.currentUser);
   const [type, setType] = useState(0); //0:normal,1:meeting, 2:chat, 3:task,4:news,
   const [name, setName] = useState("");
@@ -27,6 +28,7 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
   const [date, setDate] = useState(null);
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
+  const [appointReq, setAppointReq] = useState({});
 
   // name: "Lorem ipsum dolor sit amet",
   // userCreateName: "Khoa Nguyễn",
@@ -45,33 +47,36 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
   }
 
   function handleOnCreate() {
-    if (!name || name === "") {
+    if (!appointReq.name || appointReq.name === "") {
       setShowError(true);
       setError("Bạn chưa nhập tên cuộc hẹn!");
       return;
     }
-    if (!date || date === "") {
+    if (!appointReq.date || appointReq.date === "") {
       setShowError(true);
       setError("Bạn chưa đặt thời gian cuộc hẹn!");
       return;
     }
 
-    //date ban đầu có format "2021-07-14T00:47"
-    const dateParts = date.split("T");
-    const dateParts1 = dateParts[0]; //chuỗi ngày
-    const dateParts2 = dateParts[1]; //chuỗi thời gian
-    const timeParts = dateParts2.split(":");
     const newAppointment = {
-      name: name,
-      description: description ? description : "",
-      date: formatDate(dateParts1),
-      hour: timeParts[0],
-      minute: timeParts[1],
+      ...appointReq,
       type: getTypeText(),
-      userCreateName: user.fullName,
-      userCreateAvatar: user.userAvatar,
-    };
+      teamId: teamId,
+      date: new Date(appointReq.date)
+    }
 
+
+    console.log(newAppointment);
+
+    appointmentApi.createAppointment(newAppointment)
+      .then(res => {
+
+      })
+      .catch(res => {
+
+      })
+
+    return;
     onCreate(newAppointment);
     handleOnClose();
   }
@@ -98,8 +103,12 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
   }
 
   function onDateChange(e) {
-    console.log(e.target.value);
-    setDate(e.target.value);
+    //console.log(e.target.value);
+    //setDate(e.target.value);
+    setAppointReq({
+      ...appointReq,
+      date: e.target.value,
+    })
   }
 
   function getTypeToggle() {
@@ -139,6 +148,14 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
     }
   }
 
+
+  const onChangeText = (e) => {
+    const { name, value } = e.target;
+    setAppointReq({
+      ...appointReq,
+      [name]: value,
+    });
+  }
   return (
     <CModal
       className={`appointment-create-modal `}
@@ -154,8 +171,8 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
           </div>
           <CInput
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            onChange={(e) => onChangeText(e)}
             placeholder="Tên cuộc hẹn..."
           />
         </div>
@@ -163,8 +180,8 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
           <div className="title">Nội dung:</div>
           <CTextarea
             type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            onChange={(e) => onChangeText(e)}
             placeholder="Nội dung lịch hẹn..."
           />
         </div>

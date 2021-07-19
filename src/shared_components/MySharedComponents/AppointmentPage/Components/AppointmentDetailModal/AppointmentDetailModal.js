@@ -14,6 +14,10 @@ import { BsAlarm } from "react-icons/bs";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { FaRegNewspaper } from "react-icons/fa";
+import moment from "moment";
+import "moment/locale/vi";
+
+moment.locale("vi");
 
 function AppointmentDetailModal({ show, onClose, appointment }) {
   function handleOnClose() {
@@ -102,7 +106,7 @@ function AppointmentDetailModal({ show, onClose, appointment }) {
         </div>
         <div className="appointment-time-group">
           <span>Thời gian:</span>
-          {`${getHour()}:${getMinute()} ${appointment?.date}`}
+          {moment(appointment?.date).format("HH:MM DD/MM/YYYY")}
         </div>
         <div className="leader-infor">
           <div className="owner-title">Tạo bởi:</div>
