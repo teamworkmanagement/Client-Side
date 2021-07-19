@@ -7,6 +7,8 @@ import AppointmentDetailModal from "./Components/AppointmentDetailModal/Appointm
 import AppointmentCreateModal from "./Components/AppointmentCreateModal/AppointmentCreateModal.js";
 import { AiOutlinePlus } from "react-icons/ai";
 import appointmentApi from "src/api/appointmentApi";
+import AppointmentEditModal from "./Components/AppointmentEditModal/AppointmentEditModal.js";
+
 function AppointmentPage(props) {
   const appointmentType = ["meeting", "chat", "task", "news", "normal"];
 
@@ -122,6 +124,7 @@ function AppointmentPage(props) {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [deletingIndex, setDeletingIndex] = useState(null);
   const [showingIndex, setShowingIndex] = useState(null);
 
@@ -151,6 +154,9 @@ function AppointmentPage(props) {
   function onCreateAppointment(newAppointment) {
     //call api create new appointment here
   }
+  function onUpdateAppointment(updatedAppointment) {
+    //call api update appointment here
+  }
 
   return (
     <div className="appointment-page">
@@ -173,6 +179,10 @@ function AppointmentPage(props) {
               onShowDetail={() => {
                 setShowingIndex(index);
                 setShowDetailModal(true);
+              }}
+              onEdit={() => {
+                setEditingIndex(index);
+                setShowEditModal(true);
               }}
             />
           );
@@ -201,6 +211,13 @@ function AppointmentPage(props) {
           <div className="noti-infor">Không có cuộc hẹn nào!</div>
         </div>
       )}
+
+      <AppointmentEditModal
+        appointment={appointmentList[editingIndex]}
+        show={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onUpdate={onUpdateAppointment}
+      />
     </div>
   );
 }
