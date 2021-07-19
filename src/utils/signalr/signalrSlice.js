@@ -11,6 +11,7 @@ const signalrSlice = createSlice({
         createMeeting: null,
         removeMeeting: null,
         reloadAppointment: null,
+        reminder: null,
     },
     reducers: {
         setNewAddReact(state, action) {
@@ -88,6 +89,9 @@ const signalrSlice = createSlice({
             else {
                 state.reloadAppointment = null;
             }
+        },
+        setReminder(state, action) {
+            state.reminder = action.payload;
         }
     },
 });
@@ -102,6 +106,7 @@ export const {
     setJoinTeam,
     setCreateMeeting,
     setRemoveMeeting,
-    setReloadAppointment
+    setReloadAppointment,
+    setReminder
 } = actions;
 export default reducer;
