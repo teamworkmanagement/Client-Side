@@ -18,56 +18,54 @@ import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { FaRegNewspaper } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import {
-  KeyboardTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import moment from "moment";
-import CIcon from "@coreui/icons-react";
-import { IconButton, InputAdornment } from "@material-ui/core";
-import { BsClockHistory } from "react-icons/bs";
-function AppointmentCreateModal({ show, onClose, onCreate }) {
-  const user = useSelector((state) => state.auth.currentUser);
+import appointmentApi from "src/api/appointmentApi";
+
+function AppointmentCreateModal({ show, onClose, onCreate, teamId }) {
   const [type, setType] = useState(0); //0:normal,1:meeting, 2:chat, 3:task,4:news,
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
-  const [time, setTime] = useState(new Date());
+  const [date, setDate] = useState(null);
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
+  const [appointReq, setAppointReq] = useState({});
 
   function handleOnClose() {
     if (onClose) {
+      setAppointReq({
+        ...appointReq,
+        name: "",
+        description: "",
+      });
+      setDate("");
+      setType(0);
       onClose();
     }
   }
 
   function handleOnCreate() {
-    if (!name || name === "") {
+    if (!appointReq.name || appointReq.name === "") {
       setShowError(true);
       setError("Bạn chưa nhập tên cuộc hẹn!");
       return;
     }
-    if (time + "" === "Invalid Date") {
+    if (!appointReq.date || appointReq.date === "") {
       setShowError(true);
-      setError("Thời gian nhập không hợp lệ!");
+      setError("Bạn chưa đặt thời gian cuộc hẹn!");
       return;
     }
 
     const newAppointment = {
-      name: name,
-      description: description ? description : "",
-      date: formatDate(date),
-      hour: time.getHours(),
-      minute: time.getMinutes(),
+      ...appointReq,
       type: getTypeText(),
-      userCreateName: user.fullName,
-      userCreateAvatar: user.userAvatar,
+      teamId: teamId,
+      date: new Date(appointReq.date),
     };
 
-    onCreate(newAppointment);
-    handleOnClose();
+    appointmentApi
+      .createAppointment(newAppointment)
+      .then((res) => {})
+      .catch((res) => {})
+      .finally(() => {
+        handleOnClose();
+      });
   }
 
   function formatDate(date) {
@@ -92,8 +90,10 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
   }
 
   function onDateChange(e) {
-    console.log(e.target.value);
-    setDate(e.target.value);
+    setAppointReq({
+      ...appointReq,
+      date: e.target.value,
+    });
   }
 
   function getTypeToggle() {
@@ -133,6 +133,13 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
     }
   }
 
+  const onChangeText = (e) => {
+    const { name, value } = e.target;
+    setAppointReq({
+      ...appointReq,
+      [name]: value,
+    });
+  };
   return (
     <CModal
       className={`appointment-create-modal `}
@@ -148,8 +155,9 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
           </div>
           <CInput
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={appointReq.name}
+            onChange={(e) => onChangeText(e)}
             placeholder="Tên cuộc hẹn..."
           />
         </div>
@@ -157,34 +165,20 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
           <div className="title">Nội dung:</div>
           <CTextarea
             type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            value={appointReq.description}
+            onChange={(e) => onChangeText(e)}
             placeholder="Nội dung lịch hẹn..."
           />
         </div>
 
-        <div className="time-group">
+        <div className="date-group">
           <div className="title">
             <span>*</span>Thời gian:
           </div>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardTimePicker
-              ampm={false}
-              helperText=""
-              variant="inline"
-              value={time}
-              onChange={setTime}
-              keyboardIcon={<BsClockHistory className="icon-time" />}
-            />
-          </MuiPickersUtilsProvider>
-        </div>
-        <div className="date-group">
-          <div className="title">
-            <span>*</span>Ngày:
-          </div>
           <CInput
             value={date}
-            type="date"
+            type="datetime-local"
             //defaultValue={moment("2021-07-18").format("YYYY-MM-DD")}
             placeholder="date"
             onChange={onDateChange}
