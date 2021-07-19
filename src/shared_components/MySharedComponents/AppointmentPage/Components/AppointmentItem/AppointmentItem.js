@@ -13,7 +13,13 @@ import { BsAlarm } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 
-function AppointmentItem({ index, appointment, onDelete, onShowDetail }) {
+function AppointmentItem({
+  index,
+  appointment,
+  onDelete,
+  onShowDetail,
+  onEdit,
+}) {
   return (
     <CCol
       sm="6"
@@ -36,10 +42,7 @@ function AppointmentItem({ index, appointment, onDelete, onShowDetail }) {
                   aria-labelledby="dropdownMenuButton"
                   placement="bottom-end"
                 >
-                  <CDropdownItem
-                    className="first"
-                    //onClick={() => navigateToTeam(team.teamId)}
-                  >
+                  <CDropdownItem className="first" onClick={() => onEdit()}>
                     <FiEdit className="icon-edit-appointment" />
                     Chỉnh sửa
                   </CDropdownItem>

@@ -6,6 +6,7 @@ import DeleteConfirmModal from "./Components/DeleleConfirmModal/DeleleConfirmMod
 import AppointmentDetailModal from "./Components/AppointmentDetailModal/AppointmentDetailModal.js";
 import AppointmentCreateModal from "./Components/AppointmentCreateModal/AppointmentCreateModal.js";
 import { AiOutlinePlus } from "react-icons/ai";
+import AppointmentEditModal from "./Components/AppointmentEditModal/AppointmentEditModal.js";
 function AppointmentPage(props) {
   const appointmentType = ["meeting", "chat", "task", "news", "normal"];
 
@@ -120,6 +121,7 @@ function AppointmentPage(props) {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [deletingIndex, setDeletingIndex] = useState(null);
   const [showingIndex, setShowingIndex] = useState(null);
 
@@ -139,6 +141,9 @@ function AppointmentPage(props) {
 
   function onCreateAppointment(newAppointment) {
     //call api create new appointment here
+  }
+  function onUpdateAppointment(updatedAppointment) {
+    //call api update appointment here
   }
 
   return (
@@ -163,6 +168,10 @@ function AppointmentPage(props) {
                 setShowingIndex(index);
                 setShowDetailModal(true);
               }}
+              onEdit={() => {
+                setEditingIndex(index);
+                setShowEditModal(true);
+              }}
             />
           );
         })}
@@ -182,6 +191,12 @@ function AppointmentPage(props) {
         show={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onCreate={onCreateAppointment}
+      />
+      <AppointmentEditModal
+        appointment={appointmentList[editingIndex]}
+        show={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onUpdate={onUpdateAppointment}
       />
     </div>
   );
