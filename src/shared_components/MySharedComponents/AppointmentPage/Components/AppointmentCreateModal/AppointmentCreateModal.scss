@@ -111,6 +111,21 @@ $baseTransition: all 0.3s;
                     }
                     margin-right: 0.5rem;
                 }
+                .MuiInputBase-root.MuiInput-root {
+                    padding: 0.5rem;
+                    padding-right: 0;
+                    height: 2.5rem;
+                    border: 1px solid lightgray;
+                    border-radius: 0.625rem;
+                    .icon-time {
+                        width: 1.2rem;
+                        height: 1.2rem;
+                        color: black;
+                    }
+                    &::before {
+                        display: none;
+                    }
+                }
             }
             .date-group {
                 display: flex;
@@ -130,6 +145,7 @@ $baseTransition: all 0.3s;
                     margin-right: 0.5rem;
                 }
                 input {
+                    font-size: 110%;
                     height: 2.5rem;
                     border-radius: 0.625rem;
                     width: 13rem;
@@ -223,4 +239,21 @@ $baseTransition: all 0.3s;
             }
         }
     }
+}
+
+.MuiToolbar-root.MuiToolbar-regular.MuiPickersToolbar-toolbar {
+    background-color: $baseColor !important;
+}
+.MuiPickersClock-pin {
+    background-color: $baseColor !important;
+}
+.MuiPickersClockPointer-pointer {
+    background-color: $baseColor !important;
+}
+.MuiPickersClockPointer-thumb {
+    background-color: $baseColor !important;
+    border-color: $baseColor !important;
+}
+.MuiButtonBase-root.MuiIconButton-root {
+    outline: none !important;
 }

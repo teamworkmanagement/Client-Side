@@ -18,25 +18,24 @@ import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { FaRegNewspaper } from "react-icons/fa";
 import { useSelector } from "react-redux";
-
+import {
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import moment from "moment";
+import CIcon from "@coreui/icons-react";
+import { IconButton, InputAdornment } from "@material-ui/core";
+import { BsClockHistory } from "react-icons/bs";
 function AppointmentCreateModal({ show, onClose, onCreate }) {
   const user = useSelector((state) => state.auth.currentUser);
   const [type, setType] = useState(0); //0:normal,1:meeting, 2:chat, 3:task,4:news,
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
+  const [time, setTime] = useState(new Date());
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
-
-  // name: "Lorem ipsum dolor sit amet",
-  // userCreateName: "Khoa Nguyễn",
-  // userCreateAvatar: "https://emilus.themenate.net/img/avatars/thumb-1.jpg",
-  // date: "18/07/2021",
-  // hour: "12",
-  // minute: "24",
-  // description:
-  //   "Quisque volutpat diam tellus, sed pharetra odio mollis in. Integer bibendum sit amet massa nec vulputate. Phasellus et aliquam massa, nec dapibus nisl",
-  // type: "normal",
 
   function handleOnClose() {
     if (onClose) {
@@ -50,23 +49,18 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
       setError("Bạn chưa nhập tên cuộc hẹn!");
       return;
     }
-    if (!date || date === "") {
+    if (time + "" === "Invalid Date") {
       setShowError(true);
-      setError("Bạn chưa đặt thời gian cuộc hẹn!");
+      setError("Thời gian nhập không hợp lệ!");
       return;
     }
 
-    //date ban đầu có format "2021-07-14T00:47"
-    const dateParts = date.split("T");
-    const dateParts1 = dateParts[0]; //chuỗi ngày
-    const dateParts2 = dateParts[1]; //chuỗi thời gian
-    const timeParts = dateParts2.split(":");
     const newAppointment = {
       name: name,
       description: description ? description : "",
-      date: formatDate(dateParts1),
-      hour: timeParts[0],
-      minute: timeParts[1],
+      date: formatDate(date),
+      hour: time.getHours(),
+      minute: time.getMinutes(),
       type: getTypeText(),
       userCreateName: user.fullName,
       userCreateAvatar: user.userAvatar,
@@ -169,13 +163,28 @@ function AppointmentCreateModal({ show, onClose, onCreate }) {
           />
         </div>
 
-        <div className="date-group">
+        <div className="time-group">
           <div className="title">
             <span>*</span>Thời gian:
           </div>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardTimePicker
+              ampm={false}
+              helperText=""
+              variant="inline"
+              value={time}
+              onChange={setTime}
+              keyboardIcon={<BsClockHistory className="icon-time" />}
+            />
+          </MuiPickersUtilsProvider>
+        </div>
+        <div className="date-group">
+          <div className="title">
+            <span>*</span>Ngày:
+          </div>
           <CInput
             value={date}
-            type="datetime-local"
+            type="date"
             //defaultValue={moment("2021-07-18").format("YYYY-MM-DD")}
             placeholder="date"
             onChange={onDateChange}
