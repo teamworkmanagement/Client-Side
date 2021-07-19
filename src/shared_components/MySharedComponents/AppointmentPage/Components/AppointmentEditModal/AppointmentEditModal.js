@@ -18,6 +18,7 @@ import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { FaRegNewspaper } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import appointmentApi from "src/api/appointmentApi";
 
 function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
   const user = useSelector((state) => state.auth.currentUser);
@@ -30,6 +31,10 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
 
   function handleOnClose() {
     if (onClose) {
+      setName('');
+      setDescription('');
+      setDate('');
+      setType(0);
       onClose();
     }
   }
@@ -51,9 +56,11 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
   useEffect(() => {
     if (!appointment) return;
     setName(appointment.name);
-    setDescription(appointment?.description);
+    setDescription(appointment?.description ? appointment?.description : '');
 
-    setDate(getDefaultDate());
+    //setDate(getDefaultDate());
+    console.log(appointment.date);
+    setDate(appointment.date.substring(0, 16))
 
     switch (appointment.type) {
       case "normal":
@@ -73,44 +80,6 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
     }
   }, [show]);
 
-  function handleOnUpdate() {
-    if (!name || name === "") {
-      setShowError(true);
-      setError("Bạn chưa nhập tên cuộc hẹn!");
-      return;
-    }
-    if (!date || date === "") {
-      setShowError(true);
-      setError("Bạn chưa đặt thời gian cuộc hẹn!");
-      return;
-    }
-
-    //date ban đầu có format "2021-07-14T00:47"
-    const dateParts = date.split("T");
-    const dateParts1 = dateParts[0]; //chuỗi ngày
-    const dateParts2 = dateParts[1]; //chuỗi thời gian
-    const timeParts = dateParts2.split(":");
-    const updatedAppointment = {
-      name: name,
-      description: description ? description : "",
-      date: formatDate(dateParts1),
-      hour: timeParts[0],
-      minute: timeParts[1],
-      type: getTypeText(),
-      userCreateName: user.fullName,
-      userCreateAvatar: user.userAvatar,
-    };
-
-    onUpdate(updatedAppointment);
-    handleOnClose();
-  }
-
-  function formatDate(date) {
-    //convert từ YYYY-MM-DD sang DD/MM/YYYY
-    const dateParts = date.split("-");
-    return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
-  }
-
   function getTypeText() {
     switch (type) {
       case 0:
@@ -124,6 +93,44 @@ function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
       default:
         return "news";
     }
+  }
+
+  function handleOnUpdate() {
+    if (!name || name === "") {
+      setShowError(true);
+      setError("Bạn chưa nhập tên cuộc hẹn!");
+      return;
+    }
+    if (!date || date === "") {
+      setShowError(true);
+      setError("Bạn chưa đặt thời gian cuộc hẹn!");
+      return;
+    }
+
+    const updateObj = {
+      id: appointment.id,
+      name: name,
+      description: description,
+      date: date ? new Date(date) : null,
+      type: getTypeText(),
+    }
+
+    console.log(updateObj);
+
+    appointmentApi.updateAppointment(updateObj)
+      .then(res => {
+
+      }).catch(err => {
+
+      })
+
+    //handleOnClose();
+  }
+
+  function formatDate(date) {
+    //convert từ YYYY-MM-DD sang DD/MM/YYYY
+    const dateParts = date.split("-");
+    return dateParts[2] + "/" + dateParts[1] + "/" + dateParts[0];
   }
 
   function onDateChange(e) {

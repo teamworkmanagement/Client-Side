@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AppointmentPage.scss";
 import { CRow } from "@coreui/react";
 import AppointmentItem from "./Components/AppointmentItem/AppointmentItem.js";
@@ -6,11 +6,15 @@ import DeleteConfirmModal from "./Components/DeleleConfirmModal/DeleleConfirmMod
 import AppointmentDetailModal from "./Components/AppointmentDetailModal/AppointmentDetailModal.js";
 import AppointmentCreateModal from "./Components/AppointmentCreateModal/AppointmentCreateModal.js";
 import { AiOutlinePlus } from "react-icons/ai";
+import appointmentApi from "src/api/appointmentApi";
 import AppointmentEditModal from "./Components/AppointmentEditModal/AppointmentEditModal.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setReloadAppointment } from "src/utils/signalr/signalrSlice";
+
 function AppointmentPage(props) {
   const appointmentType = ["meeting", "chat", "task", "news", "normal"];
 
-  const appointmentList = [
+  /*const appointmentList = [
     {
       name: "Lorem ipsum dolor sit amet",
       userCreateName: "Khoa Nguyễn",
@@ -73,9 +77,9 @@ function AppointmentPage(props) {
       name: "Etiam tempor lorem dictum aliquam faucibus",
       userCreateName: "Dũng Nguyễn",
       userCreateAvatar: "https://emilus.themenate.net/img/avatars/thumb-2.jpg",
-      date: "11/07/2021",
-      hour: "14",
-      minute: "15",
+      date: "19/07/2021",
+      hour: "09",
+      minute: "36",
       description:
         "Nam nec neque finibus, cursus arcu et, vehicula leo. Etiam ac malesuada felis",
       type: "news",
@@ -116,34 +120,54 @@ function AppointmentPage(props) {
       type: "normal",
       teamId: "",
     },
-  ];
+  ];*/
+  const [appointmentList, setAppointmentList] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [deletingIndex, setDeletingIndex] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const [showingIndex, setShowingIndex] = useState(null);
+
+  const reloadAppointment = useSelector(state => state.signalr.reloadAppointment);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    appointmentApi.getByTeam(props.teamId)
+      .then(res => {
+        setAppointmentList(res.data);
+      }).catch(err => {
+
+      })
+  }, [])
+
+  useEffect(() => {
+    if (!reloadAppointment)
+      return;
+    appointmentApi.getByTeam(props.teamId)
+      .then(res => {
+        setAppointmentList(res.data);
+      }).catch(err => {
+
+      })
+
+    dispatch(setReloadAppointment(null));
+  }, [reloadAppointment])
 
   function confirmDelete(res) {
     if (res) {
-      //call api delete appointment { appointmentList[deletingIndex] } here
-      console.log("detete");
+      appointmentApi.deleteAppointment(deletingId)
+        .then(res => { })
+        .catch(err => { })
     }
     setShowDeleteModal(false);
-    setDeletingIndex(null); //xóa hoặc không xóa vẫn reset delete index về null
+    setDeletingId(null); //xóa hoặc không xóa vẫn reset delete index về null
   }
 
-  function onDeleteAppointmentItem(index) {
-    setDeletingIndex(index); //lưu lại index của item đang được confirm xóa
+  function onDeleteAppointmentItem(appointment) {
+    setDeletingId(appointment.id); //lưu lại index của item đang được confirm xóa
     setShowDeleteModal(true);
-  }
-
-  function onCreateAppointment(newAppointment) {
-    //call api create new appointment here
-  }
-  function onUpdateAppointment(updatedAppointment) {
-    //call api update appointment here
   }
 
   return (
@@ -161,7 +185,7 @@ function AppointmentPage(props) {
         {appointmentList.map((appointment, index) => {
           return (
             <AppointmentItem
-              onDelete={onDeleteAppointmentItem}
+              onDelete={() => onDeleteAppointmentItem(appointment)}
               appointment={appointment}
               index={index}
               onShowDetail={() => {
@@ -188,16 +212,22 @@ function AppointmentPage(props) {
         }
       />
       <AppointmentCreateModal
+        teamId={props.teamId}
         show={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        onCreate={onCreateAppointment}
       />
+
       <AppointmentEditModal
         appointment={appointmentList[editingIndex]}
         show={showEditModal}
         onClose={() => setShowEditModal(false)}
-        onUpdate={onUpdateAppointment}
       />
+
+      {appointmentList.length === 0 && (
+        <div className="nodata-image">
+          <div className="noti-infor">Không có cuộc hẹn nào!</div>
+        </div>
+      )}
     </div>
   );
 }
