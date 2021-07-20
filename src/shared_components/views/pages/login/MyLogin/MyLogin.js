@@ -25,6 +25,7 @@ function MyLogin(props) {
   const [loginObject, setLoginObject] = useState({
     email: "",
     password: "",
+    isAdmin: false,
   });
 
   const history = useHistory();

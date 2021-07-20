@@ -14,7 +14,7 @@ const teamSlice = createSlice({
   name: "teams",
   initialState: {
     teams: [],
-    activeTab: 0,
+    activeTab: null,
   },
   reducers: {
     addTeam(state, action) {

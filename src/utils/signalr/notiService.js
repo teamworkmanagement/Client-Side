@@ -14,6 +14,7 @@ connection.on("SendNoti", (payload) => {
 });
 
 connection.on("Reminder", (payload) => {
+  console.log(payload);
   store.dispatch(setReminder(payload));
 });
 export const startNotiService = () => {

@@ -26,6 +26,10 @@ const postApi = {
     const url = "/post";
     return axiosClient.post(url, params);
   },
+  postReport(payload) {
+    const url = '/post-report';
+    return axiosClient.post(url, payload);
+  }
 };
 
 export default postApi;
