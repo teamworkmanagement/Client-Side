@@ -5,10 +5,13 @@ import "moment/locale/vi";
 import Tag from "../Tag/Tag";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
 import CIcon from "@coreui/icons-react";
+import { useSelector } from "react-redux";
+import commentApi from "src/api/commentApi";
 
 moment.locale("vi");
 
 function CommentItem({ comment }) {
+  const user = useSelector(state => state.auth.currentUser);
   const mapStringToJsx = (str, comment) => {
     const myArr = str.split("<@tag>");
     return myArr.map((ele, index) => {
@@ -30,6 +33,17 @@ function CommentItem({ comment }) {
       }
     });
   };
+
+  const onReportComment = () => {
+    console.log('report comment: ', comment.commentId);
+    commentApi.reportComment({
+      commentId: comment.commentId
+    }).then(res => {
+
+    }).catch(err => {
+
+    })
+  }
   return (
     <div className="comment-item-container">
       <div className="commenter-avatar">
@@ -48,13 +62,13 @@ function CommentItem({ comment }) {
             {moment(comment.commentCreatedAt).format("l")}
           </div>
         </div>
-        <div className="comment-content">
+        <div className="comment-content" >
           {mapStringToJsx(comment.commentContent, comment)}
         </div>
-        <div className="comment-footer">
+        {comment.commentUserId !== user.id && <div onClick={onReportComment} className="comment-footer">
           <CIcon name="cil-flag-alt" />
           Báo cáo
-        </div>
+        </div>}
       </div>
     </div>
   );

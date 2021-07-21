@@ -29,6 +29,10 @@ const postApi = {
   postReport(payload) {
     const url = '/post-report';
     return axiosClient.post(url, payload);
+  },
+  deletePost(postId) {
+    const url = `/post/${postId}`;
+    return axiosClient.delete(url);
   }
 };
 

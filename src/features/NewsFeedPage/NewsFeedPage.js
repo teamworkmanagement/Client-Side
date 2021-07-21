@@ -68,7 +68,7 @@ function NewsFeedPage(props) {
       .then((res) => {
         setGroupList(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, []);
 
   function toggleShowFilter() {
@@ -275,7 +275,10 @@ function NewsFeedPage(props) {
         res.data.postImages = links?.map((x) => x.link);
         console.log(addPostDone);
         console.log(res.data);
-        setAddPostDone(res.data);
+        setAddPostDone({
+          ...res.data,
+          showDelete: true,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -352,15 +355,15 @@ function NewsFeedPage(props) {
                 style={
                   showFilter
                     ? {
-                        borderBottomLeftRadius: "0",
-                        borderBottomRightRadius: "0",
-                        borderBottom: "none",
-                      }
+                      borderBottomLeftRadius: "0",
+                      borderBottomRightRadius: "0",
+                      borderBottom: "none",
+                    }
                     : {
-                        borderBottomLeftRadius: "10px",
-                        borderBottomRightRadius: "10px",
-                        borderBottom: "1px solid #e6ebf1",
-                      }
+                      borderBottomLeftRadius: "10px",
+                      borderBottomRightRadius: "10px",
+                      borderBottom: "1px solid #e6ebf1",
+                    }
                 }
               >
                 <div className="title">
