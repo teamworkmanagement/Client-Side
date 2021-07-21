@@ -24,65 +24,48 @@ function MeetingVideo(props) {
   const [showInviteMembers, setShowInviteMembers] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      console.log("a ", connection);
-      console.log("b " + connection.connectionId);
-
-      const queryObj = queryString.parse(history.location.search);
-      if (!queryObj.id || !queryObj.tid) {
-        setNotFound(true);
-        setLoading(false);
-        return;
-      }
-
-      const params = {
-        meetingId: queryObj.id,
-        teamId: queryObj.tid,
-      };
-      meetingApi
-        .getMeeting({ params })
-        .then((resMeet) => {
-          meetingApi
-            .joinMeeting({
-              meetingId: resMeet.data.meetingId,
-              userConnectionId: connection.connectionId,
-            })
-            .then((res) => {
-              if (!res.succeeded) alert("already join");
-              else {
-                setMeeting(resMeet.data);
-              }
-            })
-            .catch((err) => {
-              setLoading(false);
-              setNotFound(true);
-            });
-        })
-        .catch((err) => {
-          setLoading(false);
-          setNotFound(true);
-        });
-
+    const queryObj = queryString.parse(history.location.search);
+    if (!queryObj.id || !queryObj.tid) {
+      setNotFound(true);
       setLoading(false);
-    }, 1500);
+      return;
+    }
+
+    const params = {
+      meetingId: queryObj.id,
+      teamId: queryObj.tid,
+    };
+    meetingApi
+      .getMeeting({ params })
+      .then((resMeet) => {
+        meetingApi
+          .joinMeeting({
+            meetingId: resMeet.data.meetingId
+          })
+          .then((res) => {
+            if (!res.succeeded) alert("already join");
+            else {
+              setMeeting(resMeet.data);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            setNotFound(true);
+          });
+      })
+      .catch((err) => {
+        setLoading(false);
+        setNotFound(true);
+      });
+
+    setLoading(false);
   }, [history.location.search]);
 
-  useEffect(() => {
-    console.log("c ", connection);
-    console.log("d " + connection.connectionId);
-  }, [connection]);
 
   const onMeetingEnd = () => {
     setMeeting(null);
     setMeetingEnd(true);
     window.close();
-    meetingApi
-      .leaveMeeting({
-        meetingId: meeting.meetingId,
-        userId: user.id,
-      })
-      .then((res) => {})
-      .catch((err) => {});
   };
 
   const onCLoseModal = () => {
