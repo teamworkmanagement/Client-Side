@@ -272,7 +272,7 @@ const TheLayout = () => {
       {!isMeeting && (
         <ToastContainer
           position="bottom-right"
-          autoClose={3000}
+          autoClose={1500}
           progressClassName="toastProgress"
         />
       )}
