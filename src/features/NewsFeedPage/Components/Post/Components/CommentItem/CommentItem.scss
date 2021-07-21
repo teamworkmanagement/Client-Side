@@ -314,6 +314,23 @@ $baseTransition: all 0.3s;
             }
         }
     }
+    .comment-actions {
+        margin-right: -0.5rem;
+        margin-left: 0.5rem;
+        display: flex;
+        align-items: center;
+        .c-icon.rotate-90 {
+            transform: rotate(90deg);
+        }
+        .post-header-actions-dropdown {
+            .dropdown-toggle.btn {
+                @include DropdownToggleButtonStyle;
+            }
+            .dropdown-menu.show {
+                @include DropdownMenuStyle;
+            }
+        }
+    }
 }
 
 .normal-text-comment {

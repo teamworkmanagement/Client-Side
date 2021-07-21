@@ -5,11 +5,18 @@ import "moment/locale/vi";
 import Tag from "../Tag/Tag";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
 import CIcon from "@coreui/icons-react";
+import {
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
+} from "@coreui/react";
 
 moment.locale("vi");
 
 function CommentItem({ comment }) {
   const mapStringToJsx = (str, comment) => {
+    console.log(comment);
     const myArr = str.split("<@tag>");
     return myArr.map((ele, index) => {
       if (index % 2 === 0) {
@@ -51,9 +58,30 @@ function CommentItem({ comment }) {
         <div className="comment-content">
           {mapStringToJsx(comment.commentContent, comment)}
         </div>
-        <div className="comment-footer">
-          <CIcon name="cil-flag-alt" />
-          Báo cáo
+      </div>
+      <div className="comment-actions">
+        <div className="post-header-actions-dropdown">
+          <CDropdown>
+            <CDropdownToggle id="dropdownMenuButton" caret>
+              <div className="lane-actions">
+                <CIcon name="cil-options" className="rotate-90" />
+              </div>
+            </CDropdownToggle>
+            <CDropdownMenu
+              aria-labelledby="dropdownMenuButton"
+              placement="bottom-end"
+            >
+              <CDropdownItem className="first">
+                <CIcon name="cil-flag-alt" />
+                Báo cáo
+              </CDropdownItem>
+
+              <CDropdownItem className="last">
+                <CIcon name="cil-trash" className="icon-delete" />
+                Xóa
+              </CDropdownItem>
+            </CDropdownMenu>
+          </CDropdown>
         </div>
       </div>
     </div>
