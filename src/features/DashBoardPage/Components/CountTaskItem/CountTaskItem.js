@@ -76,15 +76,21 @@ function CountTaskItem({ type = 0, task, closeCountModal }) {
             <span>{task.taskName}</span>
           </div>
           <div className="description">{task.taskDescription}</div>
-          {task.taskDeadline && <div className="deadline">
-            Thời hạn: <span>{moment(task.taskDeadline).format("DD/MM/YYYY")}</span>
-          </div>}
+          {task.taskDeadline && (
+            <div className="deadline">
+              Thời hạn:{" "}
+              <span>{moment(task.taskDeadline).format("DD/MM/YYYY")}</span>
+            </div>
+          )}
         </div>
       </div>
       <div className="detail-info">
-        {task.taskDeadline && <div className="deadline">
-          Thời hạn: <span>{moment(task.taskDeadline).format("DD/MM/YYYY")}</span>
-        </div>}
+        {task.taskDeadline && (
+          <div className="deadline">
+            Thời hạn:{" "}
+            <span>{moment(task.taskDeadline).format("DD/MM/YYYY")}</span>
+          </div>
+        )}
         {type !== 0 && type !== 2 && (
           <div
             className="status"

@@ -7,6 +7,7 @@ import { setNewNoti } from "src/appSlice";
 import { SIGNALR_URL } from "../../env";
 import { HubConnectionState } from "@microsoft/signalr";
 import { setReminder } from "./signalrSlice";
+import { addAlarm } from "./../../appSlice.js";
 
 const connection = setupSignalRConnection(`${SIGNALR_URL}/hubnoti`);
 connection.on("SendNoti", (payload) => {
@@ -14,8 +15,7 @@ connection.on("SendNoti", (payload) => {
 });
 
 connection.on("Reminder", (payload) => {
-  console.log(payload);
-  store.dispatch(setReminder(payload));
+  store.dispatch(addAlarm(payload));
 });
 export const startNotiService = () => {
   if (connection.state === HubConnectionState.Disconnected) {

@@ -14,6 +14,7 @@ import { VscSearchStop } from "react-icons/vsc";
 import { BiAlarmExclamation } from "react-icons/bi";
 
 function AppointmentPage(props) {
+  // eslint-disable-next-line
   const appointmentType = ["meeting", "chat", "task", "news", "normal"];
 
   /*const appointmentList = [

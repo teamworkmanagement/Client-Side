@@ -3,8 +3,7 @@ import "./ListMeetings.scss";
 import { CCol, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { BsClipboardData } from "react-icons/bs";
-import { VscDeviceCameraVideo, VscSearchStop } from "react-icons/vsc";
+import { VscSearchStop } from "react-icons/vsc";
 import meetingApi from "src/api/meetingApi";
 import CreateMeetingModal from "./Components/CreateMeetingModal/CreateMeetingModal";
 import {

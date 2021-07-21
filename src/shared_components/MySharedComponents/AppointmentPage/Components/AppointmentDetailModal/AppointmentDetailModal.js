@@ -20,34 +20,12 @@ import "moment/locale/vi";
 moment.locale("vi");
 
 function AppointmentDetailModal({ show, onClose, appointment }) {
+  // eslint-disable-next-line
+  const appointmentType = ["meeting", "chat", "task", "news", "normal"];
   function handleOnClose() {
     if (onClose) {
       onClose();
     }
-  }
-
-  function getHour() {
-    if (!appointment) {
-      return "";
-    }
-    var res = appointment.hour + "";
-    if (res.length === 1) {
-      res = "0" + res;
-    }
-    return res;
-  }
-
-  const appointmentType = ["meeting", "chat", "task", "news", "normal"];
-
-  function getMinute() {
-    if (!appointment) {
-      return "";
-    }
-    var res = appointment.minute + "";
-    if (res.length === 1) {
-      res = "0" + res;
-    }
-    return res;
   }
 
   function getType() {

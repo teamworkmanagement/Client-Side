@@ -146,8 +146,21 @@ const appSlice = createSlice({
     taskRemoveId: null,
 
     meeting: null,
+
+    //alarm
+    alarmList: [],
   },
   reducers: {
+    addAlarm(state, action) {
+      state.alarmList.push(action.payload);
+    },
+    deleteAlarm(state, action) {
+      const deleteIndex = action.payload;
+      state.alarmList.splice(deleteIndex, 1);
+    },
+    clearAlarm(state, action) {
+      state.alarmList = [];
+    },
     setMeeting(state, action) {
       state.meeting = action.payload;
     },
@@ -241,6 +254,9 @@ const appSlice = createSlice({
 
 const { actions, reducer } = appSlice;
 export const {
+  addAlarm,
+  deleteAlarm,
+  clearAlarm,
   setTaskRemoveId,
   setShowDialogModal,
   setDialogResult,
@@ -262,6 +278,6 @@ export const {
   setTaskEditModal,
   setViewHistory,
   setSearchGlobalStr,
-  setMeeting
+  setMeeting,
 } = actions; // named export
 export default reducer; // default export

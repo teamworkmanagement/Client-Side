@@ -9,7 +9,6 @@ import CIcon from "@coreui/icons-react";
 import { changeStateTeamTabsSidebar } from "src/appSlice";
 import { setActiveTab } from "src/features/ListTeamPage/teamSlice";
 import { GrGroup } from "react-icons/gr";
-import { HiOutlineVideoCamera } from "react-icons/hi";
 import { VscDeviceCameraVideo } from "react-icons/vsc";
 
 const TeamTabsSideBar = (props) => {

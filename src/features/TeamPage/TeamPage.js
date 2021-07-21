@@ -37,7 +37,6 @@ import {
 } from "src/utils/signalr/signalrSlice";
 import { setAdminAction } from "../KanbanBoard/kanbanSlice";
 import VideoCall from "../VideoCall/ListMeetings";
-import { HiOutlineVideoCamera } from "react-icons/hi";
 import AppointmentPage from "src/shared_components/MySharedComponents/AppointmentPage/AppointmentPage";
 import { VscDeviceCameraVideo } from "react-icons/vsc";
 

@@ -25,11 +25,9 @@ import "./AppointmentEditModal.scss";
 import { BiCameraMovie, BiTask } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { FaRegNewspaper } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import appointmentApi from "src/api/appointmentApi";
 
 function AppointmentEditModal({ show, onClose, onUpdate, appointment }) {
-  const user = useSelector((state) => state.auth.currentUser);
   const [type, setType] = useState(0); //0:normal,1:meeting, 2:chat, 3:task,4:news,
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");

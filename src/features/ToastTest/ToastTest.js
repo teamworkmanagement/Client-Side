@@ -2,6 +2,7 @@ import CIcon from "@coreui/icons-react";
 import { CButton, CTooltip } from "@coreui/react";
 import React, { useState } from "react";
 import { BiFilterAlt } from "react-icons/bi";
+import AlarmModal from "src/shared_components/MySharedComponents/AlarmModal/AlarmModal.js";
 import AvatarComponent from "src/shared_components/MySharedComponents/AvatarComponent/AvatarComponent";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
 import AvatarName from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarName/AvatarName";
@@ -15,6 +16,7 @@ const MyToaster = () => {
   const [details, setDetails] = useState([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [applyingFilter, setApplyingFilter] = useState(false);
+  const [showAlarm, setShowAlarm] = useState(false);
   function onCloseTaskHistoryModal() {
     setShowTaskHistoryModal(false);
   }
@@ -48,6 +50,8 @@ const MyToaster = () => {
   };
   return (
     <div style={{ padding: "1.5rem" }}>
+      <button onClick={() => setShowAlarm(true)}>alarm</button>
+
       <AvatarComponent
         userName="Dũng Nguyễn"
         userImage="https://emilus.themenate.net/img/avatars/thumb-2.jpg"

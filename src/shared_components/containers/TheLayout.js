@@ -18,15 +18,21 @@ import {
   setCurrentBoard,
   setNullSignalRData,
 } from "src/features/KanbanBoard/kanbanSlice";
-import { setMeeting, setTaskEditModal, setUserModal, setViewHistory } from "src/appSlice";
+import {
+  setMeeting,
+  setTaskEditModal,
+  setUserModal,
+  setViewHistory,
+} from "src/appSlice";
 import TaskHistoryModal from "../MySharedComponents/TaskHistoryModal/TaskHistoryModal";
 import HelpSidebar from "./SubSideBars/HelpSidebar/HelpSidebar.js";
 import DialogModal from "../MySharedComponents/DialogModal/DialogModal.js";
+import AlarmModal from "../MySharedComponents/AlarmModal/AlarmModal.js";
 
 const TheLayout = () => {
   const newNoti = useSelector((state) => state.app.newNotfication);
   const moveTask = useSelector((state) => state.kanban.signalrData.moveTask);
-  const meeting = useSelector(state => state.app.meeting);
+  const meeting = useSelector((state) => state.app.meeting);
   useEffect(() => {
     if (!newNoti) return;
 
@@ -81,7 +87,7 @@ const TheLayout = () => {
         .then((res) => {
           setModaTaskObj(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
 
       if (updateTask) {
         dispatch(setNullSignalRData("updateTask"));
@@ -202,7 +208,7 @@ const TheLayout = () => {
           console.log(res.data);
           setDetails(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
   }, [viewHistory]);
 
@@ -230,23 +236,25 @@ const TheLayout = () => {
   const [isMeeting, setMeetingValue] = useState(false);
 
   useEffect(() => {
-    if (history.location.pathname.includes('meetingvideo')) {
+    if (history.location.pathname.includes("meetingvideo")) {
       setMeetingValue(true);
     }
-  }, [history.location.pathname])
+  }, [history.location.pathname]);
 
   useEffect(() => {
-    if (!meeting)
-      return;
+    if (!meeting) return;
     else {
-      toast(<CustomToast
-        type="Error"
-        title="Lỗi"
-        message="Bạn đang tham gia một cuộc họp!" />)
+      toast(
+        <CustomToast
+          type="Error"
+          title="Lỗi"
+          message="Bạn đang tham gia một cuộc họp!"
+        />
+      );
     }
 
     dispatch(setMeeting(null));
-  }, [meeting])
+  }, [meeting]);
 
   return (
     <div className="c-app c-default-layout">
@@ -261,14 +269,16 @@ const TheLayout = () => {
           <TheContent />
         </div>
       </div>
-      {!isMeeting && <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        progressClassName="toastProgress"
-      />}
+      {!isMeeting && (
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          progressClassName="toastProgress"
+        />
+      )}
 
       {/* <ForgotPassword /> */}
-
+      <AlarmModal />
       <TaskEditModal
         isOfTeam={taskEditModal?.isOfTeam}
         closePopup={onEditModalClose}
