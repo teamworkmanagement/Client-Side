@@ -7,6 +7,8 @@ import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponen
 import CIcon from "@coreui/icons-react";
 import { useSelector } from "react-redux";
 import commentApi from "src/api/commentApi";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 moment.locale("vi");
 
@@ -39,9 +41,28 @@ function CommentItem({ comment }) {
     commentApi.reportComment({
       commentId: comment.commentId
     }).then(res => {
-
+      toast(
+        <CustomToast
+          type="success"
+          title="Thông báo"
+          message="Báo cáo thành công!"
+        />)
     }).catch(err => {
-
+      if (err.ErrorCode && err.ErrorCode === '409') {
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Bạn đã báo cáo nội dung này!"
+          />);
+        return;
+      }
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Có lỗi xảy ra!"
+        />)
     })
   }
   return (

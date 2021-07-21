@@ -26,6 +26,8 @@ import {
   CDropdownMenu,
   CDropdownToggle,
 } from "@coreui/react";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 moment.locale("vi");
 
@@ -263,8 +265,20 @@ function Post(props) {
     postApi.deletePost(post.postId)
       .then(res => {
         props.onDeletePost(post);
+        toast(
+          <CustomToast
+            type="success"
+            title="Thông báo"
+            message="Xóa thành công!"
+          />
+        );
       }).catch(err => {
-
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Có lỗi xảy ra!"
+          />)
       })
   }
 
@@ -273,9 +287,29 @@ function Post(props) {
     postApi.postReport({
       postId: post.postId,
     }).then(res => {
-
+      toast(
+        <CustomToast
+          type="success"
+          title="Thông báo"
+          message="Báo cáo thành công!"
+        />)
     }).catch(err => {
+      if (err.ErrorCode && err.ErrorCode === '409') {
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Bạn đã báo cáo nội dung này!"
+          />);
 
+        return;
+      }
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Có lỗi xảy ra!"
+        />)
     })
   }
 
