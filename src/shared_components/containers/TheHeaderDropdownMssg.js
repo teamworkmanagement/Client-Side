@@ -46,7 +46,7 @@ const TheHeaderDropdownMssg = () => {
           [...notissss].filter((x) => !!!x.notificationStatus).length
         );
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [triggerLoad]);
 
   useEffect(() => {
@@ -71,8 +71,8 @@ const TheHeaderDropdownMssg = () => {
 
       notiApi
         .readNoti(payload)
-        .then((res) => {})
-        .catch((err) => {});
+        .then((res) => { })
+        .catch((err) => { });
       const cloneNotis = [...notis];
 
       cloneNotis[index].notificationStatus = true;
@@ -82,6 +82,7 @@ const TheHeaderDropdownMssg = () => {
 
     if (noti.notificationLink) {
       if (noti.notificationLink.includes("MeetingId")) {
+        let i = 0;
         const data = JSON.parse(noti.notificationLink);
         if (data && data.MeetingId && data.TeamId) {
           meetingApi
@@ -90,14 +91,24 @@ const TheHeaderDropdownMssg = () => {
               if (res.data === true) {
                 dispatch(setMeeting({ userId: user.id, time: Date.now() }));
               } else {
-                window.open(
+                const newWindow = window.open(
                   `/meetingvideo?id=${data.MeetingId}&tid=${data.TeamId}`,
                   "sharer",
                   "height=550,width=750"
                 );
+
+                newWindow.onunload = function (e) {
+                  i++;
+                  console.log(i);
+                  if (i == 2) {
+                    meetingApi.leaveMeeting({
+                      meetingId: data.MeetingId,
+                    }).then(res => { }).catch(err => { })
+                  }
+                }
               }
             })
-            .catch((err) => {});
+            .catch((err) => { });
         }
       } else {
         history.push({
@@ -202,9 +213,8 @@ const TheHeaderDropdownMssg = () => {
                 return (
                   <div
                     onClick={() => onClick(noti, index)}
-                    className={`noti-item ${
-                      noti.notificationStatus ? "seen" : ""
-                    }`}
+                    className={`noti-item ${noti.notificationStatus ? "seen" : ""
+                      }`}
                   >
                     <div className="seen-signal"></div>
                     <img alt="" src={noti.notificationActionAvatar} />

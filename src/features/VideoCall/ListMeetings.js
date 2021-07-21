@@ -40,7 +40,7 @@ function ListMeetings(props) {
       .then((res) => {
         setMeetings(res.data);
       })
-      .catch((err) => {})
+      .catch((err) => { })
       .finally(() => {
         setLoadDone(true);
       });
@@ -55,8 +55,8 @@ function ListMeetings(props) {
         .then((res) => {
           setMeetings(res.data);
         })
-        .catch((err) => {})
-        .finally(() => {});
+        .catch((err) => { })
+        .finally(() => { });
     }
     dispatch(setCreateMeeting(null));
   }, [createMeeting]);
@@ -70,8 +70,8 @@ function ListMeetings(props) {
         .then((res) => {
           setMeetings(res.data);
         })
-        .catch((err) => {})
-        .finally(() => {});
+        .catch((err) => { })
+        .finally(() => { });
     }
     dispatch(setRemoveMeeting(null));
   }, [removeMeeting]);
@@ -83,31 +83,53 @@ function ListMeetings(props) {
   };
 
   const goToMeeting = (item) => {
+    let i = 0;
     meetingApi
       .checkIsCalling()
       .then((res) => {
         if (res.data === true) {
           dispatch(setMeeting({ userId: user.id, time: Date.now() }));
         } else {
-          window.open(
+          const newWindow = window.open(
             `/meetingvideo?id=${item.meetingId}&tid=${item.teamId}`,
             "sharer",
             "height=550,width=750"
           );
+
+          newWindow.onunload = function (e) {
+            i++;
+            console.log(i);
+            if (i == 2) {
+              meetingApi.leaveMeeting({
+                meetingId: item.meetingId,
+              }).then(res => { }).catch(err => { })
+            }
+          }
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const onClose = (e) => {
     setShowAddMeeting(false);
+    let i = 0;
     console.log("close: ", e);
     if (e) {
-      window.open(
+      const newWindow = window.open(
         `/meetingvideo?id=${e.meetingId}&tid=${e.teamId}`,
         "sharer",
         "height=550,width=750"
       );
+
+      newWindow.onunload = function (event) {
+        i++;
+        console.log(i);
+        if (i == 2) {
+          meetingApi.leaveMeeting({
+            meetingId: e.meetingId,
+          }).then(res => { }).catch(err => { })
+        }
+      }
     }
   };
 
@@ -121,7 +143,7 @@ function ListMeetings(props) {
           setShowAddMeeting(true);
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
   return (
     <div className="list-team-boards-container">
