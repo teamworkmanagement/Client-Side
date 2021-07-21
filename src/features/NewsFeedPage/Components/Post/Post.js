@@ -20,6 +20,12 @@ import {
   setNewComment,
   setRemoveReact,
 } from "src/utils/signalr/signalrSlice";
+import {
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
+} from "@coreui/react";
 
 moment.locale("vi");
 
@@ -279,6 +285,31 @@ function Post(props) {
               {moment(post.postCreatedAt).format("HH:MM, DD/MM/YYYY")}
               <CIcon name="cil-clock" />
             </div>
+          </div>
+        </div>
+        <div className="post-actions">
+          <div className="post-header-actions-dropdown">
+            <CDropdown>
+              <CDropdownToggle id="dropdownMenuButton" caret>
+                <div className="lane-actions">
+                  <CIcon name="cil-options" className="rotate-90" />
+                </div>
+              </CDropdownToggle>
+              <CDropdownMenu
+                aria-labelledby="dropdownMenuButton"
+                placement="bottom-end"
+              >
+                <CDropdownItem className="first">
+                  <CIcon name="cil-flag-alt" />
+                  Báo cáo
+                </CDropdownItem>
+
+                <CDropdownItem className="last">
+                  <CIcon name="cil-trash" className="icon-delete" />
+                  Xóa
+                </CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
           </div>
         </div>
       </div>

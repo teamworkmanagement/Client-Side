@@ -4,6 +4,7 @@ import moment from "moment";
 import "moment/locale/vi";
 import Tag from "../Tag/Tag";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
+import CIcon from "@coreui/icons-react";
 
 moment.locale("vi");
 
@@ -49,6 +50,10 @@ function CommentItem({ comment }) {
         </div>
         <div className="comment-content">
           {mapStringToJsx(comment.commentContent, comment)}
+        </div>
+        <div className="comment-footer">
+          <CIcon name="cil-flag-alt" />
+          Báo cáo
         </div>
       </div>
     </div>

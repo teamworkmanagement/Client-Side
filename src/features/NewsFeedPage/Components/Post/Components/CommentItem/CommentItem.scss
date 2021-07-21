@@ -263,6 +263,7 @@ $baseTransition: all 0.3s;
 .comment-item-container {
     display: flex;
     margin-bottom: 1rem;
+    transition: all 0.2s;
     .commenter-avatar {
         width: 2rem;
         height: 2rem;
@@ -277,6 +278,7 @@ $baseTransition: all 0.3s;
     .comment-infor {
         flex-grow: 1;
         width: 2rem;
+        transition: all 0.2s;
         .comment-header {
             display: flex;
             justify-content: space-between;
@@ -290,6 +292,26 @@ $baseTransition: all 0.3s;
         }
         .comment-content {
             word-break: break-all;
+        }
+        .comment-footer {
+            align-items: center;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: rgba(#e55353, 0.7);
+            display: none;
+            .c-icon {
+                margin-right: 0.5rem;
+            }
+            &:hover {
+                color: #e55353;
+                font-weight: bold;
+            }
+        }
+        &:hover {
+            .comment-footer {
+                display: flex;
+            }
         }
     }
 }
