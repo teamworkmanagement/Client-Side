@@ -108,6 +108,13 @@ function PostList(props) {
     }, 2);
   };
 
+  const onDeletePost = (post) => {
+    const clonePosts = [...listPosts];
+    const index = clonePosts.findIndex(p => p.postId === post.postId);
+    clonePosts.splice(index, 1);
+    setListPosts(clonePosts);
+  }
+
   const renderListPost = listPosts.map((item, index) => {
     return (
       <Post
@@ -115,6 +122,7 @@ function PostList(props) {
         isInTeam={props.isInTeam}
         post={item}
         key={item.postId}
+        onDeletePost={onDeletePost}
       />
     );
   });

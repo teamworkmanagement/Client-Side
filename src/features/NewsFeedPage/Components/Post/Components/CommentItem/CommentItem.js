@@ -5,18 +5,16 @@ import "moment/locale/vi";
 import Tag from "../Tag/Tag";
 import AvatarImage from "src/shared_components/MySharedComponents/AvatarComponent/Components/AvatarImage/AvatarImage";
 import CIcon from "@coreui/icons-react";
-import {
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-} from "@coreui/react";
+import { useSelector } from "react-redux";
+import commentApi from "src/api/commentApi";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 moment.locale("vi");
 
 function CommentItem({ comment }) {
+  const user = useSelector(state => state.auth.currentUser);
   const mapStringToJsx = (str, comment) => {
-    console.log(comment);
     const myArr = str.split("<@tag>");
     return myArr.map((ele, index) => {
       if (index % 2 === 0) {
@@ -37,6 +35,36 @@ function CommentItem({ comment }) {
       }
     });
   };
+
+  const onReportComment = () => {
+    console.log('report comment: ', comment.commentId);
+    commentApi.reportComment({
+      commentId: comment.commentId
+    }).then(res => {
+      toast(
+        <CustomToast
+          type="success"
+          title="Thông báo"
+          message="Báo cáo thành công!"
+        />)
+    }).catch(err => {
+      if (err.ErrorCode && err.ErrorCode === '409') {
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Bạn đã báo cáo nội dung này!"
+          />);
+        return;
+      }
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Có lỗi xảy ra!"
+        />)
+    })
+  }
   return (
     <div className="comment-item-container">
       <div className="commenter-avatar">
@@ -55,34 +83,13 @@ function CommentItem({ comment }) {
             {moment(comment.commentCreatedAt).format("l")}
           </div>
         </div>
-        <div className="comment-content">
+        <div className="comment-content" >
           {mapStringToJsx(comment.commentContent, comment)}
         </div>
-      </div>
-      <div className="comment-actions">
-        <div className="post-header-actions-dropdown">
-          <CDropdown>
-            <CDropdownToggle id="dropdownMenuButton" caret>
-              <div className="lane-actions">
-                <CIcon name="cil-options" className="rotate-90" />
-              </div>
-            </CDropdownToggle>
-            <CDropdownMenu
-              aria-labelledby="dropdownMenuButton"
-              placement="bottom-end"
-            >
-              <CDropdownItem className="first">
-                <CIcon name="cil-flag-alt" />
-                Báo cáo
-              </CDropdownItem>
-
-              <CDropdownItem className="last">
-                <CIcon name="cil-trash" className="icon-delete" />
-                Xóa
-              </CDropdownItem>
-            </CDropdownMenu>
-          </CDropdown>
-        </div>
+        {comment.commentUserId !== user.id && <div onClick={onReportComment} className="comment-footer">
+          <CIcon name="cil-flag-alt" />
+          Báo cáo
+        </div>}
       </div>
     </div>
   );

@@ -26,6 +26,8 @@ import {
   CDropdownMenu,
   CDropdownToggle,
 } from "@coreui/react";
+import { toast } from "react-toastify";
+import CustomToast from "src/shared_components/MySharedComponents/CustomToast/CustomToast";
 
 moment.locale("vi");
 
@@ -65,13 +67,13 @@ function Post(props) {
     };
     post.isReacted
       ? postApi
-          .deleteReactPost({ params })
-          .then((res) => {})
-          .catch((err) => {})
+        .deleteReactPost({ params })
+        .then((res) => { })
+        .catch((err) => { })
       : postApi
-          .reactPost(params)
-          .then((res) => {})
-          .catch((err) => {});
+        .reactPost(params)
+        .then((res) => { })
+        .catch((err) => { });
   };
 
   String.prototype.replaceBetween = function (start, end, what) {
@@ -82,7 +84,12 @@ function Post(props) {
     const myArr = str.split("<@tag>");
     return myArr.map((ele, index) => {
       if (index % 2 === 0) {
-        return ele;
+        return (
+          <div
+            className="normal-text-comment"
+            dangerouslySetInnerHTML={{ __html: ele }}
+          ></div>
+        );
       } else {
         return <Tag userId={ele} />;
       }
@@ -182,8 +189,8 @@ function Post(props) {
         commentIsDeleted: false,
         commentUserTagIds: userIds,
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => { })
+      .catch((err) => { });
   };
 
   useEffect(() => {
@@ -253,6 +260,59 @@ function Post(props) {
     history.push(`/team/${post.postTeamId}?tab=teaminfo`);
   };
 
+  const onRemovePost = () => {
+    console.log('on remove: ', post.postId)
+    postApi.deletePost(post.postId)
+      .then(res => {
+        props.onDeletePost(post);
+        toast(
+          <CustomToast
+            type="success"
+            title="Thông báo"
+            message="Xóa thành công!"
+          />
+        );
+      }).catch(err => {
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Có lỗi xảy ra!"
+          />)
+      })
+  }
+
+  const onReportPost = () => {
+    console.log('on report: ', post.postId);
+    postApi.postReport({
+      postId: post.postId,
+    }).then(res => {
+      toast(
+        <CustomToast
+          type="success"
+          title="Thông báo"
+          message="Báo cáo thành công!"
+        />)
+    }).catch(err => {
+      if (err.ErrorCode && err.ErrorCode === '409') {
+        toast(
+          <CustomToast
+            type="error"
+            title="Lỗi"
+            message="Bạn đã báo cáo nội dung này!"
+          />);
+
+        return;
+      }
+      toast(
+        <CustomToast
+          type="error"
+          title="Lỗi"
+          message="Có lỗi xảy ra!"
+        />)
+    })
+  }
+
   return (
     <div className="post-container" style={{ zIndex: props.index }}>
       <div className="post-header">
@@ -299,15 +359,15 @@ function Post(props) {
                 aria-labelledby="dropdownMenuButton"
                 placement="bottom-end"
               >
-                <CDropdownItem className="first">
+                {post.postUserId !== user.id && <CDropdownItem onClick={onReportPost} className="first">
                   <CIcon name="cil-flag-alt" />
                   Báo cáo
-                </CDropdownItem>
+                </CDropdownItem>}
 
-                <CDropdownItem className="last">
+                {post.showDelete && <CDropdownItem onClick={onRemovePost} className="last">
                   <CIcon name="cil-trash" className="icon-delete" />
                   Xóa
-                </CDropdownItem>
+                </CDropdownItem>}
               </CDropdownMenu>
             </CDropdown>
           </div>
