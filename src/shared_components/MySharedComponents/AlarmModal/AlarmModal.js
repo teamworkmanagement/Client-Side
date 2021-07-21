@@ -172,7 +172,7 @@ function AlarmModal(props) {
 
   return (
     <CModal
-      className="create-team-modal"
+      className="alarm-modal"
       show={alarmList.length > 0}
       onClose={onClose}
       size="md"
