@@ -37,7 +37,7 @@ function EzPlayer({
         configOverwrite: {
             prejoinPageEnabled: false,
         },
-        domain: 'meet.ezteam.tech',
+        domain: 'meet.ezteam.engineer',
         subject: subject,
         ...options
     })
