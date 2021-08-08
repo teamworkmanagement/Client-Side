@@ -1,36 +1,25 @@
-# Client-Side
-Front-end project for web app supporting teamwork management
+# EZTeam Application (Teamwork Manager)
+## Introduction
+EZTeam is an application for supporting student teamwork activities. With useful features such as: realtime chat, team management, task management, task progress control, video meeting, appointment reminder,...<br>
+EZTeam provides a friendly environment with friendly user interfaces. All students from high school to university is the target users of the app.<br>
+EZTeam has a full responsive UI from desktop to mobile (Recommended in desktop devices to have the best experience with kanban board and gantt chart features).
 
-# Project: Teamwork Manager
-## Getting Start
+## First looks
+We are proud to have a so friendly and beautiful UI for the best experience of users.
 
-```
-npm i
-```
-```
-npm start
-```
 
-## Tổ chức folder
+## For using
+Enjoy the app here: [EZTeam](https://ezteam.tech)
 
-```
-src
-|__ assets
-|  |__ images
-|  |__ styles (global styles) 
-|
-|__ components (shared components)
-|
-|__ features
-  |__ Photo
-    |__ components (inside child components)
-    |  |__ PhotoList (child component1)
-    |  |__ PhotoCard (child component2)
-    |  |__ PhotoForm (child component3)
-    |
-    |__ pages 
-    |  |__ MainPage
-    |  |__ AddEditPage
-    |__ photoSlice.js (feature's redux)
-    |__ index.js (main feature component)
-```
+## For development
+- Step 1: Fork project source code from the dev branch.
+- Step 2: Run these command (after having node installed):
+
+  ```
+  npm i
+  ```
+  ```
+  npm start
+  ```
+
+
