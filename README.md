@@ -1,4 +1,8 @@
 # EZTeam Application (Teamwork Manager)
+<p align="center">
+  <img width="250" height="100" src="https://github.com/teamworkmanagement/Client-Side/blob/main/public/images/introduction/ezteamlogo.svg">
+</p>
+
 ## Introduction
 EZTeam is an application for supporting student teamwork activities. With useful features such as: realtime chat, team management, task management, task progress control, video meeting, appointment reminder,...<br>
 EZTeam provides a friendly environment with friendly user interfaces. All students from high school to university is the target users of the app.<br>
