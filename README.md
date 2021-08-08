@@ -6,6 +6,17 @@ EZTeam has a full responsive UI from desktop to mobile (Recommended in desktop d
 
 ## First looks
 We are proud to have a so friendly and beautiful UI for the best experience of users.
+| Dashboard  | News feed |
+| ------------- | ------------- |
+| ![Dashboard](https://github.com/teamworkmanagement/Client-Side/blob/main/public/images/introduction/dashboard.png)  | ![Dashboard](https://github.com/teamworkmanagement/Client-Side/blob/main/public/images/introduction/post.png)   |
+
+| Teams | Chat |
+| :-: | :-:|
+| ![Dashboard](https://github.com/teamworkmanagement/Client-Side/blob/main/public/images/introduction/team.png)   | ![Dashboard](https://github.com/teamworkmanagement/Client-Side/blob/main/public/images/introduction/chat.png)   |
+
+| Kanban board | Gantt chart |
+| :-: | :-:|
+| ![Dashboard](https://github.com/teamworkmanagement/Client-Side/blob/main/public/images/introduction/kanban.png)   | ![Dashboard](https://github.com/teamworkmanagement/Client-Side/blob/main/public/images/introduction/gantt.png)   |
 
 
 ## For using
